@@ -116,6 +116,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     <th>Length</th>
   </tr>
   <?php
+  $index = 1;
   if ($has_ins) {
     $ins_artists = formatArtists($ins_track);
     $ins_title = $ins_artists . " - " . $ins_track->name;
@@ -132,7 +133,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
       if ($ins_i >= $ins_freq) {
         ?>
         <tr>
-          <td class="insert sym">+</td>
+          <td class="insert index">+</td>
           <td class="insert">
             <?php echo($ins_title); ?>
           </td>
@@ -156,7 +157,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     $playlist_length_wo_ins += $length;
     ?>
     <tr>
-      <td class="sym"></td>
+      <td class="index"><?php echo($index); ?></td>
       <td>
         <?php echo($title); ?>
       </td>
@@ -165,6 +166,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
       </td>
     </tr>
     <?php
+    $index += 1;
   }
   ?>
   <tr>
@@ -174,7 +176,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   if ($has_ins) {
     ?>
     <tr>
-      <td class="sym"></td>
+      <td class="index"></td>
       <td class="summary">
         Total playlist length (before):
       </td>
@@ -186,7 +188,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     }
   ?>
   <tr>
-    <td class="sym"></td>
+    <td class="index"></td>
     <td class="summary">
       <?php
       if ($has_ins) $str = ' (after)';
@@ -202,7 +204,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   if ($has_ins) {
     ?>
     <tr>
-      <td class="sym"></td>
+      <td class="index"></td>
       <td class="summary">
         Difference:
       </td>

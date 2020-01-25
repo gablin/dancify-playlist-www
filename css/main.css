@@ -6,7 +6,7 @@ table.playlist {
 }
 table.playlist td.insert {
 }
-table.playlist td.sym {
+table.playlist td.index {
   width: 1em;
   text-align: right;
 }
