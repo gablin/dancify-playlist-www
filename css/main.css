@@ -1,0 +1,17 @@
+div.error {
+  font-weight: 700;
+}
+
+table.playlist {
+}
+table.playlist td.insert {
+}
+table.playlist td.sym {
+  width: 1em;
+  text-align: right;
+}
+table.playlist td.length {
+  text-align: right;
+}
+table.playlist td.summary {
+}
