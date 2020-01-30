@@ -10,10 +10,38 @@ function beginPage() {
 <html>
   <head>
     <title>Dingify Your Playlist!</title>
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto|Roboto+Condensed:300&display=swap" rel="stylesheet"></link>
     <link rel="stylesheet" href="/css/main.css"></link>
   </head>
   <body>
+    <div class="logo">
+      <div class="text">
+        Dingify Your Playlist!
+      </div>
+    </div>
+    <?php createMenu(); ?>
 <?php
+}
+
+/**
+ * Creates HTML code for the menu.
+ */
+function createMenu() {
+  ?>
+  <div class="menu">
+    <?php
+    if (hasSession()) {
+      ?>
+      <ul>
+        <li><a href="/app/">Home</a></li>
+        <li><a href="/app/insert-ding/?id=...">Some playlist ...</a></li>
+        <li class="logout"><a href="/app/logout">Logout</a></li>
+      </ul>
+      <?php
+    }
+    ?>
+  </div>
+  <?php
 }
 
 /**
