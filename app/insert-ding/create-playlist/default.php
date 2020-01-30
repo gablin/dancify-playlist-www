@@ -4,6 +4,7 @@ require '../../../autoload.php';
 ensureSession();
 $session = getSession();
 $api = createWebApi($session);
+ensureAuthorizedUser($api);
 
 // Check if 'save' button was pushed. If so, forward GET to next page
 if (hasGET('commit') && hasGET('new_name')) {

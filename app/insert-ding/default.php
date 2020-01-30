@@ -4,6 +4,7 @@ require '../../autoload.php';
 ensureSession();
 $session = getSession();
 $api = createWebApi($session);
+ensureAuthorizedUser($api);
 
 beginPage();
 try {

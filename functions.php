@@ -141,6 +141,21 @@ function createWebApi($session) {
 }
 
 /**
+ * Checks that the user of this API is authorized to use the application. If
+ * not, the user is redirected to another page.
+ *
+ * @param SpotifyWebAPI\SpotifyWebAPI API object.
+ */
+function ensureAuthorizedUser($api) {
+  global $AUTH_USERS;
+  $user = $api->me();
+  if (!in_array($user->id, $AUTH_USERS)) {
+    header('Location: /auth/bad/');
+    die();
+  }
+}
+
+/**
  * Outputs an error message.
  *
  * @param Exception $e
