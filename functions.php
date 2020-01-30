@@ -44,11 +44,22 @@ function createApiSession() {
 }
 
 /**
- * Checks whether a session is active. If not, the client is redirected ot the
+ * Checks whether a session is active.
+ * @returns bool true if session is active.
+ */
+function hasSession() {
+  return isset($_SESSION['access-token']) &&
+         isset($_SESSION['refresh-token']) &&
+         strlen($_SESSION['access-token']) > 0 &&
+         strlen($_SESSION['refresh-token']) > 0;
+}
+
+/**
+ * Checks whether a session is active. If not, the client is redirected to the
  * login page.
  */
 function ensureSession() {
-  if (!isset($_SESSION['access-token']) || !isset($_SESSION['refresh-token'])) {
+  if (!hasSession()) {
     header('Location: /auth/');
     die();
   }
@@ -77,6 +88,14 @@ function getSession() {
 function updateTokens($session) {
   $_SESSION['access-token']  = $session->getAccessToken();
   $_SESSION['refresh-token'] = $session->getRefreshToken();
+}
+
+/**
+ * Closes the currently active API session. It is assumed that a PHP session has
+ * already been started.
+ */
+function closeSession() {
+  unset($_SESSION['access-token'], $_SESSION['refresh-token']);
 }
 
 /**
