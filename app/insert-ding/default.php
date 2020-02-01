@@ -1,5 +1,6 @@
 <?php
 require '../../autoload.php';
+require 'functions.php';
 
 ensureSession();
 $session = getSession();
@@ -7,6 +8,8 @@ $api = createWebApi($session);
 ensureAuthorizedUser($api);
 
 beginPage();
+createMenu(mkMenuItemShowPlaylists($api));
+beginContent();
 try {
 ?>
 
@@ -25,7 +28,7 @@ $playlists = loadPlaylists($api);
     ?>
     <tr>
       <td>
-        <a href="./show-playlist/?playlist_id=<?php echo($id); ?>"><?php echo($name); ?></a>
+        <a href="./show-tracks/?playlist_id=<?php echo($id); ?>"><?php echo($name); ?></a>
       </td>
     </tr>
     <?php
@@ -36,8 +39,9 @@ $playlists = loadPlaylists($api);
 <?php
 }
 catch (Exception $e) {
-  showError($e);
+  showError($e->getMessage());
 }
+endContent();
 endPage();
 updateTokens($session);
 ?>

@@ -19,22 +19,34 @@ function beginPage() {
         Dingify Your Playlist!
       </div>
     </div>
-    <?php createMenu(); ?>
 <?php
 }
 
 /**
  * Creates HTML code for the menu.
+ *
+ * @param array|null $args List of number of menu items or nulls.
  */
-function createMenu() {
+function createMenu(...$args) {
+  $items = array();
+  foreach ($args as $a) {
+    if (!is_null($a)) {
+      array_push($items, $a);
+    }
+  }
   ?>
   <div class="menu">
     <?php
     if (hasSession()) {
       ?>
       <ul>
-        <li><a href="/app/">Home</a></li>
-        <li><a href="/app/insert-ding/?id=...">Some playlist ...</a></li>
+        <?php
+        foreach ($items as $i) {
+          ?>
+          <li><a href="<?php echo($i['lnk']); ?>"><?php echo($i['str']); ?></a></li>
+          <?php
+        }
+        ?>
         <li class="logout"><a href="/app/logout">Logout</a></li>
       </ul>
       <?php
@@ -51,6 +63,24 @@ function endPage() {
 ?>
   </body>
 </html>
+<?php
+}
+
+/**
+ * Outputs beginning of every content.
+ */
+function beginContent() {
+?>
+<div class="content">
+<?php
+}
+
+/**
+ * Outputs end of every content.
+ */
+function endContent() {
+?>
+</div>
 <?php
 }
 
@@ -158,12 +188,12 @@ function ensureAuthorizedUser($api) {
 /**
  * Outputs an error message.
  *
- * @param Exception $e
+ * @param string $msg Error message.
  */
-function showError($e) {
+function showError($msg) {
   ?>
   <div class="error">
-    ERROR: <?php echo($e->getMessage()); ?>
+    <span class="heading">ERROR:</span> <?php echo($msg); ?>
   </div>
   <?php
 }
@@ -255,10 +285,22 @@ function ensureGET($k) {
 }
 
 /**
+ * Loads information for a given playlist.
+ *
+ * @param SpotifyWebAPI\SpotifyWebAPI api API object.
+ * @param string id Playlist ID.
+ * @returns Object Information.
+ * @throws SpotifyWebAPI\SpotifyWebAPIException If something fails.
+ */
+function loadPlaylistInfo($api, $id) {
+  return $api->getPlaylist($id);
+}
+
+/**
  * Loads all playlists from the current user.
  *
  * @param SpotifyWebAPI\SpotifyWebAPI api API object.
- * @returns List of playlist objects.
+ * @returns array List of playlist objects.
  * @throws SpotifyWebAPI\SpotifyWebAPIException If something fails.
  */
 function loadPlaylists($api) {
@@ -285,7 +327,7 @@ function loadPlaylists($api) {
  *
  * @param SpotifyWebAPI\SpotifyWebAPI api API object.
  * @param string id Playlist ID.
- * @returns List of playlist track objects.
+ * @returns array List of playlist track objects.
  * @throws SpotifyWebAPI\SpotifyWebAPIException If something fails.
  */
 function loadPlaylistTracks($api, $id) {

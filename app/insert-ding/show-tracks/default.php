@@ -1,5 +1,6 @@
 <?php
 require '../../../autoload.php';
+require '../functions.php';
 
 ensureSession();
 $session = getSession();
@@ -8,17 +9,25 @@ ensureAuthorizedUser($api);
 
 // Check if 'save' button was pushed. If so, forward GET to next page
 if (hasGET('save')) {
-  header('Location: ../create-playlist/?' . $_SERVER['QUERY_STRING']);
+  header('Location: ./new-playlist/?' . $_SERVER['QUERY_STRING']);
   die();
 }
 
+$playlist_id = '';
+if (hasGET('playlist_id')) {
+  $playlist_id = $_GET['playlist_id'];
+}
+
 beginPage();
+createMenu( mkMenuItemShowPlaylists($api)
+          , mkMenuItemShowPlaylistTracks($api, $playlist_id)
+          );
+beginContent();
 try {
 ?>
 
 <?php
 ensureGET('playlist_id');
-$playlist_id = $_GET['playlist_id'];
 $tracks = loadPlaylistTracks($api, $playlist_id);
 
 // Get track to insert (if specified)
@@ -39,11 +48,7 @@ if (hasGET('track')) {
   }
 
   if (strlen($error) > 0) {
-    ?>
-    <div>
-      ERROR: <?php echo($error); ?>
-    </div>
-    <?php
+    showError($error);
   }
 }
 else {
@@ -69,11 +74,7 @@ if (hasGET('freq')) {
   }
 
   if (strlen($error) > 0) {
-    ?>
-    <div>
-      ERROR: <?php echo($error); ?>
-    </div>
-    <?php
+    showError($error);
   }
 }
 else {
@@ -92,25 +93,25 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     <?php
   }
   ?>
-  <div>
-    Track link or URI:<input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
+  <div class="input">
+    Enter track link or URI: <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
+  </div>
+  <div class="input">
+    Insert this track every <input type="text" name="freq" value="<?php echo($_GET['freq']); ?>" class="number centered"></input> position
   </div>
   <div>
-    Insert this track every <input type="text" name="freq" value="<?php echo($_GET['freq']); ?>"></input> position
-  </div>
-  <div>
-    <input type="submit" name="preview" value="Preview result"></input>
+    <input class="button" type="submit" name="preview" value="Preview result"></input>
     <?php
     if ($has_ins) {
       ?>
-      <input type="submit" name="save" value="Save as new playlist"></input>
+      <input class="button" style="margin-left: 1em;" type="submit" name="save" value="Save as new playlist"></input>
       <?php
     }
     ?>
   </div>
 </form>
 
-<table class="playlist">
+<table class="tracks">
   <tr>
     <th></th>
     <th>Title</th>
@@ -134,7 +135,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
       if ($ins_i >= $ins_freq) {
         ?>
         <tr>
-          <td class="insert index">+</td>
+          <td class="insert index"></td>
           <td class="insert">
             <?php echo($ins_title); ?>
           </td>
@@ -171,7 +172,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   }
   ?>
   <tr>
-    <td colspan="3" style="height: 1em;"></td>
+    <td colspan="3" class="sep"></td>
   </tr>
   <?php
   if ($has_ins) {
@@ -189,15 +190,21 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     }
   ?>
   <tr>
-    <td class="index"></td>
-    <td class="summary">
-      <?php
-      if ($has_ins) $str = ' (after)';
-      else          $str = '';
-      ?>
-      Total playlist length<?php echo($str); ?>:
+    <?php
+    if ($has_ins) {
+      $class_str = ' after';
+      $desc_str = ' (after)';
+    }
+    else {
+      $class_str = '';
+      $desc_str = '';
+    }
+    ?>
+    <td class="index<?php echo($class_str); ?>"></td>
+    <td class="summary<?php echo($class_str); ?>">
+      Total playlist length<?php echo($desc_str); ?>:
     </td>
-    <td class="summary length">
+    <td class="summary length<?php echo($class_str); ?>">
       <?php echo(formatTrackLength($playlist_length)); ?>
     </td>
   </tr>
@@ -205,11 +212,11 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   if ($has_ins) {
     ?>
     <tr>
-      <td class="index"></td>
-      <td class="summary">
+      <td class="index after"></td>
+      <td class="summary after">
         Difference:
       </td>
-      <td class="summary length">
+      <td class="summary length after">
         +<?php echo(formatTrackLength($playlist_length - $playlist_length_wo_ins)); ?>
       </td>
     </tr>
@@ -221,8 +228,9 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
 <?php
 }
 catch (Exception $e) {
-  showError($e);
+  showError($e->getMessage());
 }
+endContent();
 endPage();
 updateTokens($session);
 ?>

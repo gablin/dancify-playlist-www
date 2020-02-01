@@ -59,7 +59,7 @@ try {
 }
 catch (Exception $e) {
   beginPage();
-  showError($e);
+  showError($e->getMessage());
   endPage();
 }
 updateTokens($session);

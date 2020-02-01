@@ -1,5 +1,6 @@
 <?php
-require '../../../autoload.php';
+require '../../../../autoload.php';
+require '../../functions.php';
 
 ensureSession();
 $session = getSession();
@@ -13,6 +14,8 @@ if (hasGET('commit') && hasGET('new_name')) {
 }
 
 beginPage();
+createMenu();
+beginContent();
 try {
 ?>
 
@@ -48,8 +51,9 @@ if (hasGET('commit') && !hasGET('new_name')) {
 <?php
 }
 catch (Exception $e) {
-  showError($e);
+  showError($e->getMessage());
 }
+endContent();
 endPage();
 updateTokens($session);
 ?>

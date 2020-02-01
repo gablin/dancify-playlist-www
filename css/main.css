@@ -14,6 +14,27 @@ body {
   font-size: 16px;
 }
 
+p {}
+
+a,
+a:link,
+a:visited {
+  color: #2D4739;
+  text-decoration: none;
+}
+a:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+.centered {
+  margin: auto;
+}
+
+div.content {
+  margin: 2em 4em;
+}
+
 div.logo {
   position: relative;
   height: 100px;
@@ -29,6 +50,7 @@ div.logo div.text {
   font-family: 'Lobster', cursive;
   font-size: 60px;
   text-shadow: 2px 2px 4px #000;
+  white-space: nowrap;
 }
 
 div.menu {
@@ -55,7 +77,6 @@ div.menu ul li a {
   display: block;
   color: #FFF;
   padding: 8px 16px 8px 16px;
-  text-decoration: none;
   transition: background-color .2s;
 }
 div.menu ul li a:hover {
@@ -86,22 +107,89 @@ div.menu ul li.logout a:before {
   border: 0;
 }
 
+div.login {
+  margin-top: 3em;
+  text-align: center;
+}
 
+a.button {
+  padding: 1em 3em;
+  background-color: #09814A;
+  color: #FFF;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-width: 0;
+  border-radius: 1.25em;
+  transition: background-color .2s;
+}
+a.button:hover {
+  background-color: #0CA761;
+}
 
 div.error {
+  margin: 1em 0;
+}
+div.error span.heading {
   font-weight: 700;
+  letter-spacing: 1px;
+  color: #E60000;
 }
 
-table.playlist {
+table {}
+table th {
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
 }
-table.playlist td.insert {
+
+table.tracks {
+  margin-top: 2em;
 }
-table.playlist td.index {
-  width: 1em;
+table.tracks td.insert,
+table.tracks td.after {
+  color: #09814A;
+}
+table.tracks td.index {
+  text-align: right;
+  width: 2em;
+  padding-right: 1em;
+}
+table.tracks td.length {
   text-align: right;
 }
-table.playlist td.length {
-  text-align: right;
+table.tracks td.summary {}
+table.tracks td.sep {
+  height: 1em;
 }
-table.playlist td.summary {
+
+form div.input {
+  margin: .1em 0;
+}
+input {
+  border: 1px solid #09814A;
+}
+input.number {
+  width: 1.5em;
+}
+input.centered {
+  text-align: center;
+}
+input.button {
+  margin: .5em 0;
+  font-size: 12px;
+  padding: .8em 1.2em;
+  background-color: #09814A;
+  color: #FFF;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-width: 0;
+  border-radius: .8em;
+  transition: background-color .2s;
+}
+input.button:hover {
+  background-color: #0CA761;
+  cursor: pointer;
 }

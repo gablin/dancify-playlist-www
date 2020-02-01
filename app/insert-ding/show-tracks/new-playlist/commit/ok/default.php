@@ -7,6 +7,8 @@ $api = createWebApi($session);
 ensureAuthorizedUser($api);
 
 beginPage();
+createMenu();
+beginContent();
 try {
   ensureGET('new_playlist_id');
   $new_playlist_id = $_GET['new_playlist_id'];
@@ -18,8 +20,9 @@ try {
 <?php
 }
 catch (Exception $e) {
-  showError($e);
+  showError($e->getMessage());
 }
+endContent();
 endPage();
 updateTokens($session);
 ?>
