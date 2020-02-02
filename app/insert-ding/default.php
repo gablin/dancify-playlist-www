@@ -17,10 +17,11 @@ try {
 $playlists = loadPlaylists($api);
 ?>
 
+<div class="instruction">
+Select playlist you want to Dingify:
+</div>
+
 <table>
-  <tr>
-    <th>Playlists</th>
-  </tr>
   <?php
   foreach ($playlists as $p) {
     $name = $p->name;

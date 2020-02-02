@@ -19,7 +19,7 @@ try {
   $new_playlist = $api->getPlaylist($new_playlist_id);
   ?>
   <div>
-  New playlist created: <a href="/app/insert-ding/show-tracks/?playlist_id=<?php echo($new_playlist_id); ?>"><?php echo($new_playlist->name); ?></a>
+  New playlist added to your Spotify: <a href="/app/insert-ding/show-tracks/?playlist_id=<?php echo($new_playlist_id); ?>"><?php echo($new_playlist->name); ?></a>
   </div>
 <?php
 }

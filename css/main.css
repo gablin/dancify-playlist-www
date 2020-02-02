@@ -197,3 +197,7 @@ input.button:hover {
   background-color: #0CA761;
   cursor: pointer;
 }
+
+div.instruction {
+  margin: 1em 0;
+}

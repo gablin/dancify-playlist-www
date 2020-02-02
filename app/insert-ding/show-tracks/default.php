@@ -86,10 +86,10 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   }
   ?>
   <div class="input">
-    Track link or URI: <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
+    Enter Song Link or Spotify URI: <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
   </div>
   <div class="input">
-    Insert this track every <input type="text" name="freq" value="<?php echo($_GET['freq']); ?>" class="number centered"></input> position
+    Insert above track after every <input type="text" name="freq" value="<?php echo($_GET['freq']); ?>" class="number centered"></input> track in playlist
   </div>
   <div>
     <input class="button" type="submit" name="preview" value="Preview result"></input>

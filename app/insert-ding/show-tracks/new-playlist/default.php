@@ -43,7 +43,7 @@ if (hasGET('commit') && !hasGET('new_name')) {
   ?>
   <input type="hidden" name="commit" value="true"></input>
   <div class="input">
-    Name of new playlist: 
+    Enter name of new playlist:
     <input type="text" name="new_name"></input>
   </div>
   <div>
