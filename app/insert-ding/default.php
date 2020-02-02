@@ -18,7 +18,7 @@ $playlists = loadPlaylists($api);
 ?>
 
 <div class="instruction">
-Select playlist you want to Dingify:
+  <?php echo(LNG_INSTR_SELECT_PLAYLIST); ?>:
 </div>
 
 <table>

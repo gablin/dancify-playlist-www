@@ -32,11 +32,11 @@ if (hasGET('track')) {
       $ins_track = $api->getTrack($track_id);
     }
     catch (Exception $e) {
-      $error = "failed to load track: {$e->getMessage()}";
+      $error = sprintf('%s: %s', LNG_ERR_FAILED_LOAD_TRACK, $e->getMessage());
     }
   }
   else {
-    $error = 'invalid track format';
+    $error = LNG_ERR_INVALID_TRACK_FORMAT;
   }
 
   if (strlen($error) > 0) {
@@ -58,11 +58,11 @@ if (hasGET('freq')) {
       $_GET['freq'] = $ins_freq;
     }
     else {
-      $error = 'frequency must be > 0';
+      $error = sprintf(LNG_ERR_FREQ_MUST_BE_GT, 0);
     }
   }
   else {
-    $error = 'frequency is not an integer';
+    $error = LNG_ERR_FREQ_NOT_INT;
   }
 
   if (strlen($error) > 0) {
@@ -86,17 +86,18 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   }
   ?>
   <div class="input">
-    Enter Song Link or Spotify URI: <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
+  <?php echo(sprintf(LNG_INSTR_ENTER_SONG, 'Song Link', 'Spotify URI')); ?>:
+    <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
   </div>
   <div class="input">
-    Insert above track after every <input type="text" name="freq" value="<?php echo($_GET['freq']); ?>" class="number centered"></input> track in playlist
+    <?php echo(sprintf(LNG_INSTR_ENTER_FREQ, "<input type=\"text\" name=\"freq\" value=\"{$_GET['freq']}\" class=\"number centered\"></input>")); ?>
   </div>
   <div>
-    <input class="button" type="submit" name="preview" value="Preview result"></input>
+    <input class="button" type="submit" name="preview" value="<?php echo(LNG_BTN_PREVIEW_RESULT); ?>"></input>
     <?php
     if ($has_ins) {
       ?>
-      <input class="button" style="margin-left: 1em;" type="submit" name="save" value="Save as new playlist"></input>
+      <input class="button" style="margin-left: 1em;" type="submit" name="save" value="<?php echo(LNG_BTN_SAVE_AS_NEW_PLAYLIST); ?>"></input>
       <?php
     }
     ?>
@@ -106,8 +107,8 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
 <table class="tracks">
   <tr>
     <th></th>
-    <th>Title</th>
-    <th>Length</th>
+    <th><?php echo(LNG_HEAD_TITLE); ?></th>
+    <th class="length"><?php echo(LNG_HEAD_LENGTH); ?></th>
   </tr>
   <?php
   $index = 1;
@@ -172,7 +173,10 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     <tr>
       <td class="index"></td>
       <td class="summary">
-        Total playlist length (before):
+        <?php echo(sprintf( '%s (%s):'
+                          , LNG_DESC_TOTAL_PLAYLIST_LENGTH
+                          , LNG_DESC_BEFORE)
+                          ); ?>
       </td>
       <td class="summary length">
         <?php echo(formatTrackLength($playlist_length_wo_ins)); ?>
@@ -185,7 +189,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     <?php
     if ($has_ins) {
       $class_str = ' after';
-      $desc_str = ' (after)';
+      $desc_str = sprintf(' (%s)', LNG_DESC_AFTER);
     }
     else {
       $class_str = '';
@@ -206,7 +210,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
     <tr>
       <td class="index after"></td>
       <td class="summary after">
-        Difference:
+        <?php echo(LNG_DESC_DIFFERENCE); ?>:
       </td>
       <td class="summary length after">
         +<?php echo(formatTrackLength($playlist_length - $playlist_length_wo_ins)); ?>

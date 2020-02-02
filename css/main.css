@@ -24,7 +24,7 @@ a:visited {
 }
 a:hover {
   color: #000;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .centered {
@@ -81,6 +81,7 @@ div.menu ul li a {
 }
 div.menu ul li a:hover {
   background-color: #2D4739;
+  text-decoration: none;
 }
 div.menu ul li.logout a {
   background-color: #2D4739;
@@ -127,13 +128,20 @@ a.button:hover {
   background-color: #0CA761;
 }
 
-div.error {
+div.error,
+div.success {
   margin: 1em 0;
 }
-div.error span.heading {
+div.error span.heading,
+div.success span.heading {
   font-weight: 700;
   letter-spacing: 1px;
+}
+div.error span.heading {
   color: #E60000;
+}
+div.success span.heading {
+  color: #00CC00;
 }
 
 table {}
@@ -147,20 +155,20 @@ table th {
 table.tracks {
   margin-top: 2em;
 }
-table.tracks td.insert,
-table.tracks td.after {
+table.tracks .insert,
+table.tracks .after {
   color: #09814A;
 }
-table.tracks td.index {
+table.tracks .index {
   text-align: right;
   width: 2em;
   padding-right: 1em;
 }
-table.tracks td.length {
+table.tracks .length {
   text-align: right;
 }
-table.tracks td.summary {}
-table.tracks td.sep {
+table.tracks .summary {}
+table.tracks .sep {
   height: 1em;
 }
 
@@ -196,6 +204,19 @@ input.button {
 input.button:hover {
   background-color: #0CA761;
   cursor: pointer;
+}
+
+div.logo div.lang {
+  position: absolute;
+  right: .5em;
+}
+div.logo div.lang a {
+  font-size: 12px;
+  color: #FFF;
+  margin-right: .1em;
+}
+div.logo div.lang a:hover {
+  text-decoration: underline;
 }
 
 div.instruction {

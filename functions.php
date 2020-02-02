@@ -9,14 +9,18 @@ function beginPage() {
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dingify Your Playlist!</title>
+    <title><?php echo(LNG_SLOGAN); ?>!</title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto|Roboto+Condensed:300&display=swap" rel="stylesheet"></link>
     <link rel="stylesheet" href="/css/main.css"></link>
   </head>
   <body>
     <div class="logo">
       <div class="text">
-        Dingify Your Playlist!
+        <?php echo(LNG_SLOGAN); ?>!
+      </div>
+      <div class="lang">
+        <a href="<?php echo(augmentThisLink(array('lang' => 'en'))); ?>">EN</a>
+        <a href="<?php echo(augmentThisLink(array('lang' => 'sv'))); ?>">SV</a>
       </div>
     </div>
 <?php
@@ -47,7 +51,7 @@ function createMenu(...$args) {
           <?php
         }
         ?>
-        <li class="logout"><a href="/app/logout">Logout</a></li>
+        <li class="logout"><a href="/app/logout"><?php echo(LNG_MENU_LOGOUT); ?></a></li>
       </ul>
       <?php
     }
@@ -193,7 +197,7 @@ function ensureAuthorizedUser($api) {
 function showError($msg) {
   ?>
   <div class="error">
-    <span class="heading">ERROR:</span> <?php echo($msg); ?>
+    <span class="heading"><?php echo(LNG_DESC_ERROR); ?>:</span> <?php echo($msg); ?>
   </div>
   <?php
 }
@@ -313,6 +317,23 @@ function buildLink($uri, $gets) {
 }
 
 /**
+ * Builds a new link based on the current URI and GET query.
+ *
+ * @param array $gets Array with GET values to change. The field names are the
+ *                    keys.
+ * @returns string Corresponding link.
+ */
+function augmentThisLink($gets) {
+  $uri = strtok($_SERVER['REQUEST_URI'], '?');
+  foreach ($_GET as $k => $v) {
+    if (!array_key_exists($k, $gets)) {
+      $gets[$k] = $v;
+    }
+  }
+  return buildLink($uri, $gets);
+}
+
+/**
  * Loads information for a given playlist.
  *
  * @param SpotifyWebAPI\SpotifyWebAPI api API object.
@@ -374,5 +395,71 @@ function loadPlaylistTracks($api, $id) {
     if (count($ts->items) < $limit) break;
   }
   return $tracks;
+}
+
+/**
+ * Checks if $_COOKIE has a given key, and that the value given is a non-empty,
+ * non-whitespace value (this check can be turned off).
+ *
+ * @param string k Key to check.
+ * @param bool allow_empty Allow existing but empty or whitespace-only value.
+ * @returns bool true if valid value is present.
+ */
+function hasCOOKIE($k, $allow_empty = false) {
+  return isset($_COOKIE[$k]) &&
+         ($allow_empty || strlen(trim($_COOKIE[$k])) > 0);
+}
+
+/**
+ * Gets a given key from $_COOKIE. If the key does not exist, or if exists but
+ * with a empty or whitespace-only value, an Exception is thrown.
+ *
+ * @param string k Key to use.
+ * @param bool allow_empty Allow existing but empty or whitespace-only value.
+ * @throws Exception If check fails.
+ */
+function fromCOOKIE($k, $allow_empty = false) {
+  if (!hasCOOKIE($k, $allow_empty)) {
+    throw new Exception("not in COOKIE query: {$k}");
+  }
+  return $_COOKIE[$k];
+}
+
+/**
+ * Checks if user has set a language.
+ *
+ * @returns string Language setting.
+ */
+function isLangSet() {
+  $k = 'lang';
+  return hasCOOKIE($k) || hasGET($k);
+}
+
+/**
+ * Gets language setting.
+ *
+ * @returns string Language setting.
+ * @throws Exception If language is not set.
+ */
+function getLang() {
+  $k = 'lang';
+  if (hasGET($k)) {
+    return fromGET($k);
+  }
+  else if (hasCOOKIE($k)) {
+    return fromCOOKIE($k);
+  }
+  else {
+    throw new Exception('no language set');
+  }
+}
+
+/**
+ * Saves current language setting.
+ */
+function saveLang() {
+  if (isLangSet()) {
+    setcookie('lang', getLang());
+  }
 }
 ?>

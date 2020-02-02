@@ -15,16 +15,16 @@ try {
   $new_name = fromGET('new_name');
 
   if (!is_numeric($freq)) {
-    throw new Exception("freq is not a number: {$freq}");
+    throw new Exception(sprintf('%s: %s', LNG_ERR_FREQ_NOT_INT, $freq));
   }
   $freq = intval($freq);
-  
+
   // Load necessary data
   $old_playlist = loadPlaylistInfo($api, $playlist_id);
   $old_track_list = loadPlaylistTracks($api, $playlist_id);
 
   $ins_track = $api->getTrack($track_id);
-  
+
   // Build new list of tracks
   $new_track_list = array();
   $ins_i = 0;
@@ -54,10 +54,10 @@ try {
     $slice = array_slice($new_track_list, $i, $slice_size);
     $res = $api->addPlaylistTracks($new_playlist->id, $slice);
     if (!$res) {
-      throw new Exception('failed to add tracks to new playlist');
+      throw new Exception(LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST);
     }
   }
-  
+
   // Forward to next page
   $gets = array();
   $gets['new_playlist_id'] = $new_playlist->id;

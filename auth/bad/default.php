@@ -2,12 +2,14 @@
 require '../../autoload.php';
 
 beginPage();
+beginContent();
 ?>
 
 <div class="error">
-  You are not authorized to use this application!
+  <?php echo(sprintf(LNG_ERR_UNAUTHORIZED_USER, 'gabriel [at] hjort.dev')); ?>
 </div>
 
 <?php
+endContent();
 endPage();
 ?>

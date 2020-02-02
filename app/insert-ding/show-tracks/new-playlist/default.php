@@ -26,7 +26,7 @@ try {
 if (hasGET('commit') && !hasGET('new_name')) {
   ?>
   <div>
-  Please enter a name.
+    <?php echo(LNG_INSTR_PLEASE_ENTER_NAME); ?>.
   </div>
   <?php
 }
@@ -43,11 +43,11 @@ if (hasGET('commit') && !hasGET('new_name')) {
   ?>
   <input type="hidden" name="commit" value="true"></input>
   <div class="input">
-    Enter name of new playlist:
+    <?php echo(LNG_INSTR_ENTER_NAME_OF_NEW_PLAYLIST); ?>:
     <input type="text" name="new_name"></input>
   </div>
   <div>
-    <input class="button" type="submit" value="Save"></input>
+    <input class="button" type="submit" value="<?php echo(LNG_BTN_SAVE); ?>"></input>
   </div>
 </form>
 

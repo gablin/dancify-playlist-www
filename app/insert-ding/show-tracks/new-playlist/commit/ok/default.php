@@ -18,8 +18,11 @@ try {
   $new_playlist_id = fromGET('new_playlist_id');
   $new_playlist = $api->getPlaylist($new_playlist_id);
   ?>
+  <div class="success">
+    <span class="heading"><?php echo(LNG_DESC_SAVED); ?></span>
+  </div>
   <div>
-  New playlist added to your Spotify: <a href="/app/insert-ding/show-tracks/?playlist_id=<?php echo($new_playlist_id); ?>"><?php echo($new_playlist->name); ?></a>
+    <?php echo(LNG_DESC_NEW_PLAYLIST_ADDED); ?>: <a href="/app/insert-ding/show-tracks/?playlist_id=<?php echo($new_playlist_id); ?>"><?php echo($new_playlist->name); ?></a>
   </div>
 <?php
 }

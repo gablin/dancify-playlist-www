@@ -15,4 +15,15 @@ foreach ($files as $f) {
 
 // Load functions
 require (dirname(__FILE__) . '/functions.php');
+
+// Load languages
+$lang = 'en';
+if (isLangSet()) {
+  $lang_usr = getLang();
+  if (in_array($lang_usr, ['en', 'sv'])) {
+    $lang = $lang_usr;
+  }
+  saveLang($lang);
+}
+require (dirname(__FILE__) . "/lang_{$lang}.php");
 ?>

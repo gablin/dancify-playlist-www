@@ -6,7 +6,7 @@
  * @returns array|null Menu item.
  */
 function mkMenuItemShowPlaylists($api) {
-  return array('str' => 'Select playlist', 'lnk' => '/app/insert-ding/');
+  return array('str' => LNG_MENU_SELECT_PLAYLIST, 'lnk' => '/app/insert-ding/');
 }
 
 /**
@@ -50,7 +50,7 @@ function mkMenuItemShowPlaylistTracks($api) {
  * @returns array|null Menu item.
  */
 function mkMenuItemNewPlaylist($api) {
-  $name = 'Save as new playlist';
+  $name = LNG_MENU_SAVE_AS_NEW_PLAYLIST;
   $uri = '/app/insert-ding/show-tracks/new-playlist/';
   $gets = array();
   foreach (['playlist_id', 'track', 'track_id', 'freq'] as $k) {
@@ -68,7 +68,7 @@ function mkMenuItemNewPlaylist($api) {
  * @returns array|null Menu item.
  */
 function mkMenuItemNewPlaylistCreated($api) {
-  $name = 'Success';
+  $name = LNG_MENU_SAVED;
   $uri = '/app/insert-ding/show-tracks/new-playlist/commit/ok';
   $gets = array();
   foreach ( ['playlist_id', 'track', 'track_id', 'freq', 'new_playlist_id']
