@@ -1,5 +1,6 @@
 <?php
-require '../../../../../autoload.php';
+require '../../../../../../autoload.php';
+require '../../../../functions.php';
 
 ensureSession();
 $session = getSession();
@@ -7,15 +8,18 @@ $api = createWebApi($session);
 ensureAuthorizedUser($api);
 
 beginPage();
-createMenu();
+createMenu( mkMenuItemShowPlaylists($api)
+          , mkMenuItemShowPlaylistTracks($api)
+          , mkMenuItemNewPlaylist($api)
+          , mkMenuItemNewPlaylistCreated($api)
+          );
 beginContent();
 try {
-  ensureGET('new_playlist_id');
-  $new_playlist_id = $_GET['new_playlist_id'];
+  $new_playlist_id = fromGET('new_playlist_id');
   $new_playlist = $api->getPlaylist($new_playlist_id);
   ?>
   <div>
-  New playlist created: <a href="/app/insert-ding/?playlist_id=<?php echo($new_playlist_id); ?>"><?php echo($new_playlist->name); ?></a>
+  New playlist created: <a href="/app/insert-ding/show-tracks/?playlist_id=<?php echo($new_playlist_id); ?>"><?php echo($new_playlist->name); ?></a>
   </div>
 <?php
 }

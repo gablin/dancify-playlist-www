@@ -13,21 +13,13 @@ if (hasGET('save')) {
   die();
 }
 
-$playlist_id = '';
-if (hasGET('playlist_id')) {
-  $playlist_id = $_GET['playlist_id'];
-}
-
 beginPage();
 createMenu( mkMenuItemShowPlaylists($api)
-          , mkMenuItemShowPlaylistTracks($api, $playlist_id)
+          , mkMenuItemShowPlaylistTracks($api)
           );
 beginContent();
 try {
-?>
-
-<?php
-ensureGET('playlist_id');
+$playlist_id = fromGET('playlist_id');
 $tracks = loadPlaylistTracks($api, $playlist_id);
 
 // Get track to insert (if specified)
@@ -94,7 +86,7 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   }
   ?>
   <div class="input">
-    Enter track link or URI: <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
+    Track link or URI: <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
   </div>
   <div class="input">
     Insert this track every <input type="text" name="freq" value="<?php echo($_GET['freq']); ?>" class="number centered"></input> position

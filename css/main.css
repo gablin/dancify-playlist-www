@@ -169,9 +169,13 @@ form div.input {
 }
 input {
   border: 1px solid #09814A;
+  padding: .2em .4em;
+  font-family: 'Roboto', sans-serif;
 }
 input.number {
   width: 1.5em;
+  padding-left: 0;
+  padding-right: 0;
 }
 input.centered {
   text-align: center;

@@ -262,26 +262,54 @@ function getTrackId($s) {
 
 /**
  * Checks if $_GET has a given key, and that the value given is a non-empty,
- * non-whitespace value.
+ * non-whitespace value (this check can be turned off).
  *
  * @param string k Key to check.
+ * @param bool allow_empty Allow existing but empty or whitespace-only value.
  * @returns bool true if valid value is present.
  */
-function hasGET($k) {
-  return isset($_GET[$k]) && strlen(trim($_GET[$k])) > 0;
+function hasGET($k, $allow_empty = false) {
+  return isset($_GET[$k]) && ($allow_empty || strlen(trim($_GET[$k])) > 0);
 }
 
 /**
- * Checks if $_GET has a given key with a non-empty, non-whitespace value. If
- * not, an Exception is thrown.
+ * Gets a given key from $_GET. If the key does not exist, or if exists but with
+ * a empty or whitespace-only value, an Exception is thrown.
  *
- * @param string k Key to check.
+ * @param string k Key to use.
+ * @param bool allow_empty Allow existing but empty or whitespace-only value.
  * @throws Exception If check fails.
  */
-function ensureGET($k) {
-  if (!hasGET($k)) {
-    throw new Exception(sprintf('\'%s\' not in GET query', $k));
+function fromGET($k, $allow_empty = false) {
+  if (!hasGET($k, $allow_empty)) {
+    throw new Exception("not in GET query: {$k}");
   }
+  return $_GET[$k];
+}
+
+/**
+ * Builds a link from a given URI and an array of GET fields.
+ *
+ * @param string $uri URI string.
+ * @param array $gets Array where field names are the keys.
+ * @returns string Corresponding link.
+ */
+function buildLink($uri, $gets) {
+  // Add trailing '/' if necessary
+  if (substr($uri, -1) !== '/' && count($gets) > 0) {
+    $uri .= '/';
+  }
+  
+  // Build GET query
+  $get_query = '';
+  if (count($gets) > 0) {
+    $fields = array();
+    foreach ($gets as $k => $v) {
+      array_push($fields, "{$k}={$v}");
+    }
+    $get_query = '?' . join('&', $fields);
+  }
+  return $uri . $get_query;
 }
 
 /**

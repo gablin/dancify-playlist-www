@@ -14,7 +14,10 @@ if (hasGET('commit') && hasGET('new_name')) {
 }
 
 beginPage();
-createMenu();
+createMenu( mkMenuItemShowPlaylists($api)
+          , mkMenuItemShowPlaylistTracks($api)
+          , mkMenuItemNewPlaylist($api)
+          );
 beginContent();
 try {
 ?>
@@ -32,19 +35,19 @@ if (hasGET('commit') && !hasGET('new_name')) {
 <form action="." method="GET">
   <?php
   foreach ($_GET as $k => $v) {
-    if (!in_array($k, ['playlist_id', 'track_id', 'freq'])) continue;
+    if (!in_array($k, ['playlist_id', 'track', 'track_id', 'freq'])) continue;
     ?>
     <input type="hidden" name="<?php echo($k); ?>" value="<?php echo($v); ?>"></input>
     <?php
   }
   ?>
   <input type="hidden" name="commit" value="true"></input>
-  <div>
+  <div class="input">
     Name of new playlist: 
     <input type="text" name="new_name"></input>
   </div>
   <div>
-    <input type="submit" value="Save"></input>
+    <input class="button" type="submit" value="Save"></input>
   </div>
 </form>
 

@@ -1,5 +1,6 @@
 <?php
-require '../../../../autoload.php';
+require '../../../../../autoload.php';
+require '../../../functions.php';
 
 ensureSession();
 $session = getSession();
@@ -8,18 +9,21 @@ ensureAuthorizedUser($api);
 
 try {
   // Check and sanitize input
-  foreach (['playlist_id', 'track_id', 'freq', 'new_name'] as $k) {
-    ensureGET($k);
-  }
-  $freq = $_GET['freq'];
+  $playlist_id = fromGET('playlist_id');
+  $track_id = fromGET('track_id');
+  $freq = fromGET('freq');
+  $new_name = fromGET('new_name');
+
   if (!is_numeric($freq)) {
-    throw new Exception(sprintf('freq is not a number: %d', $freq));
+    throw new Exception("freq is not a number: {$freq}");
   }
   $freq = intval($freq);
   
   // Load necessary data
-  $old_track_list = loadPlaylistTracks($api, $_GET['playlist_id']);
-  $ins_track = $api->getTrack($_GET['track_id']);
+  $old_playlist = loadPlaylistInfo($api, $playlist_id);
+  $old_track_list = loadPlaylistTracks($api, $playlist_id);
+
+  $ins_track = $api->getTrack($track_id);
   
   // Build new list of tracks
   $new_track_list = array();
@@ -37,7 +41,7 @@ try {
   }
 
   // Create new playlist
-  $new_playlist = $api->createPlaylist([ 'name' => $_GET['new_name']
+  $new_playlist = $api->createPlaylist([ 'name' => $new_name
                                        , 'public' => $old_playlist->public
                                        ]);
 
@@ -55,11 +59,25 @@ try {
   }
   
   // Forward to next page
-  header('Location: ./ok/?new_playlist_id=' . $new_playlist->id);
+  $gets = array();
+  $gets['new_playlist_id'] = $new_playlist->id;
+  foreach (['playlist_id', 'track', 'track_id', 'freq'] as $k) {
+    if (hasGET($k)) {
+      $gets[$k] = fromGET($k);
+    }
+  }
+  $lnk = buildLink('./ok/', $gets);
+  header('Location: ' . $lnk);
 }
 catch (Exception $e) {
   beginPage();
+  createMenu( mkMenuItemShowPlaylists($api)
+            , mkMenuItemShowPlaylistTracks($api)
+            , mkMenuItemNewPlaylist($api)
+            );
+  beginContent();
   showError($e->getMessage());
+  endContent();
   endPage();
 }
 updateTokens($session);
