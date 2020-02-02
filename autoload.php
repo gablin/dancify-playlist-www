@@ -10,7 +10,7 @@ $files = array( 'SpotifyWebAPIException.php'
               , 'SpotifyWebAPI.php'
               );
 foreach ($files as $f) {
-  require (dirname(__FILE__) . '/spotify-web-api-php/src/' . $f);
+  require (dirname(__FILE__) . "/spotify-web-api-php/src/{$f}");
 }
 
 // Load functions

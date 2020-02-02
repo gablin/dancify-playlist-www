@@ -9,7 +9,7 @@ ensureAuthorizedUser($api);
 
 // Check if 'save' button was pushed. If so, forward GET to next page
 if (hasGET('commit') && hasGET('new_name')) {
-  header('Location: ./commit/?' . $_SERVER['QUERY_STRING']);
+  header("Location: ./commit/?{$_SERVER['QUERY_STRING']}");
   die();
 }
 

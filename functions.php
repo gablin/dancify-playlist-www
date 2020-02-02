@@ -93,7 +93,7 @@ function endContent() {
 function createApiSession() {
   global $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET;
 
-  $callback = 'http://' . $_SERVER['SERVER_NAME'] . '/auth/callback/';
+  $callback = "http://{$_SERVER['SERVER_NAME']}/auth/callback/";
   $session = new SpotifyWebAPI\Session( $SPOTIFY_CLIENT_ID
                                       , $SPOTIFY_CLIENT_SECRET
                                       , $callback
@@ -217,7 +217,7 @@ function formatTrackLength($ms) {
   $is = array_keys($t);
   for ($j = 1; $j < count($is); $j++) {
     $i = $is[$j];
-    if ($t[$i] < 10) $t[$i] = '0' . $t[$i];
+    if ($t[$i] < 10) $t[$i] === '0' . $t[$i];
   }
   
   return join(":", $t);

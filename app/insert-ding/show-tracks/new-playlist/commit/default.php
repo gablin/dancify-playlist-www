@@ -67,7 +67,7 @@ try {
     }
   }
   $lnk = buildLink('./ok/', $gets);
-  header('Location: ' . $lnk);
+  header("Location: {$lnk}");
 }
 catch (Exception $e) {
   beginPage();

@@ -10,6 +10,6 @@ $options = [ 'scope' =>
              ]
            ];
 
-header('Location: ' . $session->getAuthorizeUrl($options));
+header("Location: {$session->getAuthorizeUrl($options)}");
 die();
 ?>

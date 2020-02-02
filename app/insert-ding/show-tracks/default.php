@@ -9,7 +9,7 @@ ensureAuthorizedUser($api);
 
 // Check if 'save' button was pushed. If so, forward GET to next page
 if (hasGET('save')) {
-  header('Location: ./new-playlist/?' . $_SERVER['QUERY_STRING']);
+  header("Location: ./new-playlist/?{$_SERVER['QUERY_STRING']}");
   die();
 }
 
@@ -32,7 +32,7 @@ if (hasGET('track')) {
       $ins_track = $api->getTrack($track_id);
     }
     catch (Exception $e) {
-      $error = 'failed to load track: ' . $e->getMessage();
+      $error = "failed to load track: {$e->getMessage()}";
     }
   }
   else {
