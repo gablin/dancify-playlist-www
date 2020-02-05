@@ -74,6 +74,7 @@ function endPage() {
  * Outputs beginning of every content.
  */
 function beginContent() {
+  showCookieInfo();
 ?>
 <div class="content">
 <?php
@@ -86,6 +87,29 @@ function endContent() {
 ?>
 </div>
 <?php
+}
+
+/**
+ * Output info that this website uses cookies, along with an 'I agree' button.
+ * If user has already pressed the button, nothing is output.
+ */
+function showCookieInfo() {
+  if (hasGET('accept_cookies')) {
+    setcookie('accept_cookies', true);
+  }
+  else if (!hasCOOKIE('accept_cookies')) {
+    ?>
+    <div class="cookies">
+      <h1><?php echo(LNG_DESC_USES_COOKIES); ?></h1>
+      <table>
+        <tr>
+          <td><?php echo(LNG_TXT_COOKIES); ?></td>
+          <td><a href="<?php echo(augmentThisLink(array('accept_cookies' => 'true'))); ?>" class="button"><?php echo(LNG_BTN_I_AGREE); ?></a></td>
+        </tr>
+      </table>
+    </div>
+    <?php
+  }
 }
 
 /**

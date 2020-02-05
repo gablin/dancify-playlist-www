@@ -13,6 +13,13 @@ denna webbsida kan göra det åt dig! Logga bara in, välj vilken lista du vill
 spellista. Klart!
 EOT
       );
+define( 'LNG_TXT_COOKIES'
+      , <<<EOT
+Kakor behövs för att möjliggöra login och spara användarinställningar. De
+används inte till något annat. Genom att använda denna tjänst godkänner du
+att webbsidan använder kakor.
+EOT
+      );
 define( 'LNG_BTN_LOGIN'
       , 'Logga in med Spotify'
       );
@@ -24,6 +31,9 @@ define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
       );
 define( 'LNG_BTN_SAVE'
       , 'Spara'
+      );
+define( 'LNG_BTN_I_AGREE'
+      , 'Jag godkänner'
       );
 define( 'LNG_MENU_LOGOUT'
       , 'Logga ut'
@@ -42,6 +52,9 @@ define( 'LNG_HEAD_TITLE'
       );
 define( 'LNG_HEAD_LENGTH'
       , 'Längd'
+      );
+define( 'LNG_DESC_USES_COOKIES'
+      , 'Denna webbsida använder kakor (cookies)'
       );
 define( 'LNG_DESC_TOTAL_PLAYLIST_LENGTH'
       , 'Total längd på spellista'

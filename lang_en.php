@@ -13,6 +13,13 @@ playlist you want to <em>dingify</em>, enter sound-effect track and frequency,
 and then save as new playlist. Done!
 EOT
       );
+define( 'LNG_TXT_COOKIES'
+      , <<<EOT
+Cookies are required to enable login and storing user settings. They are not
+used for anything else. By using this service, you are accepting that this
+website makes use of cookies.
+EOT
+      );
 define( 'LNG_BTN_LOGIN'
       , 'Login with Spotify'
       );
@@ -24,6 +31,9 @@ define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
       );
 define( 'LNG_BTN_SAVE'
       , 'Save'
+      );
+define( 'LNG_BTN_I_AGREE'
+      , 'I agree'
       );
 define( 'LNG_MENU_LOGOUT'
       , 'Logout'
@@ -42,6 +52,9 @@ define( 'LNG_HEAD_TITLE'
       );
 define( 'LNG_HEAD_LENGTH'
       , 'Length'
+      );
+define( 'LNG_DESC_USES_COOKIES'
+      , 'This website uses cookies'
       );
 define( 'LNG_DESC_TOTAL_PLAYLIST_LENGTH'
       , 'Total playlist length'

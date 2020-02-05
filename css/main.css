@@ -124,6 +124,7 @@ a.button {
   border-width: 0;
   border-radius: 1.25em;
   transition: background-color .2s;
+  white-space: nowrap;
 }
 a.button:hover {
   background-color: #0CA761;
@@ -223,4 +224,39 @@ div.logo div.lang a:hover {
 
 div.instruction {
   margin: 1em 0;
+}
+
+div.cookies {
+  position: fixed;
+  z-index: 1;
+  bottom: 0;
+  border-top: 1px solid #000;
+  background-color: #09814A;
+  color: #FFF;
+  padding: 0 10%;
+}
+div.cookies h1 {
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+div.cookies table {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 1em;
+}
+div.cookies table td {
+  margin: 0;
+  padding: 0;
+}
+div.cookies a.button {
+  float: right;
+  margin-left: 1em;
+  font-size: 14px;
+  color: #09814A;
+  background-color: #FFF;
+}
+div.cookies a.button:hover {
+  background-color: #A0F8D0;
 }
