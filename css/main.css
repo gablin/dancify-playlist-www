@@ -88,6 +88,7 @@ div.menu ul li.logout a {
 }
 div.menu ul li.logout a:hover {
   background-color: #09814A;
+  text-decoration: none;
 }
 div.menu ul li a:before {
   position: absolute;
@@ -126,6 +127,7 @@ a.button {
 }
 a.button:hover {
   background-color: #0CA761;
+  text-decoration: none;
 }
 
 div.error,
