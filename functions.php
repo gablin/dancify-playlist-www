@@ -246,7 +246,7 @@ function formatTrackLength($ms) {
   $is = array_keys($t);
   for ($j = 1; $j < count($is); $j++) {
     $i = $is[$j];
-    if ($t[$i] < 10) $t[$i] === '0' . $t[$i];
+    if ($t[$i] < 10) $t[$i] = '0' . $t[$i];
   }
   
   return join(":", $t);
