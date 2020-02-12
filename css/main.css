@@ -40,6 +40,7 @@ div.logo {
   height: 100px;
   background-color: #09814A;
   color: #FFF;
+  border-bottom: 1px solid #000;
 }
 div.logo div.text {
   position: absolute;
@@ -54,9 +55,7 @@ div.logo div.text {
 }
 
 div.menu {
-  border-style: solid;
-  border-width: 1px 0;
-  border-color: #121619;
+  border-bottom: 1px solid #121619;
   font-family: 'Roboto Condensed', sans-serif;
 }
 div.menu ul {
@@ -230,7 +229,7 @@ div.cookies {
   position: fixed;
   z-index: 1;
   bottom: 0;
-  border-top: 1px solid #000;
+  border-top: 1px solid #121619;
   background-color: #09814A;
   color: #FFF;
   padding: 0 10%;
