@@ -88,6 +88,15 @@ $has_ins = !(is_null($ins_track) || is_null($ins_freq));
   <div class="input">
   <?php echo(sprintf(LNG_INSTR_ENTER_SONG, 'Song Link', 'Spotify URI')); ?>:
     <input type="text" name="track" value="<?php echo($_GET['track']); ?>"></input>
+    <a class="small_button" href="#" onclick="$('div.song_link_help').show();">?</a>
+  </div>
+  <div class="song_link_help" onclick="$(this).hide();">
+    <div class="background"></div>
+    <div class="info">
+      <h1><?php echo(LNG_DESC_INSTRUCTIONS); ?></h1>
+      <p><?php echo(LNG_TXT_SONG_LINK_HELP); ?></p>
+      <img src="/images/song-link.png"></img>
+    </div>
   </div>
   <div class="input">
     <?php echo(sprintf(LNG_INSTR_ENTER_FREQ, "<input type=\"text\" name=\"freq\" value=\"{$_GET['freq']}\" class=\"number centered\"></input>")); ?>

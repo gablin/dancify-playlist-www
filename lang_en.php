@@ -20,6 +20,14 @@ used for anything else. By using this service, you are accepting that this
 website makes use of cookies.
 EOT
       );
+define( 'LNG_TXT_SONG_LINK_HELP'
+      , <<<EOT
+To get Song Link or Spotify URI, open Spotify and find the song you want to
+insert. If you are using a computer, right-click on the song, go to "Share", and
+press "Copy Song Link". If you are using a mobile phone, press the dots to the
+right of the song, go to "Share", and press "Copy Song Link".
+EOT
+      );
 define( 'LNG_BTN_LOGIN'
       , 'Login with Spotify'
       );
@@ -76,6 +84,9 @@ define( 'LNG_DESC_SAVED'
       );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'New playlist added to your Spotify'
+      );
+define( 'LNG_DESC_INSTRUCTIONS'
+      , 'Instructions'
       );
 define( 'LNG_ERR_UNAUTHORIZED_USER'
       , <<<EOT

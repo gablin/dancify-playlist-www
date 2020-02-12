@@ -20,6 +20,14 @@ används inte till något annat. Genom att använda denna tjänst godkänner du
 att webbsidan använder kakor.
 EOT
       );
+define( 'LNG_TXT_SONG_LINK_HELP'
+      , <<<EOT
+För att få tag i "Song Link" eller "Spotify URI", öppna Spotify och hitta låten
+du vill lägga in. Om du använder en dator, högerklicka på låten, gå till
+"Share", och sen tryck på "Copy Song Link". Om du använder en mobil, tryck på
+prickarna till höger om låten, gå till "Share", sen tryck på "Copy Song Link".
+EOT
+      );
 define( 'LNG_BTN_LOGIN'
       , 'Logga in med Spotify'
       );
@@ -76,6 +84,9 @@ define( 'LNG_DESC_SAVED'
       );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'Ny spellista har lagts till i din Spotify'
+      );
+define( 'LNG_DESC_INSTRUCTIONS'
+      , 'Instruktioner'
       );
 define( 'LNG_ERR_UNAUTHORIZED_USER'
       , <<<EOT
