@@ -12,6 +12,7 @@ function beginPage() {
     <title><?php echo(LNG_SLOGAN); ?>!</title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto|Roboto+Condensed:300&display=swap" rel="stylesheet"></link>
     <link rel="stylesheet" href="/css/main.css"></link>
+    <script src="/js/jquery-3.4.1.min.js"></script>
   </head>
   <body>
     <div class="logo">
