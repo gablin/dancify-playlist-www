@@ -5,7 +5,6 @@ require '../../../functions.php';
 ensureSession();
 $session = getSession();
 $api = createWebApi($session);
-ensureAuthorizedUser($api);
 
 try {
   // Check and sanitize input

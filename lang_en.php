@@ -88,13 +88,6 @@ define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
 define( 'LNG_DESC_INSTRUCTIONS'
       , 'Instructions'
       );
-define( 'LNG_ERR_UNAUTHORIZED_USER'
-      , <<<EOT
-You are not authorized to use this application!
-<br />
-To request access, send a mail to %s
-EOT
-      );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'failed to load track'
       );

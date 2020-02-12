@@ -88,13 +88,6 @@ define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
 define( 'LNG_DESC_INSTRUCTIONS'
       , 'Instruktioner'
       );
-define( 'LNG_ERR_UNAUTHORIZED_USER'
-      , <<<EOT
-Du har inte behörighet att använda denna applikation!
-<br />
-För att be om access, skicka ett mejl till %s
-EOT
-      );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'misslyckades att ladda låt'
       );
