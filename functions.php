@@ -97,7 +97,7 @@ function endContent() {
 function showCookieInfo() {
   if (hasGET('accept_cookies')) {
     $one_year = time() + 60*60*24*365;
-    setcookie('accept_cookies', true, $one_year);
+    setcookie('accept_cookies', true, $one_year, '/');
   }
   else if (!hasCOOKIE('accept_cookies')) {
     ?>
@@ -471,7 +471,7 @@ function getLang() {
 function saveLang() {
   if (isLangSet()) {
     $one_year = time() + 60*60*24*365;
-    setcookie('lang', getLang(), $one_year);
+    setcookie('lang', getLang(), $one_year, '/');
   }
 }
 ?>
