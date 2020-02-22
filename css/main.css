@@ -6,12 +6,23 @@
    #E5C687
  */
 
+html,
 body {
+  height: 100%;
   margin: 0;
+  padding: 0;
+}
+
+body {
   background-color: #FFF;
   color: #000;
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
+}
+
+#wrapper {
+  min-height: 100%;
+  position: relative;
 }
 
 p {}
@@ -39,7 +50,24 @@ a:hover {
 }
 
 div.content {
-  margin: 2em 4em;
+  position: relative;
+  margin: 2em 4em 0 4em;
+  padding-bottom: 60px;
+}
+
+div.footer {
+  position: absolute;
+  bottom: 0;
+  height: 32px;
+  width: 100%;
+}
+div.footer p {
+  margin: 0;
+  font-size: 9px;
+  color: #2D4739;
+  line-height: 14px;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 div.logo {

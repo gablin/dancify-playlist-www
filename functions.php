@@ -15,15 +15,16 @@ function beginPage() {
     <script src="/js/jquery-3.4.1.min.js"></script>
   </head>
   <body>
-    <div class="logo">
-      <div class="text">
-        <?php echo(LNG_SLOGAN); ?>!
+    <div id="wrapper">
+      <div class="logo">
+        <div class="text">
+          <?php echo(LNG_SLOGAN); ?>!
+        </div>
+        <div class="lang">
+          <a href="<?php echo(augmentThisLink(array('lang' => 'en'))); ?>">EN</a>
+          <a href="<?php echo(augmentThisLink(array('lang' => 'sv'))); ?>">SV</a>
+        </div>
       </div>
-      <div class="lang">
-        <a href="<?php echo(augmentThisLink(array('lang' => 'en'))); ?>">EN</a>
-        <a href="<?php echo(augmentThisLink(array('lang' => 'sv'))); ?>">SV</a>
-      </div>
-    </div>
 <?php
 }
 
@@ -66,6 +67,21 @@ function createMenu(...$args) {
  */
 function endPage() {
 ?>
+      <div class="footer">
+        <p>
+          <?php
+          $y_start = 2020;
+          $y_now = date("Y");
+          if ($y_now > $y_start) $year_str = "$y_start &ndash; $y_now";
+          else                   $year_str = "$y_start";
+          ?>
+          <?php echo(LNG_DESC_COPYRIGHT); ?> &copy; <?php echo($year_str); ?>
+          Gabriel Hjort Blindell
+          <br />
+          <?php echo(sprintf(LNG_DESC_GIVE_FEEDBACK, 'info [at] dingify.dancito.nu')); ?>
+        </p>
+      </div>
+    </div>
   </body>
 </html>
 <?php

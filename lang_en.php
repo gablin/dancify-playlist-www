@@ -61,6 +61,12 @@ define( 'LNG_HEAD_TITLE'
 define( 'LNG_HEAD_LENGTH'
       , 'Length'
       );
+define( 'LNG_DESC_COPYRIGHT'
+      , 'Copyright'
+      );
+define( 'LNG_DESC_GIVE_FEEDBACK'
+      , 'To give feedback, send an email to %s'
+      );
 define( 'LNG_DESC_USES_COOKIES'
       , 'This website uses cookies'
       );

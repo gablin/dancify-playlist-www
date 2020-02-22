@@ -61,6 +61,12 @@ define( 'LNG_HEAD_TITLE'
 define( 'LNG_HEAD_LENGTH'
       , 'Längd'
       );
+define( 'LNG_DESC_COPYRIGHT'
+      , 'Copyright'
+      );
+define( 'LNG_DESC_GIVE_FEEDBACK'
+      , 'För att ge feedback, skicka ett mejl till %s'
+      );
 define( 'LNG_DESC_USES_COOKIES'
       , 'Denna webbsida använder kakor (cookies)'
       );
