@@ -76,9 +76,9 @@ function endPage() {
           else                   $year_str = "$y_start";
           ?>
           <?php echo(LNG_DESC_COPYRIGHT); ?> &copy; <?php echo($year_str); ?>
-          Gabriel Hjort Blindell
+          Gabriel Hjort Åkerlund
           <br />
-          <?php echo(sprintf(LNG_DESC_GIVE_FEEDBACK, 'info [at] dingify.dancito.nu')); ?>
+          <?php echo(sprintf(LNG_DESC_GIVE_FEEDBACK, 'gabriel [at] hjort.dev')); ?>
         </p>
       </div>
     </div>
