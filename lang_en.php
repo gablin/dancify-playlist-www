@@ -40,8 +40,14 @@ define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
 define( 'LNG_BTN_SAVE'
       , 'Save'
       );
+define( 'LNG_BTN_RANDOMIZE'
+      , 'Randomize'
+      );
 define( 'LNG_BTN_I_AGREE'
       , 'I agree'
+      );
+define( 'LNG_MENU_HOME'
+      , 'Home'
       );
 define( 'LNG_MENU_LOGOUT'
       , 'Logout'
@@ -60,6 +66,9 @@ define( 'LNG_HEAD_TITLE'
       );
 define( 'LNG_HEAD_LENGTH'
       , 'Length'
+      );
+define( 'LNG_HEAD_BPM'
+      , 'BPM'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -109,8 +118,11 @@ define( 'LNG_ERR_FREQ_MUST_BE_GT'
 define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       , 'failed to add tracks to new playlist'
       );
-define( 'LNG_INSTR_SELECT_PLAYLIST'
+define( 'LNG_INSTR_SELECT_PLAYLIST_TO_DING'
       , 'Select playlist you want to dingify'
+      );
+define( 'LNG_INSTR_SELECT_PLAYLIST_TO_RANDOMIZE'
+      , 'Select playlist you want to randomize'
       );
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Enter "%s" or "%s"'
@@ -123,5 +135,29 @@ define( 'LNG_INSTR_ENTER_NAME_OF_NEW_PLAYLIST'
       );
 define( 'LNG_INSTR_PLEASE_ENTER_NAME'
       , 'Please enter a name'
+      );
+define( 'LNG_INSTR_SELECT_APP'
+      , 'Select what you want to do'
+      );
+define( 'LNG_APP_INSERT_DING'
+      , 'Insert ding into playlist'
+      );
+define( 'LNG_APP_RANDOMIZE_BY_BPM'
+      , 'Randomize playlist by BPM'
+      );
+define( 'LNG_ERR_BPM_TOO_SMALL'
+      , 'BPM cannot be 0 or less'
+      );
+define( 'LNG_ERR_BPM_TOO_LARGE'
+      , 'BPM cannot be more than 255'
+      );
+define( 'LNG_ERR_BPM_NAN'
+      , 'BPM is not a number'
+      );
+define( 'LNG_DESC_TRACKS_NOT_INCLUDED'
+      , 'Tracks that could not be included'
+      );
+define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
+      , 'No suitable track to fill this slot'
       );
 ?>

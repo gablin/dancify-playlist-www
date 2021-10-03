@@ -17,7 +17,7 @@ $playlists = loadPlaylists($api);
 ?>
 
 <div class="instruction">
-  <?php echo(LNG_INSTR_SELECT_PLAYLIST_TO_DING); ?>:
+  <?php echo(LNG_INSTR_SELECT_PLAYLIST_TO_RANDOMIZE); ?>:
 </div>
 
 <table>

@@ -40,8 +40,14 @@ define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
 define( 'LNG_BTN_SAVE'
       , 'Spara'
       );
+define( 'LNG_BTN_RANDOMIZE'
+      , 'Slumpa'
+      );
 define( 'LNG_BTN_I_AGREE'
       , 'Jag godkänner'
+      );
+define( 'LNG_MENU_HOME'
+      , 'Hem'
       );
 define( 'LNG_MENU_LOGOUT'
       , 'Logga ut'
@@ -60,6 +66,9 @@ define( 'LNG_HEAD_TITLE'
       );
 define( 'LNG_HEAD_LENGTH'
       , 'Längd'
+      );
+define( 'LNG_HEAD_BPM'
+      , 'BPM'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -109,8 +118,11 @@ define( 'LNG_ERR_FREQ_MUST_BE_GT'
 define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       , 'misslyckades att lägga in låtar i ny spellista'
       );
-define( 'LNG_INSTR_SELECT_PLAYLIST'
+define( 'LNG_INSTR_SELECT_PLAYLIST_TO_DING'
       , 'Välj spellista som du vill dingifiera'
+      );
+define( 'LNG_INSTR_SELECT_PLAYLIST_TO_RANDOMIZE'
+      , 'Välj spellista som du vill slumpa'
       );
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Skriv in "%s" eller "%s"'
@@ -123,5 +135,29 @@ define( 'LNG_INSTR_ENTER_NAME_OF_NEW_PLAYLIST'
       );
 define( 'LNG_INSTR_PLEASE_ENTER_NAME'
       , 'Var god skriv in ett namn'
+      );
+define( 'LNG_INSTR_SELECT_APP'
+      , 'Välj vad du vill göra'
+      );
+define( 'LNG_APP_INSERT_DING'
+      , 'Lägg in ding i spellista'
+      );
+define( 'LNG_APP_RANDOMIZE_BY_BPM'
+      , 'Slumpa spellista efter BPM'
+      );
+define( 'LNG_ERR_BPM_TOO_SMALL'
+      , 'BPM kan inte vara 0 eller mindre'
+      );
+define( 'LNG_ERR_BPM_TOO_LARGE'
+      , 'BPM kan inte vara mer än 255'
+      );
+define( 'LNG_ERR_BPM_NAN'
+      , 'BPM är inte en siffra'
+      );
+define( 'LNG_DESC_TRACKS_NOT_INCLUDED'
+      , 'Låtar som inte kunde inkluderas'
+      );
+define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
+      , 'Ingen låt fanns att fylla denna slot'
       );
 ?>

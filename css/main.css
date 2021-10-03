@@ -197,6 +197,7 @@ table th {
 
 table.tracks {
   margin-top: 2em;
+  border-collapse: collapse;
 }
 table.tracks .insert,
 table.tracks .after {
@@ -207,12 +208,27 @@ table.tracks .index {
   width: 2em;
   padding-right: 1em;
 }
-table.tracks .length {
+table.tracks .length,
+table.tracks .bpm {
   text-align: right;
 }
 table.tracks .summary {}
 table.tracks .sep {
   height: 1em;
+}
+table.tracks tr.dance-slot-sep td {
+  padding: 0.5em 0;
+}
+table.tracks tr.dance-slot-sep div {
+  border-top: 1px solid #09814A;
+  opacity: 0.5;
+}
+table.tracks td.unused {
+  padding-top: 1em;
+  font-weight: bold;
+}
+table.tracks tr.unfilled-slot {
+  font-style: italic;
 }
 
 form div.input {
@@ -228,25 +244,56 @@ input.number {
   padding-left: 0;
   padding-right: 0;
 }
+input.bpm {
+  width: 2.2em;
+  padding-left: 0;
+  padding-right: .4em;
+  text-align: right;
+}
+input.invalid {
+  border-color: #f00;
+}
 input.centered {
   text-align: center;
 }
+button,
 input.button {
   margin: .5em 0;
   font-size: 12px;
   padding: .8em 1.2em;
   background-color: #09814A;
+  border-color: #09814A;
   color: #FFF;
   font-weight: bold;
   letter-spacing: 1px;
   text-transform: uppercase;
-  border-width: 0;
+  border-style: solid;
+  border-width: 2px;
   border-radius: .8em;
   transition: background-color .2s;
 }
-input.button:hover {
+button:hover,
+input.button:hover,
+button.lowlight:hover {
   background-color: #0CA761;
+  border-color: #0CA761;
+  color: #fff;
   cursor: pointer;
+}
+input.slider {
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+input.slider:hover {
+  opacity: 1;
 }
 
 div.logo div.lang {
@@ -326,4 +373,18 @@ div.song_link_help div.info p {
 }
 div.song_link_help div.info img {
   margin-top: 1.25em;
+}
+
+button.lowlight {
+  background-color: #fff;
+  color: #09814A;
+}
+button.loading {
+  background-color: #666 !important;
+  border-color: #666 !important;
+  color: #fff !important;
+}
+
+.loading:hover {
+  cursor: wait !important;
 }

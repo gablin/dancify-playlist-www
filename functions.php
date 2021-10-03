@@ -46,6 +46,7 @@ function createMenu(...$args) {
     if (hasSession()) {
       ?>
       <ul>
+        <li><a href="/app/"><?php echo(LNG_MENU_HOME); ?></a></li>
         <?php
         foreach ($items as $i) {
           ?>
@@ -144,7 +145,7 @@ function createApiSession() {
                                       , $SPOTIFY_CLIENT_SECRET
                                       , $callback
                                       );
-  return $session;    
+  return $session;
 }
 
 /**
@@ -250,7 +251,7 @@ function formatTrackLength($ms) {
     $i = $is[$j];
     if ($t[$i] < 10) $t[$i] = '0' . $t[$i];
   }
-  
+
   return join(":", $t);
 }
 
@@ -264,7 +265,7 @@ function formatArtists($t) {
   $artists = array();
   foreach ($t->artists as $a) {
     array_push($artists, $a->name);
-  }  
+  }
   return join(", ", $artists);
 }
 
@@ -319,6 +320,33 @@ function fromGET($k, $allow_empty = false) {
 }
 
 /**
+ * Checks if $_POST has a given key, and that the value given is a non-empty,
+ * non-whitespace value (this check can be turned off).
+ *
+ * @param string k Key to check.
+ * @param bool allow_empty Allow existing but empty or whitespace-only value.
+ * @returns bool true if valid value is present.
+ */
+function hasPOST($k, $allow_empty = false) {
+  return isset($_POST[$k]) && ($allow_empty || strlen(trim($_POST[$k])) > 0);
+}
+
+/**
+ * Gets a given key from $_POST. If the key does not exist, or if exists but with
+ * a empty or whitespace-only value, an Exception is thrown.
+ *
+ * @param string k Key to use.
+ * @param bool allow_empty Allow existing but empty or whitespace-only value.
+ * @throws Exception If check fails.
+ */
+function fromPOST($k, $allow_empty = false) {
+  if (!hasPOST($k, $allow_empty)) {
+    throw new Exception("not in POST query: {$k}");
+  }
+  return $_POST[$k];
+}
+
+/**
  * Builds a link from a given URI and an array of GET fields.
  *
  * @param string $uri URI string.
@@ -330,7 +358,7 @@ function buildLink($uri, $gets) {
   if (substr($uri, -1) !== '/' && count($gets) > 0) {
     $uri .= '/';
   }
-  
+
   // Build GET query
   $get_query = '';
   if (count($gets) > 0) {
@@ -413,8 +441,8 @@ function loadPlaylistTracks($api, $id) {
   //   get-playlists-tracks/
   $tracks = array();
   $limit = 100;
-  for ($i = 0; ; $i += $limit) {
-    $options = [ 'limit' => $limit, 'offset' => $i ];
+  for ($o = 0; ; $o += $limit) {
+    $options = [ 'limit' => $limit, 'offset' => $o ];
     $ts = $api->getPlaylistTracks($id, $options);
     foreach ($ts->items as $t) {
       array_push($tracks, $t);
@@ -422,6 +450,29 @@ function loadPlaylistTracks($api, $id) {
     if (count($ts->items) < $limit) break;
   }
   return $tracks;
+}
+
+/**
+ * Loads audio features from a given array of tracks.
+ *
+ * @param array $ts Track objects.
+ * @returns array Audio features objects.
+ */
+function loadTrackAudioFeatures($api, $ts) {
+  // Due to API limitations, we can only get a limited number of features at a
+  // time. For more information, see:
+  // https://developer.spotify.com/documentation/web-api/reference/#category-tracks
+  $feats = [];
+  $limit = 100;
+  for ($o = 0; $o < count($ts); $o += $limit) {
+    $ids = [];
+    for ($i = $o; $i < $o + $limit && $i < count($ts); $i++) {
+      $ids[] = $ts[$i]->id;
+    }
+    $res = $api->getAudioFeatures($ids);
+    $feats = array_merge($feats, $res->audio_features);
+  }
+  return $feats;
 }
 
 /**
@@ -490,4 +541,124 @@ function saveLang() {
     setcookie('lang', getLang(), $one_year, '/');
   }
 }
+
+/**
+ * Connection to the SQL database.
+ */
+$DH_DB_CONN = null;
+
+function connectDb() {
+  global $DH_DB_SERVER_IP;
+  global $DH_DB_USERNAME;
+  global $DH_DB_PASSWD;
+  global $DH_DB_DATABASE;
+  global $DH_DB_CONN;
+
+  if (!$DH_DB_CONN) {
+    $DH_DB_CONN = mysqli_connect( $DH_DB_SERVER_IP
+                                , $DH_DB_USERNAME
+                                , $DH_DB_PASSWD
+                                );
+    if (!$DH_DB_CONN) {
+      throw new Exception(mysqli_connect_error());
+    }
+
+    // Check if there exists a database; if not, create it
+    $res = queryDb("SHOW DATABASES LIKE '{$DH_DB_DATABASE}'");
+    if ($res->num_rows == 0) {
+      queryDb("CREATE DATABASE {$DH_DB_DATABASE}");
+    }
+
+    if (!$DH_DB_CONN->select_db($DH_DB_DATABASE)) {
+      throw new Exception("failed to select database: {$DH_DB_DATABASE}");
+    }
+  }
+}
+
+/**
+ * Send SQL query to database.
+ *
+ * @param string $sql The query string.
+ * @return mysqli_result object if successful.
+ * @throws Exception when something went wrong.
+ */
+function queryDb($sql) {
+  global $DH_DB_CONN;
+
+  if (!$DH_DB_CONN) throw new Exception("no database connection");
+
+  $res = $DH_DB_CONN->query($sql);
+  if (!$res) {
+    throw new Exception("Query failed ({$sql}): " . $DH_DB_CONN->error);
+  }
+  return $res;
+}
+
+/**
+ * Converts JSON string into an associative array of JSON data.
+ *
+ * @param string $s JSON string.
+ * @return mixed[]
+ */
+function fromJson($s) {
+  return json_decode($s, true);
+}
+
+/**
+ * Converts an array of JSON data into JSON string.
+ *
+ * @param string[] $j Array of JSON data.
+ * @return string
+ */
+function toJson($j) {
+  return json_encode($j, JSON_UNESCAPED_SLASHES);
+}
+
+/**
+ * Creates a temporary directory with unique name and returns the path to it.
+ *
+ * @return string|false
+ */
+function createTempDir() {
+  $path = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) .
+          DIRECTORY_SEPARATOR .
+          mt_rand() .
+          microtime(true);
+  if (mkdir($path)) {
+      return $path;
+  }
+  return false;
+}
+
+/**
+ * Make an array where each value is an array consists of each value from the
+ * provided arrays. For example:
+ *
+ *   array_zip([1, 2, 3], [4, 5, 6]) = [[1, 4], [2, 5], [3, 6]];
+ *
+ * @param array $arrays Arrays.
+ * @return array
+ */
+function array_zip(array ...$arrays) {
+  foreach ($arrays as $a) {
+    assert(is_array($a), 'not all arguments are arrays');
+    assert(count($arrays[0]) == count($a), 'not same number of elements');
+  }
+
+  $num_arrays = count($arrays);
+  if ($num_arrays == 0) {
+    return [];
+  }
+  $num_elements = count($arrays[0]);
+  $t = [];
+  for ($i = 0; $i < $num_elements; $i++) {
+    $v = [];
+    foreach ($arrays as $a) {
+      $v[] = $a[$i];
+    }
+    $t[] = $v;
+  }
+  return $t;
+}
+
 ?>
