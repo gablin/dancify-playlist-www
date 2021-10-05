@@ -209,8 +209,10 @@ table.tracks .index {
   padding-right: 1em;
 }
 table.tracks .length,
-table.tracks .bpm {
+table.tracks th.bpm,
+table.tracks td.bpm {
   text-align: right;
+  padding-right: 1em;
 }
 table.tracks .summary {}
 table.tracks .sep {

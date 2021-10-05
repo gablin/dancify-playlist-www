@@ -43,8 +43,8 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 <table id="playlist" class="tracks">
   <tr>
     <th></th>
-    <th><?php echo(LNG_HEAD_TITLE); ?></th>
     <th class="bpm"><?php echo(LNG_HEAD_BPM); ?></th>
+    <th><?php echo(LNG_HEAD_TITLE); ?></th>
   </tr>
   <?php
   for ($i = 0; $i < count($tracks); $i++) {
@@ -62,11 +62,11 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
     <tr>
       <input type="hidden" name="track_id" value="<?= $tid ?>" />
       <td class="index"><?php echo($i+1); ?></td>
-      <td class="title">
-        <?php echo($title); ?>
-      </td>
       <td class="bpm">
         <input type="text" name="bpm" class="bpm" value="<?= $bpm ?>" />
+      </td>
+      <td class="title">
+        <?php echo($title); ?>
       </td>
     </tr>
     <?php
