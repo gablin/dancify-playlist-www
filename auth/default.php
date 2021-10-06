@@ -8,6 +8,7 @@ $options = [ 'scope' =>
              , 'playlist-modify-public'
              , 'playlist-modify-private'
              ]
+           , 'show_dialog' => true
            ];
 
 header("Location: {$session->getAuthorizeUrl($options)}");
