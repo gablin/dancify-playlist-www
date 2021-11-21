@@ -177,7 +177,7 @@ function setupButtons(form) {
       // Save new playlist
       var playlist_data = getPlaylistData(form, true, true, false);
       var data = { trackIdList: playlist_data.trackIdList
-                 , unusedTrackIdList: playlist_data.unusedTrackIdList
+                 , leftoverTrackIdList: playlist_data.leftoverTrackIdList
                  , playlistName: name
                  , publicPlaylist: <?= $playlist_info->public ? 'true' : 'false' ?>
                  };
@@ -223,7 +223,7 @@ function setupButtons(form) {
       if (data == null) {
         return;
       }
-      delete data.unusedTrackIdList;
+      delete data.leftoverTrackIdList;
       $.post('/api/randomize-by-bpm/', { data: JSON.stringify(data) })
         .done(
           function(res) {
@@ -253,25 +253,25 @@ function setupButtons(form) {
 
 function getPlaylistData( form
                         , include_unfilled_slots = false
-                        , include_unused = false
+                        , include_leftover = false
                         , report_errors = true
                         )
 {
   var data = { trackIdList: []
-             , unusedTrackIdList: []
+             , leftoverTrackIdList: []
              , bpmList: []
                // TODO: get values below from form
-             , rangeList: [[0, 120], [100, 255], [100, 255]]
-             , minBpmDistanceList: [30, 30]
+             , rangeList: [[0, 255], [0, 255]]
+             , minBpmDistanceList: [40]
              };
   var has_error = false;
-  var in_unused_section = false;
+  var in_leftover_section = false;
 
   form.find('tr').each(
     function() {
       var tr = $(this);
-      if ($(this).find('td[class=unused]').length > 0 && include_unused) {
-        in_unused_section = true;
+      if ($(this).find('td[class=leftover]').length > 0 && include_leftover) {
+        in_leftover_section = true;
         return;
       }
       else if ($(this).find('input[name=track_id]').length == 0) {
@@ -291,12 +291,12 @@ function getPlaylistData( form
       else if (!include_unfilled_slots) {
         return;
       }
-      if (!in_unused_section) {
+      if (!in_leftover_section) {
         data.trackIdList.push(tid);
         data.bpmList.push(parseInt(bpm));
       }
       else {
-        data.unusedTrackIdList.push(tid);
+        data.leftoverTrackIdList.push(tid);
       }
     }
   );
@@ -411,10 +411,10 @@ function updatePlaylist(form, track_order, bpm_ranges) {
     }
   }
 
-  // Append left-over tracks and mark as unused
+  // Append left-over tracks and mark as such
   if (num_used_tracks < track_ids.length) {
     table.append(
-      $('<tr><td class="unused" colspan="3"><?= LNG_DESC_TRACKS_NOT_INCLUDED ?></td></tr>')
+      $('<tr><td class="leftover" colspan="3"><?= LNG_DESC_TRACKS_NOT_INCLUDED ?></td></tr>')
     );
 
     for (var i = 0; i < track_ids.length; i++) {

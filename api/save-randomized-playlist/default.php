@@ -26,8 +26,8 @@ if (is_null($json)) {
 if (!array_key_exists('trackIdList', $json)) {
   fail('trackIdList missing');
 }
-if (!array_key_exists('unusedTrackIdList', $json)) {
-  fail('unusedTrackIdList missing');
+if (!array_key_exists('leftoverTrackIdList', $json)) {
+  fail('leftoverTrackIdList missing');
 }
 if (!array_key_exists('playlistName', $json)) {
   fail('playlistName missing');
@@ -36,7 +36,7 @@ if (!array_key_exists('publicPlaylist', $json)) {
   fail('publicPlaylist missing');
 }
 $track_ids = $json['trackIdList'];
-$unused_track_ids = $json['unusedTrackIdList'];
+$leftover_track_ids = $json['leftoverTrackIdList'];
 if (count($track_ids) == 0) {
   fail('no track IDs');
 }
@@ -51,7 +51,7 @@ if (!is_bool($make_public)) {
 
 // Build list of tracks
 $filler_track_id = '2arG6nSmXmh7joBYxxqEdU'; // 5s silence
-$unused_sep_track_id = '7qLhC1Ib6rfiAJlcssbPDU'; // 60s silence
+$leftover_sep_track_id = '7qLhC1Ib6rfiAJlcssbPDU'; // 60s silence
 $tracks = [];
 foreach ($track_ids as $tid) {
   if (strlen(trim($tid)) > 0) {
@@ -62,10 +62,10 @@ foreach ($track_ids as $tid) {
     $tracks[] = $filler_track_id;
   }
 }
-if (count($unused_track_ids) > 0) {
-  $tracks[] = $unused_sep_track_id;
+if (count($leftover_track_ids) > 0) {
+  $tracks[] = $leftover_sep_track_id;
 }
-$tracks = array_merge($tracks, $unused_track_ids);
+$tracks = array_merge($tracks, $leftover_track_ids);
 
 // Create new playlist
 $new_playlist = $api->createPlaylist([ 'name' => $playlist_name

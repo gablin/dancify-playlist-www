@@ -225,7 +225,7 @@ table.tracks tr.dance-slot-sep div {
   border-top: 1px solid #09814A;
   opacity: 0.5;
 }
-table.tracks td.unused {
+table.tracks td.leftover {
   padding-top: 1em;
   font-weight: bold;
 }
