@@ -361,6 +361,7 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   var playlist_index = 1;
   var range_index = 0;
   var num_used_tracks = 0;
+  var num_cols = table.find('tr > th').length;
   while (order_index < track_order.length) {
     var tid = track_order[order_index];
 
@@ -399,7 +400,10 @@ function updatePlaylist(form, track_order, bpm_ranges) {
        )
     {
       table.append(
-        $('<tr class="dance-slot-sep"><td colspan="3"><div /></td></tr>')
+        $( '<tr class="dance-slot-sep">' +
+             '<td colspan="' + num_cols + '"><div /></td>' +
+           '</tr>'
+         )
       );
     }
 
@@ -414,7 +418,10 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   // Append left-over tracks and mark as such
   if (num_used_tracks < track_ids.length) {
     table.append(
-      $('<tr><td class="leftover" colspan="3"><?= LNG_DESC_TRACKS_NOT_INCLUDED ?></td></tr>')
+      $( '<tr><td class="leftover" colspan="' + num_cols + '">' +
+           '<?= LNG_DESC_TRACKS_NOT_INCLUDED ?>' +
+         '</td></tr>'
+       )
     );
 
     for (var i = 0; i < track_ids.length; i++) {
