@@ -44,17 +44,30 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
   <tr>
     <th></th>
     <th class="bpm"><?php echo(LNG_HEAD_BPM); ?></th>
+    <th class="genre"><?php echo(LNG_HEAD_GENRE); ?></th>
     <th><?php echo(LNG_HEAD_TITLE); ?></th>
   </tr>
   <?php
   for ($i = 0; $i < count($tracks); $i++) {
     $t = $tracks[$i];
+
+    // Get BPM
     $bpm = (int) $audio_feats[$i]->tempo;
     $tid = $t->id;
     $res = queryDb("SELECT bpm FROM bpm WHERE song = '$tid'");
     if ($res->num_rows == 1) {
       $bpm = $res->fetch_assoc()['bpm'];
     }
+
+    // Get genre
+    $genre = '';
+    $cid = $session->getClientId();
+    $res =
+       queryDb("SELECT genre FROM genre WHERE song = '$tid' AND user = '$cid'");
+    if ($res->num_rows == 1) {
+      $genre = $res->fetch_assoc()['genre'];
+    }
+
     $artists = formatArtists($t);
     $title = $artists . " - " . $t->name;
     $length = $t->duration_ms;
@@ -64,6 +77,9 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
       <td class="index"><?php echo($i+1); ?></td>
       <td class="bpm">
         <input type="text" name="bpm" class="bpm" value="<?= $bpm ?>" />
+      </td>
+      <td class="genre">
+        <input type="text" name="genre" class="genre" value="<?= $genre ?>" />
       </td>
       <td class="title">
         <?php echo($title); ?>
@@ -84,6 +100,7 @@ function initForm() {
 
   setupForm(form);
   setupBpmUpdate(form);
+  setupGenreUpdate(form);
   setupButtons(form);
 }
 
@@ -112,7 +129,7 @@ function setupBpmUpdate(form) {
           }
 
           // Check BPM value
-          var bpm = bpm_input.val();
+          var bpm = bpm_input.val().trim();
           if (!checkBpmInput(bpm)) {
             bpm_input.addClass('invalid');
             return;
@@ -122,6 +139,53 @@ function setupBpmUpdate(form) {
           // Save new BPM to database
           var data = { trackId: tid, bpm: bpm };
           $.post('/api/update-bpm/', { data: JSON.stringify(data) })
+            .done(
+              function(res) {
+                json = JSON.parse(res);
+                if (json.status == 'OK') {
+                  // Do nothing
+                }
+                else if (json.status == 'FAILED') {
+                  alert('ERROR: ' + json.msg);
+                }
+              }
+            )
+            .fail(
+              function(xhr, status, error) {
+                alert('ERROR: ' + error);
+              }
+            );
+        }
+      );
+    }
+  );
+}
+
+function setupGenreUpdate(form) {
+  var genre_inputs = form.find('input[name=genre]');
+  genre_inputs.each(
+    function() {
+      $(this).change(
+        function() {
+          var genre_input = $(this);
+
+          // Find corresponding track ID
+          var tid_input =
+            genre_input.parent().parent().find('input[name=track_id]');
+          if (tid_input.length == 0) {
+            console.log('could not find track ID');
+            return;
+          }
+          var tid = tid_input.val().trim();
+          if (tid.length == 0) {
+            return;
+          }
+
+          var genre = genre_input.val().trim();
+
+          // Save new genre to database
+          var data = { trackId: tid, genre: genre };
+          $.post('/api/update-genre/', { data: JSON.stringify(data) })
             .done(
               function(res) {
                 json = JSON.parse(res);
@@ -260,6 +324,7 @@ function getPlaylistData( form
   var data = { trackIdList: []
              , leftoverTrackIdList: []
              , bpmList: []
+             , genreList: []
                // TODO: get values below from form
              , rangeList: [[0, 255], [0, 255]]
              , minBpmDistanceList: [40]
@@ -281,12 +346,14 @@ function getPlaylistData( form
       var tid = tr.find('input[name=track_id]').val();
       if (tid.length > 0) {
         var bpm_input = tr.find('input[name=bpm]');
-        var bpm = bpm_input.val();
+        var bpm = bpm_input.val().trim();
         if (!checkBpmInput(bpm, report_errors)) {
           bpm_input.addClass('invalid');
           has_error = true;
           return;
         }
+        var genre_input = tr.find('input[name=genre]');
+        var genre = genre_input.val().trim();
       }
       else if (!include_unfilled_slots) {
         return;
@@ -294,6 +361,7 @@ function getPlaylistData( form
       if (!in_leftover_section) {
         data.trackIdList.push(tid);
         data.bpmList.push(parseInt(bpm));
+        data.genreList.push(genre);
       }
       else {
         data.leftoverTrackIdList.push(tid);
@@ -309,24 +377,28 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   var track_ids = [];
   var track_titles = [];
   var track_bpms = [];
+  var track_genres = [];
   form.find('tr').each(
     function() {
       var tr = $(this);
       var tid_input = tr.find('input[name=track_id]');
       var title_e = tr.find('td[class=title]');
       var bpm_input = tr.find('input[name=bpm]');
+      var genre_input = tr.find('input[name=genre]');
       if (tid_input.length == 0 || title_e.length == 0 || bpm_input.length == 0) {
         return;
       }
       var tid = tid_input.val().trim();
       var title = title_e.text().trim();
       var bpm = bpm_input.val().trim();
+      var genre = genre_input.val().trim();
       if (tid.length == 0 || title.length == 0 || !checkBpmInput(bpm, false)) {
         return;
       }
       track_ids.push(tid);
       track_titles.push(title);
       track_bpms.push(bpm);
+      track_genres.push(genre);
     }
   );
 
@@ -346,14 +418,16 @@ function updatePlaylist(form, track_order, bpm_ranges) {
     return;
   }
   tr_template = $(tr_template[0]).clone(true, true);
-  var createNewPlaylistRow = function(playlist_index, track_id, title, bpm) {
-    var new_tr = tr_template.clone(true, true);
-    new_tr.find('td[class=index]').text(playlist_index);
-    new_tr.find('td[class=title]').text(title);
-    new_tr.find('input[name=track_id]').prop('value', track_id);
-    new_tr.find('input[name=bpm]').prop('value', bpm);
-    return new_tr;
-  };
+  var createNewPlaylistRow =
+    function(playlist_index, track_id, title, bpm, genre) {
+      var new_tr = tr_template.clone(true, true);
+      new_tr.find('td[class=index]').text(playlist_index);
+      new_tr.find('td[class=title]').text(title);
+      new_tr.find('input[name=track_id]').prop('value', track_id);
+      new_tr.find('input[name=bpm]').prop('value', bpm);
+      new_tr.find('input[name=genre]').prop('value', genre);
+      return new_tr;
+    };
 
   // Construct new playlist using given track order
   table.find('tr > td').parent().remove();
@@ -377,12 +451,18 @@ function updatePlaylist(form, track_order, bpm_ranges) {
       num_used_tracks++;
 
       new_tr =
-        createNewPlaylistRow(playlist_index, tid, track_titles[i], track_bpms[i]);
+        createNewPlaylistRow( playlist_index
+                            , tid
+                            , track_titles[i]
+                            , track_bpms[i]
+                            , track_genres[i]
+                            );
     }
     else {
       new_tr = createNewPlaylistRow( playlist_index
                                    , ''
                                    , '<?= LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT ?>'
+                                   , ''
                                    , ''
                                    );
       new_tr.addClass('unfilled-slot');
@@ -391,6 +471,7 @@ function updatePlaylist(form, track_order, bpm_ranges) {
       var min_bpm = bpm_ranges[range_index][0];
       var max_bpm = bpm_ranges[range_index][1];
       new_tr.find('td[class=bpm]').text(min_bpm + '-' + max_bpm);
+      new_tr.find('input[name=genre]').remove();
     }
     table.append(new_tr);
 

@@ -70,6 +70,9 @@ define( 'LNG_HEAD_LENGTH'
 define( 'LNG_HEAD_BPM'
       , 'BPM'
       );
+define( 'LNG_HEAD_GENRE'
+      , 'Genre'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );

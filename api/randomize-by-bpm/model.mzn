@@ -1,6 +1,7 @@
 include "globals.mzn";
 
 array[int] of int: bpm;
+array[int] of int: genres;
 array[int, int] of int: ranges;
 array[int] of int: min_bpm_distance;
 set of int: RangeSet = index_set_1of2(ranges);
@@ -49,6 +50,11 @@ forall (i in RangeSet)
             )
   ( has_track[j] -> (min_bpm <= bpm[order[j]] /\ bpm[order[j]] <= max_bpm) )
 );
+
+% Only tracks with same genre can be place in the same dance slot.
+constraint
+forall (s in DanceSlotSet, i in (s-1)*card(RangeSet)+1..s*card(RangeSet)-1 )
+( has_track[i] /\ has_track[i+1] -> genres[order[i]] == genres[order[i+1]] );
 
 % Ensure that there is at least minimal BPM distance between two adjacent tracks
 % in the same dance slot. A positive/negative BPM distance means that the

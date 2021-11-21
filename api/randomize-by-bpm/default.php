@@ -27,6 +27,9 @@ if (!array_key_exists('trackIdList', $json)) {
 if (!array_key_exists('bpmList', $json)) {
   fail('bpmList missing');
 }
+if (!array_key_exists('genreList', $json)) {
+  fail('genreList missing');
+}
 if (!array_key_exists('rangeList', $json)) {
   fail('rangeList missing');
 }
@@ -35,14 +38,18 @@ if (!array_key_exists('minBpmDistanceList', $json)) {
 }
 $track_ids = $json['trackIdList'];
 $bpms = $json['bpmList'];
+$genres = $json['genreList'];
 if (count($track_ids) == 0) {
   fail('no track IDs');
 }
 if (count($bpms) == 0) {
   fail('no BPMs');
 }
-if (count($track_ids) != count($bpms)) {
-  fail('inconsistent number of track IDs and BPMs');
+if (count($genres) == 0) {
+  fail('no genres');
+}
+if (count($track_ids) != count($bpms) || count($track_ids) != count($genres)) {
+  fail('inconsistent number of track IDs, BPMs and/or genres');
 }
 $ranges = $json['rangeList'];
 $min_bpm_dists = $json['minBpmDistanceList'];
@@ -57,14 +64,23 @@ if (count($ranges) != count($min_bpm_dists)+1) {
 }
 
 // Randomize track order
-$a = array_zip($track_ids, $bpms);
+$a = array_zip($track_ids, $bpms, $genres);
 shuffle($a);
 $track_ids = array_map(function ($l) { return $l[0]; }, $a);
 $bpms      = array_map(function ($l) { return $l[1]; }, $a);
+$genres    = array_map(function ($l) { return $l[2]; }, $a);
+
+$uniq_genres = array_values(array_unique($genres));
+$int_genres = array_map( function ($g) use ($uniq_genres) {
+                           return array_search($g, $uniq_genres);
+                         }
+                       , $genres
+                       );
 
 // Generate model input
 $dzn_content = "";
 $dzn_content .= "bpm = [" . implode(',', $bpms) . "];\n";
+$dzn_content .= "genres = [" . implode(',', $int_genres) . "];\n";
 $dzn_content .= "ranges = [|" .
                  implode( '|'
                         , array_map( function ($l) { return implode(',', $l); }

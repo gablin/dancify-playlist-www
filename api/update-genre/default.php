@@ -24,21 +24,33 @@ if (is_null($json)) {
 if (!array_key_exists('trackId', $json)) {
   fail('trackId missing');
 }
-if (!array_key_exists('bpm', $json)) {
-  fail('bpm missing');
+if (!array_key_exists('genre', $json)) {
+  fail('genre missing');
 }
 
 connectDb();
 
 // Check if entry exists
 $tid = $json['trackId'];
-$bpm = $json['bpm'];
-$res = queryDb("SELECT bpm FROM bpm WHERE song = '$tid'");
+$cid = getSession()->getClientId();
+$genre = trim($json['genre']);
+$res = queryDb("SELECT genre FROM genre WHERE song = '$tid' AND user = '$cid'");
 if ($res->num_rows == 1) {
-  queryDb("UPDATE bpm SET bpm = $bpm WHERE song = '$tid'");
+  if (strlen($genre) > 0) {
+    queryDb( "UPDATE genre SET genre = '$genre' " .
+             "WHERE song = '$tid' AND user = '$cid'"
+           );
+  }
+  else {
+    queryDb("DELETE FROM genre WHERE song = '$tid' AND user = '$cid'");
+  }
 }
 else {
-  queryDb("INSERT INTO bpm (song, bpm) VALUES ('$tid', $bpm)");
+  if (strlen($genre) > 0) {
+    queryDb( "INSERT INTO genre (song, user, genre) " .
+             "VALUES ('$tid', '$cid', '$genre')"
+           );
+  }
 }
 
 echo(toJson(['status' => 'OK']));
