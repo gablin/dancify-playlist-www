@@ -40,16 +40,16 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
   </div>
 </div>
 <div>
-  <input type="checkbox" id="chkboxDanceSlotSameGenre"
-    name="dance-slot-has-same-genre" value="true" />
-  <?php echo(LNG_DESC_DANCE_SLOT_SAME_GENRE) ?>
+  <input type="checkbox" id="chkboxDanceSlotSameCategory"
+    name="dance-slot-has-same-category" value="true" />
+  <?php echo(LNG_DESC_DANCE_SLOT_SAME_CATEGORY) ?>
 </div>
 
 <table id="playlist" class="tracks">
   <tr>
     <th></th>
     <th class="bpm"><?php echo(LNG_HEAD_BPM); ?></th>
-    <th class="genre"><?php echo(LNG_HEAD_GENRE); ?></th>
+    <th class="category"><?php echo(LNG_HEAD_CATEGORY_SHORT); ?></th>
     <th><?php echo(LNG_HEAD_TITLE); ?></th>
   </tr>
   <?php
@@ -64,13 +64,14 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
       $bpm = $res->fetch_assoc()['bpm'];
     }
 
-    // Get genre
-    $genre = '';
+    // Get category
+    $category = '';
     $cid = $session->getClientId();
-    $res =
-       queryDb("SELECT genre FROM genre WHERE song = '$tid' AND user = '$cid'");
+    $res = queryDb( "SELECT category FROM category " .
+                    "WHERE song = '$tid' AND user = '$cid'"
+                  );
     if ($res->num_rows == 1) {
-      $genre = $res->fetch_assoc()['genre'];
+      $category = $res->fetch_assoc()['category'];
     }
 
     $artists = formatArtists($t);
@@ -83,8 +84,8 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
       <td class="bpm">
         <input type="text" name="bpm" class="bpm" value="<?= $bpm ?>" />
       </td>
-      <td class="genre">
-        <input type="text" name="genre" class="genre" value="<?= $genre ?>" />
+      <td class="category">
+        <input type="text" name="category" class="category" value="<?= $category ?>" />
       </td>
       <td class="title">
         <?php echo($title); ?>
@@ -105,7 +106,7 @@ function initForm() {
 
   setupForm(form);
   setupBpmUpdate(form);
-  setupGenreUpdate(form);
+  setupCategoryUpdate(form);
   setupFormElements(form);
 }
 
@@ -166,17 +167,17 @@ function setupBpmUpdate(form) {
   );
 }
 
-function setupGenreUpdate(form) {
-  var genre_inputs = form.find('input[name=genre]');
-  genre_inputs.each(
+function setupCategoryUpdate(form) {
+  var category_inputs = form.find('input[name=category]');
+  category_inputs.each(
     function() {
       $(this).change(
         function() {
-          var genre_input = $(this);
+          var category_input = $(this);
 
           // Find corresponding track ID
           var tid_input =
-            genre_input.parent().parent().find('input[name=track_id]');
+            category_input.parent().parent().find('input[name=track_id]');
           if (tid_input.length == 0) {
             console.log('could not find track ID');
             return;
@@ -186,11 +187,11 @@ function setupGenreUpdate(form) {
             return;
           }
 
-          var genre = genre_input.val().trim();
+          var category = category_input.val().trim();
 
-          // Save new genre to database
-          var data = { trackId: tid, genre: genre };
-          $.post('/api/update-genre/', { data: JSON.stringify(data) })
+          // Save new category to database
+          var data = { trackId: tid, category: category };
+          $.post('/api/update-category/', { data: JSON.stringify(data) })
             .done(
               function(res) {
                 json = JSON.parse(res);
@@ -293,8 +294,8 @@ function setupFormElements(form) {
         return;
       }
       delete data.leftoverTrackIdList;
-      data.danceSlotSameGenre =
-        form.find('input[id=chkboxDanceSlotSameGenre]').prop('checked');
+      data.danceSlotSameCategory =
+        form.find('input[id=chkboxDanceSlotSameCategory]').prop('checked');
       $.post('/api/randomize-by-bpm/', { data: JSON.stringify(data) })
         .done(
           function(res) {
@@ -321,11 +322,11 @@ function setupFormElements(form) {
     }
   );
 
-  // Checkbox for same genre in dance slot
-  var chk_b = form.find('input[id=chkboxDanceSlotSameGenre]');
+  // Checkbox for same category in dance slot
+  var chk_b = form.find('input[id=chkboxDanceSlotSameCategory]');
   chk_b.click(
     function() {
-      $('table .genre').css('display', $(this).prop('checked') ? 'block' : 'none');
+      $('table .category').css('display', $(this).prop('checked') ? 'block' : 'none');
     }
   );
 }
@@ -339,7 +340,7 @@ function getPlaylistData( form
   var data = { trackIdList: []
              , leftoverTrackIdList: []
              , bpmList: []
-             , genreList: []
+             , categoryList: []
                // TODO: get values below from form
              , rangeList: [[0, 255], [0, 255]]
              , minBpmDistanceList: [40]
@@ -367,8 +368,8 @@ function getPlaylistData( form
           has_error = true;
           return;
         }
-        var genre_input = tr.find('input[name=genre]');
-        var genre = genre_input.val().trim();
+        var category_input = tr.find('input[name=category]');
+        var category = category_input.val().trim();
       }
       else if (!include_unfilled_slots) {
         return;
@@ -376,7 +377,7 @@ function getPlaylistData( form
       if (!in_leftover_section) {
         data.trackIdList.push(tid);
         data.bpmList.push(parseInt(bpm));
-        data.genreList.push(genre);
+        data.categoryList.push(category);
       }
       else {
         data.leftoverTrackIdList.push(tid);
@@ -392,28 +393,28 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   var track_ids = [];
   var track_titles = [];
   var track_bpms = [];
-  var track_genres = [];
+  var track_categories = [];
   form.find('tr').each(
     function() {
       var tr = $(this);
       var tid_input = tr.find('input[name=track_id]');
       var title_e = tr.find('td[class=title]');
       var bpm_input = tr.find('input[name=bpm]');
-      var genre_input = tr.find('input[name=genre]');
+      var category_input = tr.find('input[name=category]');
       if (tid_input.length == 0 || title_e.length == 0 || bpm_input.length == 0) {
         return;
       }
       var tid = tid_input.val().trim();
       var title = title_e.text().trim();
       var bpm = bpm_input.val().trim();
-      var genre = genre_input.val().trim();
+      var category = category_input.val().trim();
       if (tid.length == 0 || title.length == 0 || !checkBpmInput(bpm, false)) {
         return;
       }
       track_ids.push(tid);
       track_titles.push(title);
       track_bpms.push(bpm);
-      track_genres.push(genre);
+      track_categories.push(category);
     }
   );
 
@@ -434,13 +435,13 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   }
   tr_template = $(tr_template[0]).clone(true, true);
   var createNewPlaylistRow =
-    function(playlist_index, track_id, title, bpm, genre) {
+    function(playlist_index, track_id, title, bpm, category) {
       var new_tr = tr_template.clone(true, true);
       new_tr.find('td[class=index]').text(playlist_index);
       new_tr.find('td[class=title]').text(title);
       new_tr.find('input[name=track_id]').prop('value', track_id);
       new_tr.find('input[name=bpm]').prop('value', bpm);
-      new_tr.find('input[name=genre]').prop('value', genre);
+      new_tr.find('input[name=category]').prop('value', category);
       return new_tr;
     };
 
@@ -470,7 +471,7 @@ function updatePlaylist(form, track_order, bpm_ranges) {
                             , tid
                             , track_titles[i]
                             , track_bpms[i]
-                            , track_genres[i]
+                            , track_categories[i]
                             );
     }
     else {
@@ -486,7 +487,7 @@ function updatePlaylist(form, track_order, bpm_ranges) {
       var min_bpm = bpm_ranges[range_index][0];
       var max_bpm = bpm_ranges[range_index][1];
       new_tr.find('td[class=bpm]').text(min_bpm + '-' + max_bpm);
-      new_tr.find('input[name=genre]').remove();
+      new_tr.find('input[name=category]').remove();
     }
     table.append(new_tr);
 

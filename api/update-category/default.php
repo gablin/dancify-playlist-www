@@ -24,8 +24,8 @@ if (is_null($json)) {
 if (!array_key_exists('trackId', $json)) {
   fail('trackId missing');
 }
-if (!array_key_exists('genre', $json)) {
-  fail('genre missing');
+if (!array_key_exists('category', $json)) {
+  fail('category missing');
 }
 
 connectDb();
@@ -33,22 +33,24 @@ connectDb();
 // Check if entry exists
 $tid = $json['trackId'];
 $cid = getSession()->getClientId();
-$genre = trim($json['genre']);
-$res = queryDb("SELECT genre FROM genre WHERE song = '$tid' AND user = '$cid'");
+$category = trim($json['category']);
+$res = queryDb( "SELECT category FROM category " .
+                "WHERE song = '$tid' AND user = '$cid'"
+              );
 if ($res->num_rows == 1) {
-  if (strlen($genre) > 0) {
-    queryDb( "UPDATE genre SET genre = '$genre' " .
+  if (strlen($category) > 0) {
+    queryDb( "UPDATE category SET category = '$category' " .
              "WHERE song = '$tid' AND user = '$cid'"
            );
   }
   else {
-    queryDb("DELETE FROM genre WHERE song = '$tid' AND user = '$cid'");
+    queryDb("DELETE FROM category WHERE song = '$tid' AND user = '$cid'");
   }
 }
 else {
-  if (strlen($genre) > 0) {
-    queryDb( "INSERT INTO genre (song, user, genre) " .
-             "VALUES ('$tid', '$cid', '$genre')"
+  if (strlen($category) > 0) {
+    queryDb( "INSERT INTO category (song, user, category) " .
+             "VALUES ('$tid', '$cid', '$category')"
            );
   }
 }

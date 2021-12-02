@@ -70,8 +70,8 @@ define( 'LNG_HEAD_LENGTH'
 define( 'LNG_HEAD_BPM'
       , 'BPM'
       );
-define( 'LNG_HEAD_GENRE'
-      , 'Genre'
+define( 'LNG_HEAD_CATEGORY_SHORT'
+      , 'Kat.'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -163,7 +163,7 @@ define( 'LNG_DESC_TRACKS_NOT_INCLUDED'
 define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
       , 'Ingen låt fanns att fylla denna slot'
       );
-define( 'LNG_DESC_DANCE_SLOT_SAME_GENRE'
-      , 'Placera endast låtar av samma genre i samma dansslot'
+define( 'LNG_DESC_DANCE_SLOT_SAME_CATEGORY'
+      , 'Placera endast låtar av samma kategori i samma dansslot'
       );
 ?>

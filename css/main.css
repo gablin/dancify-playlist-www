@@ -217,8 +217,8 @@ table.tracks td.bpm {
 table.tracks td.bpm {
   font-size: 90%;
 }
-table.tracks th.genre,
-table.tracks td.genre {
+table.tracks th.category,
+table.tracks td.category {
   display: none;
 }
 table.tracks .summary {}
@@ -259,7 +259,7 @@ input.bpm {
   padding-right: .4em;
   text-align: right;
 }
-input.genre {
+input.category {
   width: 4em;
   padding-left: .4em;
   padding-right: 0;
