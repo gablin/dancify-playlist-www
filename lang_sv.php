@@ -161,7 +161,7 @@ define( 'LNG_DESC_TRACKS_NOT_INCLUDED'
       , 'Låtar som inte kunde inkluderas'
       );
 define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
-      , 'Ingen låt fanns att fylla denna slot'
+      , 'Ingen låt fanns att fylla denna plats'
       );
 define( 'LNG_DESC_DANCE_SLOT_SAME_CATEGORY'
       , 'Placera endast låtar av samma kategori i samma dansslot'
