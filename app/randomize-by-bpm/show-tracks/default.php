@@ -39,6 +39,11 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
     </button>
   </div>
 </div>
+<div>
+  <input type="checkbox" id="chkboxDanceSlotSameGenre"
+    name="dance-slot-has-same-genre" value="true" />
+  <?php echo(LNG_DESC_DANCE_SLOT_SAME_GENRE) ?>
+</div>
 
 <table id="playlist" class="tracks">
   <tr>
@@ -101,7 +106,7 @@ function initForm() {
   setupForm(form);
   setupBpmUpdate(form);
   setupGenreUpdate(form);
-  setupButtons(form);
+  setupFormElements(form);
 }
 
 function setupForm(form) {
@@ -208,7 +213,7 @@ function setupGenreUpdate(form) {
   );
 }
 
-function setupButtons(form) {
+function setupFormElements(form) {
   // Add-requirement button
   var add_req_b = form.find('button[id=addReqBtn]');
   add_req_b.click(
@@ -288,6 +293,8 @@ function setupButtons(form) {
         return;
       }
       delete data.leftoverTrackIdList;
+      data.danceSlotSameGenre =
+        form.find('input[id=chkboxDanceSlotSameGenre]').prop('checked');
       $.post('/api/randomize-by-bpm/', { data: JSON.stringify(data) })
         .done(
           function(res) {
@@ -311,6 +318,14 @@ function setupButtons(form) {
         );
 
       return false;
+    }
+  );
+
+  // Checkbox for same genre in dance slot
+  var chk_b = form.find('input[id=chkboxDanceSlotSameGenre]');
+  chk_b.click(
+    function() {
+      $('table .genre').css('display', $(this).prop('checked') ? 'block' : 'none');
     }
   );
 }

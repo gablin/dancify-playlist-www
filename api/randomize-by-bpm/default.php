@@ -36,6 +36,9 @@ if (!array_key_exists('rangeList', $json)) {
 if (!array_key_exists('minBpmDistanceList', $json)) {
   fail('minBpmDistanceList missing');
 }
+if (!array_key_exists('danceSlotSameGenre', $json)) {
+  fail('danceSlotSameGenre missing');
+}
 $track_ids = $json['trackIdList'];
 $bpms = $json['bpmList'];
 $genres = $json['genreList'];
@@ -89,12 +92,19 @@ $dzn_content .= "ranges = [|" .
                         ) .
                 "|];\n";
 $dzn_content .= "min_bpm_distance = [" . implode(',', $min_bpm_dists) . "];\n";
+$dzn_content .= "dance_slot_same_genre = " .
+                ($json['danceSlotSameGenre'] ? "true" : "false") .
+                "\n;";
 $dir = createTempDir();
 $clean_up_fun = function () use ($dir) { shell_exec("rm -rf $dir"); };
 if ($dir === false) {
   fail('failed to create temp dir');
 }
-$dzn_file = $dir . '/input.dzn';
+
+// TODO: restore
+//$dzn_file = $dir . '/input.dzn';
+$dzn_file = 'input.dzn';
+
 $fh = fopen($dzn_file, 'w');
 if ($fh === false) {
   $clean_up_fun();

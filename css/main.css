@@ -219,6 +219,7 @@ table.tracks td.bpm {
 }
 table.tracks th.genre,
 table.tracks td.genre {
+  display: none;
 }
 table.tracks .summary {}
 table.tracks .sep {
