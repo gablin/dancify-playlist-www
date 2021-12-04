@@ -175,6 +175,13 @@ function setupBpmUpdate(form) {
   var bpm_inputs = form.find('input[name=bpm]');
   bpm_inputs.each(
     function() {
+      $(this).click(
+        function(e) {
+          // Prevent playing of track preview
+          e.stopPropagation();
+          return false;
+        }
+      );
       $(this).change(
         function() {
           var bpm_input = $(this);
