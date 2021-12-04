@@ -303,6 +303,55 @@ button.lowlight:disabled {
   cursor: not-allowed !important;
 }
 
+label {
+  position: relative;
+  padding-left: 25px;
+}
+label input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+label .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border: 1px solid #09814A;
+  transition: background-color .2s;
+}
+label:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+label input:checked ~ .checkmark {
+  background-color: #09814A;
+}
+label:hover input:checked ~ .checkmark {
+  background-color: #0CA761;
+}
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+label input:checked ~ .checkmark:after {
+  display: block;
+}
+label .checkmark:after {
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
 div.logo div.lang {
   position: absolute;
   right: .5em;

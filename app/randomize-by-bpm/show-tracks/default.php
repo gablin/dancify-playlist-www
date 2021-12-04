@@ -84,11 +84,12 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
     </tr>
   <tbody>
 </table>
-<div>
+<label>
   <input type="checkbox" id="chkboxDanceSlotSameCategory"
     name="dance-slot-has-same-category" value="true" />
+  <span class="checkmark"></span>
   <?php echo(LNG_DESC_DANCE_SLOT_SAME_CATEGORY) ?>
-</div>
+</label>
 
 <table id="playlist" class="tracks">
   <thead>
