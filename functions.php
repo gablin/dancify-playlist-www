@@ -586,6 +586,34 @@ function connectDb() {
     if (!$DH_DB_CONN->select_db($DH_DB_DATABASE)) {
       throw new Exception("failed to select database: {$DH_DB_DATABASE}");
     }
+    checkDbTables();
+  }
+}
+
+/**
+ * Checks that all database tables exists, and creates them if not.
+ */
+function checkDbTables() {
+  $tables = [ 'bpm' =>
+              'CREATE TABLE bpm' .
+              ' ( song char(22) NOT NULL' .
+              ' , bpm tinyint(3) unsigned NOT NULL' .
+              ' )'
+            , 'category' =>
+              'CREATE TABLE category' .
+              ' ( song char(22) NOT NULL' .
+              ' , user char(32) NOT NULL' .
+              ' , category char(31) NOT NULL' .
+              ' , PRIMARY KEY (song, user)' .
+              ' )'
+            ];
+
+  // Check if there exists a database; if not, create it
+  // https://stackoverflow.com/a/6432196
+  foreach ($tables as $t => $sql) {
+    if (queryDb("SELECT 1 FROM $t LIMIT 1", false) === false) {
+      queryDb($sql);
+    }
   }
 }
 
@@ -593,16 +621,17 @@ function connectDb() {
  * Send SQL query to database.
  *
  * @param string $sql The query string.
+ * @param bool $fail_on_error Whether to throw exception on error.
  * @return mysqli_result object if successful.
  * @throws Exception when something went wrong.
  */
-function queryDb($sql) {
+function queryDb($sql, $fail_on_error = true) {
   global $DH_DB_CONN;
 
   if (!$DH_DB_CONN) throw new Exception("no database connection");
 
   $res = $DH_DB_CONN->query($sql);
-  if (!$res) {
+  if (!$res && $fail_on_error) {
     throw new Exception("Query failed ({$sql}): " . $DH_DB_CONN->error);
   }
   return $res;
