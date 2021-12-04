@@ -199,6 +199,16 @@ table.tracks {
   margin-top: 2em;
   border-collapse: collapse;
 }
+table.tracks tbody tr:hover {
+  background-color: #eee;
+  cursor: pointer;
+}
+table.tracks tbody tr.playing {
+  background-color: rgba(12, 167, 97, 0.3);
+}
+table.tracks tbody tr.cannot-play {
+  background-color: rgba(230, 0, 0, 0.3);
+}
 table.tracks .insert,
 table.tracks .after {
   color: #09814A;

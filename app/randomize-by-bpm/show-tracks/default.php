@@ -126,9 +126,11 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
       $artists = formatArtists($t);
       $title = $artists . " - " . $t->name;
       $length = $t->duration_ms;
+      $preview_url = $t->preview_url;
       ?>
-      <tr>
+      <tr class="track">
         <input type="hidden" name="track_id" value="<?= $tid ?>" />
+        <input type="hidden" name="preview_url" value="<?= $preview_url ?>" />
         <td class="index"><?php echo($i+1); ?></td>
         <td class="bpm">
           <input type="text" name="bpm" class="bpm" value="<?= $bpm ?>" />
@@ -151,14 +153,17 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 
 <script type="text/javascript">
 $(document).ready(initForm);
+var audio = $('<audio />');
 
 function initForm() {
   var form = $('form[name=playlist]');
+  var table = $('table.tracks');
 
   setupForm(form);
   setupBpmUpdate(form);
   setupCategoryUpdate(form);
   setupFormElements(form);
+  setupTableElements(table);
 }
 
 function setupForm(form) {
@@ -497,6 +502,35 @@ function setupFormElements(form) {
     function() {
       $('table.tracks .category')
       .css('display', $(this).prop('checked') ? 'block' : 'none');
+    }
+  );
+}
+
+function setupTableElements(table) {
+  // Play preview when clicking on row corresponding to track
+  table.find('tbody tr.track').each(
+    function() {
+      $(this).click(
+        function() {
+          audio.attr('src', ''); // Stop playing
+          $(this).siblings().removeClass('playing');
+          $(this).siblings().removeClass('cannot-play');
+          if ($(this).hasClass('playing')) {
+            $(this).removeClass('playing');
+            return;
+          }
+
+          var url = $(this).find('input[name=preview_url]').val();
+          if (url.length > 0) {
+            $(this).addClass('playing');
+            audio.attr('src', url);
+            audio.get(0).play();
+          }
+          else {
+            $(this).addClass('cannot-play');
+          }
+        }
+      );
     }
   );
 }
