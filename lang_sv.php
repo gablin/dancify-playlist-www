@@ -175,4 +175,7 @@ define( 'LNG_DESC_BPM_RANGE_TRACK'
 define( 'LNG_DESC_MIN_BPM_DISTANCE'
       , 'Min. avstånd'
       );
+define( 'LNG_SOURCE_CODE'
+      , 'Källkod'
+      );
 ?>

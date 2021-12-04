@@ -84,6 +84,8 @@ function endPage() {
           Gabriel Hjort Åkerlund
           <br />
           <?php echo(sprintf(LNG_DESC_GIVE_FEEDBACK, 'gabriel [at] hjort.dev')); ?>
+          &mdash; <?php echo(LNG_SOURCE_CODE); ?>:
+          <a href="https://github.com/gablin/dingify">github</a>
         </p>
       </div>
     </div>
