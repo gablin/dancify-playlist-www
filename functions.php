@@ -16,6 +16,7 @@ function beginPage() {
     <link rel="stylesheet" href="/css/main.css"></link>
     <script src="/js/jquery-3.5.1.min.js"></script>
     <script src="/js/jquery-ui-1.13.0.js"></script>
+    <script src="/js/js-cookie-3.0.1.min.js"></script>
   </head>
   <body>
     <div id="wrapper">
@@ -115,10 +116,6 @@ function endContent() {
  * If user has already pressed the button, nothing is output.
  */
 function showCookieInfo() {
-  if (hasGET('accept_cookies')) {
-    $one_year = time() + 60*60*24*365;
-    setcookie('accept_cookies', true, $one_year, '/');
-  }
   if (!hasCOOKIE('accept_cookies')) {
     ?>
     <div class="cookies">
@@ -126,10 +123,24 @@ function showCookieInfo() {
       <table>
         <tr>
           <td><?php echo(LNG_TXT_COOKIES); ?></td>
-          <td><a href="<?php echo(augmentThisLink(array('accept_cookies' => 'true'))); ?>" class="button"><?php echo(LNG_BTN_I_AGREE); ?></a></td>
+          <td><button><?php echo(LNG_BTN_I_AGREE); ?></button></td>
         </tr>
       </table>
     </div>
+    <script type="text/javascript">
+      var div = $('div.cookies');
+      div.find('button').click(
+        function() {
+          Cookies.set('accept_cookies'
+                     , true
+                     , { expires: 365
+                       , path: '/'
+                       }
+                     );
+          div.remove();
+        }
+      );
+    </script>
     <?php
   }
 }

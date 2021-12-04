@@ -396,15 +396,16 @@ div.cookies table td {
   margin: 0;
   padding: 0;
 }
-div.cookies a.button {
+div.cookies button {
   float: right;
   margin-left: 1em;
   font-size: 80%;
   color: #09814A;
   background-color: #FFF;
 }
-div.cookies a.button:hover {
+div.cookies button:hover {
   background-color: #A0F8D0;
+  border-color: #A0F8D0;
 }
 
 div.song_link_help {
