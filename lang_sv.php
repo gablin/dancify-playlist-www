@@ -157,13 +157,22 @@ define( 'LNG_ERR_BPM_TOO_LARGE'
 define( 'LNG_ERR_BPM_NAN'
       , 'BPM är inte en siffra'
       );
-define( 'LNG_DESC_TRACKS_NOT_INCLUDED'
-      , 'Låtar som inte kunde inkluderas'
+define( 'LNG_DESC_TRACKS_NOT_PLACED'
+      , 'Låtar som inte kunde placeras'
       );
 define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
       , 'Ingen låt fanns att fylla denna plats'
       );
 define( 'LNG_DESC_DANCE_SLOT_SAME_CATEGORY'
       , 'Placera endast låtar av samma kategori i samma dansslot'
+      );
+define( 'LNG_DESC_BPM'
+      , 'BPM'
+      );
+define( 'LNG_DESC_BPM_RANGE_TRACK'
+      , 'Låt'
+      );
+define( 'LNG_DESC_MIN_BPM_DISTANCE'
+      , 'Min. avstånd'
       );
 ?>

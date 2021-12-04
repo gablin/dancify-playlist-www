@@ -24,14 +24,14 @@ if (is_null($json)) {
 if (!array_key_exists('trackIdList', $json)) {
   fail('trackIdList missing');
 }
-if (!array_key_exists('bpmList', $json)) {
-  fail('bpmList missing');
+if (!array_key_exists('trackBpmList', $json)) {
+  fail('trackBpmList missing');
 }
-if (!array_key_exists('categoryList', $json)) {
-  fail('categoryList missing');
+if (!array_key_exists('trackCategoryList', $json)) {
+  fail('trackCategoryList missing');
 }
-if (!array_key_exists('rangeList', $json)) {
-  fail('rangeList missing');
+if (!array_key_exists('bpmRangeList', $json)) {
+  fail('bpmRangeList missing');
 }
 if (!array_key_exists('minBpmDistanceList', $json)) {
   fail('minBpmDistanceList missing');
@@ -40,8 +40,8 @@ if (!array_key_exists('danceSlotSameCategory', $json)) {
   fail('danceSlotSameCategory missing');
 }
 $track_ids = $json['trackIdList'];
-$bpms = $json['bpmList'];
-$categories = $json['categoryList'];
+$bpms = $json['trackBpmList'];
+$categories = $json['trackCategoryList'];
 if (count($track_ids) == 0) {
   fail('no track IDs');
 }
@@ -54,7 +54,7 @@ if (count($categories) == 0) {
 if (count($track_ids) != count($bpms) || count($track_ids) != count($categories)) {
   fail('inconsistent number of track IDs, BPMs and/or categories');
 }
-$ranges = $json['rangeList'];
+$ranges = $json['bpmRangeList'];
 $min_bpm_dists = $json['minBpmDistanceList'];
 if (count($ranges) == 0) {
   fail('no ranges');

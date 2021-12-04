@@ -11,8 +11,10 @@ function beginPage() {
   <head>
     <title><?php echo(LNG_SLOGAN); ?>!</title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto|Roboto+Condensed:300&display=swap" rel="stylesheet"></link>
+    <link rel="stylesheet" href="/css/jquery-ui-1.13.0.css"></link>
     <link rel="stylesheet" href="/css/main.css"></link>
     <script src="/js/jquery-3.5.1.min.js"></script>
+    <script src="/js/jquery-ui-1.13.0.js"></script>
   </head>
   <body>
     <div id="wrapper">

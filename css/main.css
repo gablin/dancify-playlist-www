@@ -285,7 +285,7 @@ input.button {
   border-style: solid;
   border-width: 2px;
   border-radius: .8em;
-  transition: background-color .2s;
+  transition: background-color .2s, border-color .2s;
 }
 button:hover,
 input.button:hover,
@@ -295,20 +295,12 @@ button.lowlight:hover {
   color: #fff;
   cursor: pointer;
 }
-input.slider {
-  border: none;
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 10px;
-  background: #d3d3d3;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-input.slider:hover {
-  opacity: 1;
+button:disabled,
+button.lowlight:disabled {
+  background-color: #8f8f8f;
+  border-color: #8f8f8f;
+  color: #fff;
+  cursor: not-allowed !important;
 }
 
 div.logo div.lang {
@@ -395,11 +387,53 @@ button.lowlight {
   color: #09814A;
 }
 button.loading {
-  background-color: #666 !important;
-  border-color: #666 !important;
+  background-color: #8f8f8f !important;
+  border-color: #8f8f8f !important;
   color: #fff !important;
 }
 
 .loading:hover {
   cursor: wait !important;
+}
+.bpm-range-area {
+  margin: 1em 0;
+}
+.bpm-range-area .track {
+  width: 4em;
+  font-weight: bold;
+}
+.bpm-range-area .label {
+  width: 10em;
+}
+.bpm-range-area .range-controller,
+.bpm-range-area .dist-controller {
+  width: 300px;
+}
+.bpm-range-area button {
+  margin: 0 .5em;
+  padding: 0 .5em;
+  font-size: 12px;
+  border-radius: .2em;
+}
+.bpm-range-area button:first-child {
+  margin-left: 2em;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+	border: 1px solid #0CA761;
+	background: #0CA761;
+	font-weight: normal;
+	color: #ffffff;
+}
+.ui-icon-background,
+.ui-state-active .ui-icon-background {
+	border: #0CA761;
+}
+.ui-widget-header {
+  background: rgba(12, 167, 97, 0.3);
 }

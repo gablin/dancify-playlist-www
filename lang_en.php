@@ -157,13 +157,22 @@ define( 'LNG_ERR_BPM_TOO_LARGE'
 define( 'LNG_ERR_BPM_NAN'
       , 'BPM is not a number'
       );
-define( 'LNG_DESC_TRACKS_NOT_INCLUDED'
-      , 'Tracks that could not be included'
+define( 'LNG_DESC_TRACKS_NOT_PLACED'
+      , 'Tracks that could not be placed'
       );
 define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
       , 'No suitable track to fill this place'
       );
 define( 'LNG_DESC_DANCE_SLOT_SAME_CATEGORY'
       , 'Put only songs of same category in same dance slot'
+      );
+define( 'LNG_DESC_BPM'
+      , 'BPM'
+      );
+define( 'LNG_DESC_BPM_RANGE_TRACK'
+      , 'Track'
+      );
+define( 'LNG_DESC_MIN_BPM_DISTANCE'
+      , 'Min dist.'
       );
 ?>

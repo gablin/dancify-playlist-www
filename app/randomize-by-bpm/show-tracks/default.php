@@ -39,6 +39,51 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
     </button>
   </div>
 </div>
+
+<table class="bpm-range-area">
+  <tbody>
+    <tr class="range">
+      <td class="track">
+        <?php echo(LNG_DESC_BPM_RANGE_TRACK) ?> <span>1</span>
+      </td>
+      <td class="label">
+        <?php echo(LNG_DESC_BPM) ?>: <span></span>
+      </td>
+      <td class="range-controller">
+        <div></div>
+      </td>
+      <td>
+        <button class="add lowlight">+</button>
+        <button class="remove lowlight">-</button>
+      </td>
+    </tr>
+    <tr class="distance">
+      <td></td>
+      <td class="label">
+        <?php echo(LNG_DESC_MIN_BPM_DISTANCE) ?>: <span></span>
+      </td>
+      <td class="dist-controller">
+        <div></div>
+      </td>
+      <td></td>
+    </tr>
+    <tr class="range">
+      <td class="track">
+        <?php echo(LNG_DESC_BPM_RANGE_TRACK) ?> <span>2</span>
+      </td>
+      <td class="label">
+        <?php echo(LNG_DESC_BPM) ?>: <span></span>
+      </td>
+      <td class="range-controller">
+        <div></div>
+      </td>
+      <td>
+        <button class="add lowlight">+</button>
+        <button class="remove lowlight">-</button>
+      </td>
+    </tr>
+  <tbody>
+</table>
 <div>
   <input type="checkbox" id="chkboxDanceSlotSameCategory"
     name="dance-slot-has-same-category" value="true" />
@@ -46,54 +91,59 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 </div>
 
 <table id="playlist" class="tracks">
-  <tr>
-    <th></th>
-    <th class="bpm"><?php echo(LNG_HEAD_BPM); ?></th>
-    <th class="category"><?php echo(LNG_HEAD_CATEGORY_SHORT); ?></th>
-    <th><?php echo(LNG_HEAD_TITLE); ?></th>
-  </tr>
-  <?php
-  for ($i = 0; $i < count($tracks); $i++) {
-    $t = $tracks[$i];
-
-    // Get BPM
-    $bpm = (int) $audio_feats[$i]->tempo;
-    $tid = $t->id;
-    $res = queryDb("SELECT bpm FROM bpm WHERE song = '$tid'");
-    if ($res->num_rows == 1) {
-      $bpm = $res->fetch_assoc()['bpm'];
-    }
-
-    // Get category
-    $category = '';
-    $cid = $session->getClientId();
-    $res = queryDb( "SELECT category FROM category " .
-                    "WHERE song = '$tid' AND user = '$cid'"
-                  );
-    if ($res->num_rows == 1) {
-      $category = $res->fetch_assoc()['category'];
-    }
-
-    $artists = formatArtists($t);
-    $title = $artists . " - " . $t->name;
-    $length = $t->duration_ms;
-    ?>
+  <thead>
     <tr>
-      <input type="hidden" name="track_id" value="<?= $tid ?>" />
-      <td class="index"><?php echo($i+1); ?></td>
-      <td class="bpm">
-        <input type="text" name="bpm" class="bpm" value="<?= $bpm ?>" />
-      </td>
-      <td class="category">
-        <input type="text" name="category" class="category" value="<?= $category ?>" />
-      </td>
-      <td class="title">
-        <?php echo($title); ?>
-      </td>
+      <th></th>
+      <th class="bpm"><?php echo(LNG_HEAD_BPM); ?></th>
+      <th class="category"><?php echo(LNG_HEAD_CATEGORY_SHORT); ?></th>
+      <th><?php echo(LNG_HEAD_TITLE); ?></th>
     </tr>
+  </thead>
+  <tbody>
     <?php
-  }
-  ?>
+    for ($i = 0; $i < count($tracks); $i++) {
+      $t = $tracks[$i];
+
+      // Get BPM
+      $bpm = (int) $audio_feats[$i]->tempo;
+      $tid = $t->id;
+      $res = queryDb("SELECT bpm FROM bpm WHERE song = '$tid'");
+      if ($res->num_rows == 1) {
+        $bpm = $res->fetch_assoc()['bpm'];
+      }
+
+      // Get category
+      $category = '';
+      $cid = $session->getClientId();
+      $res = queryDb( "SELECT category FROM category " .
+                      "WHERE song = '$tid' AND user = '$cid'"
+                    );
+      if ($res->num_rows == 1) {
+        $category = $res->fetch_assoc()['category'];
+      }
+
+      $artists = formatArtists($t);
+      $title = $artists . " - " . $t->name;
+      $length = $t->duration_ms;
+      ?>
+      <tr>
+        <input type="hidden" name="track_id" value="<?= $tid ?>" />
+        <td class="index"><?php echo($i+1); ?></td>
+        <td class="bpm">
+          <input type="text" name="bpm" class="bpm" value="<?= $bpm ?>" />
+        </td>
+        <td class="category">
+          <input type="text" name="category" class="category"
+                 value="<?= $category ?>" />
+        </td>
+        <td class="title">
+          <?php echo($title); ?>
+        </td>
+      </tr>
+      <?php
+    }
+    ?>
+  </tbody>
 </table>
 
 </form>
@@ -215,15 +265,6 @@ function setupCategoryUpdate(form) {
 }
 
 function setupFormElements(form) {
-  // Add-requirement button
-  var add_req_b = form.find('button[id=addReqBtn]');
-  add_req_b.click(
-    function() {
-      // TODO: implement
-      return false;
-    }
-  );
-
   // Save-playlist button
   var save_b = form.find('button[id=saveBtn]');
   save_b.click(
@@ -257,7 +298,9 @@ function setupFormElements(form) {
             json = JSON.parse(res);
             if (json.status == 'OK') {
               alert('<?= LNG_DESC_NEW_PLAYLIST_ADDED ?>');
-              window.location.href = '/app/randomize-by-bpm/show-tracks/?playlist_id=' + json.newPlaylistId;
+              window.location.href =
+                '/app/randomize-by-bpm/show-tracks/?playlist_id=' +
+                json.newPlaylistId;
             }
             else if (json.status == 'FAILED') {
               alert('ERROR: ' + json.msg);
@@ -293,6 +336,7 @@ function setupFormElements(form) {
       if (data == null) {
         return;
       }
+
       delete data.leftoverTrackIdList;
       data.danceSlotSameCategory =
         form.find('input[id=chkboxDanceSlotSameCategory]').prop('checked');
@@ -301,7 +345,7 @@ function setupFormElements(form) {
           function(res) {
             json = JSON.parse(res);
             if (json.status == 'OK') {
-              updatePlaylist(form, json.trackOrder, data.rangeList);
+              updatePlaylist(form, json.trackOrder, data.bpmRangeList);
             }
             else if (json.status == 'FAILED') {
               alert('ERROR: ' + json.msg);
@@ -322,11 +366,136 @@ function setupFormElements(form) {
     }
   );
 
+  // BPM distance
+  var buildBpmDistSlider = function(tr) {
+    var printValue =
+      function(v1) { tr.find('td.label > span').text(v1); };
+    tr.find('td.dist-controller > div').each(
+      function() {
+        if ($(this).children().length > 0) {
+          $(this).empty();
+        }
+        $(this).slider(
+          { min: -128
+          , max: 128
+          , values: [0]
+          , slide: function(event, ui) {
+              printValue(ui.values[0]);
+            }
+          }
+        );
+        printValue($(this).slider('values', 0));
+      }
+    );
+  };
+  $('table.bpm-range-area tr.distance').each(
+    function() { buildBpmDistSlider($(this)); }
+  );
+
+  // BPM ranges and buttons
+  var buildBpmRangeSlider = function(tr) {
+    var printValues =
+      function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
+    tr.find('td.range-controller > div').each(
+      function() {
+        if ($(this).children().length > 0) {
+          $(this).empty();
+        }
+        $(this).slider(
+          { range: true
+          , min: 0
+          , max: 255
+          , values: [0, 255]
+          , slide: function(event, ui) {
+              printValues(ui.values[0], ui.values[1]);
+            }
+          }
+        );
+        printValues( $(this).slider('values', 0)
+                   , $(this).slider('values', 1)
+                   );
+      }
+    );
+  };
+  var setupBpmRangeButtons = function(range_tr) {
+    var base_range_tr = range_tr.clone();
+    var dist_tr = range_tr.next().length > 0 ? range_tr.next() : range_tr.prev();
+    var base_dist_tr = dist_tr.clone();
+
+    // Add button
+    var btn = range_tr.find('button.add');
+    btn.click(
+      function() {
+        var new_range_tr = base_range_tr.clone();
+        var new_dist_tr = base_dist_tr.clone();
+        buildBpmRangeSlider(new_range_tr);
+        buildBpmDistSlider(new_dist_tr);
+        range_tr.after(new_dist_tr);
+        new_dist_tr.after(new_range_tr);
+        setupBpmRangeButtons(new_range_tr);
+        updateBpmRangeTrackCounters();
+        enableRemoveButtons();
+      }
+    );
+
+    // Remove button
+    range_tr.find('button.remove').each(
+      function() {
+        $(this).click(
+          function() {
+            var range_tr = $(this).parent().parent();
+            var dist_tr = range_tr.next().length > 0
+                            ? range_tr.next() : range_tr.prev();
+            range_tr.remove();
+            dist_tr.remove();
+            disableRemoveButtonsIfNeeded();
+            updateBpmRangeTrackCounters();
+          }
+        );
+      }
+    );
+  };
+  var enableRemoveButtons = function() {
+    $('table.bpm-range-area button.remove').each(
+      function() {
+        $(this).prop('disabled', false);
+      }
+    );
+  };
+  var disableRemoveButtonsIfNeeded = function() {
+    var table = $('table.bpm-range-area');
+    var num_ranges = table.find('tr.range').length;
+    if (num_ranges <= 2) {
+      table.find('button.remove').each(
+        function() {
+          $(this).prop('disabled', true);
+        }
+      );
+    }
+  };
+  var updateBpmRangeTrackCounters = function() {
+    $('table.bpm-range-area tr > td.track > span').each(
+      function(i) {
+        $(this).text(i+1);
+      }
+    );
+  };
+  $('table.bpm-range-area tr.range').each(
+    function() {
+      var tr = $(this);
+      buildBpmRangeSlider(tr);
+      setupBpmRangeButtons(tr);
+      updateBpmRangeTrackCounters();
+    }
+  );
+  disableRemoveButtonsIfNeeded();
+
   // Checkbox for same category in dance slot
   var chk_b = form.find('input[id=chkboxDanceSlotSameCategory]');
   chk_b.click(
     function() {
-      $('table .category').css('display', $(this).prop('checked') ? 'block' : 'none');
+      $('table.tracks .category')
+      .css('display', $(this).prop('checked') ? 'block' : 'none');
     }
   );
 }
@@ -339,16 +508,36 @@ function getPlaylistData( form
 {
   var data = { trackIdList: []
              , leftoverTrackIdList: []
-             , bpmList: []
-             , categoryList: []
-               // TODO: get values below from form
-             , rangeList: [[0, 255], [0, 255]]
-             , minBpmDistanceList: [40]
+             , trackBpmList: []
+             , trackCategoryList: []
+             , bpmRangeList: []
+             , minBpmDistanceList: []
              };
   var has_error = false;
   var in_leftover_section = false;
 
-  form.find('tr').each(
+  // Get BPM range and distance info
+  form.find('table.bpm-range-area tr').each(
+    function() {
+      var tr = $(this);
+      tr.find('td.range-controller > div').each(
+        function() {
+          v1 = $(this).slider('values', 0);
+          v2 = $(this).slider('values', 1);
+          data.bpmRangeList.push([v1, v2]);
+        }
+      );
+      tr.find('td.dist-controller > div').each(
+        function() {
+          v = $(this).slider('values', 0);
+          data.minBpmDistanceList.push(v);
+        }
+      );
+    }
+  );
+
+  // Get track info
+  form.find('table.tracks tr').each(
     function() {
       var tr = $(this);
       if ($(this).find('td[class=leftover]').length > 0 && include_leftover) {
@@ -376,8 +565,8 @@ function getPlaylistData( form
       }
       if (!in_leftover_section) {
         data.trackIdList.push(tid);
-        data.bpmList.push(parseInt(bpm));
-        data.categoryList.push(category);
+        data.trackBpmList.push(parseInt(bpm));
+        data.trackCategoryList.push(category);
       }
       else {
         data.leftoverTrackIdList.push(tid);
@@ -516,7 +705,7 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   if (num_used_tracks < track_ids.length) {
     table.append(
       $( '<tr><td class="leftover" colspan="' + num_cols + '">' +
-           '<?= LNG_DESC_TRACKS_NOT_INCLUDED ?>' +
+           '<?= LNG_DESC_TRACKS_NOT_PLACED ?>' +
          '</td></tr>'
        )
     );
