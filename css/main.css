@@ -202,14 +202,16 @@ table.tracks {
   margin-top: 2em;
   border-collapse: collapse;
 }
-table.tracks tbody tr:hover {
+table.tracks tbody tr.track:hover {
   background-color: #eee;
   cursor: pointer;
 }
-table.tracks tbody tr.playing {
+table.tracks tbody tr.playing,
+table.tracks tbody tr.playing:hover {
   background-color: rgba(12, 167, 97, 0.3);
 }
-table.tracks tbody tr.cannot-play {
+table.tracks tbody tr.cannot-play,
+table.tracks tbody tr.cannot-play:hover {
   background-color: rgba(230, 0, 0, 0.3);
 }
 table.tracks .insert,

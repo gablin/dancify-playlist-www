@@ -535,6 +535,9 @@ function setupTableElements(table) {
           }
 
           var url = $(this).find('input[name=preview_url]').val();
+          if (url == null) {
+            return;
+          }
           if (url.length > 0) {
             $(this).addClass('playing');
             audio.attr('src', url);
