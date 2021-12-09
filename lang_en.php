@@ -1,16 +1,17 @@
 <?php
 define( 'LNG_SLOGAN'
-      , 'Dingify Your Playlist'
+      , 'Dancify'
       );
 define( 'LNG_TXT_INTRO'
       , <<<EOT
-Have you ever had a playlist where you would need to insert a sound effect of
-some sort &ndash; like silence or a <em>dinnnnng!</em> &ndash; every second or
-third song? Then you know how tedious and time-consuming that task is. And then
-you will be especially happy to know that you no longer need to do that
-manually, because this website can do that for you!  Just log in, select the
-playlist you want to <em>dingify</em>, enter sound-effect track and frequency,
-and then save as new playlist. Done!
+This website is a tool to simplify building of Spotify playlists for dance
+events. For example, have you ever had a playlist where you would need to insert
+a sound effect of some sort &ndash; like silence or a <em>dinnnnng!</em> &ndash;
+every second or third song? Then you know how tedious and time-consuming that
+task is. And then you will be especially happy to know that you no longer need
+to do that manually, because this website can do that for you! Just log in,
+select the playlist you edit, enter sound-effect track and frequency, and then
+save as new playlist. Done!
 EOT
       );
 define( 'LNG_TXT_COOKIES'
@@ -122,7 +123,7 @@ define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       , 'failed to add tracks to new playlist'
       );
 define( 'LNG_INSTR_SELECT_PLAYLIST_TO_DING'
-      , 'Select playlist you want to dingify'
+      , 'Select playlist'
       );
 define( 'LNG_INSTR_SELECT_PLAYLIST_TO_RANDOMIZE'
       , 'Select playlist you want to randomize'

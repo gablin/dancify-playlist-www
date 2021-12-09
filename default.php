@@ -5,7 +5,7 @@ beginPage();
 beginContent();
 ?>
 
-<p>
+<p class="intro centered">
   <?php echo(LNG_TXT_INTRO); ?>
 </p>
 

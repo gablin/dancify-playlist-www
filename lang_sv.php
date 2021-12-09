@@ -1,16 +1,17 @@
 <?php
 define( 'LNG_SLOGAN'
-      , 'Dingify Din Spellista'
+      , 'Dancify'
       );
 define( 'LNG_TXT_INTRO'
       , <<<EOT
-Har du nån gång haft en spellista där du behövt lägga in en ljudeffekt av något
-slag &ndash; som tystnad eller ett <em>dinnnnng!</em> &ndash; varannan eller
-var tredje låt? Då vet du hur tråkigt och tidsödande det är. Och då kommer du
-bli extra glad över att veta att du aldrig behöver göra detta för hand, eftersom
-denna webbsida kan göra det åt dig! Logga bara in, välj vilken lista du vill
-<em>dingifiera</em>, skriv in ljudeffektslåt och frekvens, och spara som ny
-spellista. Klart!
+Denna webbsida är ett verktyg för att förenkla byggandet av Spotify-spellistor
+för dansevenemang. Till exempel, har du nån gång haft en spellista där du
+behövt lägga in en ljudeffekt av något slag &ndash; som tystnad eller ett
+<em>dinnnnng!</em> &ndash; varannan eller var tredje låt? Då vet du hur tråkigt
+och tidsödande det är. Och då kommer du bli extra glad över att veta att du
+aldrig behöver göra detta för hand, eftersom denna webbsida kan göra det åt dig!
+Logga bara in, välj vilken lista du vill <em>dingifiera</em>, skriv in
+ljudeffektslåt och frekvens, och spara som ny spellista. Klart!
 EOT
       );
 define( 'LNG_TXT_COOKIES'
