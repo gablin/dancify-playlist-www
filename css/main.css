@@ -471,7 +471,7 @@ button.loading {
   width: 10em;
 }
 .bpm-range-area .range-controller,
-.bpm-range-area .dist-controller {
+.bpm-range-area .distance-controller {
   width: 20em;
 }
 .bpm-range-area button {

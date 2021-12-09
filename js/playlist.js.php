@@ -67,31 +67,9 @@ function getPlaylistData( form
              , leftoverTrackIdList: []
              , trackBpmList: []
              , trackCategoryList: []
-             , bpmRangeList: []
-             , minBpmDistanceList: []
              };
   var has_error = false;
   var in_leftover_section = false;
-
-  // Get BPM range and distance info
-  form.find('table.bpm-range-area tr').each(
-    function() {
-      var tr = $(this);
-      tr.find('td.range-controller > div').each(
-        function() {
-          v1 = $(this).slider('values', 0);
-          v2 = $(this).slider('values', 1);
-          data.bpmRangeList.push([v1, v2]);
-        }
-      );
-      tr.find('td.dist-controller > div').each(
-        function() {
-          v = $(this).slider('values', 0);
-          data.minBpmDistanceList.push(v);
-        }
-      );
-    }
-  );
 
   // Get track info
   form.find('table.tracks tr').each(

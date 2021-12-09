@@ -134,15 +134,26 @@ function setupFormElementsForRandomizeByBpm(form) {
         b.removeClass('loading');
       };
 
-      // Randomize playlist
-      var data = getPlaylistData(form);
-      if (data == null) {
+      var playlist_data = getPlaylistData(form);
+      if (playlist_data == null) {
+        alert('<?= LNG_ERR_FAILED_TO_RANDOMIZE ?>');
+        return;
+      }
+      var bpm_data = getBpmSettings(form);
+      if (bpm_data == null) {
+        alert('<?= LNG_ERR_FAILED_TO_RANDOMIZE ?>');
         return;
       }
 
-      delete data.leftoverTrackIdList;
-      data.danceSlotSameCategory =
-        form.find('input[id=chkboxDanceSlotSameCategory]').prop('checked');
+      var data = { trackIdList: playlist_data.trackIdList
+                 , trackBpmList: playlist_data.trackBpmList
+                 , trackCategoryList: playlist_data.trackCategoryList
+                 , bpmRangeList: bpm_data.bpmRangeList
+                 , bpmDifferenceList: bpm_data.bpmDifferenceList
+                 , danceSlotSameCategory:
+                     form.find('input[id=chkboxDanceSlotSameCategory]')
+                     .prop('checked')
+                 };
       $.post('/api/randomize-by-bpm/', { data: JSON.stringify(data) })
         .done(
           function(res) {
@@ -172,30 +183,33 @@ function setupFormElementsForRandomizeByBpm(form) {
     }
   );
 
-  // BPM distance
-  var buildBpmDistSlider = function(tr) {
-    var printValue =
-      function(v1) { tr.find('td.label > span').text(v1); };
-    tr.find('td.dist-controller > div').each(
+  // BPM differences
+  var buildBpmDiffSlider = function(tr) {
+    var printValues =
+      function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
+    tr.find('td.difference-controller > div').each(
       function() {
         if ($(this).children().length > 0) {
           $(this).empty();
         }
         $(this).slider(
-          { min: -128
+          { range: true
+          , min: -128
           , max: 128
-          , values: [0]
+          , values: [10, 40]
           , slide: function(event, ui) {
-              printValue(ui.values[0]);
+              printValues(ui.values[0], ui.values[1]);
             }
           }
         );
-        printValue($(this).slider('values', 0));
+        printValues( $(this).slider('values', 0)
+                   , $(this).slider('values', 1)
+                   );
       }
     );
   };
-  $('table.bpm-range-area tr.distance').each(
-    function() { buildBpmDistSlider($(this)); }
+  $('table.bpm-range-area tr.difference').each(
+    function() { buildBpmDiffSlider($(this)); }
   );
 
   // BPM ranges and buttons
@@ -225,19 +239,19 @@ function setupFormElementsForRandomizeByBpm(form) {
   };
   var setupBpmRangeButtons = function(range_tr) {
     var base_range_tr = range_tr.clone();
-    var dist_tr = range_tr.next().length > 0 ? range_tr.next() : range_tr.prev();
-    var base_dist_tr = dist_tr.clone();
+    var diff_tr = range_tr.next().length > 0 ? range_tr.next() : range_tr.prev();
+    var base_diff_tr = diff_tr.clone();
 
     // Add button
     var btn = range_tr.find('button.add');
     btn.click(
       function() {
         var new_range_tr = base_range_tr.clone();
-        var new_dist_tr = base_dist_tr.clone();
+        var new_diff_tr = base_diff_tr.clone();
         buildBpmRangeSlider(new_range_tr);
-        buildBpmDistSlider(new_dist_tr);
-        range_tr.after(new_dist_tr);
-        new_dist_tr.after(new_range_tr);
+        buildBpmDiffSlider(new_diff_tr);
+        range_tr.after(new_diff_tr);
+        new_diff_tr.after(new_range_tr);
         setupBpmRangeButtons(new_range_tr);
         updateBpmRangeTrackCounters();
         enableRemoveButtons();
@@ -250,10 +264,10 @@ function setupFormElementsForRandomizeByBpm(form) {
         $(this).click(
           function() {
             var range_tr = $(this).parent().parent();
-            var dist_tr = range_tr.next().length > 0
+            var diff_tr = range_tr.next().length > 0
                             ? range_tr.next() : range_tr.prev();
             range_tr.remove();
-            dist_tr.remove();
+            diff_tr.remove();
             disableRemoveButtonsIfNeeded();
             updateBpmRangeTrackCounters();
           }
@@ -304,6 +318,34 @@ function setupFormElementsForRandomizeByBpm(form) {
       .css('display', $(this).prop('checked') ? 'block' : 'none');
     }
   );
+}
+
+function getBpmSettings(form) {
+  var data = { bpmRangeList: []
+             , bpmDifferenceList: []
+             };
+
+  form.find('table.bpm-range-area tr').each(
+    function() {
+      var tr = $(this);
+      tr.find('td.range-controller > div').each(
+        function() {
+          v1 = $(this).slider('values', 0);
+          v2 = $(this).slider('values', 1);
+          data.bpmRangeList.push([v1, v2]);
+        }
+      );
+      tr.find('td.difference-controller > div').each(
+        function() {
+          v1 = $(this).slider('values', 0);
+          v2 = $(this).slider('values', 1);
+          data.bpmDifferenceList.push([v1, v2]);
+        }
+      );
+    }
+  );
+
+  return data;
 }
 
 function updatePlaylistAfterRandomize(form, track_order, bpm_ranges) {

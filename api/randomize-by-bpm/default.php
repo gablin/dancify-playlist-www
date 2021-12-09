@@ -33,8 +33,8 @@ if (!array_key_exists('trackCategoryList', $json)) {
 if (!array_key_exists('bpmRangeList', $json)) {
   fail('bpmRangeList missing');
 }
-if (!array_key_exists('minBpmDistanceList', $json)) {
-  fail('minBpmDistanceList missing');
+if (!array_key_exists('bpmDifferenceList', $json)) {
+  fail('bpmDifferenceList missing');
 }
 if (!array_key_exists('danceSlotSameCategory', $json)) {
   fail('danceSlotSameCategory missing');
@@ -55,15 +55,15 @@ if (count($track_ids) != count($bpms) || count($track_ids) != count($categories)
   fail('inconsistent number of track IDs, BPMs and/or categories');
 }
 $ranges = $json['bpmRangeList'];
-$min_bpm_dists = $json['minBpmDistanceList'];
+$diffs = $json['bpmDifferenceList'];
 if (count($ranges) == 0) {
-  fail('no ranges');
+  fail('no BPM ranges');
 }
-if (count($min_bpm_dists) == 0) {
-  fail('no min-BPM distances');
+if (count($diffs) == 0) {
+  fail('no BPM differences');
 }
-if (count($ranges) != count($min_bpm_dists)+1) {
-  fail('inconsistent number of ranges and min-BPM distances');
+if (count($ranges) != count($diffs)+1) {
+  fail('inconsistent number of BPM ranges and differences');
 }
 
 // Randomize track order
@@ -91,7 +91,13 @@ $dzn_content .= "ranges = [|" .
                                    )
                         ) .
                 "|];\n";
-$dzn_content .= "min_bpm_distance = [" . implode(',', $min_bpm_dists) . "];\n";
+$dzn_content .= "diffs = [|" .
+                 implode( '|'
+                        , array_map( function ($l) { return implode(',', $l); }
+                                   , $diffs
+                                   )
+                        ) .
+                "|];\n";
 $dzn_content .= "dance_slot_same_category = " .
                 ($json['danceSlotSameCategory'] ? "true" : "false") .
                 "\n;";

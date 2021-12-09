@@ -3,7 +3,7 @@ include "globals.mzn";
 array[int] of int: bpm;
 array[int] of int: categories;
 array[int, int] of int: ranges;
-array[int] of int: min_bpm_distance;
+array[int, int] of int: diffs;
 set of int: RangeSet = index_set_1of2(ranges);
 bool: dance_slot_same_category;
 
@@ -26,8 +26,8 @@ var int: n_slot_full = sum(slot_full);
 
 % Assert number of ranges is 1+ number of min BPM distances.
 constraint
-assert( card(index_set_1of2(ranges)) == card(index_set(min_bpm_distance))+1
-      , "num(ranges) == num(min_bpm_distance)+1"
+assert( card(index_set_1of2(ranges)) == card(index_set_1of2(diffs))+1
+      , "num(ranges) != num(diffs)+1"
       , true
       );
 
@@ -62,25 +62,40 @@ then forall (s in DanceSlotSet, i in (s-1)*card(RangeSet)+1..s*card(RangeSet)-1 
 else true
 endif;
 
-% Ensure that there is at least minimal BPM distance between two adjacent tracks
-% in the same dance slot. A positive/negative BPM distance means that the
-% following track must be faster/slower by at least that much. A BPM distance
-% of 0 means this check is disabled.
+% Ensure that there BPM difference between two adjacent tracks
+% in the same dance slot is within the acceptable difference range. A
+% positive/negative BPM distance means that the following track must be
+% faster/slower by at least that much. A BPM difference range of 0 means this
+% check is disabled.
 constraint
-forall (i in index_set(min_bpm_distance))
-( let { int: d = min_bpm_distance[i] }
-  in if d != 0
-     then forall ( j in OrderSet
-                   where (j mod card(RangeSet)) == (i mod card(RangeSet))
-                 )
-          ( (has_track[j] /\ has_track[j+1]) ->
-            if d > 0
-            then bpm[order[j+1]] - bpm[order[j]] >= d
-            else bpm[order[j+1]] - bpm[order[j]] <= d
+forall (i in index_set_1of2(diffs))
+( let { int: v1 = diffs[i, 1]
+      , int: v2 = diffs[i, 2]
+      , int: min_d = if v1 > 0 then min(v1, v2) else max(v1, v2) endif
+      , int: max_d = if v1 > 0 then max(v1, v2) else min(v1, v2) endif
+      }
+  in forall ( j in OrderSet
+              where (j mod card(RangeSet)) == (i mod card(RangeSet))
+            )
+     ( assert( v1*v2 >= 0
+             , "differences have non-matching signs: \(v1), \(v2)"
+             , true
+             ) /\
+       if min_d != 0
+       then (has_track[j] /\ has_track[j+1]) ->
+            if min_d > 0
+            then bpm[order[j+1]] - bpm[order[j]] >= min_d
+            else bpm[order[j+1]] - bpm[order[j]] <= min_d
             endif
-          )
-     else true
-     endif
+       endif /\
+       if max_d != 0
+       then (has_track[j] /\ has_track[j+1]) ->
+            if max_d > 0
+            then bpm[order[j+1]] - bpm[order[j]] <= max_d
+            else bpm[order[j+1]] - bpm[order[j]] >= max_d
+            endif
+       endif
+     )
 );
 
 % Count number of tracks in each slot.

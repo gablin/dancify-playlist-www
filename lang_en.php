@@ -122,6 +122,9 @@ define( 'LNG_ERR_FREQ_MUST_BE_GT'
 define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       , 'failed to add tracks to new playlist'
       );
+define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
+      , 'failed to run randomization'
+      );
 define( 'LNG_INSTR_SELECT_PLAYLIST_TO_DING'
       , 'Select playlist'
       );
@@ -173,8 +176,8 @@ define( 'LNG_DESC_BPM'
 define( 'LNG_DESC_BPM_RANGE_TRACK'
       , 'Track'
       );
-define( 'LNG_DESC_MIN_BPM_DISTANCE'
-      , 'Min dist.'
+define( 'LNG_DESC_BPM_DIFFERENCE'
+      , 'Diff'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

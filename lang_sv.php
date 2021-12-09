@@ -122,6 +122,9 @@ define( 'LNG_ERR_FREQ_MUST_BE_GT'
 define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       , 'misslyckades att lägga in låtar i ny spellista'
       );
+define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
+      , 'misslyckades att köra randomiseringen'
+      );
 define( 'LNG_INSTR_SELECT_PLAYLIST_TO_DING'
       , 'Välj spellista som du vill dingifiera'
       );
@@ -173,8 +176,8 @@ define( 'LNG_DESC_BPM'
 define( 'LNG_DESC_BPM_RANGE_TRACK'
       , 'Låt'
       );
-define( 'LNG_DESC_MIN_BPM_DISTANCE'
-      , 'Min. avstånd'
+define( 'LNG_DESC_BPM_DIFFERENCE'
+      , 'Diff'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

@@ -57,12 +57,12 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
         <button class="remove lowlight">-</button>
       </td>
     </tr>
-    <tr class="distance">
+    <tr class="difference">
       <td></td>
       <td class="label">
-        <?php echo(LNG_DESC_MIN_BPM_DISTANCE) ?>: <span></span>
+        <?php echo(LNG_DESC_BPM_DIFFERENCE) ?>: <span></span>
       </td>
-      <td class="dist-controller">
+      <td class="difference-controller">
         <div></div>
       </td>
       <td></td>
