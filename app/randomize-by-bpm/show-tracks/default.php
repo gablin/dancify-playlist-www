@@ -630,29 +630,22 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   // Save existing track IDs, track names, and BPMs
   var track_ids = [];
   var track_titles = [];
+  var track_preview_urls = [];
   var track_bpms = [];
   var track_categories = [];
-  form.find('tr').each(
+  form.find('tr.track').each(
     function() {
       var tr = $(this);
-      var tid_input = tr.find('input[name=track_id]');
-      var title_e = tr.find('td[class=title]');
-      var bpm_input = tr.find('input[name=bpm]');
-      var category_input = tr.find('input[name=category]');
-      if (tid_input.length == 0 || title_e.length == 0 || bpm_input.length == 0) {
-        return;
-      }
-      var tid = tid_input.val().trim();
-      var title = title_e.text().trim();
-      var bpm = bpm_input.val().trim();
-      var category = category_input.val().trim();
-      if (tid.length == 0 || title.length == 0 || !checkBpmInput(bpm, false)) {
-        return;
-      }
+      var tid = tr.find('input[name=track_id]').val().trim();
+      var title = tr.find('td[class=title]').text().trim();
+      var preview_url = tr.find('input[name=preview_url]').val().trim();
+      var bpm = tr.find('input[name=bpm]').val().trim();
+      var category = tr.find('input[name=category]').val().trim();
       track_ids.push(tid);
       track_titles.push(title);
       track_bpms.push(bpm);
       track_categories.push(category);
+      track_preview_urls.push(preview_url);
     }
   );
 
@@ -673,11 +666,12 @@ function updatePlaylist(form, track_order, bpm_ranges) {
   }
   tr_template = $(tr_template[0]).clone(true, true);
   var createNewPlaylistRow =
-    function(playlist_index, track_id, title, bpm, category) {
+    function(playlist_index, track_id, title, preview_url, bpm, category) {
       var new_tr = tr_template.clone(true, true);
       new_tr.find('td[class=index]').text(playlist_index);
       new_tr.find('td[class=title]').text(title);
       new_tr.find('input[name=track_id]').prop('value', track_id);
+      new_tr.find('input[name=preview_url]').prop('value', preview_url);
       new_tr.find('input[name=bpm]').prop('value', bpm);
       new_tr.find('input[name=category]').prop('value', category);
       return new_tr;
@@ -708,6 +702,7 @@ function updatePlaylist(form, track_order, bpm_ranges) {
         createNewPlaylistRow( playlist_index
                             , tid
                             , track_titles[i]
+                            , track_preview_urls[i]
                             , track_bpms[i]
                             , track_categories[i]
                             );
@@ -718,9 +713,12 @@ function updatePlaylist(form, track_order, bpm_ranges) {
                                    , '<?= LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT ?>'
                                    , ''
                                    , ''
+                                   , ''
                                    );
+      new_tr.removeClass('track');
       new_tr.addClass('unfilled-slot');
-      new_tr.find('input[name=track_id]').prop('value', '');
+      new_tr.find('input[name=track_id]').remove();
+      new_tr.find('input[name=preview_url]').remove();
       new_tr.find('input[name=bpm]').remove();
       var min_bpm = bpm_ranges[range_index][0];
       var max_bpm = bpm_ranges[range_index][1];
