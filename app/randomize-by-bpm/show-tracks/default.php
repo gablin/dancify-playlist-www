@@ -234,6 +234,13 @@ function setupCategoryUpdate(form) {
   var category_inputs = form.find('input[name=category]');
   category_inputs.each(
     function() {
+      $(this).click(
+        function(e) {
+          // Prevent playing of track preview
+          e.stopPropagation();
+          return false;
+        }
+      );
       $(this).change(
         function() {
           var category_input = $(this);
