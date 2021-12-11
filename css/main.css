@@ -198,60 +198,65 @@ table th {
   letter-spacing: .1em;
 }
 
-table.tracks {
+.playlist .playlist-title {
+  font-size: 125%;
+  font-weight: bold;
   margin-top: 2em;
+}
+.playlist table {
+  margin-top: 1em;
   border-collapse: collapse;
 }
-table.tracks tbody tr.track:hover {
+.playlist table tbody tr.track:hover {
   background-color: #eee;
   cursor: pointer;
 }
-table.tracks tbody tr.playing,
-table.tracks tbody tr.playing:hover {
+.playlist table tbody tr.playing,
+.playlist table tbody tr.playing:hover {
   background-color: rgba(12, 167, 97, 0.3);
 }
-table.tracks tbody tr.cannot-play,
-table.tracks tbody tr.cannot-play:hover {
+.playlist table tbody tr.cannot-play,
+.playlist table tbody tr.cannot-play:hover {
   background-color: rgba(230, 0, 0, 0.3);
 }
-table.tracks .insert,
-table.tracks .after {
+.playlist table .insert,
+.playlist table .after {
   color: #09814A;
 }
-table.tracks .index {
+.playlist table .index {
   text-align: right;
   width: 2em;
   padding-right: 1em;
 }
-table.tracks .length,
-table.tracks th.bpm,
-table.tracks td.bpm {
+.playlist table .length,
+.playlist table th.bpm,
+.playlist table td.bpm {
   text-align: right;
   padding-right: 1em;
 }
-table.tracks td.bpm {
+.playlist table td.bpm {
   font-size: 90%;
 }
-table.tracks th.category,
-table.tracks td.category {
+.playlist table th.category,
+.playlist table td.category {
   display: none;
 }
-table.tracks .summary {}
-table.tracks .sep {
+.playlist table .summary {}
+.playlist table .sep {
   height: 1em;
 }
-table.tracks tr.dance-slot-sep td {
+.playlist table tr.dance-slot-sep td {
   padding: 0.5em 0;
 }
-table.tracks tr.dance-slot-sep div {
+.playlist table tr.dance-slot-sep div {
   border-top: 1px solid #09814A;
   opacity: 0.5;
 }
-table.tracks td.leftover {
+.playlist table td.leftover {
   padding-top: 1em;
   font-weight: bold;
 }
-table.tracks tr.unfilled-slot {
+.playlist table tr.unfilled-slot {
   font-style: italic;
 }
 

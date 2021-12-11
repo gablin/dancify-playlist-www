@@ -2,7 +2,7 @@
 require '../autoload.php';
 ?>
 
-function setupSaveButton(form, is_playlist_public) {
+function setupSaveButton(form, table, is_playlist_public) {
   var save_b = form.find('button[id=saveBtn]');
   save_b.click(
     function() {
@@ -23,7 +23,7 @@ function setupSaveButton(form, is_playlist_public) {
       }
 
       // Save new playlist
-      var playlist_data = getPlaylistData(form, true, true, false);
+      var playlist_data = getPlaylistData(form, table, true, true, false);
       var data = { trackIdList: playlist_data.trackIdList
                  , leftoverTrackIdList: playlist_data.leftoverTrackIdList
                  , playlistName: name
@@ -58,6 +58,7 @@ function setupSaveButton(form, is_playlist_public) {
 }
 
 function getPlaylistData( form
+                        , table
                         , include_unfilled_slots = false
                         , include_leftover = false
                         , report_errors = true
@@ -72,7 +73,7 @@ function getPlaylistData( form
   var in_leftover_section = false;
 
   // Get track info
-  form.find('table.tracks tr').each(
+  table.find('tr').each(
     function() {
       var tr = $(this);
       if ($(this).find('td[class=leftover]').length > 0 && include_leftover) {

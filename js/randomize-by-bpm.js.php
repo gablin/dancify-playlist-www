@@ -5,7 +5,7 @@ require '../autoload.php';
 function setupRandomizeByBpm(form, table) {
   setupBpmUpdate(form);
   setupCategoryUpdate(form);
-  setupFormElementsForRandomizeByBpm(form);
+  setupFormElementsForRandomizeByBpm(form, table);
 }
 
 function setupBpmUpdate(form) {
@@ -121,7 +121,7 @@ function setupCategoryUpdate(form) {
   );
 }
 
-function setupFormElementsForRandomizeByBpm(form) {
+function setupFormElementsForRandomizeByBpm(form, table) {
   // Randomize button
   var rnd_b = form.find('button[id=randomizeBtn]');
   rnd_b.click(
@@ -134,7 +134,7 @@ function setupFormElementsForRandomizeByBpm(form) {
         b.removeClass('loading');
       };
 
-      var playlist_data = getPlaylistData(form);
+      var playlist_data = getPlaylistData(form, table);
       if (playlist_data == null) {
         alert('<?= LNG_ERR_FAILED_TO_RANDOMIZE ?>');
         return;
@@ -314,7 +314,7 @@ function setupFormElementsForRandomizeByBpm(form) {
   var chk_b = form.find('input[id=chkboxDanceSlotSameCategory]');
   chk_b.click(
     function() {
-      $('table.tracks .category')
+      table.find('.category')
       .css('display', $(this).prop('checked') ? 'block' : 'none');
     }
   );

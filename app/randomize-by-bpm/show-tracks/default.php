@@ -16,6 +16,7 @@ beginContent();
 try {
 $playlist_id = fromGET('playlist_id');
 $playlist_info = loadPlaylistInfo($api, $playlist_id);
+$playlist_name = $playlist_info->name;
 $tracks = [];
 foreach (loadPlaylistTracks($api, $playlist_id) as $t) {
   $tracks[] = $t->track;
@@ -91,7 +92,11 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
   <?php echo(LNG_DESC_DANCE_SLOT_SAME_CATEGORY) ?>
 </label>
 
-<table id="playlist" class="tracks">
+<div class="playlist">
+
+<div class="playlist-title"><?= $playlist_name ?></div>
+
+<table id="playlist">
   <thead>
     <tr>
       <th></th>
@@ -149,6 +154,8 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
   </tbody>
 </table>
 
+</div>
+
 </form>
 
 <script src="/js/playlist.js.php"></script>
@@ -158,14 +165,14 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 $(document).ready(
   function() {
     var form = $('form[name=playlist]');
-    var table = $('table.tracks');
+    var table = $('table[id=playlist]');
 
     // Disable submission
     form.submit(function() { return false; });
 
     setupPlaylistElementsForPreview(form, table);
 
-    setupSaveButton(form, <?= $playlist_info->public ? 'true' : 'false' ?>);
+    setupSaveButton(form, table, <?= $playlist_info->public ? 'true' : 'false' ?>);
     setupRandomizeByBpm(form, table);
   }
 );
