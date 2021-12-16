@@ -41,23 +41,38 @@ define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
 define( 'LNG_BTN_SAVE'
       , 'Spara'
       );
+define( 'LNG_BTN_CANCEL'
+      , 'Avbryt'
+      );
 define( 'LNG_BTN_RANDOMIZE'
       , 'Slumpa'
       );
 define( 'LNG_BTN_I_AGREE'
       , 'Jag godkänner'
       );
-define( 'LNG_MENU_HOME'
-      , 'Hem'
+define( 'LNG_BTN_INSERT'
+      , 'Lägg in'
+      );
+define( 'LNG_MENU'
+      , 'Meny'
       );
 define( 'LNG_MENU_LOGOUT'
       , 'Logga ut'
       );
-define( 'LNG_MENU_SELECT_PLAYLIST'
-      , 'Välj spellista'
+define( 'LNG_MENU_CHANGE_PLAYLIST'
+      , 'Byt spellista'
       );
 define( 'LNG_MENU_SAVE_AS_NEW_PLAYLIST'
       , 'Spara som ny spellista'
+      );
+define( 'LNG_MENU_RANDOMIZE_BY_BPM'
+      , 'Slumpa efter BPM'
+      );
+define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
+      , 'Lägg in låt vid intervall'
+      );
+define( 'LNG_MENU_HOME'
+      , 'Hem'
       );
 define( 'LNG_MENU_SAVED'
       , 'Sparad'
@@ -107,6 +122,9 @@ define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
 define( 'LNG_DESC_INSTRUCTIONS'
       , 'Instruktioner'
       );
+define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
+      , 'Måste ange en låt att lägga in'
+      );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'misslyckades att ladda låt'
       );
@@ -125,11 +143,8 @@ define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
       , 'misslyckades att köra randomiseringen'
       );
-define( 'LNG_INSTR_SELECT_PLAYLIST_TO_DING'
-      , 'Välj spellista som du vill dingifiera'
-      );
-define( 'LNG_INSTR_SELECT_PLAYLIST_TO_RANDOMIZE'
-      , 'Välj spellista som du vill slumpa'
+define( 'LNG_INSTR_SELECT_PLAYLIST'
+      , 'Välj spellista'
       );
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Skriv in "%s" eller "%s"'
@@ -178,6 +193,9 @@ define( 'LNG_DESC_BPM_RANGE_TRACK'
       );
 define( 'LNG_DESC_BPM_DIFFERENCE'
       , 'Diff'
+      );
+define( 'LNG_DESC_PLAYLIST_NAME'
+      , 'Namn'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

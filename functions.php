@@ -286,6 +286,17 @@ function formatArtists($t) {
 }
 
 /**
+ * Formats track title.
+ *
+ * @param string $artists Track artists.
+ * @param string $name Track name.
+ * @returns string
+ */
+function formatTrackTitle($artists, $name) {
+  return $artists . ' - ' . $name;
+}
+
+/**
  * Takes a Spotify link or URI and returns the track ID.
  *
  * @param string $s String to parse.

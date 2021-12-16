@@ -95,55 +95,44 @@ div.logo div.text {
 div.menu {
   border-bottom: 1px solid #121619;
   font-family: 'Roboto Condensed', sans-serif;
-}
-div.menu ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
   background-color: #121619;
+  overflow: hidden;
 }
-div.menu ul li {
-  float: left;
-  border-right: 1px solid #2D4739;
-}
-div.menu ul li.logout {
-  float: right;
-}
-div.menu ul li a {
-  display: block;
+div.menu a {
+  display: inline-block;
   color: #FFF;
   padding: .5em 1em .5em 1em;
   transition: background-color .2s;
+  font-size: 95%;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-right: 1px solid #2D4739;
 }
-div.menu ul li a:hover {
+div.menu a:hover,
+div.menu div.dropdown-content a:hover {
   background-color: #2D4739;
   text-decoration: none;
 }
-div.menu ul li.logout a {
-  background-color: #2D4739;
+div.menu div.dropdown {
+  float: left;
+  overflow: hidden;
 }
-div.menu ul li.logout a:hover {
-  background-color: #09814A;
-  text-decoration: none;
-}
-div.menu ul li a:before {
+div.menu div.dropdown-content {
+  display: none;
   position: absolute;
-  margin-left: -1.05em;
-  margin-top: .15em;
-  content: '';
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-left: 6px solid #2D4739;
   z-index: 1;
-  transition: border-color .2s;
 }
-div.menu ul li a:hover:before {
-  border-left-color: #121619;
+div.menu div.dropdown-content a {
+  display: block;
+  background-color: #121619;
+  letter-spacing: normal;
+  text-transform: none;
 }
-div.menu ul li:first-child a:before,
-div.menu ul li.logout a:before {
-  border: 0;
+div.menu div.dropdown-content a.logout:hover {
+  background-color: #810909;
+}
+div.menu div.dropdown:hover div.dropdown-content {
+  display: block;
 }
 
 div.login {
@@ -237,10 +226,6 @@ table th {
 .playlist table td.bpm {
   font-size: 90%;
 }
-.playlist table th.category,
-.playlist table td.category {
-  display: none;
-}
 .playlist table .summary {}
 .playlist table .sep {
   height: 1em;
@@ -258,6 +243,9 @@ table th {
 }
 .playlist table tr.unfilled-slot {
   font-style: italic;
+}
+.playlist table tr.summary .length {
+  padding-top: .5em;
 }
 
 form div.input {
@@ -291,6 +279,7 @@ input.invalid {
 input.centered {
   text-align: center;
 }
+
 button,
 input.button {
   margin: .5em 0;
@@ -309,7 +298,8 @@ input.button {
 }
 button:hover,
 input.button:hover,
-button.lowlight:hover {
+button.lowlight:hover,
+button.cancel:hover {
   background-color: #0CA761;
   border-color: #0CA761;
   color: #fff;
@@ -322,18 +312,22 @@ button.lowlight:disabled {
   color: #fff;
   cursor: not-allowed !important;
 }
+button.small {
+  padding: .1em .4em;
+  border-radius: .2em;
+}
 
-label {
+label.checkbox {
   position: relative;
   padding-left: 1.7em;
 }
-label input {
+label.checkbox input {
   position: absolute;
   opacity: 0;
   height: 0;
   width: 0;
 }
-label .checkmark {
+label.checkbox .checkmark {
   position: absolute;
   top: 0;
   left: 0;
@@ -343,13 +337,13 @@ label .checkmark {
   border: 1px solid #09814A;
   transition: background-color .2s;
 }
-label:hover input ~ .checkmark {
+label.checkbox:hover input ~ .checkmark {
   background-color: #ccc;
 }
-label input:checked ~ .checkmark {
+label.checkbox input:checked ~ .checkmark {
   background-color: #09814A;
 }
-label:hover input:checked ~ .checkmark {
+label.checkbox:hover input:checked ~ .checkmark {
   background-color: #0CA761;
 }
 .checkmark:after {
@@ -357,10 +351,10 @@ label:hover input:checked ~ .checkmark {
   position: absolute;
   display: none;
 }
-label input:checked ~ .checkmark:after {
+label.checkbox input:checked ~ .checkmark:after {
   display: block;
 }
-label .checkmark:after {
+label.checkbox .checkmark:after {
   left: .3em;
   top: .1em;
   width: .25em;
@@ -387,11 +381,14 @@ div.logo div.lang a:hover {
 
 div.instruction {
   margin: 1em 0;
+  font-size: 125%;
+  font-weight: bold;
 }
 
 div.cookies {
   position: fixed;
   z-index: 1;
+  width: 100%;
   bottom: 0;
   border-top: 1px solid #121619;
   background-color: #09814A;
@@ -417,6 +414,43 @@ div.cookies button {
 div.cookies button:hover {
   background-color: #A0F8D0;
   border-color: #A0F8D0;
+}
+
+div.action-input-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: none;
+}
+div.action-input-area div.background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: #121619;
+  opacity: 30%;
+}
+div.action-input-area div.input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 1px solid #000;
+  padding: 2em;
+}
+div.action-input-area div.input .title {
+  font-size: 125%;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+div.action-input-area div.input .buttons {
+  margin-top: 1em;
+}
+div.action-input-area div.input .buttons button {
+  float: right;
+  margin-left: 2em;
 }
 
 div.song_link_help {
@@ -452,7 +486,8 @@ div.song_link_help div.info img {
   margin-top: 1.25em;
 }
 
-button.lowlight {
+button.lowlight,
+button.cancel {
   background-color: #fff;
   color: #09814A;
 }

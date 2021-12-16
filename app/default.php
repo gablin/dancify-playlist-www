@@ -1,24 +1,40 @@
 <?php
 require '../autoload.php';
+require 'functions.php';
 
 ensureSession();
 $session = getSession();
 $api = createWebApi($session);
 
 beginPage();
-createMenu();
+mkHtmlNavMenu([]);
 beginContent();
 try {
 ?>
 
+<?php
+$playlists = loadPlaylists($api);
+?>
+
 <div class="instruction">
-  <?php echo(LNG_INSTR_SELECT_APP); ?>:
+  <?php echo(LNG_INSTR_SELECT_PLAYLIST); ?>
 </div>
 
-<ul>
-  <li><a href="./insert-ding/"><?php echo(LNG_APP_INSERT_DING); ?></a></li>
-  <li><a href="./randomize-by-bpm/"><?php echo(LNG_APP_RANDOMIZE_BY_BPM); ?></a></li>
-</ul>
+<table>
+  <?php
+  foreach ($playlists as $p) {
+    $name = $p->name;
+    $id = $p->id;
+    ?>
+    <tr>
+      <td>
+        <a href="./playlist/?id=<?php echo($id); ?>"><?php echo($name); ?></a>
+      </td>
+    </tr>
+    <?php
+  }
+  ?>
+</table>
 
 <?php
 }

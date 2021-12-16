@@ -41,26 +41,41 @@ define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
 define( 'LNG_BTN_SAVE'
       , 'Save'
       );
+define( 'LNG_BTN_CANCEL'
+      , 'Cancel'
+      );
 define( 'LNG_BTN_RANDOMIZE'
       , 'Randomize'
       );
 define( 'LNG_BTN_I_AGREE'
       , 'I agree'
       );
-define( 'LNG_MENU_HOME'
-      , 'Home'
+define( 'LNG_BTN_INSERT'
+      , 'Insert'
+      );
+define( 'LNG_MENU'
+      , 'Menu'
       );
 define( 'LNG_MENU_LOGOUT'
       , 'Logout'
       );
-define( 'LNG_MENU_SELECT_PLAYLIST'
-      , 'Select playlist'
-      );
-define( 'LNG_MENU_SAVED'
-      , 'Saved'
+define( 'LNG_MENU_CHANGE_PLAYLIST'
+      , 'Change playlist'
       );
 define( 'LNG_MENU_SAVE_AS_NEW_PLAYLIST'
       , 'Save as new playlist'
+      );
+define( 'LNG_MENU_RANDOMIZE_BY_BPM'
+      , 'Randomize by BPM'
+      );
+define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
+      , 'Insert track at interval'
+      );
+define( 'LNG_MENU_HOME'
+      , 'Home'
+      );
+define( 'LNG_MENU_SAVED'
+      , 'Saved'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
@@ -107,6 +122,9 @@ define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
 define( 'LNG_DESC_INSTRUCTIONS'
       , 'Instructions'
       );
+define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
+      , 'Must specify a track to insert'
+      );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'failed to load track'
       );
@@ -125,11 +143,8 @@ define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
       , 'failed to run randomization'
       );
-define( 'LNG_INSTR_SELECT_PLAYLIST_TO_DING'
+define( 'LNG_INSTR_SELECT_PLAYLIST'
       , 'Select playlist'
-      );
-define( 'LNG_INSTR_SELECT_PLAYLIST_TO_RANDOMIZE'
-      , 'Select playlist you want to randomize'
       );
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Enter "%s" or "%s"'
@@ -178,6 +193,9 @@ define( 'LNG_DESC_BPM_RANGE_TRACK'
       );
 define( 'LNG_DESC_BPM_DIFFERENCE'
       , 'Diff'
+      );
+define( 'LNG_DESC_PLAYLIST_NAME'
+      , 'Name'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

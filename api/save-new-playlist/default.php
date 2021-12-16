@@ -26,9 +26,6 @@ if (is_null($json)) {
 if (!array_key_exists('trackIdList', $json)) {
   fail('trackIdList missing');
 }
-if (!array_key_exists('leftoverTrackIdList', $json)) {
-  fail('leftoverTrackIdList missing');
-}
 if (!array_key_exists('playlistName', $json)) {
   fail('playlistName missing');
 }
@@ -36,7 +33,6 @@ if (!array_key_exists('publicPlaylist', $json)) {
   fail('publicPlaylist missing');
 }
 $track_ids = $json['trackIdList'];
-$leftover_track_ids = $json['leftoverTrackIdList'];
 if (count($track_ids) == 0) {
   fail('no track IDs');
 }
@@ -49,24 +45,6 @@ if (!is_bool($make_public)) {
   fail('illegal publicPlaylist value');
 }
 
-// Build list of tracks
-$filler_track_id = '2arG6nSmXmh7joBYxxqEdU'; // 5s silence
-$leftover_sep_track_id = '7qLhC1Ib6rfiAJlcssbPDU'; // 60s silence
-$tracks = [];
-foreach ($track_ids as $tid) {
-  if (strlen(trim($tid)) > 0) {
-    $tracks[] = $tid;
-  }
-  else {
-    // Add filler song
-    $tracks[] = $filler_track_id;
-  }
-}
-if (count($leftover_track_ids) > 0) {
-  $tracks[] = $leftover_sep_track_id;
-}
-$tracks = array_merge($tracks, $leftover_track_ids);
-
 // Create new playlist
 $new_playlist = $api->createPlaylist([ 'name' => $playlist_name
                                      , 'public' => $make_public
@@ -78,7 +56,7 @@ $new_playlist = $api->createPlaylist([ 'name' => $playlist_name
 // information, see: https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/
 $limit = 100;
 for ($i = 0; $i < count($track_ids); $i += $limit) {
-  $ts = array_slice($tracks, $i, $limit);
+  $ts = array_slice($track_ids, $i, $limit);
   $res = $api->addPlaylistTracks($new_playlist->id, $ts);
   if (!$res) {
     throw new Exception(LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST);

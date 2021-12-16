@@ -3,122 +3,7 @@ require '../autoload.php';
 ?>
 
 function setupRandomizeByBpm(form, table) {
-  setupBpmUpdate(form);
-  setupCategoryUpdate(form);
   setupFormElementsForRandomizeByBpm(form, table);
-}
-
-function setupBpmUpdate(form) {
-  var bpm_inputs = form.find('input[name=bpm]');
-  bpm_inputs.each(
-    function() {
-      $(this).click(
-        function(e) {
-          // Prevent playing of track preview
-          e.stopPropagation();
-          return false;
-        }
-      );
-      $(this).change(
-        function() {
-          var bpm_input = $(this);
-
-          // Find corresponding track ID
-          var tid_input = bpm_input.parent().parent().find('input[name=track_id]');
-          if (tid_input.length == 0) {
-            console.log('could not find track ID');
-            return;
-          }
-          var tid = tid_input.val().trim();
-          if (tid.length == 0) {
-            return;
-          }
-
-          // Check BPM value
-          var bpm = bpm_input.val().trim();
-          if (!checkBpmInput(bpm)) {
-            bpm_input.addClass('invalid');
-            return;
-          }
-          bpm_input.removeClass('invalid');
-
-          // Save new BPM to database
-          var data = { trackId: tid, bpm: bpm };
-          $.post('/api/update-bpm/', { data: JSON.stringify(data) })
-            .done(
-              function(res) {
-                json = JSON.parse(res);
-                if (json.status == 'OK') {
-                  // Do nothing
-                }
-                else if (json.status == 'FAILED') {
-                  alert('ERROR: ' + json.msg);
-                }
-              }
-            )
-            .fail(
-              function(xhr, status, error) {
-                alert('ERROR: ' + error);
-              }
-            );
-        }
-      );
-    }
-  );
-}
-
-function setupCategoryUpdate(form) {
-  var category_inputs = form.find('input[name=category]');
-  category_inputs.each(
-    function() {
-      $(this).click(
-        function(e) {
-          // Prevent playing of track preview
-          e.stopPropagation();
-          return false;
-        }
-      );
-      $(this).change(
-        function() {
-          var category_input = $(this);
-
-          // Find corresponding track ID
-          var tid_input =
-            category_input.parent().parent().find('input[name=track_id]');
-          if (tid_input.length == 0) {
-            console.log('could not find track ID');
-            return;
-          }
-          var tid = tid_input.val().trim();
-          if (tid.length == 0) {
-            return;
-          }
-
-          var category = category_input.val().trim();
-
-          // Save new category to database
-          var data = { trackId: tid, category: category };
-          $.post('/api/update-category/', { data: JSON.stringify(data) })
-            .done(
-              function(res) {
-                json = JSON.parse(res);
-                if (json.status == 'OK') {
-                  // Do nothing
-                }
-                else if (json.status == 'FAILED') {
-                  alert('ERROR: ' + json.msg);
-                }
-              }
-            )
-            .fail(
-              function(xhr, status, error) {
-                alert('ERROR: ' + error);
-              }
-            );
-        }
-      );
-    }
-  );
 }
 
 function setupFormElementsForRandomizeByBpm(form, table) {
@@ -135,23 +20,23 @@ function setupFormElementsForRandomizeByBpm(form, table) {
       };
 
       var playlist_data = getPlaylistData(form, table);
-      if (playlist_data == null) {
-        alert('<?= LNG_ERR_FAILED_TO_RANDOMIZE ?>');
-        return;
+      var track_ids = [];
+      var bpms = [];
+      var categories = [];
+      for (var i = 0; i < playlist_data.length; i++) {
+        var track = playlist_data[i];
+        track_ids.push(track.trackId)
+        bpms.push(track.bpm);
+        categories.push(track.category);
       }
       var bpm_data = getBpmSettings(form);
-      if (bpm_data == null) {
-        alert('<?= LNG_ERR_FAILED_TO_RANDOMIZE ?>');
-        return;
-      }
-
-      var data = { trackIdList: playlist_data.trackIdList
-                 , trackBpmList: playlist_data.trackBpmList
-                 , trackCategoryList: playlist_data.trackCategoryList
+      var data = { trackIdList: track_ids
+                 , trackBpmList: bpms
+                 , trackCategoryList: categories
                  , bpmRangeList: bpm_data.bpmRangeList
                  , bpmDifferenceList: bpm_data.bpmDifferenceList
                  , danceSlotSameCategory:
-                     form.find('input[id=chkboxDanceSlotSameCategory]')
+                     form.find('input[name=dance-slot-has-same-category]')
                      .prop('checked')
                  };
       $.post('/api/randomize-by-bpm/', { data: JSON.stringify(data) })
@@ -160,6 +45,7 @@ function setupFormElementsForRandomizeByBpm(form, table) {
             json = JSON.parse(res);
             if (json.status == 'OK') {
               updatePlaylistAfterRandomize( form
+                                          , table
                                           , json.trackOrder
                                           , data.bpmRangeList
                                           );
@@ -167,15 +53,16 @@ function setupFormElementsForRandomizeByBpm(form, table) {
             else if (json.status == 'FAILED') {
               alert('ERROR: ' + json.msg);
             }
+            // TODO: indicate unsaved changes
             restoreButton();
-            b.addClass('lowlight');
-            form.find('div[id=new-playlist-area]').css('display', 'block');
+            clearActionInputs();
           }
         )
         .fail(
           function(xhr, status, error) {
             alert('ERROR: ' + error);
             restoreButton();
+            clearActionInputs();
           }
         );
 
@@ -309,15 +196,6 @@ function setupFormElementsForRandomizeByBpm(form, table) {
     }
   );
   disableRemoveButtonsIfNeeded();
-
-  // Checkbox for same category in dance slot
-  var chk_b = form.find('input[id=chkboxDanceSlotSameCategory]');
-  chk_b.click(
-    function() {
-      table.find('.category')
-      .css('display', $(this).prop('checked') ? 'block' : 'none');
-    }
-  );
 }
 
 function getBpmSettings(form) {
@@ -348,173 +226,41 @@ function getBpmSettings(form) {
   return data;
 }
 
-function updatePlaylistAfterRandomize(form, track_order, bpm_ranges) {
-  // Save existing track IDs, track names, and BPMs
-  var track_ids = [];
-  var track_titles = [];
-  var track_preview_urls = [];
-  var track_bpms = [];
-  var track_categories = [];
-  form.find('tr.track').each(
-    function() {
-      var tr = $(this);
-      var tid = tr.find('input[name=track_id]').val().trim();
-      var title = tr.find('td[class=title]').text().trim();
-      var preview_url = tr.find('input[name=preview_url]').val().trim();
-      var bpm = tr.find('input[name=bpm]').val().trim();
-      var category = tr.find('input[name=category]').val().trim();
-      track_ids.push(tid);
-      track_titles.push(title);
-      track_bpms.push(bpm);
-      track_categories.push(category);
-      track_preview_urls.push(preview_url);
-    }
-  );
-
-  // Find <tr> template to use when constructing new playlist
-  var table = form.find('table[id=playlist]');
-  if (table.length == 0) {
-    console.log('failed to find table');
-    return;
-  }
-  var tr_template = table.find('tr').filter(
-    function (index) {
-      return $(this).find('input[name=bpm]').length > 0;
-    }
-  );
-  if (tr_template.length == 0) {
-    console.log('failed to find <tr> template');
-    return;
-  }
-  tr_template = $(tr_template[0]).clone(true, true);
-  var createNewPlaylistRow =
-    function(playlist_index, track_id, title, preview_url, bpm, category) {
-      var new_tr = tr_template.clone(true, true);
-      new_tr.find('td[class=index]').text(playlist_index);
-      new_tr.find('td[class=title]').text(title);
-      new_tr.find('input[name=track_id]').prop('value', track_id);
-      new_tr.find('input[name=preview_url]').prop('value', preview_url);
-      new_tr.find('input[name=bpm]').prop('value', bpm);
-      new_tr.find('input[name=category]').prop('value', category);
-      return new_tr;
-    };
-
-  // Construct new playlist using given track order
-  table.find('tr > td').parent().remove();
-  var order_index = 0;
-  var playlist_index = 1;
-  var range_index = 0;
-  var num_used_tracks = 0;
-  var num_cols = table.find('tr > th').length;
-  while (order_index < track_order.length) {
-    var tid = track_order[order_index];
-
-    var new_tr = null;
+function updatePlaylistAfterRandomize(form, table, track_order, bpm_ranges) {
+  var playlist = getPlaylistData(form, table);
+  var new_playlist = [];
+  for (var i = 0, range_index = 0; i < track_order.length; i++) {
+    var tid = track_order[i];
     if (tid.length > 0) {
       // Find track with matching ID
-      var i = 0;
-      for (; track_ids[i] != tid && i < track_ids.length; i++) {}
-      if (i == track_ids.length) {
+      var j = 0;
+      for (; j < playlist.length && playlist[j].trackId != tid; j++) {}
+      if (j == playlist.length) {
         console.log('failed to find track with ID: ' + tid);
         continue;
       }
-      num_used_tracks++;
 
-      new_tr =
-        createNewPlaylistRow( playlist_index
-                            , tid
-                            , track_titles[i]
-                            , track_preview_urls[i]
-                            , track_bpms[i]
-                            , track_categories[i]
-                            );
+      new_playlist.push(playlist[j]);
     }
     else {
-      new_tr = createNewPlaylistRow( playlist_index
-                                   , ''
-                                   , '<?= LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT ?>'
-                                   , ''
-                                   , ''
-                                   , ''
-                                   );
-      new_tr.removeClass('track');
-      new_tr.addClass('unfilled-slot');
-      new_tr.find('input[name=track_id]').remove();
-      new_tr.find('input[name=preview_url]').remove();
-      new_tr.find('input[name=bpm]').remove();
       var min_bpm = bpm_ranges[range_index][0];
       var max_bpm = bpm_ranges[range_index][1];
-      new_tr.find('td[class=bpm]').text(min_bpm + '-' + max_bpm);
-      new_tr.find('input[name=category]').remove();
-    }
-    table.append(new_tr);
-
-    // Add dance slot separator
-    if ( playlist_index % bpm_ranges.length == 0 &&
-         order_index < track_order.length-1
-       )
-    {
-      table.append(
-        $( '<tr class="dance-slot-sep">' +
-             '<td colspan="' + num_cols + '"><div /></td>' +
-           '</tr>'
-         )
+      var bpm_text = min_bpm + '-' + max_bpm;
+      new_playlist.push(
+        createPlaylistPlaceholderObject(
+          '<?= LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT ?>'
+        , ''
+        , bpm_text
+        , ''
+        )
       );
     }
 
-    playlist_index++;
-    order_index++;
     range_index++;
     if (range_index >= bpm_ranges.length) {
       range_index = 0;
     }
   }
 
-  // Append left-over tracks and mark as such
-  if (num_used_tracks < track_ids.length) {
-    table.append(
-      $( '<tr><td class="leftover" colspan="' + num_cols + '">' +
-           '<?= LNG_DESC_TRACKS_NOT_PLACED ?>' +
-         '</td></tr>'
-       )
-    );
-
-    for (var i = 0; i < track_ids.length; i++) {
-      var included = false;
-      for (var j = 0; j < track_order.length; j++) {
-        if (track_ids[i] == track_order[j]) {
-          included = true;
-          break;
-        }
-      }
-      if (!included) {
-        var new_tr =
-          createNewPlaylistRow('', track_ids[i], track_titles[i], track_bpms[i]);
-        table.append(new_tr);
-      }
-    }
-  }
-}
-
-function checkBpmInput(str, report_on_fail = true) {
-  bpm = parseInt(str);
-  if (isNaN(bpm)) {
-    if (report_on_fail) {
-      alert('<?= LNG_ERR_BPM_NAN ?>');
-    }
-    return false;
-  }
-  if (bpm <= 0) {
-    if (report_on_fail) {
-      alert('<?= LNG_ERR_BPM_TOO_SMALL ?>');
-    }
-    return false;
-  }
-  if (bpm > 255) {
-    if (report_on_fail) {
-      alert('<?= LNG_ERR_BPM_TOO_LARGE ?>');
-    }
-    return false;
-  }
-  return true;
+  updatePlaylist(form, table, new_playlist);
 }
