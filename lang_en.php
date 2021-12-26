@@ -53,6 +53,12 @@ define( 'LNG_BTN_I_AGREE'
 define( 'LNG_BTN_INSERT'
       , 'Insert'
       );
+define( 'LNG_BTN_SHOW'
+      , 'Show'
+      );
+define( 'LNG_BTN_HIDE'
+      , 'Hide'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -71,11 +77,8 @@ define( 'LNG_MENU_RANDOMIZE_BY_BPM'
 define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
       , 'Insert track at interval'
       );
-define( 'LNG_MENU_HOME'
-      , 'Home'
-      );
-define( 'LNG_MENU_SAVED'
-      , 'Saved'
+DEFINE( 'LNG_MENU_TRACK_DELIMITER'
+      , 'Track delimiter'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
@@ -149,8 +152,11 @@ define( 'LNG_INSTR_SELECT_PLAYLIST'
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Enter "%s" or "%s"'
       );
-define( 'LNG_INSTR_ENTER_FREQ'
+define( 'LNG_INSTR_INSERT_TRACK_ENTER_FREQ'
       , 'Insert above track after every %s track in playlist'
+      );
+define( 'LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ'
+      , 'Insert delimiter every %s track in playlist'
       );
 define( 'LNG_INSTR_ENTER_NAME_OF_NEW_PLAYLIST'
       , 'Enter name of new playlist'

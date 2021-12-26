@@ -10,6 +10,7 @@ connectDb();
 beginPage();
 mkHtmlNavMenu(
   [ [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
+  , [ LNG_MENU_TRACK_DELIMITER, '#', 'track-delimiter' ]
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , [ LNG_MENU_SAVE_AS_NEW_PLAYLIST, '#', 'save-as-new-playlist' ]
@@ -129,7 +130,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
         <button class="small" onclick="$('div.song_link_help').show();">?</button>
       </div>
       <div>
-        <?= sprintf( LNG_INSTR_ENTER_FREQ
+        <?= sprintf( LNG_INSTR_INSERT_TRACK_ENTER_FREQ
                    , "<input type=\"text\" name=\"insertion-freq\" class=\"number centered\" />"
                    ) ?>
       </div>
@@ -140,6 +141,29 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
         <?= LNG_BTN_CANCEL ?>
       </button>
       <button id="insertTrackBtn"><?= LNG_BTN_INSERT ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="track-delimiter">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_TRACK_DELIMITER ?></div>
+
+    <div>
+      <div>
+        <?= sprintf( LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ
+                   , "<input type=\"text\" name=\"delimiter-freq\" class=\"number centered\" />"
+                   ) ?>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="hideTrackDelimiterBtn"><?= LNG_BTN_HIDE ?></button>
+      <button id="showTrackDelimiterBtn"><?= LNG_BTN_SHOW ?></button>
     </div>
   </div>
 </div>
@@ -221,6 +245,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 <script src="/js/save-playlist.js.php"></script>
 <script src="/js/insert-track.js.php"></script>
 <script src="/js/randomize-by-bpm.js.php"></script>
+<script src="/js/track-delimiter.js.php"></script>
 <script type="text/javascript">
 $(document).ready(
   function() {
@@ -237,7 +262,8 @@ $(document).ready(
                               , <?= $playlist_info->public ? 'true' : 'false' ?>
                               );
     setupRandomizeByBpm(form, table);
-    setupFormElementsForInsertTrack(form, table);
+    setupInsertTrack(form, table);
+    setupTrackDelimiter(form, table);
     setupUnloadWarning(form, table);
   }
 );

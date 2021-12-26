@@ -227,13 +227,10 @@ table th {
   font-size: 90%;
 }
 .playlist table .summary {}
-.playlist table .sep {
-  height: 1em;
-}
-.playlist table tr.dance-slot-sep td {
+.playlist table tr.delimiter td {
   padding: 0.5em 0;
 }
-.playlist table tr.dance-slot-sep div {
+.playlist table tr.delimiter div {
   border-top: 1px solid #09814A;
   opacity: 0.5;
 }

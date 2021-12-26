@@ -3,7 +3,7 @@ require '../autoload.php';
 ?>
 
 function setupInsertTrack(form, table) {
-  setupFormElementsForRandomizeByBpm(form, table);
+  setupFormElementsForInsertTrack(form, table);
 }
 
 function setupFormElementsForInsertTrack(form, table) {
@@ -62,8 +62,6 @@ function setupFormElementsForInsertTrack(form, table) {
             clearActionInputs();
           }
         );
-
-      return;
     }
   );
 }

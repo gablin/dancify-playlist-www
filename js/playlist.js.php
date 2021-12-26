@@ -2,7 +2,8 @@
 require '../autoload.php';
 ?>
 
-var audio = $('<audio />');
+var AUDIO = $('<audio />');
+var PLAYLIST_TRACK_DELIMITER = 0;
 
 function setupPlaylist(form, table) {
   setupTrackPreview(form, table);
@@ -16,7 +17,7 @@ function setupTrackPreview(form, table) {
     function() {
       $(this).click(
         function() {
-          audio.attr('src', ''); // Stop playing
+          AUDIO.attr('src', ''); // Stop playing
           $(this).siblings().removeClass('playing');
           $(this).siblings().removeClass('cannot-play');
           if ($(this).hasClass('playing')) {
@@ -30,8 +31,8 @@ function setupTrackPreview(form, table) {
           }
           if (url.length > 0) {
             $(this).addClass('playing');
-            audio.attr('src', url);
-            audio.get(0).play();
+            AUDIO.attr('src', url);
+            AUDIO.get(0).play();
           }
           else {
             $(this).addClass('cannot-play');
@@ -259,6 +260,10 @@ function createPlaylistPlaceholderObject( title_text
 }
 
 function updatePlaylist(form, table, new_playlist) {
+  if (new_playlist === undefined) {
+    new_playlist = getPlaylistData(form, table);
+  }
+
   // Find <tr> template to use when constructing new playlist
   var tr_templates = table.find('tr.track');
   if (tr_templates.length == 0) {
@@ -273,7 +278,21 @@ function updatePlaylist(form, table, new_playlist) {
 
   // Construct new playlist
   var total_length = 0;
+  var delimiter_i = 0;
   for (var i = 0; i < new_playlist.length; i++) {
+    if ( PLAYLIST_TRACK_DELIMITER > 0 &&
+         delimiter_i == PLAYLIST_TRACK_DELIMITER
+       )
+    {
+      var cols = tr_template.find('td').length;
+      var delimiter_tr = $('<tr class="delimiter"><td colspan="' + cols + '" /><div /></tr>');
+      table.append(delimiter_tr);
+      delimiter_i = 1;
+    }
+    else {
+      delimiter_i++;
+    }
+
     var track = new_playlist[i];
     var new_tr = tr_template.clone(true, true);
     if ('trackId' in track) {

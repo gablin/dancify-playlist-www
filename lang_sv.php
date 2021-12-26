@@ -53,6 +53,12 @@ define( 'LNG_BTN_I_AGREE'
 define( 'LNG_BTN_INSERT'
       , 'Lägg in'
       );
+define( 'LNG_BTN_SHOW'
+      , 'Visa'
+      );
+define( 'LNG_BTN_HIDE'
+      , 'Göm'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -71,11 +77,8 @@ define( 'LNG_MENU_RANDOMIZE_BY_BPM'
 define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
       , 'Lägg in låt vid intervall'
       );
-define( 'LNG_MENU_HOME'
-      , 'Hem'
-      );
-define( 'LNG_MENU_SAVED'
-      , 'Sparad'
+DEFINE( 'LNG_MENU_TRACK_DELIMITER'
+      , 'Låtavgränsning'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
@@ -149,8 +152,11 @@ define( 'LNG_INSTR_SELECT_PLAYLIST'
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Skriv in "%s" eller "%s"'
       );
-define( 'LNG_INSTR_ENTER_FREQ'
+define( 'LNG_INSTR_INSERT_TRACK_ENTER_FREQ'
       , 'Lägg in ovanstående låt efter varje %s låt i spellistan'
+      );
+define( 'LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ'
+      , 'Lägg in avgränsning efter varje %s låt i spellistan'
       );
 define( 'LNG_INSTR_ENTER_NAME_OF_NEW_PLAYLIST'
       , 'Skriv in namn på ny spellista'
