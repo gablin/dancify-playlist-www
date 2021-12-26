@@ -2,11 +2,14 @@
 require '../autoload.php';
 ?>
 
-function setupRandomizeByBpm(form, table) {
-  setupFormElementsForRandomizeByBpm(form, table);
+function setupRandomizeByBpm() {
+  setupFormElementsForRandomizeByBpm();
 }
 
-function setupFormElementsForRandomizeByBpm(form, table) {
+function setupFormElementsForRandomizeByBpm() {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
+
   // Randomize button
   var rnd_b = form.find('button[id=randomizeBtn]');
   rnd_b.click(
@@ -19,7 +22,7 @@ function setupFormElementsForRandomizeByBpm(form, table) {
         b.removeClass('loading');
       };
 
-      var playlist_data = getPlaylistData(form, table);
+      var playlist_data = getPlaylistData();
       var track_ids = [];
       var bpms = [];
       var categories = [];
@@ -29,7 +32,7 @@ function setupFormElementsForRandomizeByBpm(form, table) {
         bpms.push(track.bpm);
         categories.push(track.category);
       }
-      var bpm_data = getBpmSettings(form);
+      var bpm_data = getBpmSettings();
       var data = { trackIdList: track_ids
                  , trackBpmList: bpms
                  , trackCategoryList: categories
@@ -44,9 +47,7 @@ function setupFormElementsForRandomizeByBpm(form, table) {
           function(res) {
             json = JSON.parse(res);
             if (json.status == 'OK') {
-              updatePlaylistAfterRandomize( form
-                                          , table
-                                          , json.trackOrder
+              updatePlaylistAfterRandomize( json.trackOrder
                                           , data.bpmRangeList
                                           );
             }
@@ -198,7 +199,8 @@ function setupFormElementsForRandomizeByBpm(form, table) {
   disableRemoveButtonsIfNeeded();
 }
 
-function getBpmSettings(form) {
+function getBpmSettings() {
+  var form = PLAYLIST_FORM;
   var data = { bpmRangeList: []
              , bpmDifferenceList: []
              };
@@ -226,8 +228,8 @@ function getBpmSettings(form) {
   return data;
 }
 
-function updatePlaylistAfterRandomize(form, table, track_order, bpm_ranges) {
-  var playlist = getPlaylistData(form, table);
+function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
+  var playlist = getPlaylistData();
   var new_playlist = [];
   for (var i = 0, range_index = 0; i < track_order.length; i++) {
     var tid = track_order[i];
@@ -262,5 +264,5 @@ function updatePlaylistAfterRandomize(form, table, track_order, bpm_ranges) {
     }
   }
 
-  updatePlaylist(form, table, new_playlist);
+  updatePlaylist(new_playlist);
 }

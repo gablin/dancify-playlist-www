@@ -2,37 +2,41 @@
 require '../autoload.php';
 ?>
 
-function setupTrackDelimiter(form, table) {
-  setupFormElementsForTrackDelimiter(form, table);
+function setupTrackDelimiter() {
+  setupFormElementsForTrackDelimiter();
 }
 
-function setupFormElementsForTrackDelimiter(form, table) {
+function setupFormElementsForTrackDelimiter() {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
   form.find('button[id=showTrackDelimiterBtn]').click(
     function() {
-      if (!checkTrackDelimiterInput(form)) {
+      if (!checkTrackDelimiterInput()) {
         return;
       }
-      var data = getTrackDelimiterData(form);
+      var data = getTrackDelimiterData();
       PLAYLIST_TRACK_DELIMITER = data.delimiterFreq;
-      updatePlaylist(form, table);
+      updatePlaylist();
       clearActionInputs();
     }
   );
   form.find('button[id=hideTrackDelimiterBtn]').click(
     function() {
       PLAYLIST_TRACK_DELIMITER = 0;
-      updatePlaylist(form, table);
+      updatePlaylist();
       clearActionInputs();
     }
   );
 }
 
-function getTrackDelimiterData(form) {
+function getTrackDelimiterData() {
+  var form = PLAYLIST_FORM;
   return { delimiterFreq: form.find('input[name=delimiter-freq]').val().trim()
          };
 }
 
-function checkTrackDelimiterInput(form) {
+function checkTrackDelimiterInput() {
+  var form = PLAYLIST_FORM;
   var freq_str = form.find('input[name=delimiter-freq]').val().trim();
   freq = parseInt(freq_str);
   if (isNaN(freq)) {

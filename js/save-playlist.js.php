@@ -2,7 +2,9 @@
 require '../autoload.php';
 ?>
 
-function setupSaveNewPlaylistButton(form, table, make_public) {
+function setupSaveNewPlaylistButton(make_public) {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
   var save_b = form.find('button[id=saveAsNewPlaylistBtn]');
   save_b.click(
     function() {
@@ -23,7 +25,7 @@ function setupSaveNewPlaylistButton(form, table, make_public) {
       }
 
       // Save new playlist
-      var playlist_data = getPlaylistData(form, table);
+      var playlist_data = getPlaylistData();
       var track_ids = [];
       for (var i = 0; i < playlist_data.length; i++) {
           track_ids.push(playlist_data[i].trackId);

@@ -2,11 +2,13 @@
 require '../autoload.php';
 ?>
 
-function setupInsertTrack(form, table) {
-  setupFormElementsForInsertTrack(form, table);
+function setupInsertTrack() {
+  setupFormElementsForInsertTrack();
 }
 
-function setupFormElementsForInsertTrack(form, table) {
+function setupFormElementsForInsertTrack() {
+  var form = PLAYLIST_FORM;
+
   form.find('button[id=insertTrackBtn]').click(
     function() {
       var b = $(this);
@@ -37,7 +39,7 @@ function setupFormElementsForInsertTrack(form, table) {
                                                             , json.category
                                                             , json.preview_url
                                                             );
-              var old_playlist = getPlaylistData(form, table);
+              var old_playlist = getPlaylistData();
               var new_playlist = [];
               for (var i = 0; i < old_playlist.length; i++) {
                   if (i > 0 && i % data.insertFreq == 0) {
@@ -45,7 +47,7 @@ function setupFormElementsForInsertTrack(form, table) {
                   }
                   new_playlist.push(old_playlist[i]);
               }
-              updatePlaylist(form, table, new_playlist);
+              updatePlaylist(new_playlist);
               // TODO: indicate unsaved changes
             }
             else if (json.status == 'FAILED') {
@@ -66,13 +68,15 @@ function setupFormElementsForInsertTrack(form, table) {
   );
 }
 
-function getInsertData(form) {
+function getInsertData() {
+  var form = PLAYLIST_FORM;
   return { trackUrl: form.find('input[name=track-to-insert]').val().trim()
          , insertFreq: form.find('input[name=insertion-freq]').val().trim()
          };
 }
 
-function checkTrackInsertInput(form) {
+function checkTrackInsertInput() {
+  var form = PLAYLIST_FORM;
   var track_link = form.find('input[name=track-to-insert]').val().trim();
   if (track_link.length == 0) {
     alert('<?= LNG_ERR_SPECIFY_TRACK_TO_INSERT ?>');

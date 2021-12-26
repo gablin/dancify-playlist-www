@@ -240,6 +240,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 
 </form>
 
+<script src="/js/globals.js.php"></script>
 <script src="/js/actions.js.php"></script>
 <script src="/js/playlist.js.php"></script>
 <script src="/js/save-playlist.js.php"></script>
@@ -251,20 +252,18 @@ $(document).ready(
   function() {
     var form = $('form[id=playlistForm]');
     var table = $('table[id=playlist]');
+    initPlaylistGlobals(form, table);
 
     // Disable submission
     form.submit(function() { return false; });
 
-    setupPlaylist(form, table);
-
-    setupSaveNewPlaylistButton( form
-                              , table
-                              , <?= $playlist_info->public ? 'true' : 'false' ?>
+    setupPlaylist();
+    setupSaveNewPlaylistButton( <?= $playlist_info->public ? 'true' : 'false' ?>
                               );
-    setupRandomizeByBpm(form, table);
-    setupInsertTrack(form, table);
-    setupTrackDelimiter(form, table);
-    setupUnloadWarning(form, table);
+    setupRandomizeByBpm();
+    setupInsertTrack();
+    setupTrackDelimiter();
+    setupUnloadWarning();
   }
 );
 </script>

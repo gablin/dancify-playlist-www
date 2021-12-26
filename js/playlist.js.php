@@ -2,22 +2,22 @@
 require '../autoload.php';
 ?>
 
-var AUDIO = $('<audio />');
-var PLAYLIST_TRACK_DELIMITER = 0;
-
-function setupPlaylist(form, table) {
-  setupTrackPreview(form, table);
-  setupBpmUpdate(form, table);
-  setupCategoryUpdate(form, table);
+function setupPlaylist() {
+  setupTrackPreview();
+  setupBpmUpdate();
+  setupCategoryUpdate();
 }
 
-function setupTrackPreview(form, table) {
+function setupTrackPreview() {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
+
   // Play preview when clicking on row corresponding to track
   table.find('tbody tr.track').each(
     function() {
       $(this).click(
         function() {
-          AUDIO.attr('src', ''); // Stop playing
+          PREVIEW_AUDIO.attr('src', ''); // Stop playing
           $(this).siblings().removeClass('playing');
           $(this).siblings().removeClass('cannot-play');
           if ($(this).hasClass('playing')) {
@@ -31,8 +31,8 @@ function setupTrackPreview(form, table) {
           }
           if (url.length > 0) {
             $(this).addClass('playing');
-            AUDIO.attr('src', url);
-            AUDIO.get(0).play();
+            PREVIEW_AUDIO.attr('src', url);
+            PREVIEW_AUDIO.get(0).play();
           }
           else {
             $(this).addClass('cannot-play');
@@ -43,7 +43,9 @@ function setupTrackPreview(form, table) {
   );
 }
 
-function setupBpmUpdate(form, table) {
+function setupBpmUpdate() {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
   var bpm_inputs = table.find('input[name=bpm]');
   bpm_inputs.each(
     function() {
@@ -132,7 +134,9 @@ function checkBpmInput(str, report_on_fail = true) {
   return true;
 }
 
-function setupCategoryUpdate(form, table) {
+function setupCategoryUpdate() {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
   var category_inputs = table.find('input[name=category]');
   category_inputs.each(
     function() {
@@ -193,12 +197,14 @@ function setupCategoryUpdate(form, table) {
   );
 }
 
-function verifyPlaylistData(form, table) {
+function verifyPlaylistData() {
   // TODO: implement
 }
 
-function getPlaylistData(form, table)
+function getPlaylistData()
 {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
   var playlist = [];
   table.find('tr').each(
     function() {
@@ -259,9 +265,11 @@ function createPlaylistPlaceholderObject( title_text
          }
 }
 
-function updatePlaylist(form, table, new_playlist) {
+function updatePlaylist(new_playlist) {
+  var form = PLAYLIST_FORM;
+  var table = PLAYLIST_TABLE;
   if (new_playlist === undefined) {
-    new_playlist = getPlaylistData(form, table);
+    new_playlist = getPlaylistData();
   }
 
   // Find <tr> template to use when constructing new playlist

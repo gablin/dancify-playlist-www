@@ -10,7 +10,7 @@ function clearActionInputs() {
   $('.action-input-area').hide();
 }
 
-function setupUnloadWarning(form, table) {
+function setupUnloadWarning() {
   $(window).on(
     'beforeunload'
   , function() {
