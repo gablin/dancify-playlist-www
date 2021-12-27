@@ -19,7 +19,7 @@ function beginPage() {
     <script src="/js/js-cookie-3.0.1.min.js"></script>
   </head>
   <body>
-    <div id="wrapper">
+    <div class="body-wrapper">
       <div class="logo">
         <div class="text">
           <?php echo(LNG_SLOGAN); ?>!

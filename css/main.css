@@ -8,7 +8,7 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
 }
@@ -19,9 +19,10 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-#wrapper {
-  min-height: 100%;
-  position: relative;
+.body-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 p {}
@@ -53,14 +54,13 @@ a:hover {
 }
 
 div.content {
-  position: relative;
   margin: 2em 4vw 0 4vw;
-  padding-bottom: 5em;
+  overflow: auto;
+  flex: 2;
 }
 
 div.footer {
-  position: absolute;
-  bottom: 0;
+  padding-top: 1em;
   height: 2em;
   width: 100%;
 }
@@ -190,7 +190,6 @@ table th {
 .playlist .playlist-title {
   font-size: 125%;
   font-weight: bold;
-  margin-top: 2em;
 }
 .playlist table {
   margin-top: 1em;
@@ -377,7 +376,7 @@ div.logo div.lang a:hover {
 }
 
 div.instruction {
-  margin: 1em 0;
+  margin-bottom: 1em;
   font-size: 125%;
   font-weight: bold;
 }
