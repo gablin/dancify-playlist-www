@@ -2,6 +2,9 @@
 require '../autoload.php';
 ?>
 
+var PREVIEW_AUDIO = $('<audio />');
+var PLAYLIST_TRACK_DELIMITER = 0;
+
 function setupPlaylist() {
   setupTrackPreview();
   setupBpmUpdate();
@@ -9,8 +12,8 @@ function setupPlaylist() {
 }
 
 function setupTrackPreview() {
-  var form = PLAYLIST_FORM;
-  var table = PLAYLIST_TABLE;
+  var form = getPlaylistForm();
+  var table = getPlaylistTable();
 
   // Play preview when clicking on row corresponding to track
   table.find('tbody tr.track').each(
@@ -44,8 +47,8 @@ function setupTrackPreview() {
 }
 
 function setupBpmUpdate() {
-  var form = PLAYLIST_FORM;
-  var table = PLAYLIST_TABLE;
+  var form = getPlaylistForm();
+  var table = getPlaylistTable();
   var bpm_inputs = table.find('input[name=bpm]');
   bpm_inputs.each(
     function() {
@@ -135,8 +138,8 @@ function checkBpmInput(str, report_on_fail = true) {
 }
 
 function setupCategoryUpdate() {
-  var form = PLAYLIST_FORM;
-  var table = PLAYLIST_TABLE;
+  var form = getPlaylistForm();
+  var table = getPlaylistTable();
   var category_inputs = table.find('input[name=category]');
   category_inputs.each(
     function() {
@@ -203,8 +206,8 @@ function verifyPlaylistData() {
 
 function getPlaylistData()
 {
-  var form = PLAYLIST_FORM;
-  var table = PLAYLIST_TABLE;
+  var form = getPlaylistForm();
+  var table = getPlaylistTable();
   var playlist = [];
   table.find('tr').each(
     function() {
@@ -266,8 +269,8 @@ function createPlaylistPlaceholderObject( title_text
 }
 
 function updatePlaylist(new_playlist) {
-  var form = PLAYLIST_FORM;
-  var table = PLAYLIST_TABLE;
+  var form = getPlaylistForm();
+  var table = getPlaylistTable();
   if (new_playlist === undefined) {
     new_playlist = getPlaylistData();
   }
@@ -356,4 +359,8 @@ function formatTrackLength(ms) {
   }
 
   return t.join(':');
+}
+
+function setTrackDelimiter(d) {
+  PLAYLIST_TRACK_DELIMITER = d;
 }

@@ -7,7 +7,7 @@ function setupInsertTrack() {
 }
 
 function setupFormElementsForInsertTrack() {
-  var form = PLAYLIST_FORM;
+  var form = getPlaylistForm();
 
   form.find('button[id=insertTrackBtn]').click(
     function() {
@@ -69,14 +69,14 @@ function setupFormElementsForInsertTrack() {
 }
 
 function getInsertData() {
-  var form = PLAYLIST_FORM;
+  var form = getPlaylistForm();
   return { trackUrl: form.find('input[name=track-to-insert]').val().trim()
          , insertFreq: form.find('input[name=insertion-freq]').val().trim()
          };
 }
 
 function checkTrackInsertInput() {
-  var form = PLAYLIST_FORM;
+  var form = getPlaylistForm();
   var track_link = form.find('input[name=track-to-insert]').val().trim();
   if (track_link.length == 0) {
     alert('<?= LNG_ERR_SPECIFY_TRACK_TO_INSERT ?>');

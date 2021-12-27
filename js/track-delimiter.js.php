@@ -7,22 +7,22 @@ function setupTrackDelimiter() {
 }
 
 function setupFormElementsForTrackDelimiter() {
-  var form = PLAYLIST_FORM;
-  var table = PLAYLIST_TABLE;
+  var form = getPlaylistForm();
+  var table = getPlaylistTable();
   form.find('button[id=showTrackDelimiterBtn]').click(
     function() {
       if (!checkTrackDelimiterInput()) {
         return;
       }
       var data = getTrackDelimiterData();
-      PLAYLIST_TRACK_DELIMITER = data.delimiterFreq;
+      setTrackDelimiter(data.delimiterFreq);
       updatePlaylist();
       clearActionInputs();
     }
   );
   form.find('button[id=hideTrackDelimiterBtn]').click(
     function() {
-      PLAYLIST_TRACK_DELIMITER = 0;
+      setTrackDelimiter(0);
       updatePlaylist();
       clearActionInputs();
     }
@@ -30,13 +30,13 @@ function setupFormElementsForTrackDelimiter() {
 }
 
 function getTrackDelimiterData() {
-  var form = PLAYLIST_FORM;
+  var form = getPlaylistForm();
   return { delimiterFreq: form.find('input[name=delimiter-freq]').val().trim()
          };
 }
 
 function checkTrackDelimiterInput() {
-  var form = PLAYLIST_FORM;
+  var form = getPlaylistForm();
   var freq_str = form.find('input[name=delimiter-freq]').val().trim();
   freq = parseInt(freq_str);
   if (isNaN(freq)) {

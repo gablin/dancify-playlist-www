@@ -7,8 +7,8 @@ function setupRandomizeByBpm() {
 }
 
 function setupFormElementsForRandomizeByBpm() {
-  var form = PLAYLIST_FORM;
-  var table = PLAYLIST_TABLE;
+  var form = getPlaylistForm();
+  var table = getPlaylistTable();
 
   // Randomize button
   var rnd_b = form.find('button[id=randomizeBtn]');
@@ -200,7 +200,7 @@ function setupFormElementsForRandomizeByBpm() {
 }
 
 function getBpmSettings() {
-  var form = PLAYLIST_FORM;
+  var form = getPlaylistForm();
   var data = { bpmRangeList: []
              , bpmDifferenceList: []
              };
