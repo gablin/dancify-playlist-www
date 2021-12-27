@@ -92,6 +92,9 @@ define( 'LNG_HEAD_BPM'
 define( 'LNG_HEAD_CATEGORY_SHORT'
       , 'Kat.'
       );
+define( 'LNG_HEAD_SCRATCHPAD'
+      , 'Scratchpad'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );
