@@ -9,7 +9,9 @@ function setupTrackDelimiter() {
 function setupFormElementsForTrackDelimiter() {
   var form = getPlaylistForm();
   var table = getPlaylistTable();
-  form.find('button[id=showTrackDelimiterBtn]').click(
+  var show_btn = form.find('button[id=showTrackDelimiterBtn]');
+  var hide_btn = form.find('button[id=hideTrackDelimiterBtn]');
+  show_btn.click(
     function() {
       if (!checkTrackDelimiterInput()) {
         return;
@@ -17,6 +19,8 @@ function setupFormElementsForTrackDelimiter() {
       var data = getTrackDelimiterData();
       setTrackDelimiter(data.delimiterFreq);
       updatePlaylist();
+      show_btn.prop('disabled', true);
+      hide_btn.prop('disabled', false);
       clearActionInputs();
     }
   );
@@ -24,15 +28,23 @@ function setupFormElementsForTrackDelimiter() {
     function() {
       setTrackDelimiter(0);
       updatePlaylist();
+      hide_btn.prop('disabled', true);
+      show_btn.prop('disabled', false)
       clearActionInputs();
+    }
+  );
+  hide_btn.prop('disabled', true);
+  form.find('input[name=delimiter-freq]').on(
+    'input'
+  , function() {
+      show_btn.prop('disabled', false);
     }
   );
 }
 
 function getTrackDelimiterData() {
   var form = getPlaylistForm();
-  return { delimiterFreq: form.find('input[name=delimiter-freq]').val().trim()
-         };
+  return { delimiterFreq: form.find('input[name=delimiter-freq]').val().trim() };
 }
 
 function checkTrackDelimiterInput() {
