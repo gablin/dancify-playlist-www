@@ -80,6 +80,9 @@ define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
 DEFINE( 'LNG_MENU_TRACK_DELIMITER'
       , 'Track delimiter'
       );
+DEFINE( 'LNG_MENU_SCRATCHPAD'
+      , 'Scratchpad'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
@@ -121,6 +124,12 @@ define( 'LNG_DESC_DIFFERENCE'
       );
 define( 'LNG_DESC_SAVED'
       , 'Saved'
+      );
+define( 'LNG_DESC_SCRATCHPAD'
+      , <<<EOT
+The scratchpad is an area to which tracks can be dragged-and-dropped in to simplify
+playlist edits.
+EOT
       );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'New playlist added to your Spotify'

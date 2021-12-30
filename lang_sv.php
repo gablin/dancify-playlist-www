@@ -80,6 +80,9 @@ define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
 DEFINE( 'LNG_MENU_TRACK_DELIMITER'
       , 'Låtavgränsning'
       );
+DEFINE( 'LNG_MENU_SCRATCHPAD'
+      , 'Scratchpad'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );
@@ -121,6 +124,12 @@ define( 'LNG_DESC_DIFFERENCE'
       );
 define( 'LNG_DESC_SAVED'
       , 'Sparad'
+      );
+define( 'LNG_DESC_SCRATCHPAD'
+      , <<<EOT
+Scratchpaden är ett område till vilken låtar kan dras och släppas för att förenkla
+redigering av spellistan.
+EOT
       );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'Ny spellista har lagts till i din Spotify'

@@ -270,6 +270,7 @@ table th {
 
 .scratchpad {
   margin-left: 2em;
+  display: none;
 }
 .scratchpad .playlist-title {
   font-style: italic;
