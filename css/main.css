@@ -205,6 +205,7 @@ table th {
 .playlist table {
   margin-top: 1em;
   border-collapse: collapse;
+  width: 100%;
 }
 .playlist table tbody tr.track:hover {
   background-color: #eee;
@@ -233,8 +234,20 @@ table th {
   text-align: right;
   padding-right: 1em;
 }
+.playlist table th.bpm,
+.playlist table td.bpm {
+  width: 3em;
+}
 .playlist table td.bpm {
   font-size: 90%;
+}
+.playlist table th.category,
+.playlist table td.category {
+  width: 5em;
+}
+.playlist table th.length,
+.playlist table td.length {
+  width: 6em;
 }
 .playlist table .summary {}
 .playlist table tr.delimiter td {
