@@ -172,6 +172,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 
 <div class="playlist">
 <div class="playlist-title"><?= $playlist_name ?></div>
+<div class="table-wrapper">
 <table id="playlist">
   <thead>
     <tr>
@@ -237,6 +238,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
   </tbody>
 </table>
 </div>
+</div>
 
 </div>
 
@@ -267,13 +269,15 @@ $(document).ready(
     setupTrackDelimiter();
     setupUnloadWarning();
 
-    // TODO: set max-height of playlist
-    var screen_vh = window.innerHeight;
-    var logo_vh = $('div.logo').height();
-    var menu_vh = $('div.menu').height();
-    var footer_vh = $('div.footer').height();
-    var playlist_vh = screen_vh - logo_vh - menu_vh - footer_vh - 50;
-    $('div.playlist').css('max-height', playlist_vh + 'px');
+    var limitPlaylistHeight = function() {
+      var screen_vh = window.innerHeight;
+      var table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
+      var footer_vh = $('div.footer').outerHeight();
+      var playlist_vh = screen_vh - table_offset - footer_vh;
+      $('div.playlist .table-wrapper').css('max-height', playlist_vh + 'px');
+    };
+    $(window).resize(limitPlaylistHeight);
+    limitPlaylistHeight();
   }
 );
 </script>

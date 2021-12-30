@@ -194,11 +194,13 @@ table th {
 
 .playlist {
   flex: 1;
-  overflow-y: auto;
 }
 .playlist .playlist-title {
   font-size: 125%;
   font-weight: bold;
+}
+.playlist .table-wrapper {
+  overflow-y: auto;
 }
 .playlist table {
   margin-top: 1em;
