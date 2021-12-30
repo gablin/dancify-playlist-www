@@ -6,6 +6,7 @@ function setupSaveNewPlaylistButton(make_public) {
   var form = getPlaylistForm();
   var table = getPlaylistTable();
   var save_b = form.find('button[id=saveAsNewPlaylistBtn]');
+  var name_input = form.find('input[name=new-playlist-name]');
   save_b.click(
     function() {
       var b = $(this);
@@ -17,7 +18,7 @@ function setupSaveNewPlaylistButton(make_public) {
       };
 
       // Check new playlist name
-      var name = form.find('input[name=new-playlist-name]').val().trim();
+      var name = name_input.val().trim();
       if (name.length == 0) {
         alert('<?= LNG_INSTR_PLEASE_ENTER_NAME ?>');
         restoreButton();
@@ -56,6 +57,13 @@ function setupSaveNewPlaylistButton(make_public) {
         );
 
       return false;
+    }
+  );
+  save_b.prop('disabled', true);
+  name_input.on(
+    'input'
+  , function() {
+      save_b.prop('disabled', name_input.val().trim().length == 0);
     }
   );
 }
