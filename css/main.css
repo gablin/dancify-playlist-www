@@ -269,6 +269,7 @@ table th {
 }
 .playlist table tr.summary .length {
   padding-top: .5em;
+  font-weight: bold;
 }
 
 .scratchpad {
