@@ -196,7 +196,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 <table id="playlist">
   <thead>
     <tr>
-      <th class="index"></th>
+      <th class="index">#</th>
       <th class="bpm"><?= LNG_HEAD_BPM ?></th>
       <th class="category"><?= LNG_HEAD_CATEGORY_SHORT ?></th>
       <th><?= LNG_HEAD_TITLE ?></th>
@@ -266,7 +266,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 <table id="scratchpad">
   <thead>
     <tr>
-      <th class="index"></th>
+      <th class="index">#</th>
       <th class="bpm"><?= LNG_HEAD_BPM ?></th>
       <th class="category"><?= LNG_HEAD_CATEGORY_SHORT ?></th>
       <th><?= LNG_HEAD_TITLE ?></th>
