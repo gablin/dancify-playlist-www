@@ -47,8 +47,16 @@ function setupFormElementsForRandomizeByBpm() {
           function(res) {
             json = JSON.parse(res);
             if (json.status == 'OK') {
+              unused_tracks = [];
+              for (var i = 0; i < track_ids.length; i++) {
+                var tid = track_ids[i];
+                if (!json.trackOrder.includes(tid)) {
+                  unused_tracks.push(tid);
+                }
+              }
               updatePlaylistAfterRandomize( json.trackOrder
                                           , data.bpmRangeList
+                                          , unused_tracks
                                           );
             }
             else if (json.status == 'FAILED') {
@@ -234,15 +242,12 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
   for (var i = 0, range_index = 0; i < track_order.length; i++) {
     var tid = track_order[i];
     if (tid.length > 0) {
-      // Find track with matching ID
-      var j = 0;
-      for (; j < playlist.length && playlist[j].trackId != tid; j++) {}
-      if (j == playlist.length) {
+      var track = getTrackWithMatchingId(playlist, tid);
+      if (track == null) {
         console.log('failed to find track with ID: ' + tid);
         continue;
       }
-
-      new_playlist.push(playlist[j]);
+      new_playlist.push(track);
     }
     else {
       var min_bpm = bpm_ranges[range_index][0];
@@ -264,5 +269,22 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
     }
   }
 
+  var scratchpad = getScratchpadData();
+  var new_scratchpad = [...scratchpad];
+  for (var i = 0; i < playlist.length; i++) {
+    var track = playlist[i]
+    var tid = track.trackId;
+    if ( getTrackWithMatchingId(new_playlist, tid) == null &&
+         getTrackWithMatchingId(scratchpad, tid) == null
+       )
+    {
+      new_scratchpad.push(track);
+    }
+  }
+
   updatePlaylist(new_playlist);
+  updateScratchpad(new_scratchpad);
+  if (scratchpad.length != new_scratchpad.length) {
+    showScratchpad();
+  }
 }

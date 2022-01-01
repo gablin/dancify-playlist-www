@@ -207,6 +207,9 @@ table th {
   border-collapse: collapse;
   width: 100%;
 }
+.playlist table tbody tr.template {
+  display: none;
+}
 .playlist table tbody tr.track:hover {
   background-color: #eee;
   cursor: pointer;

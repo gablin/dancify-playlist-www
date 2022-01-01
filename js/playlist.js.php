@@ -12,11 +12,13 @@ function setupPlaylist() {
 }
 
 function setupTrackPreview() {
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
+  setupTrackPreviewOnTable(getPlaylistTable());
+  setupTrackPreviewOnTable(getScratchpadTable());
+}
 
+function setupTrackPreviewOnTable(table) {
   // Play preview when clicking on row corresponding to track
-  table.find('tbody tr.track').each(
+  table.find('tr.track').each(
     function() {
       $(this).click(
         function() {
@@ -204,10 +206,7 @@ function verifyPlaylistData() {
   // TODO: implement
 }
 
-function getPlaylistData()
-{
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
+function getTrackData(table) {
   var playlist = [];
   table.find('tr').each(
     function() {
@@ -235,6 +234,18 @@ function getPlaylistData()
   );
 
   return playlist;
+}
+
+function getPlaylistData()
+{
+  var table = getPlaylistTable();
+  return getTrackData(table);
+}
+
+function getScratchpadData()
+{
+  var table = getScratchpadTable();
+  return getTrackData(table);
 }
 
 function createPlaylistTrackObject( track_id
@@ -268,33 +279,42 @@ function createPlaylistPlaceholderObject( title_text
          }
 }
 
-function updatePlaylist(new_playlist) {
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
-  if (new_playlist === undefined) {
-    new_playlist = getPlaylistData();
-  }
+function getTrackWithMatchingId(track_list, track_id) {
+  var i = 0;
+  for (; i < track_list.length && track_list[i].trackId != track_id; i++) {}
+  return i < track_list.length ? track_list[i] : null;
+}
 
-  // Find <tr> template to use when constructing new playlist
-  var tr_templates = table.find('tr.track');
-  if (tr_templates.length == 0) {
-    console.log('failed to find track <tr> template');
-    return;
-  }
-  tr_template = $(tr_templates[0]).clone(true, true);
-  var summary_tr = table.find('tr.summary');
+function getTableTrackTrTemplate(table) {
+  var tr = table.find('tr.template')[0];
+  return $(tr);
+}
 
-  // Clear playlist
+function getTableSummaryTr(table) {
+  var tr = table.find('tr.summary')[0];
+  return $(tr);
+}
+
+function clearTable(table) {
+  var track_tr_template = getTableTrackTrTemplate(table).clone(true, true);
+  var summary_tr = getTableSummaryTr(table).clone(true, true);
   table.find('tr > td').parent().remove();
+  table.append(track_tr_template);
+  table.append(summary_tr);
+}
 
-  // Construct new playlist
+function updateTable(table, delimiter, new_tracks) {
+  clearTable(table);
+  var tr_template = getTableTrackTrTemplate(table).clone(true, true);
+  tr_template.removeClass('template');
+  tr_template.addClass('track');
+  var summary_tr = getTableSummaryTr(table);
+
+  // Construct new table rows
   var total_length = 0;
   var delimiter_i = 0;
-  for (var i = 0; i < new_playlist.length; i++) {
-    if ( PLAYLIST_TRACK_DELIMITER > 0 &&
-         delimiter_i == PLAYLIST_TRACK_DELIMITER
-       )
-    {
+  for (var i = 0; i < new_tracks.length; i++) {
+    if (delimiter > 0 && delimiter_i == delimiter) {
       var cols = tr_template.find('td').length;
       var delimiter_tr = $('<tr class="delimiter"><td colspan="' + cols + '" /><div /></tr>');
       table.append(delimiter_tr);
@@ -304,7 +324,7 @@ function updatePlaylist(new_playlist) {
       delimiter_i++;
     }
 
-    var track = new_playlist[i];
+    var track = new_tracks[i];
     var new_tr = tr_template.clone(true, true);
     if ('trackId' in track) {
       new_tr.find('td.index').text(i+1);
@@ -338,6 +358,24 @@ function updatePlaylist(new_playlist) {
   var cols = tr_template.find('td').length;
   summary_tr.find('td.length').text(formatTrackLength(total_length));
   table.append(summary_tr);
+}
+
+function updatePlaylist(new_tracks) {
+  if (new_tracks === undefined) {
+    new_tracks = getPlaylistData();
+  }
+  var table = getPlaylistTable();
+  updateTable(table, PLAYLIST_TRACK_DELIMITER, new_tracks);
+  setupTrackPreviewOnTable(table);
+}
+
+function updateScratchpad(new_tracks) {
+  if (new_tracks === undefined) {
+    new_tracks = getScratchpadData();
+  }
+  var table = getScratchpadTable();
+  updateTable(table, 0, new_tracks);
+  setupTrackPreviewOnTable(table);
 }
 
 function formatTrackTitle(artists, name) {

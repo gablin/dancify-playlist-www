@@ -204,6 +204,21 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
     </tr>
   </thead>
   <tbody>
+    <tr class="template">
+      <input type="hidden" name="track_id" value="" />
+      <input type="hidden" name="preview_url" value="" />
+      <input type="hidden" name="length_ms" value="" />
+      <td class="index"></td>
+      <td class="bpm">
+        <input type="text" name="bpm" class="bpm" value="" />
+      </td>
+      <td class="category">
+        <input type="text" name="category" class="category" value="" />
+      </td>
+      <td class="title"></td>
+      <td class="length"></td>
+    </tr>
+
     <?php
     $total_length = 0;
     for ($i = 0; $i < count($tracks); $i++) {
@@ -273,6 +288,26 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
       <th class="length"><?= LNG_HEAD_LENGTH ?></th>
     </tr>
   </thead>
+  <tbody>
+    <tr class="template">
+      <input type="hidden" name="track_id" value="" />
+      <input type="hidden" name="preview_url" value="" />
+      <input type="hidden" name="length_ms" value="" />
+      <td class="index"></td>
+      <td class="bpm">
+        <input type="text" name="bpm" class="bpm" value="" />
+      </td>
+      <td class="category">
+        <input type="text" name="category" class="category" value="" />
+      </td>
+      <td class="title"></td>
+      <td class="length"></td>
+    </tr>
+    <tr class="summary">
+      <td colspan="4"></td>
+      <td class="length"></td>
+    </tr>
+  </tbody>
 </table>
 </div>
 </div>
@@ -293,8 +328,9 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 $(document).ready(
   function() {
     var form = $('form[id=playlistForm]');
-    var table = $('table[id=playlist]');
-    initPlaylistGlobals(form, table);
+    var p_table = $('table[id=playlist]');
+    var s_table = $('table[id=scratchpad]');
+    initPlaylistGlobals(form, p_table, s_table);
 
     // Disable submission
     form.submit(function() { return false; });
