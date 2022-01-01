@@ -313,7 +313,7 @@ $(document).ready(
       var table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
       var footer_vh = $('div.footer').outerHeight();
       var playlist_vh = screen_vh - table_offset - footer_vh;
-      $('div.playlist .table-wrapper').css('max-height', playlist_vh + 'px');
+      $('div.playlist .table-wrapper').css('height', playlist_vh + 'px');
     };
     $(window).resize(limitPlaylistHeight);
     limitPlaylistHeight();
