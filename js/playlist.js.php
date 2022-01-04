@@ -6,46 +6,40 @@ var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_TRACK_DELIMITER = 0;
 
 function setupPlaylist() {
-  setupTrackPreview();
   setupBpmUpdate();
   setupCategoryUpdate();
+  getPlaylistTable().find('tr.track').each(
+    function() { addPreviewLink($(this)); }
+  );
 }
 
-function setupTrackPreview() {
-  setupTrackPreviewOnTable(getPlaylistTable());
-  setupTrackPreviewOnTable(getScratchpadTable());
-}
-
-function setupTrackPreviewOnTable(table) {
-  // Play preview when clicking on row corresponding to track
-  table.find('tr.track').each(
+function playPreview(jlink, preview_url, playing_text, stop_text) {
+  PREVIEW_AUDIO.attr('src', ''); // Stop playing
+  var clicked_playing_preview = jlink.hasClass('playing');
+  var preview_links = $.merge( getPlaylistTable().find('tr.track .title a')
+                             , getScratchpadTable().find('tr.track .title a')
+                             );
+  preview_links.each(
     function() {
-      $(this).click(
-        function() {
-          PREVIEW_AUDIO.attr('src', ''); // Stop playing
-          $(this).siblings().removeClass('playing');
-          $(this).siblings().removeClass('cannot-play');
-          if ($(this).hasClass('playing')) {
-            $(this).removeClass('playing');
-            return;
-          }
-
-          var url = $(this).find('input[name=preview_url]').val();
-          if (url == null) {
-            return;
-          }
-          if (url.length > 0) {
-            $(this).addClass('playing');
-            PREVIEW_AUDIO.attr('src', url);
-            PREVIEW_AUDIO.get(0).play();
-          }
-          else {
-            $(this).addClass('cannot-play');
-          }
-        }
-      );
+      $(this).removeClass('playing');
+      $(this).removeClass('cannot-play');
+      $(this).html(stop_text);
     }
   );
+  if (clicked_playing_preview) {
+    jlink.html(stop_text);
+    return;
+  }
+
+  if (preview_url.length > 0) {
+    jlink.html(playing_text);
+    jlink.addClass('playing');
+    PREVIEW_AUDIO.attr('src', preview_url);
+    PREVIEW_AUDIO.get(0).play();
+  }
+  else {
+    jlink.addClass('cannot-play');
+  }
 }
 
 function setupBpmUpdate() {
@@ -56,7 +50,7 @@ function setupBpmUpdate() {
     function() {
       $(this).click(
         function(e) {
-          // Prevent playing of track preview
+          // Prevent row selection
           e.stopPropagation();
           return false;
         }
@@ -147,7 +141,7 @@ function setupCategoryUpdate() {
     function() {
       $(this).click(
         function(e) {
-          // Prevent playing of track preview
+          // Prevent row selection
           e.stopPropagation();
           return false;
         }
@@ -202,6 +196,16 @@ function setupCategoryUpdate() {
   );
 }
 
+function getTrTitleText(tr) {
+  var nodes = tr.find('td.title').contents().filter(
+                function() { return this.nodeType == 3; }
+              );
+  if (nodes.length > 0) {
+    return nodes[0].nodeValue;
+  }
+  return '';
+}
+
 function verifyPlaylistData() {
   // TODO: implement
 }
@@ -216,7 +220,7 @@ function getTrackData(table) {
         var preview_url = tr.find('input[name=preview_url]').val().trim();
         var bpm = tr.find('input[name=bpm]').val().trim();
         var category = tr.find('input[name=category]').val().trim();
-        var title = tr.find('td.title').text().trim();
+        var title = getTrTitleText(tr);
         var len = tr.find('input[name=length_ms]').val().trim();
         playlist.push( { trackId: track_id
                        , title: title
@@ -303,6 +307,24 @@ function clearTable(table) {
   table.append(summary_tr);
 }
 
+function addPreviewLink(tr) {
+  if (!tr.hasClass('track')) {
+    return;
+  }
+
+  const static_text = '&#9835;';
+  const playing_text = '&#9836;';
+  const stop_text = static_text;
+  var preview_url = tr.find('input[name=preview_url]').val().trim();
+  var link = $('<a href="#">' + static_text + '</a>');
+  link.click(
+    function() {
+      playPreview($(this), preview_url, playing_text, stop_text)
+    }
+  );
+  tr.find('td.title').append(link);
+}
+
 function updateTable(table, delimiter, new_tracks) {
   clearTable(table);
   var tr_template = getTableTrackTrTemplate(table).clone(true, true);
@@ -335,6 +357,7 @@ function updateTable(table, delimiter, new_tracks) {
       new_tr.find('input[name=bpm]').prop('value', track.bpm);
       new_tr.find('input[name=category]').prop('value', track.category);
       new_tr.find('td.length').text(formatTrackLength(track.length));
+      addPreviewLink(new_tr);
       total_length += parseInt(track.length);
     }
     else {
@@ -366,7 +389,6 @@ function updatePlaylist(new_tracks) {
   }
   var table = getPlaylistTable();
   updateTable(table, PLAYLIST_TRACK_DELIMITER, new_tracks);
-  setupTrackPreviewOnTable(table);
 }
 
 function updateScratchpad(new_tracks) {
@@ -375,7 +397,6 @@ function updateScratchpad(new_tracks) {
   }
   var table = getScratchpadTable();
   updateTable(table, 0, new_tracks);
-  setupTrackPreviewOnTable(table);
 }
 
 function formatTrackTitle(artists, name) {

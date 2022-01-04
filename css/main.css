@@ -212,19 +212,6 @@ table th {
 }
 .playlist table tbody tr.track:hover {
   background-color: #eee;
-  cursor: pointer;
-}
-.playlist table tbody tr.playing,
-.playlist table tbody tr.playing:hover {
-  background-color: rgba(12, 167, 97, 0.3);
-}
-.playlist table tbody tr.cannot-play,
-.playlist table tbody tr.cannot-play:hover {
-  background-color: rgba(230, 0, 0, 0.3);
-}
-.playlist table .insert,
-.playlist table .after {
-  color: #09814A;
 }
 .playlist table .index {
   text-align: right;
@@ -270,6 +257,20 @@ table th {
 .playlist table tr.summary .length {
   padding-top: .5em;
   font-weight: bold;
+}
+.playlist table td.title a {
+  font-size: 130%;
+  text-decoration: none;
+  margin-left: .15em;
+}
+.playlist table td.title a:hover {
+  color: #09814A;
+}
+.playlist table td.title a.playing {
+  color: #0CA761;
+}
+.playlist table td.title a.cannot-play {
+  color: #E60000;
 }
 
 .scratchpad {
