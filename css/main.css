@@ -207,6 +207,9 @@ table th {
   border-collapse: collapse;
   width: 100%;
 }
+.playlist table tbody tr {
+  user-select: none;
+}
 .playlist table tbody tr.template {
   display: none;
 }
@@ -271,6 +274,13 @@ table th {
 }
 .playlist table td.title a.cannot-play {
   color: #E60000;
+}
+.playlist table tr.selected {
+  background-color: rgba(12, 167, 97, 0.3);
+}
+.playlist table tr.track.selected:hover {
+  background-color: rgba(12, 167, 97, 0.4);
+  cursor: move;
 }
 
 .scratchpad {
@@ -457,6 +467,7 @@ div.action-input-area {
   left: 0;
   height: 100%;
   width: 100%;
+  z-index: 1;
   display: none;
 }
 div.action-input-area div.background {

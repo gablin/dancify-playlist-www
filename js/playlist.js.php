@@ -11,6 +11,10 @@ function setupPlaylist() {
   getPlaylistTable().find('tr.track').each(
     function() { addPreviewLink($(this)); }
   );
+  setupTrackSelection(getPlaylistTable());
+  setupTrackSelection(getScratchpadTable());
+  setupTrackMovement(getPlaylistTable());
+  setupTrackMovement(getScratchpadTable());
 }
 
 function playPreview(jlink, preview_url, playing_text, stop_text) {
@@ -50,9 +54,7 @@ function setupBpmUpdate() {
     function() {
       $(this).click(
         function(e) {
-          // Prevent row selection
-          e.stopPropagation();
-          return false;
+          e.stopPropagation(); // Prevent row selection
         }
       );
       $(this).change(
@@ -141,9 +143,7 @@ function setupCategoryUpdate() {
     function() {
       $(this).click(
         function(e) {
-          // Prevent row selection
-          e.stopPropagation();
-          return false;
+          e.stopPropagation(); // Prevent row selection
         }
       );
       $(this).change(
@@ -318,34 +318,22 @@ function addPreviewLink(tr) {
   var preview_url = tr.find('input[name=preview_url]').val().trim();
   var link = $('<a href="#">' + static_text + '</a>');
   link.click(
-    function() {
-      playPreview($(this), preview_url, playing_text, stop_text)
+    function(e) {
+      playPreview($(this), preview_url, playing_text, stop_text);
+      e.stopPropagation(); // Prevent row selection
     }
   );
   tr.find('td.title').append(link);
 }
 
-function updateTable(table, delimiter, new_tracks) {
+function regenerateTable(table, delimiter, new_tracks) {
   clearTable(table);
   var tr_template = getTableTrackTrTemplate(table).clone(true, true);
   tr_template.removeClass('template');
   tr_template.addClass('track');
-  var summary_tr = getTableSummaryTr(table);
 
-  // Construct new table rows
-  var total_length = 0;
-  var delimiter_i = 0;
+  // Construct table row for each track
   for (var i = 0; i < new_tracks.length; i++) {
-    if (delimiter > 0 && delimiter_i == delimiter) {
-      var cols = tr_template.find('td').length;
-      var delimiter_tr = $('<tr class="delimiter"><td colspan="' + cols + '" /><div /></tr>');
-      table.append(delimiter_tr);
-      delimiter_i = 1;
-    }
-    else {
-      delimiter_i++;
-    }
-
     var track = new_tracks[i];
     var new_tr = tr_template.clone(true, true);
     if ('trackId' in track) {
@@ -358,7 +346,6 @@ function updateTable(table, delimiter, new_tracks) {
       new_tr.find('input[name=category]').prop('value', track.category);
       new_tr.find('td.length').text(formatTrackLength(track.length));
       addPreviewLink(new_tr);
-      total_length += parseInt(track.length);
     }
     else {
       new_tr.removeClass('track');
@@ -378,25 +365,63 @@ function updateTable(table, delimiter, new_tracks) {
     }
     table.append(new_tr);
   }
-  var cols = tr_template.find('td').length;
-  summary_tr.find('td.length').text(formatTrackLength(total_length));
-  table.append(summary_tr);
+  table.append(getTableSummaryTr(table));
+  redrawTable(table, delimiter);
 }
 
-function updatePlaylist(new_tracks) {
+function redrawTable(table, delimiter) {
+  // Insert delimiters
+  table.find('tr.delimiter').remove();
+  if (delimiter > 0) {
+    var num_cols = getTableTrackTrTemplate(table).find('td').length;
+    table.find('tr.track:nth-child(' + delimiter + 'n+1)').after(
+      $( '<tr class="delimiter"><td colspan="' + num_cols + '"><div /></td>' +
+         '</tr>'
+       )
+    );
+
+    // Remove dangling delimiter, if any
+    var trs = table.find('tr.track, tr.delimiter');
+    if (trs.length > 0) {
+      var last_tr = $(trs[trs.length-1]);
+      if (last_tr.hasClass('delimiter')) {
+        last_tr.remove();
+      }
+    }
+  }
+
+  // Compute total length
+  var total_length = 0;
+  table.find('tr.track').each(
+    function() {
+      total_length += parseInt($(this).find('input[name=length_ms]').val());
+    }
+  );
+  getTableSummaryTr(table).find('td.length').text(formatTrackLength(total_length));
+}
+
+function redrawPlaylist() {
+  redrawTable(getPlaylistTable(), PLAYLIST_TRACK_DELIMITER);
+}
+
+function redrawScratchpad() {
+  redrawTable(getScratchpadTable(), 0);
+}
+
+function regeneratePlaylist(new_tracks) {
   if (new_tracks === undefined) {
     new_tracks = getPlaylistData();
   }
   var table = getPlaylistTable();
-  updateTable(table, PLAYLIST_TRACK_DELIMITER, new_tracks);
+  regenerateTable(table, PLAYLIST_TRACK_DELIMITER, new_tracks);
 }
 
-function updateScratchpad(new_tracks) {
+function regenerateScratchpad(new_tracks) {
   if (new_tracks === undefined) {
     new_tracks = getScratchpadData();
   }
   var table = getScratchpadTable();
-  updateTable(table, 0, new_tracks);
+  regenerateTable(table, 0, new_tracks);
 }
 
 function formatTrackTitle(artists, name) {
@@ -422,4 +447,54 @@ function formatTrackLength(ms) {
 
 function setTrackDelimiter(d) {
   PLAYLIST_TRACK_DELIMITER = d;
+}
+
+function updateTrackSelection(tr, multi_select_mode, span_mode) {
+  if (multi_select_mode) {
+    tr.toggleClass('selected');
+    return;
+  }
+
+  if (span_mode) {
+    var selected_sib_trs =
+      tr.siblings().filter(function() { return $(this).hasClass('selected') });
+    if (selected_sib_trs.length == 0) {
+      tr.addClass('selected');
+      return;
+    }
+    var first = $(selected_sib_trs[0]);
+    var last = $(selected_sib_trs[selected_sib_trs.length-1]);
+    var trs = tr.siblings().add(tr);
+    for ( var i = Math.min(tr.index(), first.index(), last.index())
+        ; i <= Math.max(tr.index(), first.index(), last.index())
+        ; i++
+        )
+    {
+      if ($(trs[i]).hasClass('track')) {
+        $(trs[i]).addClass('selected');
+      }
+    }
+    return;
+  }
+
+  var selected_sib_trs =
+    tr.siblings().filter(function() { return $(this).hasClass('selected') });
+  selected_sib_trs.removeClass('selected');
+  if (selected_sib_trs.length > 0) {
+    tr.addClass('selected');
+    return
+  }
+  tr.toggleClass('selected');
+}
+
+function setupTrackSelection(table) {
+  table.find('tbody tr.track').click(
+    function(e) {
+      updateTrackSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+    }
+  );
+}
+
+function setupTrackMovement(table) {
+  // TODO: implement
 }

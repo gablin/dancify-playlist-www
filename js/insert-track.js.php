@@ -47,7 +47,7 @@ function setupFormElementsForInsertTrack() {
                   }
                   new_playlist.push(old_playlist[i]);
               }
-              updatePlaylist(new_playlist);
+              regeneratePlaylist(new_playlist);
               // TODO: indicate unsaved changes
             }
             else if (json.status == 'FAILED') {
