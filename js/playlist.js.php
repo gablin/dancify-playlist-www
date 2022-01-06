@@ -16,6 +16,14 @@ function setupPlaylist() {
   setupTrackSelection(getScratchpadTable());
   setupTrackMovement(getPlaylistTable());
   setupTrackMovement(getScratchpadTable());
+
+  $(document).on( 'keyup'
+                , function(e) {
+                    if (e.key == 'Escape') {
+                      clearTrackSelection();
+                    }
+                  }
+                );
 }
 
 function playPreview(jlink, preview_url, playing_text, stop_text) {
@@ -453,6 +461,10 @@ function formatTrackLength(ms) {
 
 function setTrackDelimiter(d) {
   PLAYLIST_TRACK_DELIMITER = d;
+}
+
+function clearTrackSelection() {
+  $('.playlist tr.selected').removeClass('selected');
 }
 
 function updateTrackSelection(tr, multi_select_mode, span_mode) {
