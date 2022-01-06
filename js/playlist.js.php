@@ -26,7 +26,6 @@ function playPreview(jlink, preview_url, playing_text, stop_text) {
   preview_links.each(
     function() {
       $(this).removeClass('playing');
-      $(this).removeClass('cannot-play');
       $(this).html(stop_text);
     }
   );
@@ -35,15 +34,10 @@ function playPreview(jlink, preview_url, playing_text, stop_text) {
     return;
   }
 
-  if (preview_url.length > 0) {
-    jlink.html(playing_text);
-    jlink.addClass('playing');
-    PREVIEW_AUDIO.attr('src', preview_url);
-    PREVIEW_AUDIO.get(0).play();
-  }
-  else {
-    jlink.addClass('cannot-play');
-  }
+  jlink.html(playing_text);
+  jlink.addClass('playing');
+  PREVIEW_AUDIO.attr('src', preview_url);
+  PREVIEW_AUDIO.get(0).play();
 }
 
 function setupBpmUpdate() {
@@ -316,6 +310,10 @@ function addPreviewLink(tr) {
   const playing_text = '&#9836;';
   const stop_text = static_text;
   var preview_url = tr.find('input[name=preview_url]').val().trim();
+  if (preview_url.length == 0) {
+    return;
+  }
+
   var link = $('<a href="#">' + static_text + '</a>');
   link.click(
     function(e) {

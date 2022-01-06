@@ -272,9 +272,6 @@ table th {
 .playlist table td.title a.playing {
   color: #0CA761;
 }
-.playlist table td.title a.cannot-play {
-  color: #E60000;
-}
 .playlist table tr.selected {
   background-color: rgba(12, 167, 97, 0.3);
 }
