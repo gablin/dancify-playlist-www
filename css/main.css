@@ -216,6 +216,9 @@ table th {
 .playlist table tbody tr.track:hover {
   background-color: #eee;
 }
+.playlist.drag-mode table tbody tr.track:hover {
+  background-color: inherit;
+}
 .playlist table .index {
   text-align: right;
   width: 2em;
@@ -272,12 +275,16 @@ table th {
 .playlist table td.title a.playing {
   color: #0CA761;
 }
-.playlist table tr.selected {
+.playlist table tr.selected,
+.playlist.drag-mode table tr.track.selected:hover {
   background-color: rgba(12, 167, 97, 0.3);
 }
 .playlist table tr.track.selected:hover {
   background-color: rgba(12, 167, 97, 0.4);
-  cursor: move;
+  cursor: pointer;
+}
+.grabbed {
+  cursor: move !important;
 }
 
 .scratchpad {
@@ -288,6 +295,28 @@ table th {
 }
 .scratchpad .playlist-title {
   font-style: italic;
+}
+
+.grabbed-info-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: .25em .5em;
+  color: #fff;
+  background-color: #09814A;
+  border: .1em solid #09814A;
+  border-radius: .4em;
+  z-index: 3;
+  display: none;
+}
+
+.drag-insertion-point {
+  position: absolute;
+  width: 0;
+  height: .2em;
+  background-color: #0CA761;
+  z-index: 2;
+  display: none;
 }
 
 form div.input {

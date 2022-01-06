@@ -4,6 +4,7 @@ require '../autoload.php';
 
 var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_TRACK_DELIMITER = 0;
+var TRACK_DRAG_STATE = 0;
 
 function setupPlaylist() {
   setupBpmUpdate();
@@ -368,6 +369,13 @@ function regenerateTable(table, delimiter, new_tracks) {
 }
 
 function redrawTable(table, delimiter) {
+  // Recount indices
+  var trs = table.find('tr.track');
+  for (var i = 0; i < trs.length; i++) {
+    var tr = $(trs[i]);
+    tr.find('td.index').text(i+1);
+  }
+
   // Insert delimiters
   table.find('tr.delimiter').remove();
   if (delimiter > 0) {
@@ -448,6 +456,17 @@ function setTrackDelimiter(d) {
 }
 
 function updateTrackSelection(tr, multi_select_mode, span_mode) {
+  // Remove active selection in other playlist areas
+  $('.playlist').each(
+    function() {
+      var p = $(this);
+      if (p[0] == tr.closest('.playlist')[0]) {
+        return;
+      }
+      p.find('tr.selected').removeClass('selected');
+    }
+  );
+
   if (multi_select_mode) {
     tr.toggleClass('selected');
     return;
@@ -488,11 +507,135 @@ function updateTrackSelection(tr, multi_select_mode, span_mode) {
 function setupTrackSelection(table) {
   table.find('tbody tr.track').click(
     function(e) {
-      updateTrackSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+      if (TRACK_DRAG_STATE == 0) {
+        updateTrackSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+      }
+      else {
+        TRACK_DRAG_STATE = 0;
+      }
     }
   );
 }
 
 function setupTrackMovement(table) {
-  // TODO: implement
+  var trs = table.find('tbody tr.track');
+  trs.mousedown(
+    function(e) {
+      var mousedown_tr = $(e.target).closest('tr');
+      if (!mousedown_tr.hasClass('selected')) {
+        return;
+      }
+      var body = $(document.body);
+      body.addClass('grabbed');
+      mousedown_tr.addClass('grabbed');
+
+      var selected_trs =
+        mousedown_tr.siblings().add(mousedown_tr).filter(
+          function() { return $(this).hasClass('selected') }
+        );
+      var mb = $('.grabbed-info-block');
+      mb.find('span').text(selected_trs.length);
+      mb.css({ top: e.pageY + 'px', left: e.pageX + 'px' });
+      mb.show();
+
+      $('.playlist').toggleClass('drag-mode');
+
+      var ins_point = $('.drag-insertion-point');
+
+      function move(e) {
+        // Move info block
+        const of = 5; // To prevent grabbed-info-block to appear as target
+        mb.css({ top: e.pageY+of + 'px', left: e.pageX+of + 'px' });
+
+        TRACK_DRAG_STATE = 1; // tr.click() and mouseup may both reset this.
+                              // This is to prevent deselection if drag stops on
+                              // selected tracks
+
+        // Check if moving over insertion-point bar (to prevent flickering)
+        if ($(e.target).hasClass('drag-insertion-point')) {
+          return;
+        }
+
+        // Find insertion point, if moving over playlist or scratchpad
+        var tr = $(e.target.closest('tr'));
+        if (tr.length == 0 || tr.closest('.playlist').length == 0) {
+          $('.insert-above, .insert-below')
+            .removeClass('insert-above')
+            .removeClass('insert-below');
+          ins_point.hide();
+          return;
+        }
+        if (tr.closest('thead').length > 0) {
+          // Get first tbody tr
+          tr = $(tr.closest('table').find('tbody tr.track, tbody tr.summary')[0]);
+        }
+
+        var tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
+        var insert_above = tr_y_half <= 0 || tr.hasClass('summary');
+        if (insert_above) {
+          tr.addClass('insert-above');
+          tr.removeClass('insert-below');
+        }
+        else {
+          tr.addClass('insert-below');
+          tr.removeClass('insert-above');
+        }
+        tr.siblings().removeClass('insert-above').removeClass('insert-below');
+        ins_point.css( { width: tr.width() + 'px'
+                       , left: tr.offset().left + 'px'
+                       , top: ( tr.offset().top +
+                                (insert_above ? 0 : tr.height()) -
+                                ins_point.height()/2
+                              ) + 'px'
+                       }
+                     );
+        ins_point.show();
+      }
+
+      function up(e) {
+        var tr_insert_point =
+          $('.playlist tr.insert-above, .playlist tr.insert-below');
+        if (tr_insert_point.length > 0) {
+          // Forbid dropping adjacent to a selected track as that causes wierd
+          // reordering
+          var dropped_adjacent_to_selected =
+            tr_insert_point.hasClass('selected') ||
+            ( tr_insert_point.hasClass('insert-above') &&
+              tr_insert_point.prev().hasClass('selected')
+            ) ||
+            ( tr_insert_point.hasClass('insert-below') &&
+              tr_insert_point.next().hasClass('selected')
+            );
+          if (!dropped_adjacent_to_selected) {
+            var selected_trs = $('tr.track.selected');
+            if (tr_insert_point.hasClass('insert-above')) {
+              tr_insert_point.before(selected_trs);
+            }
+            else {
+              tr_insert_point.after(selected_trs);
+            }
+            redrawPlaylist();
+            redrawScratchpad();
+          }
+          tr_insert_point.removeClass('insert-above insert-below');
+        }
+
+        // Remove info block and insertion-point bar
+        mb.hide();
+        mousedown_tr.removeClass('grabbed');
+        body.removeClass('grabbed');
+        ins_point.hide();
+
+        $('.playlist').toggleClass('drag-mode');
+
+        if (tr_insert_point[0] != mousedown_tr[0]) {
+          TRACK_DRAG_STATE = 0;
+        }
+
+        $(document).unbind('mousemove', move).unbind('mouseup', up);
+      }
+
+      $(document).mousemove(move).mouseup(up);
+    }
+  );
 }

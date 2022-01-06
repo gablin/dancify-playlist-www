@@ -357,6 +357,12 @@ $(document).ready(
 );
 </script>
 
+<div class="grabbed-info-block">
+  <span>X</span>
+</div>
+
+<div class="drag-insertion-point"></div>
+
 <?php
 }
 catch (Exception $e) {

@@ -4,6 +4,7 @@ require '../autoload.php';
 
 function setupScratchpad() {
   setupFormElementsForScratchpad();
+  redrawScratchpad();
 }
 
 function getScratchpadShowButton() {
