@@ -10,12 +10,13 @@ function setupPlaylist() {
   setupBpmUpdate();
   setupCategoryUpdate();
   getPlaylistTable().find('tr.track').each(
-    function() { addPreviewLink($(this)); }
+    function() {
+      var tr = $(this);
+      addPreviewLink(tr);
+      addTrackSelection(tr);
+      addTrackMovement(tr);
+    }
   );
-  setupTrackSelection(getPlaylistTable());
-  setupTrackSelection(getScratchpadTable());
-  setupTrackMovement(getPlaylistTable());
-  setupTrackMovement(getScratchpadTable());
 
   $(document).on( 'keyup'
                 , function(e) {
@@ -353,6 +354,8 @@ function regenerateTable(table, delimiter, new_tracks) {
       new_tr.find('input[name=category]').prop('value', track.category);
       new_tr.find('td.length').text(formatTrackLength(track.length));
       addPreviewLink(new_tr);
+      addTrackSelection(new_tr);
+      addTrackMovement(new_tr);
     }
     else {
       new_tr.removeClass('track');
@@ -516,8 +519,8 @@ function updateTrackSelection(tr, multi_select_mode, span_mode) {
   tr.toggleClass('selected');
 }
 
-function setupTrackSelection(table) {
-  table.find('tbody tr.track').click(
+function addTrackSelection(tr) {
+  tr.click(
     function(e) {
       if (TRACK_DRAG_STATE == 0) {
         updateTrackSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
@@ -529,9 +532,8 @@ function setupTrackSelection(table) {
   );
 }
 
-function setupTrackMovement(table) {
-  var trs = table.find('tbody tr.track');
-  trs.mousedown(
+function addTrackMovement(tr) {
+  tr.mousedown(
     function(e) {
       var mousedown_tr = $(e.target).closest('tr');
       if (!mousedown_tr.hasClass('selected')) {
