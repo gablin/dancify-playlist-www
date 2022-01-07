@@ -369,6 +369,8 @@ function buildTrackRow(table, track) {
     category_td.find('input').remove();
     category_td.text(track.category);
     tr.find('td.length').text(track.length);
+    addTrackSelectHandling(tr);
+    addTrackDragHandling(tr);
   }
   return tr;
 }
@@ -493,7 +495,7 @@ function updateTrackSelection(tr, multi_select_mode, span_mode) {
         ; i++
         )
     {
-      if ($(trs[i]).hasClass('track')) {
+      if ($(trs[i]).hasClass('track') || $(trs[i]).hasClass('empty-track')) {
         $(trs[i]).addClass('selected');
       }
     }
@@ -576,7 +578,7 @@ function addTrackDragHandling(tr) {
         // We have moved over a playlist
 
         // If moved over empty-track tr, mark entire tr as insertion point
-        if (tr.hasClass('track-empty')) {
+        if (tr.hasClass('empty-track')) {
           tr.addClass('insert-above');
           ins_point.hide();
           return;
@@ -620,7 +622,7 @@ function addTrackDragHandling(tr) {
               tr_insert_point.next().hasClass('selected')
             );
           if (!dropped_adjacent_to_selected) {
-            var selected_trs = $('tr.track.selected');
+            var selected_trs = $('tr.selected');
             if (tr_insert_point.hasClass('insert-above')) {
               tr_insert_point.before(selected_trs);
             }

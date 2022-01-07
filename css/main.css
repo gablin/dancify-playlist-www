@@ -213,7 +213,8 @@ table th {
 .playlist table tbody tr.template {
   display: none;
 }
-.playlist table tbody tr.track:hover {
+.playlist table tbody tr.track:hover,
+.playlist table tbody tr.empty-track:hover {
   background-color: #eee;
 }
 .playlist.drag-mode table tbody tr.track:hover {
@@ -261,7 +262,9 @@ table th {
   font-style: italic;
 }
 .playlist table tr.empty-track.insert-above,
-.playlist table tr.empty-track.insert-below {
+.playlist table tr.empty-track.insert-below,
+.playlist table tr.empty-track.insert-above:hover,
+.playlist table tr.empty-track.insert-below:hover {
   background-color: #0CA761;
 }
 .playlist table tr.summary .length {
@@ -280,10 +283,12 @@ table th {
   color: #0CA761;
 }
 .playlist table tr.selected,
-.playlist.drag-mode table tr.track.selected:hover {
+.playlist.drag-mode table tr.track.selected:hover,
+.playlist.drag-mode table tr.empty-track.selected:hover {
   background-color: rgba(12, 167, 97, 0.3);
 }
-.playlist table tr.track.selected:hover {
+.playlist table tr.track.selected:hover,
+.playlist table tr.empty-track.selected:hover {
   background-color: rgba(12, 167, 97, 0.4);
   cursor: pointer;
 }
