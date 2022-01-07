@@ -2,7 +2,7 @@
 require '../autoload.php';
 ?>
 
-function setupSaveNewPlaylistButton(make_public) {
+function setupSaveNewPlaylist(make_public) {
   var form = getPlaylistForm();
   var table = getPlaylistTable();
   var save_b = form.find('button[id=saveAsNewPlaylistBtn]');

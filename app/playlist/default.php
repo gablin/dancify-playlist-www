@@ -336,8 +336,7 @@ $(document).ready(
     form.submit(function() { return false; });
 
     setupPlaylist();
-    setupSaveNewPlaylistButton( <?= $playlist_info->public ? 'true' : 'false' ?>
-                              );
+    setupSaveNewPlaylist(<?= $playlist_info->public ? 'true' : 'false' ?>);
     setupRandomizeByBpm();
     setupInsertTrack();
     setupTrackDelimiter();
