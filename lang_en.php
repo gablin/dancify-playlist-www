@@ -152,6 +152,9 @@ define( 'LNG_ERR_FAILED_UPDATE_BPM'
 define( 'LNG_ERR_FAILED_UPDATE_CATEGORY'
       , 'failed to update category'
       );
+define( 'LNG_ERR_FAILED_INSERT_TRACK'
+      , 'failed to insert track'
+      );
 define( 'LNG_ERR_INVALID_TRACK_FORMAT'
       , 'invalid track format'
       );

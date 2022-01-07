@@ -22,7 +22,6 @@ function loadPlaylist(playlist_id) {
                , offset: offset
                };
     function fail(msg) {
-      console.log(msg);
       alert('ERROR: <?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
     }
     callApi( '/api/get-playlist-tracks/'
@@ -123,7 +122,6 @@ function addTrackBpmHandling(tr) {
              , function(d) {}
              , function(msg) {
                  alert('<?= LNG_ERR_FAILED_UPDATE_BPM ?>');
-                 console.log(msg);
                }
              );
 
@@ -166,7 +164,6 @@ function addTrackCategoryHandling(tr) {
              , function(d) {}
              , function(msg) {
                  alert('<?= LNG_ERR_FAILED_UPDATE_CATEGORY ?>');
-                 console.log(msg);
                }
              );
 

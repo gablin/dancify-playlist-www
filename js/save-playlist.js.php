@@ -12,7 +12,7 @@ function setupSaveNewPlaylist(make_public) {
       var b = $(this);
       b.prop('disabled', true);
       b.addClass('loading');
-      var restoreButton = function() {
+      function restoreButton() {
         b.prop('disabled', false);
         b.removeClass('loading');
       };
@@ -35,27 +35,18 @@ function setupSaveNewPlaylist(make_public) {
                  , playlistName: name
                  , publicPlaylist: make_public
                  };
-      $.post('/api/save-new-playlist/', { data: JSON.stringify(data) })
-        .done(
-          function(res) {
-            json = JSON.parse(res);
-            if (json.status == 'OK') {
-              alert('<?= LNG_DESC_NEW_PLAYLIST_ADDED ?>');
-              window.location.href = './?id=' + json.newPlaylistId;
-            }
-            else if (json.status == 'FAILED') {
-              alert('ERROR: ' + json.msg);
-            }
-            restoreButton();
-          }
-        )
-        .fail(
-          function(xhr, status, error) {
-            alert('ERROR: ' + error);
-            restoreButton();
-          }
-        );
-
+      callApi( '/api/save-new-playlist/'
+             , data
+             , function(d) {
+                 alert('<?= LNG_DESC_NEW_PLAYLIST_ADDED ?>');
+                 window.location.href = './?id=' + d.newPlaylistId;
+               }
+             , function(msg) {
+                 alert('ERROR: <?= LNG_ERR_FAILED_INSERT_TRACK ?>');
+                 restoreButton();
+                 clearActionInputs();
+               }
+             );
       return false;
     }
   );

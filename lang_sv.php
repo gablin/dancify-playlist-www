@@ -152,6 +152,9 @@ define( 'LNG_ERR_FAILED_UPDATE_BPM'
 define( 'LNG_ERR_FAILED_UPDATE_CATEGORY'
       , 'misslyckades att uppdatera kategori'
       );
+define( 'LNG_ERR_FAILED_INSERT_TRACK'
+      , 'misslyckades att lägga in låt'
+      );
 define( 'LNG_ERR_INVALID_TRACK_FORMAT'
       , 'felaktigt låtformat'
       );

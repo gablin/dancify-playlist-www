@@ -17,7 +17,7 @@ function setupFormElementsForRandomizeByBpm() {
       var b = $(this);
       b.prop('disabled', true);
       b.addClass('loading');
-      var restoreButton = function() {
+      function restoreButton() {
         b.prop('disabled', false);
         b.removeClass('loading');
       };
@@ -42,39 +42,29 @@ function setupFormElementsForRandomizeByBpm() {
                      form.find('input[name=dance-slot-has-same-category]')
                      .prop('checked')
                  };
-      $.post('/api/randomize-by-bpm/', { data: JSON.stringify(data) })
-        .done(
-          function(res) {
-            json = JSON.parse(res);
-            if (json.status == 'OK') {
-              unused_tracks = [];
-              for (var i = 0; i < track_ids.length; i++) {
-                var tid = track_ids[i];
-                if (!json.trackOrder.includes(tid)) {
-                  unused_tracks.push(tid);
-                }
-              }
-              updatePlaylistAfterRandomize( json.trackOrder
-                                          , data.bpmRangeList
-                                          , unused_tracks
-                                          );
-            }
-            else if (json.status == 'FAILED') {
-              alert('ERROR: ' + json.msg);
-            }
-            // TODO: indicate unsaved changes
-            restoreButton();
-            clearActionInputs();
-          }
-        )
-        .fail(
-          function(xhr, status, error) {
-            alert('ERROR: ' + error);
-            restoreButton();
-            clearActionInputs();
-          }
-        );
-
+      callApi( '/api/randomize-by-bpm/'
+             , data
+             , function(d) {
+                 unused_tracks = [];
+                 for (var i = 0; i < track_ids.length; i++) {
+                   var tid = track_ids[i];
+                   if (!d.trackOrder.includes(tid)) {
+                     unused_tracks.push(tid);
+                   }
+                 }
+                 updatePlaylistAfterRandomize( d.trackOrder
+                                             , data.bpmRangeList
+                                             , unused_tracks
+                                             );
+                 restoreButton();
+                 clearActionInputs();
+               }
+             , function fail(msg) {
+                 alert('ERROR: <?= LNG_ERR_FAILED_TO_RANDOMIZE ?>');
+                 restoreButton();
+                 clearActionInputs();
+               }
+             );
       return false;
     }
   );
@@ -273,19 +263,16 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
   for (var i = 0; i < playlist.length; i++) {
     var track = playlist[i]
     var tid = track.trackId;
-    if ( getTrackWithMatchingId(new_playlist, tid) == null &&
-         getTrackWithMatchingId(scratchpad, tid) == null
-       )
-    {
+    if (getTrackWithMatchingId(new_playlist, tid) == null) {
       new_scratchpad.push(track);
     }
   }
 
   replaceTracks(getPlaylistTable(), new_playlist);
-  replaceTracks(getScratchpadTable(), new_scratchpad);
   renderPlaylist();
-  renderScratchpad();
-  if (scratchpad.length != new_scratchpad.length) {
+  if (new_scratchpad.length > 0) {
+    replaceTracks(getScratchpadTable(), new_scratchpad);
+    renderScratchpad();
     showScratchpad();
   }
 }

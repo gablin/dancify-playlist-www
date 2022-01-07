@@ -14,7 +14,7 @@ function setupFormElementsForInsertTrack() {
       var b = $(this);
       b.prop('disabled', true);
       b.addClass('loading');
-      var restoreButton = function() {
+      function restoreButton() {
         b.prop('disabled', false);
         b.removeClass('loading');
       };
@@ -26,44 +26,36 @@ function setupFormElementsForInsertTrack() {
 
       var data = getInsertData(form);
       var track_data = { trackUrl: data.trackUrl };
-      $.post('/api/get-track-info/', { data: JSON.stringify(track_data) })
-        .done(
-          function(res) {
-            json = JSON.parse(res);
-            if (json.status == 'OK') {
-              var playlist_entry = createPlaylistTrackObject( json.trackId
-                                                            , json.artists
-                                                            , json.name
-                                                            , json.length
-                                                            , json.bpm
-                                                            , json.category
-                                                            , json.preview_url
-                                                            );
-              var old_playlist = getPlaylistData();
-              var new_playlist = [];
-              for (var i = 0; i < old_playlist.length; i++) {
-                  if (i > 0 && i % data.insertFreq == 0) {
-                    new_playlist.push(playlist_entry);
-                  }
-                  new_playlist.push(old_playlist[i]);
-              }
-              regeneratePlaylist(new_playlist);
-              // TODO: indicate unsaved changes
-            }
-            else if (json.status == 'FAILED') {
-              alert('ERROR: ' + json.msg);
-            }
-            restoreButton();
-            clearActionInputs();
-          }
-        )
-        .fail(
-          function(xhr, status, error) {
-            alert('ERROR: ' + error);
-            restoreButton();
-            clearActionInputs();
-          }
-        );
+      callApi( '/api/get-track-info/'
+             , track_data
+             , function(d) {
+                 var to = createPlaylistTrackObject( d.trackId
+                                                   , d.artists
+                                                   , d.name
+                                                   , d.length
+                                                   , d.bpm
+                                                   , d.category
+                                                   , d.preview_url
+                                                   );
+                 var tracks = getPlaylistData();
+                 var new_tracks = [];
+                 for (var i = 0; i < tracks.length; i++) {
+                     if (i > 0 && i % data.insertFreq == 0) {
+                       new_tracks.push(to);
+                     }
+                     new_tracks.push(tracks[i]);
+                 }
+                 replaceTracks(getPlaylistTable(), new_tracks);
+                 renderPlaylist();
+                 restoreButton();
+                 clearActionInputs();
+               }
+             , function fail(msg) {
+                 alert('ERROR: <?= LNG_ERR_FAILED_INSERT_TRACK ?>');
+                 restoreButton();
+                 clearActionInputs();
+               }
+             );
     }
   );
 }
