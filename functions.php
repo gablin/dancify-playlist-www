@@ -247,31 +247,6 @@ function showError($msg) {
 }
 
 /**
- * Converts a track length to "hh:mm:ss" format.
- *
- * @param int $ms Track length, in milliseconds.
- * @returns string Formatted string.
- */
-function formatTrackLength($ms) {
-  $t = (int) round($ms / 1000);
-  $t = array(0, 0, $t);
-  for ($i = count($t) - 2; $i >= 0; $i--) {
-    if ($t[$i+1] < 60) break;
-    $t[$i] = floor($t[$i+1] / 60);
-    $t[$i+1] = $t[$i+1] % 60;
-  }
-
-  if ($t[0] == 0) unset($t[0]);
-  $is = array_keys($t);
-  for ($j = 1; $j < count($is); $j++) {
-    $i = $is[$j];
-    if ($t[$i] < 10) $t[$i] = '0' . $t[$i];
-  }
-
-  return join(":", $t);
-}
-
-/**
  * Extracts and formats list of artists from a given track.
  *
  * @param object $t Track object.
@@ -283,17 +258,6 @@ function formatArtists($t) {
     array_push($artists, $a->name);
   }
   return join(", ", $artists);
-}
-
-/**
- * Formats track title.
- *
- * @param string $artists Track artists.
- * @param string $name Track name.
- * @returns string
- */
-function formatTrackTitle($artists, $name) {
-  return $artists . ' - ' . $name;
 }
 
 /**
