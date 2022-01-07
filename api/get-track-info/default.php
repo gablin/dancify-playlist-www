@@ -41,7 +41,7 @@ if ( ( array_key_exists('trackUrl', $json) +
 $track_ids = [];
 if (array_key_exists('trackUrl', $json)) {
   $id = getTrackId($json['trackUrl']);
-  if (strlen($track_id) == 0) {
+  if (strlen($id) == 0) {
     fail('illegal URL format');
   }
   $track_ids[] = $id;
