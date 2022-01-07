@@ -17,11 +17,14 @@ function setupPlaylist() {
 }
 
 function loadPlaylist(playlist_id) {
+  var body = $(document.body);
+  body.addClass('loading');
   function load(offset) {
     var data = { playlistId: playlist_id
                , offset: offset
                };
     function fail(msg) {
+      body.removeClass('loading');
       alert('ERROR: <?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
     }
     callApi( '/api/get-playlist-tracks/'
@@ -51,6 +54,7 @@ function loadPlaylist(playlist_id) {
                           }
                           else {
                             renderPlaylist();
+                            body.removeClass('loading');
                           }
                         }
                       , fail

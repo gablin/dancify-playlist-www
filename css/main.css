@@ -578,7 +578,8 @@ button.loading {
   color: #fff !important;
 }
 
-.loading:hover {
+.loading,
+button.loading:hover {
   cursor: wait !important;
 }
 .bpm-range-area {
