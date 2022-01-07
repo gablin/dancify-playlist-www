@@ -281,8 +281,10 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
     }
   }
 
-  regeneratePlaylist(new_playlist);
-  regenerateScratchpad(new_scratchpad);
+  replaceTracks(getPlaylistTable(), new_playlist);
+  replaceTracks(getScratchpadTable(), new_scratchpad);
+  renderPlaylist();
+  renderScratchpad();
   if (scratchpad.length != new_scratchpad.length) {
     showScratchpad();
   }

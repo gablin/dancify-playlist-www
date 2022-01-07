@@ -21,12 +21,6 @@ beginContent();
 try {
 $playlist_id = fromGET('id');
 $playlist_info = loadPlaylistInfo($api, $playlist_id);
-$playlist_name = $playlist_info->name;
-$tracks = [];
-foreach (loadPlaylistTracks($api, $playlist_id) as $t) {
-  $tracks[] = $t->track;
-}
-$audio_feats = loadTrackAudioFeatures($api, $tracks);
 ?>
 
 <form id="playlistForm">
@@ -191,7 +185,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 <div class="playlists-wrapper">
 
 <div class="playlist">
-<div class="playlist-title"><?= $playlist_name ?></div>
+<div class="playlist-title"><?= $playlist_info->name ?></div>
 <div class="table-wrapper">
 <table id="playlist">
   <thead>
@@ -218,57 +212,9 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
       <td class="title"></td>
       <td class="length"></td>
     </tr>
-
-    <?php
-    $total_length = 0;
-    for ($i = 0; $i < count($tracks); $i++) {
-      $t = $tracks[$i];
-
-      // Get BPM
-      $bpm = (int) $audio_feats[$i]->tempo;
-      $tid = $t->id;
-      $res = queryDb("SELECT bpm FROM bpm WHERE song = '$tid'");
-      if ($res->num_rows == 1) {
-        $bpm = $res->fetch_assoc()['bpm'];
-      }
-
-      // Get category
-      $category = '';
-      $cid = $session->getClientId();
-      $res = queryDb( "SELECT category FROM category " .
-                      "WHERE song = '$tid' AND user = '$cid'"
-                    );
-      if ($res->num_rows == 1) {
-        $category = $res->fetch_assoc()['category'];
-      }
-
-      $artists = formatArtists($t);
-      $title = formatTrackTitle($artists, $t->name);
-      $length = $t->duration_ms;
-      $preview_url = $t->preview_url;
-      ?>
-      <tr class="track">
-        <input type="hidden" name="track_id" value="<?= $tid ?>" />
-        <input type="hidden" name="preview_url" value="<?= $preview_url ?>" />
-        <input type="hidden" name="length_ms" value="<?= $length ?>" />
-        <td class="index"><?= $i+1 ?></td>
-        <td class="bpm">
-          <input type="text" name="bpm" class="bpm" value="<?= $bpm ?>" />
-        </td>
-        <td class="category">
-          <input type="text" name="category" class="category"
-                 value="<?= $category ?>" />
-        </td>
-        <td class="title"><?= $title ?></td>
-        <td class="length"><?= formatTrackLength($length) ?></td>
-      </tr>
-      <?php
-      $total_length += $length;
-    }
-    ?>
     <tr class="summary">
       <td colspan="4"></td>
-      <td class="length"><?= formatTrackLength($total_length) ?></td>
+      <td class="length"></td>
     </tr>
   </tbody>
 </table>
@@ -316,6 +262,7 @@ $audio_feats = loadTrackAudioFeatures($api, $tracks);
 
 </form>
 
+<script src="/js/utils.js.php"></script>
 <script src="/js/globals.js.php"></script>
 <script src="/js/actions.js.php"></script>
 <script src="/js/playlist.js.php"></script>
@@ -352,6 +299,8 @@ $(document).ready(
     };
     $(window).resize(limitPlaylistHeight);
     limitPlaylistHeight();
+
+    loadPlaylist('<?= $playlist_id ?>');
   }
 );
 </script>

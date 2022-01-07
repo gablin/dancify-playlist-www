@@ -140,8 +140,17 @@ define( 'LNG_DESC_INSTRUCTIONS'
 define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
       , 'Must specify a track to insert'
       );
+define( 'LNG_ERR_FAILED_LOAD_PLAYLIST'
+      , 'failed to load playlist'
+      );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'failed to load track'
+      );
+define( 'LNG_ERR_FAILED_UPDATE_BPM'
+      , 'failed to update BPM'
+      );
+define( 'LNG_ERR_FAILED_UPDATE_CATEGORY'
+      , 'failed to update category'
       );
 define( 'LNG_ERR_INVALID_TRACK_FORMAT'
       , 'invalid track format'

@@ -717,4 +717,53 @@ function array_zip(array ...$arrays) {
   return $t;
 }
 
+/**
+ * Checks if a given string only consists of a certain set of characters.
+ *
+ * @param string $s String to check.
+ * @param string $chars Set of characters.
+ * @return true if check passes.
+ */
+function onlyHasChars($s, $chars) {
+  assert(is_string($s), 'not a string');
+  assert(is_string($chars), 'not a string');
+
+  $chars = str_split($chars);
+  foreach (str_split($s) as $c) {
+    if (!in_array($c, $chars)) return false;
+  }
+  return true;
+}
+
+/**
+ * Checks that a given value is a string consisting only of number characters.
+ * A preceding '-' is allowed.
+ *
+ * @param mixed $s Value to check.
+ * @return true if check passes.
+ */
+function isIntString($s) {
+  if (!is_string($s) || strlen($s) == 0) {
+    return false;
+  }
+  if ($s[0] == '-') {
+    $s = substr($s, 1);
+  }
+  return onlyHasChars($s, '0123456789');
+}
+
+/**
+ * Converts a string to corresponding integer.
+ *
+ * @param string $s String to convert.
+ * @return int
+ * @throws Exception when not an integer.
+ */
+function toIntString($s) {
+  if (!isIntString($s)) {
+    throw new Exception("not an int string: {$s}");
+  }
+  return (int) $s;
+}
+
 ?>

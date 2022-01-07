@@ -7,17 +7,6 @@ var PLAYLIST_TRACK_DELIMITER = 0;
 var TRACK_DRAG_STATE = 0;
 
 function setupPlaylist() {
-  setupBpmUpdate();
-  setupCategoryUpdate();
-  getPlaylistTable().find('tr.track').each(
-    function() {
-      var tr = $(this);
-      addPreviewLink(tr);
-      addTrackSelection(tr);
-      addTrackMovement(tr);
-    }
-  );
-
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == 'Escape') {
@@ -25,6 +14,53 @@ function setupPlaylist() {
                     }
                   }
                 );
+}
+
+function loadPlaylist(playlist_id) {
+  function load(offset) {
+    var data = { playlistId: playlist_id
+               , offset: offset
+               };
+    function fail(msg) {
+      console.log(msg);
+      alert('ERROR: <?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
+    }
+    callApi( '/api/get-playlist-tracks/'
+           , data
+           , function(d) {
+               var data = { trackIds: d.tracks };
+               callApi( '/api/get-track-info/'
+                      , data
+                      , function(dd) {
+                          var tracks = [];
+                          for (var i = 0; i < dd.tracks.length; i++) {
+                            var t = dd.tracks[i];
+                            var o = createPlaylistTrackObject( t.trackId
+                                                             , t.artists
+                                                             , t.name
+                                                             , t.length
+                                                             , t.bpm
+                                                             , t.category
+                                                             , t.preview_url
+                                                             );
+                            tracks.push(o);
+                          }
+                          appendTracks(getPlaylistTable(), tracks);
+                          var next_offset = offset + tracks.length;
+                          if (next_offset < d.total) {
+                            load(next_offset);
+                          }
+                          else {
+                            renderPlaylist();
+                          }
+                        }
+                      , fail
+                      )
+             }
+           , fail
+           );
+  }
+  load(0);
 }
 
 function playPreview(jlink, preview_url, playing_text, stop_text) {
@@ -50,68 +86,97 @@ function playPreview(jlink, preview_url, playing_text, stop_text) {
   PREVIEW_AUDIO.get(0).play();
 }
 
-function setupBpmUpdate() {
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
-  var bpm_inputs = table.find('input[name=bpm]');
-  bpm_inputs.each(
+function addTrackBpmHandling(tr) {
+  var input = tr.find('input[name=bpm]');
+  input.click(
+    function(e) {
+      e.stopPropagation(); // Prevent row selection
+    }
+  );
+  input.change(
     function() {
-      $(this).click(
-        function(e) {
-          e.stopPropagation(); // Prevent row selection
-        }
-      );
-      $(this).change(
+      var input = $(this);
+
+      // Find corresponding track ID
+      var tid_input = input.closest('tr').find('input[name=track_id]');
+      if (tid_input.length == 0) {
+        console.log('could not find track ID');
+        return;
+      }
+      var tid = tid_input.val().trim();
+      if (tid.length == 0) {
+        return;
+      }
+
+      // Check BPM value
+      var bpm = input.val().trim();
+      if (!checkBpmInput(bpm)) {
+        input.addClass('invalid');
+        return;
+      }
+      input.removeClass('invalid');
+
+      // Save new BPM to database
+      var data = { trackId: tid, bpm: bpm };
+      callApi( '/api/update-bpm/'
+             , data
+             , function(d) {}
+             , function(msg) {
+                 alert('<?= LNG_ERR_FAILED_UPDATE_BPM ?>');
+                 console.log(msg);
+               }
+             );
+
+      // Update BPM on all duplicate tracks (if any)
+      input.closest('table').find('input[name=track_id][value=' + tid + ']').each(
         function() {
-          var bpm_input = $(this);
-
-          // Find corresponding track ID
-          var tid_input = bpm_input.parent().parent().find('input[name=track_id]');
-          if (tid_input.length == 0) {
-            console.log('could not find track ID');
-            return;
-          }
-          var tid = tid_input.val().trim();
-          if (tid.length == 0) {
-            return;
-          }
-
-          // Check BPM value
-          var bpm = bpm_input.val().trim();
-          if (!checkBpmInput(bpm)) {
-            bpm_input.addClass('invalid');
-            return;
-          }
-          bpm_input.removeClass('invalid');
-
-          // Save new BPM to database
-          var data = { trackId: tid, bpm: bpm };
-          $.post('/api/update-bpm/', { data: JSON.stringify(data) })
-            .done(
-              function(res) {
-                json = JSON.parse(res);
-                if (json.status == 'OK') {
-                  // Do nothing
-                }
-                else if (json.status == 'FAILED') {
-                  alert('ERROR: ' + json.msg);
-                }
-              }
-            )
-            .fail(
-              function(xhr, status, error) {
-                alert('ERROR: ' + error);
-              }
-            );
-
-          // Update BPM on all duplicate tracks (if any)
-          table.find('input[name=track_id][value=' + tid + ']').each(
-            function() {
-              $(this).parent().find('input[name=bpm]').val(bpm);
-            }
-          );
+          $(this).parent().find('input[name=bpm]').val(bpm);
         }
       );
+    }
+  );
+}
+
+function addTrackCategoryHandling(tr) {
+  var input = tr.find('input[name=category]');
+  input.click(
+    function(e) {
+      e.stopPropagation(); // Prevent row selection
+    }
+  );
+  input.change(
+    function() {
+      var input = $(this);
+
+      // Find corresponding track ID
+      var tid_input = input.closest('tr').find('input[name=track_id]');
+      if (tid_input.length == 0) {
+        console.log('could not find track ID');
+        return;
+      }
+      var tid = tid_input.val().trim();
+      if (tid.length == 0) {
+        return;
+      }
+
+      // Save new category to database
+      var data = { trackId: tid, category: category };
+      callApi( '/api/update-category/'
+             , data
+             , function(d) {}
+             , function(msg) {
+                 alert('<?= LNG_ERR_FAILED_UPDATE_CATEGORY ?>');
+                 console.log(msg);
+               }
+             );
+
+      // Update category on all duplicate tracks (if any)
+      input
+        .closest('table').find('input[name=track_id][value=' + tid + ']').each(
+          function() {
+            $(this).parent().find('input[name=category]').val(category);
+          }
+        );
     }
   );
 }
@@ -137,67 +202,6 @@ function checkBpmInput(str, report_on_fail = true) {
     return false;
   }
   return true;
-}
-
-function setupCategoryUpdate() {
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
-  var category_inputs = table.find('input[name=category]');
-  category_inputs.each(
-    function() {
-      $(this).click(
-        function(e) {
-          e.stopPropagation(); // Prevent row selection
-        }
-      );
-      $(this).change(
-        function() {
-          var category_input = $(this);
-
-          // Find corresponding track ID
-          var tid_input =
-            category_input.parent().parent().find('input[name=track_id]');
-          if (tid_input.length == 0) {
-            console.log('could not find track ID');
-            return;
-          }
-          var tid = tid_input.val().trim();
-          if (tid.length == 0) {
-            return;
-          }
-
-          var category = category_input.val().trim();
-
-          // Save new category to database
-          var data = { trackId: tid, category: category };
-          $.post('/api/update-category/', { data: JSON.stringify(data) })
-            .done(
-              function(res) {
-                json = JSON.parse(res);
-                if (json.status == 'OK') {
-                  // Do nothing
-                }
-                else if (json.status == 'FAILED') {
-                  alert('ERROR: ' + json.msg);
-                }
-              }
-            )
-            .fail(
-              function(xhr, status, error) {
-                alert('ERROR: ' + error);
-              }
-            );
-
-          // Update category on all duplicate tracks (if any)
-          table.find('input[name=track_id][value=' + tid + ']').each(
-            function() {
-              $(this).parent().find('input[name=category]').val(category);
-            }
-          );
-        }
-      );
-    }
-  );
 }
 
 function getTrTitleText(tr) {
@@ -311,7 +315,7 @@ function clearTable(table) {
   table.append(summary_tr);
 }
 
-function addPreviewLink(tr) {
+function addTrackPreviewHandling(tr) {
   if (!tr.hasClass('track')) {
     return;
   }
@@ -334,53 +338,57 @@ function addPreviewLink(tr) {
   tr.find('td.title').append(link);
 }
 
-function regenerateTable(table, delimiter, new_tracks) {
-  clearTable(table);
-  var tr_template = getTableTrackTrTemplate(table).clone(true, true);
-  tr_template.removeClass('template');
-  tr_template.addClass('track');
-
-  // Construct table row for each track
-  for (var i = 0; i < new_tracks.length; i++) {
-    var track = new_tracks[i];
-    var new_tr = tr_template.clone(true, true);
-    if ('trackId' in track) {
-      new_tr.find('td.index').text(i+1);
-      new_tr.find('td.title').text(track.title);
-      new_tr.find('input[name=track_id]').prop('value', track.trackId);
-      new_tr.find('input[name=preview_url]').prop('value', track.previewUrl);
-      new_tr.find('input[name=length_ms]').prop('value', track.length);
-      new_tr.find('input[name=bpm]').prop('value', track.bpm);
-      new_tr.find('input[name=category]').prop('value', track.category);
-      new_tr.find('td.length').text(formatTrackLength(track.length));
-      addPreviewLink(new_tr);
-      addTrackSelection(new_tr);
-      addTrackMovement(new_tr);
-    }
-    else {
-      new_tr.removeClass('track');
-      new_tr.addClass('unfilled-slot');
-      new_tr.find('td.index').text(i+1);
-      new_tr.find('td.title').text(track.title);
-      new_tr.find('input[name=track_id]').remove();
-      new_tr.find('input[name=preview_url]').remove();
-      new_tr.find('input[name=length_ms]').remove();
-      bpm_td = new_tr.find('input[name=bpm]').parent();
-      bpm_td.find('input').remove();
-      bpm_td.text(track.bpm);
-      category_td = new_tr.find('input[name=category]').parent();
-      category_td.find('input').remove();
-      category_td.text(track.category);
-      new_tr.find('td.length').text(track.length);
-    }
-    table.append(new_tr);
+function buildTrackRow(table, track) {
+  var tr = getTableTrackTrTemplate(table).clone(true, true);
+  tr.removeClass('template');
+  tr.addClass('track');
+  if ('trackId' in track) {
+    tr.find('td.title').text(track.title);
+    tr.find('input[name=track_id]').prop('value', track.trackId);
+    tr.find('input[name=preview_url]').prop('value', track.previewUrl);
+    tr.find('input[name=length_ms]').prop('value', track.length);
+    tr.find('input[name=bpm]').prop('value', track.bpm);
+    tr.find('input[name=category]').prop('value', track.category);
+    tr.find('td.length').text(formatTrackLength(track.length));
+    addTrackPreviewHandling(tr);
+    addTrackSelectHandling(tr);
+    addTrackDragHandling(tr);
+    addTrackBpmHandling(tr);
+    addTrackCategoryHandling(tr);
   }
-  table.append(getTableSummaryTr(table));
-  redrawTable(table, delimiter);
+  else {
+    tr.removeClass('track');
+    tr.addClass('unfilled-slot');
+    tr.find('td.title').text(track.title);
+    tr.find('input[name=track_id]').remove();
+    tr.find('input[name=preview_url]').remove();
+    tr.find('input[name=length_ms]').remove();
+    bpm_td = tr.find('input[name=bpm]').parent();
+    bpm_td.find('input').remove();
+    bpm_td.text(track.bpm);
+    category_td = tr.find('input[name=category]').parent();
+    category_td.find('input').remove();
+    category_td.text(track.category);
+    tr.find('td.length').text(track.length);
+  }
+  return tr;
 }
 
-function redrawTable(table, delimiter) {
-  // Recount indices
+function appendTracks(table, tracks) {
+  for (var i = 0; i < tracks.length; i++) {
+    var new_tr = buildTrackRow(table, tracks[i]);
+    table.append(new_tr);
+  }
+  table.append(getTableSummaryTr(table)); // Move summary to last
+}
+
+function replaceTracks(table, tracks) {
+  clearTable(table);
+  appendTracks(table, tracks);
+}
+
+function renderTable(table, delimiter) {
+  // Assign indices
   var trs = table.find('tr.track');
   for (var i = 0; i < trs.length; i++) {
     var tr = $(trs[i]);
@@ -417,28 +425,12 @@ function redrawTable(table, delimiter) {
   getTableSummaryTr(table).find('td.length').text(formatTrackLength(total_length));
 }
 
-function redrawPlaylist() {
-  redrawTable(getPlaylistTable(), PLAYLIST_TRACK_DELIMITER);
+function renderPlaylist() {
+  renderTable(getPlaylistTable(), PLAYLIST_TRACK_DELIMITER);
 }
 
-function redrawScratchpad() {
-  redrawTable(getScratchpadTable(), 0);
-}
-
-function regeneratePlaylist(new_tracks) {
-  if (new_tracks === undefined) {
-    new_tracks = getPlaylistData();
-  }
-  var table = getPlaylistTable();
-  regenerateTable(table, PLAYLIST_TRACK_DELIMITER, new_tracks);
-}
-
-function regenerateScratchpad(new_tracks) {
-  if (new_tracks === undefined) {
-    new_tracks = getScratchpadData();
-  }
-  var table = getScratchpadTable();
-  regenerateTable(table, 0, new_tracks);
+function renderScratchpad() {
+  renderTable(getScratchpadTable(), 0);
 }
 
 function formatTrackTitle(artists, name) {
@@ -519,7 +511,7 @@ function updateTrackSelection(tr, multi_select_mode, span_mode) {
   tr.toggleClass('selected');
 }
 
-function addTrackSelection(tr) {
+function addTrackSelectHandling(tr) {
   tr.click(
     function(e) {
       if (TRACK_DRAG_STATE == 0) {
@@ -532,7 +524,7 @@ function addTrackSelection(tr) {
   );
 }
 
-function addTrackMovement(tr) {
+function addTrackDragHandling(tr) {
   tr.mousedown(
     function(e) {
       var mousedown_tr = $(e.target).closest('tr');
@@ -628,8 +620,8 @@ function addTrackMovement(tr) {
             else {
               tr_insert_point.after(selected_trs);
             }
-            redrawPlaylist();
-            redrawScratchpad();
+            renderPlaylist();
+            renderScratchpad();
           }
           tr_insert_point.removeClass('insert-above insert-below');
         }

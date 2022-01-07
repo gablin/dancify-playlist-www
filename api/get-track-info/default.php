@@ -23,46 +23,77 @@ if (is_null($json)) {
 }
 
 // Check data
-if (!array_key_exists('trackUrl', $json)) {
-  fail('trackUrl missing');
+if ( !array_key_exists('trackUrl', $json) &&
+     !array_key_exists('trackId', $json) &&
+     !array_key_exists('trackIds', $json)
+   )
+{
+  fail('trackUrl/trackId/trackIds missing');
 }
-
-$track_id = getTrackId($json['trackUrl']);
-if (strlen($track_id) > 0) {
-  try {
-    $track = $api->getTrack($track_id);
+if ( ( array_key_exists('trackUrl', $json) +
+       array_key_exists('trackId', $json) +
+       array_key_exists('trackIds', $json)
+     ) > 1
+   )
+{
+  fail('only one of trackUrl/trackId/trackIds can be specified');
+}
+$track_ids = [];
+if (array_key_exists('trackUrl', $json)) {
+  $id = getTrackId($json['trackUrl']);
+  if (strlen($track_id) == 0) {
+    fail('illegal URL format');
   }
-  catch (Exception $e) {
-    fail(sprintf('%s: %s', LNG_ERR_FAILED_LOAD_TRACK, $e->getMessage()));
-  }
+  $track_ids[] = $id;
+}
+else if (array_key_exists('trackId', $json)) {
+  $track_ids[] = $json['trackId'];
 }
 else {
-  fail(LNG_ERR_INVALID_TRACK_FORMAT);
+  $track_ids = $json['trackIds'];
 }
 
-$audio_feats = loadTrackAudioFeatures($api, [$track]);
+$tracks = $api->getTracks($track_ids)->tracks;
+$audio_feats = loadTrackAudioFeatures($api, $tracks);
 
-$category = '';
+$categories = [];
 $client_id = $session->getClientId();
 connectDb();
-$res = queryDb( "SELECT category FROM category " .
-                "WHERE song = '$track_id' AND user = '$client_id'"
+$res = queryDb( "SELECT song, category FROM category " .
+                "WHERE song IN (" .
+                join(',', array_map(function($t) { return "'$t'"; }, $track_ids)) .
+                ") AND user = '$client_id'"
               );
-if ($res->num_rows == 1) {
-  $category = $res->fetch_assoc()['category'];
+while ($row = $res->fetch_assoc()) {
+  $categories[] = [$row['song'], $row['category']];
 }
 
-echo( toJson( [ 'status' => 'OK'
-              , 'trackId' => $track->id
-              , 'name' => $track->name
-              , 'artists' => formatArtists($track)
-              , 'length' => $track->duration_ms
-              , 'bpm' => (int) $audio_feats[0]->tempo
-              , 'category' => $category
-              , 'preview_url' => $track->preview_url
-              ]
-            )
-    );
+$tracks_res = [];
+for ($i = 0; $i < count($tracks); $i++) {
+  $t = $tracks[$i];
+  $bpm = (int) $audio_feats[$i]->tempo;
+  $category = array_filter( $categories
+                          , function($c) { return $c[0] === $t->id; }
+                          );
+  $category = count($category) > 0 ? $category[1] : '';
+  $tracks_res[] = [ 'trackId' => $t->id
+                  , 'name' => $t->name
+                  , 'artists' => formatArtists($t)
+                  , 'length' => $t->duration_ms
+                  , 'bpm' => $bpm
+                  , 'category' => $category
+                  , 'preview_url' => $t->preview_url
+                  ];
+}
+
+$res = ['status' => 'OK'];
+if (array_key_exists('trackIds', $json)) {
+  $res['tracks'] = $tracks_res;
+}
+else {
+  $res = array_merge($res, $tracks_res[0]);
+}
+echo(toJson($res));
 
 } // End try
 catch (\Exception $e) {
