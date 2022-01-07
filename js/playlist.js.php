@@ -576,9 +576,12 @@ function addTrackDragHandling(tr) {
 
         // We have moved over a playlist
 
+        // If moving over table head, move insertion point to next visible tbody tr
         if (tr.closest('thead').length > 0) {
-          // Get first tbody tr
-          tr = $(tr.closest('table').find('tbody tr.track, tbody tr.summary')[0]);
+          tr = $(tr.closest('table').find('tbody tr')[0]);
+          while (!tr.is(':visible')) {
+            tr = tr.next();
+          }
         }
 
         var tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
