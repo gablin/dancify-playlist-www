@@ -279,18 +279,26 @@ $(document).ready(
     var s_table = $('table[id=scratchpad]');
     initPlaylistGlobals(form, p_table, s_table);
 
-    // Disable submission
+    // Disable default form submission when pressing Enter
     form.submit(function() { return false; });
 
     setupPlaylist();
+    loadPlaylist('<?= $playlist_id ?>');
     setupSaveNewPlaylist(<?= $playlist_info->public ? 'true' : 'false' ?>);
     setupRandomizeByBpm();
     setupInsertTrack();
     setupTrackDelimiter();
     setupScratchpad();
-    setupUnloadWarning();
 
-    var limitPlaylistHeight = function() {
+    // TODO: automatic saving
+    // TODO: restore to original playlist
+    // TODO: add/remove track placeholders
+    // TODO: replace category by genre
+    // TODO: color by genre
+    // TODO: add tracks
+    // TODO: search function
+
+    function limitPlaylistHeight() {
       var screen_vh = window.innerHeight;
       var table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
       var footer_vh = $('div.footer').outerHeight();
@@ -299,8 +307,6 @@ $(document).ready(
     };
     $(window).resize(limitPlaylistHeight);
     limitPlaylistHeight();
-
-    loadPlaylist('<?= $playlist_id ?>');
   }
 );
 </script>
