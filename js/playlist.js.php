@@ -562,15 +562,20 @@ function addTrackDragHandling(tr) {
           return;
         }
 
-        // Find insertion point, if moving over playlist or scratchpad
+        // Always clear previous insertion point; else we could in some cases end
+        // up with multiple insertion points
+        $('.playlist tr.insert-above, .playlist tr.insert-below')
+          .removeClass('insert-above insert-below');
+
+        // Hide insertion-point bar if we are not over a playlist
         var tr = $(e.target.closest('tr'));
         if (tr.length == 0 || tr.closest('.playlist').length == 0) {
-          $('.insert-above, .insert-below')
-            .removeClass('insert-above')
-            .removeClass('insert-below');
           ins_point.hide();
           return;
         }
+
+        // We have moved over a playlist
+
         if (tr.closest('thead').length > 0) {
           // Get first tbody tr
           tr = $(tr.closest('table').find('tbody tr.track, tbody tr.summary')[0]);
@@ -578,15 +583,7 @@ function addTrackDragHandling(tr) {
 
         var tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
         var insert_above = tr_y_half <= 0 || tr.hasClass('summary');
-        if (insert_above) {
-          tr.addClass('insert-above');
-          tr.removeClass('insert-below');
-        }
-        else {
-          tr.addClass('insert-below');
-          tr.removeClass('insert-above');
-        }
-        tr.siblings().removeClass('insert-above').removeClass('insert-below');
+        tr.addClass(insert_above ? 'insert-above' : 'insert-below');
         ins_point.css( { width: tr.width() + 'px'
                        , left: tr.offset().left + 'px'
                        , top: ( tr.offset().top +
@@ -601,7 +598,7 @@ function addTrackDragHandling(tr) {
       function up(e) {
         var tr_insert_point =
           $('.playlist tr.insert-above, .playlist tr.insert-below');
-        if (tr_insert_point.length > 0) {
+        if (tr_insert_point.length == 1) {
           // Forbid dropping adjacent to a selected track as that causes wierd
           // reordering
           var dropped_adjacent_to_selected =
