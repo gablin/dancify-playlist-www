@@ -357,8 +357,7 @@ function buildTrackRow(table, track) {
     addTrackCategoryHandling(tr);
   }
   else {
-    tr.removeClass('track');
-    tr.addClass('unfilled-slot');
+    tr.removeClass('track').addClass('empty-track');
     tr.find('td.title').text(track.title);
     tr.find('input[name=track_id]').remove();
     tr.find('input[name=preview_url]').remove();
@@ -576,6 +575,13 @@ function addTrackDragHandling(tr) {
 
         // We have moved over a playlist
 
+        // If moved over empty-track tr, mark entire tr as insertion point
+        if (tr.hasClass('track-empty')) {
+          tr.addClass('insert-above');
+          ins_point.hide();
+          return;
+        }
+
         // If moving over table head, move insertion point to next visible tbody tr
         if (tr.closest('thead').length > 0) {
           tr = $(tr.closest('table').find('tbody tr')[0]);
@@ -584,6 +590,7 @@ function addTrackDragHandling(tr) {
           }
         }
 
+        // Mark insertion point and draw insertion-point bar
         var tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
         var insert_above = tr_y_half <= 0 || tr.hasClass('summary');
         tr.addClass(insert_above ? 'insert-above' : 'insert-below');
@@ -624,6 +631,9 @@ function addTrackDragHandling(tr) {
             renderScratchpad();
           }
           tr_insert_point.removeClass('insert-above insert-below');
+          if (tr_insert_point.hasClass('empty-track')) {
+            tr_insert_point.remove();
+          }
         }
 
         // Remove info block and insertion-point bar

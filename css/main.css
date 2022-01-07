@@ -257,8 +257,12 @@ table th {
   padding-top: 1em;
   font-weight: bold;
 }
-.playlist table tr.unfilled-slot {
+.playlist table tr.empty-track {
   font-style: italic;
+}
+.playlist table tr.empty-track.insert-above,
+.playlist table tr.empty-track.insert-below {
+  background-color: #0CA761;
 }
 .playlist table tr.summary .length {
   padding-top: .5em;
