@@ -5,6 +5,8 @@ require '../autoload.php';
 var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_TRACK_DELIMITER = 0;
 var TRACK_DRAG_STATE = 0;
+const BPM_MIN = 0;
+const BPM_MAX = 255;
 
 function setupPlaylist() {
   $(document).on( 'keyup'
@@ -132,11 +134,44 @@ function addTrackBpmHandling(tr) {
       // Update BPM on all duplicate tracks (if any)
       input.closest('table').find('input[name=track_id][value=' + tid + ']').each(
         function() {
-          $(this).parent().find('input[name=bpm]').val(bpm);
+          $(this).parent().find('input[name=bpm]').each(
+            function() {
+              $(this).val(bpm);
+              renderTrackBpm($(this).closest('tr'));
+            }
+          );
         }
       );
     }
   );
+}
+
+function renderTrackBpm(tr) {
+  var input = tr.find('input[name=bpm]');
+  var bpm = input.val().trim();
+  if (!checkBpmInput(bpm, false)) {
+    return;
+  }
+  bpm = parseInt(bpm);
+  //               bpm    color (RGB)
+  const colors = [ [   0, [  0,   0, 255] ] // Blue
+                 , [  40, [  0, 255,   0] ] // Green
+                 , [ 100, [255, 255,   0] ] // Yellow
+                 , [ 160, [255,   0,   0] ] // Red
+                 , [ 200, [255,   0, 255] ] // Purple
+                 , [ 255, [255,   0, 255] ] // Purple
+                 ];
+  for (var i = 0; i < colors.length; i++) {
+    if (i == colors.length-2 || bpm < colors[i+1][0]) {
+      var p = (bpm - colors[i][0]) / (colors[i+1][0] - colors[i][0]);
+      var c = [...colors[i][1]];
+      for (var j = 0; j < c.length; j++) {
+        c[j] += Math.round((colors[i+1][1][j] - c[j]) * p);
+      }
+      input.css('background-color', 'rgb(' + c.join(',') + ')');
+      return;
+    }
+  }
 }
 
 function addTrackCategoryHandling(tr) {
@@ -190,13 +225,13 @@ function checkBpmInput(str, report_on_fail = true) {
     }
     return false;
   }
-  if (bpm <= 0) {
+  if (bpm < BPM_MIN) {
     if (report_on_fail) {
       alert('<?= LNG_ERR_BPM_TOO_SMALL ?>');
     }
     return false;
   }
-  if (bpm > 255) {
+  if (bpm > BPM_MAX) {
     if (report_on_fail) {
       alert('<?= LNG_ERR_BPM_TOO_LARGE ?>');
     }
@@ -354,6 +389,7 @@ function buildTrackRow(table, track) {
     addTrackPreviewHandling(tr);
     addTrackSelectHandling(tr);
     addTrackDragHandling(tr);
+    renderTrackBpm(tr);
     addTrackBpmHandling(tr);
     addTrackCategoryHandling(tr);
   }
