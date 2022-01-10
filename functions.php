@@ -573,14 +573,14 @@ function connectDb() {
 function checkDbTables() {
   $tables = [ 'bpm' =>
               'CREATE TABLE bpm' .
-              ' ( song char(22) NOT NULL' .
-              ' , bpm tinyint(3) unsigned NOT NULL' .
+              ' ( song CHAR(22) NOT NULL' .
+              ' , bpm TINYINT UNSIGNED NOT NULL' .
               ' )'
-            , 'category' =>
-              'CREATE TABLE category' .
-              ' ( song char(22) NOT NULL' .
-              ' , user char(32) NOT NULL' .
-              ' , category char(31) NOT NULL' .
+            , 'genre' =>
+              'CREATE TABLE genre' .
+              ' ( song CHAR(22) NOT NULL' .
+              ' , user CHAR(32) NOT NULL' .
+              ' , genre TINYINT UNSIGNED NOT NULL' .
               ' , PRIMARY KEY (song, user)' .
               ' )'
             ];

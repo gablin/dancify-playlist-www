@@ -1,11 +1,11 @@
 include "globals.mzn";
 
 array[int] of int: bpm;
-array[int] of int: categories;
+array[int] of int: genres;
 array[int, int] of int: ranges;
 array[int, int] of int: diffs;
 set of int: RangeSet = index_set_1of2(ranges);
-bool: dance_slot_same_category;
+bool: dance_slot_same_genre;
 
 int: Null = 0;
 set of int: TrackSet = index_set(bpm);
@@ -52,12 +52,12 @@ forall (i in RangeSet)
   ( has_track[j] -> (min_bpm <= bpm[order[j]] /\ bpm[order[j]] <= max_bpm) )
 );
 
-% Only tracks with same category can be place in the same dance slot.
+% Only tracks with same genre can be place in the same dance slot.
 constraint
-if dance_slot_same_category
+if dance_slot_same_genre
 then forall (s in DanceSlotSet, i in (s-1)*card(RangeSet)+1..s*card(RangeSet)-1 )
      ( ( has_track[i] /\ has_track[i+1] ) ->
-       categories[order[i]] == categories[order[i+1]]
+       genres[order[i]] == genres[order[i+1]]
      )
 else true
 endif;

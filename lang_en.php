@@ -92,8 +92,8 @@ define( 'LNG_HEAD_LENGTH'
 define( 'LNG_HEAD_BPM'
       , 'BPM'
       );
-define( 'LNG_HEAD_CATEGORY_SHORT'
-      , 'Cat.'
+define( 'LNG_HEAD_GENRE'
+      , 'Genre'
       );
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
@@ -149,8 +149,8 @@ define( 'LNG_ERR_FAILED_LOAD_TRACK'
 define( 'LNG_ERR_FAILED_UPDATE_BPM'
       , 'failed to update BPM'
       );
-define( 'LNG_ERR_FAILED_UPDATE_CATEGORY'
-      , 'failed to update category'
+define( 'LNG_ERR_FAILED_UPDATE_GENRE'
+      , 'failed to update genre'
       );
 define( 'LNG_ERR_FAILED_INSERT_TRACK'
       , 'failed to insert track'
@@ -212,8 +212,8 @@ define( 'LNG_DESC_TRACKS_NOT_PLACED'
 define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
       , 'No suitable track to fill this place'
       );
-define( 'LNG_DESC_DANCE_SLOT_SAME_CATEGORY'
-      , 'Put only songs of same category in same dance slot'
+define( 'LNG_DESC_DANCE_SLOT_SAME_GENRE'
+      , 'Put only songs of same genre in same dance slot'
       );
 define( 'LNG_DESC_BPM'
       , 'BPM'
@@ -229,5 +229,17 @@ define( 'LNG_DESC_PLAYLIST_NAME'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
+      );
+define( 'LNG_GENRE_DANCEBAND'
+      , 'danceband'
+      );
+define( 'LNG_GENRE_COUNTRY'
+      , 'country'
+      );
+define( 'LNG_GENRE_ROCK'
+      , 'rock'
+      );
+define( 'LNG_GENRE_POP'
+      , 'pop'
       );
 ?>

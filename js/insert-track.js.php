@@ -34,7 +34,7 @@ function setupFormElementsForInsertTrack() {
                                                    , d.name
                                                    , d.length
                                                    , d.bpm
-                                                   , d.category
+                                                   , d.genre
                                                    , d.preview_url
                                                    );
                  var tracks = getPlaylistData();

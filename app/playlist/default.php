@@ -91,9 +91,9 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <tbody>
     </table>
     <label class="checkbox">
-      <input type="checkbox" name="dance-slot-has-same-category" value="true" />
+      <input type="checkbox" name="dance-slot-has-same-genre" value="true" />
       <span class="checkmark"></span>
-      <?= LNG_DESC_DANCE_SLOT_SAME_CATEGORY ?>
+      <?= LNG_DESC_DANCE_SLOT_SAME_GENRE ?>
     </label>
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
@@ -188,35 +188,8 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <div class="playlist-title"><?= $playlist_info->name ?></div>
 <div class="table-wrapper">
 <table id="playlist">
-  <thead>
-    <tr>
-      <th class="index">#</th>
-      <th class="bpm"><?= LNG_HEAD_BPM ?></th>
-      <th class="category"><?= LNG_HEAD_CATEGORY_SHORT ?></th>
-      <th><?= LNG_HEAD_TITLE ?></th>
-      <th class="length"><?= LNG_HEAD_LENGTH ?></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="template">
-      <input type="hidden" name="track_id" value="" />
-      <input type="hidden" name="preview_url" value="" />
-      <input type="hidden" name="length_ms" value="" />
-      <td class="index"></td>
-      <td class="bpm">
-        <input type="text" name="bpm" class="bpm" value="" />
-      </td>
-      <td class="category">
-        <input type="text" name="category" class="category" value="" />
-      </td>
-      <td class="title"></td>
-      <td class="length"></td>
-    </tr>
-    <tr class="summary">
-      <td colspan="4"></td>
-      <td class="length"></td>
-    </tr>
-  </tbody>
+  <thead></thead>
+  <tbody></tbody>
 </table>
 </div>
 </div>
@@ -225,35 +198,8 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <div class="playlist-title"><?= LNG_HEAD_SCRATCHPAD ?></div>
 <div class="table-wrapper">
 <table id="scratchpad">
-  <thead>
-    <tr>
-      <th class="index">#</th>
-      <th class="bpm"><?= LNG_HEAD_BPM ?></th>
-      <th class="category"><?= LNG_HEAD_CATEGORY_SHORT ?></th>
-      <th><?= LNG_HEAD_TITLE ?></th>
-      <th class="length"><?= LNG_HEAD_LENGTH ?></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="template">
-      <input type="hidden" name="track_id" value="" />
-      <input type="hidden" name="preview_url" value="" />
-      <input type="hidden" name="length_ms" value="" />
-      <td class="index"></td>
-      <td class="bpm">
-        <input type="text" name="bpm" class="bpm" value="" />
-      </td>
-      <td class="category">
-        <input type="text" name="category" class="category" value="" />
-      </td>
-      <td class="title"></td>
-      <td class="length"></td>
-    </tr>
-    <tr class="summary">
-      <td colspan="4"></td>
-      <td class="length"></td>
-    </tr>
-  </tbody>
+  <thead></thead>
+  <tbody></tbody>
 </table>
 </div>
 </div>
@@ -290,11 +236,10 @@ $(document).ready(
     setupTrackDelimiter();
     setupScratchpad();
 
+    // TODO: color by genre
     // TODO: automatic saving
     // TODO: restore to original playlist
     // TODO: add/remove track placeholders
-    // TODO: replace category by genre
-    // TODO: color by genre
     // TODO: add tracks
     // TODO: search function
 

@@ -33,3 +33,17 @@ function callApi(url, data, success_f, fail_f) {
       }
     );
 }
+
+/**
+ * Do string comparison that can be used for sorting. Returns:
+ *   <0 if s1 is lexicographically less than s2,
+ *   >0 if s1 is lexicographically greater than s2,
+ *    0 if s1 is equal to s2.
+ *
+ * @param s1 First string.
+ * @param s2 Second string.
+ * @return int
+ */
+function strcmp(str1, str2) {
+  return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1;
+}

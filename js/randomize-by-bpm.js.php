@@ -30,16 +30,16 @@ function setupFormElementsForRandomizeByBpm() {
         var track = playlist_data[i];
         track_ids.push(track.trackId)
         bpms.push(track.bpm);
-        categories.push(track.category);
+        categories.push(track.genre);
       }
       var bpm_data = getBpmSettings();
       var data = { trackIdList: track_ids
                  , trackBpmList: bpms
-                 , trackCategoryList: categories
+                 , trackGenreList: categories
                  , bpmRangeList: bpm_data.bpmRangeList
                  , bpmDifferenceList: bpm_data.bpmDifferenceList
-                 , danceSlotSameCategory:
-                     form.find('input[name=dance-slot-has-same-category]')
+                 , danceSlotSameGenre:
+                     form.find('input[name=dance-slot-has-same-genre]')
                      .prop('checked')
                  };
       callApi( '/api/randomize-by-bpm/'

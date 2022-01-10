@@ -9,6 +9,10 @@ const BPM_MIN = 0;
 const BPM_MAX = 255;
 
 function setupPlaylist() {
+  addTableHead(getPlaylistTable());
+  addTableHead(getScratchpadTable());
+  addTrTemplate(getPlaylistTable());
+  addTrTemplate(getScratchpadTable());
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == 'Escape') {
@@ -44,7 +48,7 @@ function loadPlaylist(playlist_id) {
                                                              , t.name
                                                              , t.length
                                                              , t.bpm
-                                                             , t.category
+                                                             , t.genre
                                                              , t.preview_url
                                                              );
                             tracks.push(o);
@@ -134,7 +138,7 @@ function addTrackBpmHandling(tr) {
       // Update BPM on all duplicate tracks (if any)
       input.closest('table').find('input[name=track_id][value=' + tid + ']').each(
         function() {
-          $(this).parent().find('input[name=bpm]').each(
+          $(this).closest('tr').find('input[name=bpm]').each(
             function() {
               $(this).val(bpm);
               renderTrackBpm($(this).closest('tr'));
@@ -174,19 +178,19 @@ function renderTrackBpm(tr) {
   }
 }
 
-function addTrackCategoryHandling(tr) {
-  var input = tr.find('input[name=category]');
-  input.click(
+function addTrackGenreHandling(tr) {
+  var select = tr.find('select[name=genre]');
+  select.click(
     function(e) {
       e.stopPropagation(); // Prevent row selection
     }
   );
-  input.change(
+  select.change(
     function() {
-      var input = $(this);
+      var s = $(this);
 
       // Find corresponding track ID
-      var tid_input = input.closest('tr').find('input[name=track_id]');
+      var tid_input = s.closest('tr').find('input[name=track_id]');
       if (tid_input.length == 0) {
         console.log('could not find track ID');
         return;
@@ -196,25 +200,33 @@ function addTrackCategoryHandling(tr) {
         return;
       }
 
-      // Save new category to database
-      var data = { trackId: tid, category: category };
-      callApi( '/api/update-category/'
+      // Save new genre to database
+      var genre = parseInt(s.find(':selected').val().trim());
+      var data = { trackId: tid, genre: genre };
+      callApi( '/api/update-genre/'
              , data
              , function(d) {}
              , function(msg) {
-                 alert('<?= LNG_ERR_FAILED_UPDATE_CATEGORY ?>');
+                 alert('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>');
                }
              );
 
-      // Update category on all duplicate tracks (if any)
-      input
-        .closest('table').find('input[name=track_id][value=' + tid + ']').each(
-          function() {
-            $(this).parent().find('input[name=category]').val(category);
-          }
-        );
+      // Update genre on all duplicate tracks (if any)
+      s.closest('table').find('input[name=track_id][value=' + tid + ']').each(
+        function() {
+          var tr = $(this).closest('tr');
+          tr.closest('tr')
+            .find('select[name=genre] option[value=' + genre + ']')
+            .attr('selected', true);
+          renderTrackGenre(tr);
+        }
+      );
     }
   );
+}
+
+function renderTrackGenre(tr) {
+  // TODO: implement
 }
 
 function checkBpmInput(str, report_on_fail = true) {
@@ -263,14 +275,14 @@ function getTrackData(table) {
         var track_id = tr.find('input[name=track_id]').val().trim();
         var preview_url = tr.find('input[name=preview_url]').val().trim();
         var bpm = tr.find('input[name=bpm]').val().trim();
-        var category = tr.find('input[name=category]').val().trim();
+        var genre = tr.find('select[name=genre] option:selected').val().trim();
         var title = getTrTitleText(tr);
         var len = tr.find('input[name=length_ms]').val().trim();
         playlist.push( { trackId: track_id
                        , title: title
                        , length: len
                        , bpm: bpm
-                       , category: category
+                       , genre: genre
                        , previewUrl: preview_url
                        }
                      );
@@ -301,7 +313,7 @@ function createPlaylistTrackObject( track_id
                                   , name
                                   , length_ms
                                   , bpm
-                                  , category
+                                  , genre
                                   , preview_url
                                   )
 {
@@ -309,7 +321,7 @@ function createPlaylistTrackObject( track_id
          , title: formatTrackTitle(artists, name)
          , length: length_ms
          , bpm: bpm
-         , category: category
+         , genre: genre
          , previewUrl: preview_url
          }
 }
@@ -317,13 +329,13 @@ function createPlaylistTrackObject( track_id
 function createPlaylistPlaceholderObject( title_text
                                         , length_text
                                         , bpm_text
-                                        , category_text
+                                        , genre_text
                                         )
 {
   return { title: title_text
          , length: length_text
          , bpm: bpm_text
-         , category: category_text
+         , genre: genre_text
          }
 }
 
@@ -331,6 +343,61 @@ function getTrackWithMatchingId(track_list, track_id) {
   var i = 0;
   for (; i < track_list.length && track_list[i].trackId != track_id; i++) {}
   return i < track_list.length ? track_list[i] : null;
+}
+
+function addTableHead(table) {
+  var tr =
+    $( '<tr>' +
+       '  <th class="index">#</th>' +
+       '  <th class="bpm"><?= LNG_HEAD_BPM ?></th>' +
+       '  <th class="genre"><?= LNG_HEAD_GENRE ?></th>' +
+       '  <th><?= LNG_HEAD_TITLE ?></th>' +
+       '  <th class="length"><?= LNG_HEAD_LENGTH ?></th>' +
+       '</tr>'
+     );
+  table.find('thead').append(tr);
+}
+
+function addTrTemplate(table) {
+  var genres = [ [ 0, '']
+               , [ 1, '<?= strtolower(LNG_GENRE_DANCEBAND) ?>']
+               , [ 2, '<?= strtolower(LNG_GENRE_COUNTRY) ?>']
+               , [ 3, '<?= strtolower(LNG_GENRE_ROCK) ?>']
+               , [ 4, '<?= strtolower(LNG_GENRE_POP) ?>']
+               ];
+  genres.sort( function(a, b) {
+                 if (a[0] == 0) return -1;
+                 if (b[0] == 0) return  1;
+                 return strcmp(a[1], b[1]);
+               }
+             );
+  var tr =
+    $( '<tr class="template">' +
+       '  <input type="hidden" name="track_id" value="" />' +
+       '  <input type="hidden" name="preview_url" value="" />' +
+       '  <input type="hidden" name="length_ms" value="" />' +
+       '  <td class="index" />' +
+       '  <td class="bpm">' +
+       '    <input type="text" name="bpm" class="bpm" value="" />' +
+       '  </td>' +
+       '  <td class="genre">' +
+       '    <select class="genre" name="genre">' +
+              genres.map(
+                function(g) {
+                  return '<option value="' + g[0] + '">' + g[1] + '</value>';
+                }
+              ).join('') +
+       '    </select>' +
+       '  </td>' +
+       '  <td class="title" />' +
+       '  <td class="length" />' +
+       '</tr>' +
+       '<tr class="summary">' +
+       '  <td colspan="4" />' +
+       '  <td class="length" />' +
+       '</tr>'
+     );
+  table.find('tbody').append(tr);
 }
 
 function getTableTrackTrTemplate(table) {
@@ -346,7 +413,7 @@ function getTableSummaryTr(table) {
 function clearTable(table) {
   var track_tr_template = getTableTrackTrTemplate(table).clone(true, true);
   var summary_tr = getTableSummaryTr(table).clone(true, true);
-  table.find('tr > td').parent().remove();
+  table.find('tbody tr').remove();
   table.append(track_tr_template);
   table.append(summary_tr);
 }
@@ -384,14 +451,15 @@ function buildTrackRow(table, track) {
     tr.find('input[name=preview_url]').prop('value', track.previewUrl);
     tr.find('input[name=length_ms]').prop('value', track.length);
     tr.find('input[name=bpm]').prop('value', track.bpm);
-    tr.find('input[name=category]').prop('value', track.category);
+    tr.find('select[name=genre] option[value=' + track.genre + ']')
+      .prop('selected', true);
     tr.find('td.length').text(formatTrackLength(track.length));
     addTrackPreviewHandling(tr);
     addTrackSelectHandling(tr);
     addTrackDragHandling(tr);
     renderTrackBpm(tr);
     addTrackBpmHandling(tr);
-    addTrackCategoryHandling(tr);
+    addTrackGenreHandling(tr);
   }
   else {
     tr.removeClass('track').addClass('empty-track');
@@ -399,12 +467,12 @@ function buildTrackRow(table, track) {
     tr.find('input[name=track_id]').remove();
     tr.find('input[name=preview_url]').remove();
     tr.find('input[name=length_ms]').remove();
-    bpm_td = tr.find('input[name=bpm]').parent();
+    bpm_td = tr.find('input[name=bpm]').closest('td');
     bpm_td.find('input').remove();
     bpm_td.text(track.bpm);
-    category_td = tr.find('input[name=category]').parent();
-    category_td.find('input').remove();
-    category_td.text(track.category);
+    genre_td = tr.find('select[name=genre]').closest('td');
+    genre_td.find('select').remove();
+    genre_td.text(track.genre);
     tr.find('td.length').text(track.length);
     addTrackSelectHandling(tr);
     addTrackDragHandling(tr);

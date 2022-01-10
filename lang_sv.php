@@ -92,8 +92,8 @@ define( 'LNG_HEAD_LENGTH'
 define( 'LNG_HEAD_BPM'
       , 'BPM'
       );
-define( 'LNG_HEAD_CATEGORY_SHORT'
-      , 'Kat.'
+define( 'LNG_HEAD_GENRE'
+      , 'Genre'
       );
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
@@ -149,7 +149,7 @@ define( 'LNG_ERR_FAILED_LOAD_TRACK'
 define( 'LNG_ERR_FAILED_UPDATE_BPM'
       , 'misslyckades att uppdatera BPM'
       );
-define( 'LNG_ERR_FAILED_UPDATE_CATEGORY'
+define( 'LNG_ERR_FAILED_UPDATE_GENRE'
       , 'misslyckades att uppdatera kategori'
       );
 define( 'LNG_ERR_FAILED_INSERT_TRACK'
@@ -212,8 +212,8 @@ define( 'LNG_DESC_TRACKS_NOT_PLACED'
 define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
       , 'Ingen låt fanns att fylla denna plats'
       );
-define( 'LNG_DESC_DANCE_SLOT_SAME_CATEGORY'
-      , 'Placera endast låtar av samma kategori i samma dansslot'
+define( 'LNG_DESC_DANCE_SLOT_SAME_GENRE'
+      , 'Placera endast låtar av samma genre i samma dansslot'
       );
 define( 'LNG_DESC_BPM'
       , 'BPM'
@@ -229,5 +229,17 @@ define( 'LNG_DESC_PLAYLIST_NAME'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
+      );
+define( 'LNG_GENRE_DANCEBAND'
+      , 'dansband'
+      );
+define( 'LNG_GENRE_COUNTRY'
+      , 'country'
+      );
+define( 'LNG_GENRE_ROCK'
+      , 'rock'
+      );
+define( 'LNG_GENRE_POP'
+      , 'pop'
       );
 ?>

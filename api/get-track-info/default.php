@@ -56,32 +56,33 @@ else {
 $tracks = $api->getTracks($track_ids)->tracks;
 $audio_feats = loadTrackAudioFeatures($api, $tracks);
 
-$categories = [];
+$genres = [];
 $client_id = $session->getClientId();
 connectDb();
-$res = queryDb( "SELECT song, category FROM category " .
+$res = queryDb( "SELECT song, genre FROM genre " .
                 "WHERE song IN (" .
                 join(',', array_map(function($t) { return "'$t'"; }, $track_ids)) .
                 ") AND user = '$client_id'"
               );
 while ($row = $res->fetch_assoc()) {
-  $categories[] = [$row['song'], $row['category']];
+  $genres[] = [$row['song'], $row['genre']];
 }
-
 $tracks_res = [];
 for ($i = 0; $i < count($tracks); $i++) {
   $t = $tracks[$i];
   $bpm = (int) $audio_feats[$i]->tempo;
-  $category = array_filter( $categories
-                          , function($c) { return $c[0] === $t->id; }
-                          );
-  $category = count($category) > 0 ? $category[1] : '';
+  $genre = array_values( // To reset indices
+             array_filter( $genres
+             , function($g) use ($t) { return $g[0] === $t->id; }
+             )
+           );
+  $genre = count($genre) > 0 ? $genre[0][1] : 0;
   $tracks_res[] = [ 'trackId' => $t->id
                   , 'name' => $t->name
                   , 'artists' => formatArtists($t)
                   , 'length' => $t->duration_ms
                   , 'bpm' => $bpm
-                  , 'category' => $category
+                  , 'genre' => $genre
                   , 'preview_url' => $t->preview_url
                   ];
 }

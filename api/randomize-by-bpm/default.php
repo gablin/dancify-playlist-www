@@ -27,8 +27,8 @@ if (!array_key_exists('trackIdList', $json)) {
 if (!array_key_exists('trackBpmList', $json)) {
   fail('trackBpmList missing');
 }
-if (!array_key_exists('trackCategoryList', $json)) {
-  fail('trackCategoryList missing');
+if (!array_key_exists('trackGenreList', $json)) {
+  fail('trackGenreList missing');
 }
 if (!array_key_exists('bpmRangeList', $json)) {
   fail('bpmRangeList missing');
@@ -36,23 +36,23 @@ if (!array_key_exists('bpmRangeList', $json)) {
 if (!array_key_exists('bpmDifferenceList', $json)) {
   fail('bpmDifferenceList missing');
 }
-if (!array_key_exists('danceSlotSameCategory', $json)) {
-  fail('danceSlotSameCategory missing');
+if (!array_key_exists('danceSlotSameGenre', $json)) {
+  fail('danceSlotSameGenre missing');
 }
 $track_ids = $json['trackIdList'];
 $bpms = $json['trackBpmList'];
-$categories = $json['trackCategoryList'];
+$genres = $json['trackGenreList'];
 if (count($track_ids) == 0) {
   fail('no track IDs');
 }
 if (count($bpms) == 0) {
   fail('no BPMs');
 }
-if (count($categories) == 0) {
-  fail('no categories');
+if (count($genres) == 0) {
+  fail('no genres');
 }
-if (count($track_ids) != count($bpms) || count($track_ids) != count($categories)) {
-  fail('inconsistent number of track IDs, BPMs and/or categories');
+if (count($track_ids) != count($bpms) || count($track_ids) != count($genres)) {
+  fail('inconsistent number of track IDs, BPMs and/or genres');
 }
 $ranges = $json['bpmRangeList'];
 $diffs = $json['bpmDifferenceList'];
@@ -67,23 +67,16 @@ if (count($ranges) != count($diffs)+1) {
 }
 
 // Randomize track order
-$a = array_zip($track_ids, $bpms, $categories);
+$a = array_zip($track_ids, $bpms, $genres);
 shuffle($a);
-$track_ids  = array_map(function ($l) { return $l[0]; }, $a);
-$bpms       = array_map(function ($l) { return $l[1]; }, $a);
-$categories = array_map(function ($l) { return $l[2]; }, $a);
-
-$uniq_categories = array_values(array_unique($categories));
-$int_categories = array_map( function ($g) use ($uniq_categories) {
-                               return array_search($g, $uniq_categories);
-                             }
-                           , $categories
-                           );
+$track_ids = array_map(function ($l) { return $l[0]; }, $a);
+$bpms      = array_map(function ($l) { return $l[1]; }, $a);
+$genres    = array_map(function ($l) { return $l[2]; }, $a);
 
 // Generate model input
 $dzn_content = "";
 $dzn_content .= "bpm = [" . implode(',', $bpms) . "];\n";
-$dzn_content .= "categories = [" . implode(',', $int_categories) . "];\n";
+$dzn_content .= "genres = [" . implode(',', $genres) . "];\n";
 $dzn_content .= "ranges = [|" .
                  implode( '|'
                         , array_map( function ($l) { return implode(',', $l); }
@@ -98,8 +91,8 @@ $dzn_content .= "diffs = [|" .
                                    )
                         ) .
                 "|];\n";
-$dzn_content .= "dance_slot_same_category = " .
-                ($json['danceSlotSameCategory'] ? "true" : "false") .
+$dzn_content .= "dance_slot_same_genre = " .
+                ($json['danceSlotSameGenre'] ? "true" : "false") .
                 "\n;";
 $dir = createTempDir();
 $clean_up_fun = function () use ($dir) { shell_exec("rm -rf $dir"); };

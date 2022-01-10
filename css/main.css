@@ -238,9 +238,9 @@ table th {
 .playlist table td.bpm {
   font-size: 90%;
 }
-.playlist table th.category,
-.playlist table td.category {
-  width: 5em;
+.playlist table th.genre,
+.playlist table td.genre {
+  width: 6.25em;
 }
 .playlist table th.length,
 .playlist table td.length {
@@ -347,12 +347,7 @@ input.bpm {
   padding-right: .4em;
   text-align: right;
 }
-input.category {
-  width: 4em;
-  padding-left: .4em;
-  padding-right: 0;
-  margin-right: 0.5em;
-}
+select.genre {}
 input.invalid {
   border-color: #f00;
 }
