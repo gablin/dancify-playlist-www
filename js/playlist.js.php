@@ -336,6 +336,13 @@ function createPlaylistPlaceholderObject( title_text
                                         , genre_text
                                         )
 {
+  if (title_text === undefined) {
+    return { title: '<?= LNG_DESC_PLACEHOLDER ?>'
+           , length: ''
+           , bpm: ''
+           , genre: ''
+           }
+  }
   return { title: title_text
          , length: length_text
          , bpm: bpm_text
@@ -583,6 +590,10 @@ function setTrackDelimiter(d) {
   PLAYLIST_TRACK_DELIMITER = d;
 }
 
+function isUsingTrackDelimiter() {
+  return PLAYLIST_TRACK_DELIMITER > 0;
+}
+
 function clearTrackSelection() {
   $('.playlist tr.selected').removeClass('selected');
 }
@@ -747,6 +758,22 @@ function addTrackDragHandling(tr) {
             );
           if (!dropped_adjacent_to_selected) {
             var selected_trs = $('tr.selected');
+
+            // If appropriate, insert placeholders where selected tracks used to be
+            var source_table = getTableOfTr($(selected_trs[0]));
+            if (isUsingTrackDelimiter() && source_table.is(getPlaylistTable())) {
+              selected_trs.each(
+                function() {
+                  if (!$(this).hasClass('empty-track')) {
+                    var o = createPlaylistPlaceholderObject();
+                    var tr = buildTrackRow(source_table, o);
+                    $(this).before(tr);
+                  }
+                }
+              );
+            }
+
+            // Move selected
             if (tr_insert_point.hasClass('insert-above')) {
               tr_insert_point.before(selected_trs);
             }
@@ -785,12 +812,8 @@ function addTrackDragHandling(tr) {
 function addTrackRightClickMenu(tr) {
   function buildMenu(menu, clicked_tr, close_f) {
     function buildPlaceholderTr() {
-      var track = createPlaylistPlaceholderObject( '<?= LNG_DESC_PLACEHOLDER ?>'
-                                                 , ''
-                                                 , ''
-                                                 , ''
-                                                 )
-      return buildTrackRow(getTableOfTr(clicked_tr), track);
+      var o = createPlaylistPlaceholderObject();
+      return buildTrackRow(getTableOfTr(clicked_tr), o);
     }
     const actions =
       [ [ '<?= LNG_MENU_INSERT_PLACEHOLDER_BEFORE ?>'

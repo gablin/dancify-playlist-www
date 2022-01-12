@@ -236,6 +236,7 @@ $(document).ready(
     setupTrackDelimiter();
     setupScratchpad();
 
+    // TODO: delete tracks
     // TODO: automatic saving
     // TODO: restore to original playlist
     // TODO: color by genre
