@@ -53,18 +53,18 @@ a:hover {
   margin: auto;
 }
 
-div.content {
+.content {
   margin: 2em 4vw 0 4vw;
   overflow: auto;
   flex: 2;
 }
 
-div.footer {
+.footer {
   padding-top: 1em;
   height: 2em;
   width: 100%;
 }
-div.footer p {
+.footer p {
   margin: 0;
   font-size: 55%;
   color: #2D4739;
@@ -73,14 +73,14 @@ div.footer p {
   text-align: center;
 }
 
-div.logo {
+.logo {
   position: relative;
   height: 5em;
   background-color: #09814A;
   color: #FFF;
   border-bottom: 1px solid #000;
 }
-div.logo div.text {
+.logo .text {
   position: absolute;
   margin: 0;
   top: 50%;
@@ -92,13 +92,13 @@ div.logo div.text {
   white-space: nowrap;
 }
 
-div.menu {
+.menu {
   border-bottom: 1px solid #121619;
   font-family: 'Roboto Condensed', sans-serif;
   background-color: #121619;
   overflow: hidden;
 }
-div.menu a {
+.menu a {
   display: inline-block;
   color: #FFF;
   padding: .5em 1em .5em 1em;
@@ -108,34 +108,34 @@ div.menu a {
   text-transform: uppercase;
   border-right: 1px solid #2D4739;
 }
-div.menu a:hover,
-div.menu div.dropdown-content a:hover {
+.menu a:hover,
+.menu .dropdown-content a:hover {
   background-color: #2D4739;
   text-decoration: none;
 }
-div.menu div.dropdown {
+.menu .dropdown {
   float: left;
   overflow: hidden;
 }
-div.menu div.dropdown-content {
+.menu .dropdown-content {
   display: none;
   position: absolute;
   z-index: 1;
 }
-div.menu div.dropdown-content a {
+.menu .dropdown-content a {
   display: block;
   background-color: #121619;
   letter-spacing: normal;
   text-transform: none;
 }
-div.menu div.dropdown-content a.logout:hover {
+.menu .dropdown-content a.logout:hover {
   background-color: #810909;
 }
-div.menu div.dropdown:hover div.dropdown-content {
+.menu .dropdown:hover .dropdown-content {
   display: block;
 }
 
-div.login {
+.login {
   margin-top: 3em;
   text-align: center;
 }
@@ -163,19 +163,19 @@ a.small_button:hover {
   text-decoration: none;
 }
 
-div.error,
-div.success {
+.error,
+.success {
   margin: 1em 0;
 }
-div.error span.heading,
-div.success span.heading {
+.error span.heading,
+.success span.heading {
   font-weight: 700;
   letter-spacing: .1em;
 }
-div.error span.heading {
+.error span.heading {
   color: #E60000;
 }
-div.success span.heading {
+.success span.heading {
   color: #00CC00;
 }
 
@@ -441,26 +441,26 @@ label.checkbox .checkmark:after {
   transform: rotate(45deg);
 }
 
-div.logo div.lang {
+.logo .lang {
   position: absolute;
   right: .5em;
 }
-div.logo div.lang a {
+.logo .lang a {
   font-size: 70%;
   color: #FFF;
   margin-right: .1em;
 }
-div.logo div.lang a:hover {
+.logo .lang a:hover {
   text-decoration: underline;
 }
 
-div.instruction {
+.instruction {
   margin-bottom: 1em;
   font-size: 125%;
   font-weight: bold;
 }
 
-div.cookies {
+.cookies {
   position: fixed;
   z-index: 1;
   width: 100%;
@@ -470,28 +470,28 @@ div.cookies {
   color: #FFF;
   padding: 0 10%;
 }
-div.cookies table {
+.cookies table {
   margin: 0;
   padding: 0;
   margin-bottom: 1em;
 }
-div.cookies table td {
+.cookies table td {
   margin: 0;
   padding: 0;
 }
-div.cookies button {
+.cookies button {
   float: right;
   margin-left: 1em;
   font-size: 80%;
   color: #09814A;
   background-color: #FFF;
 }
-div.cookies button:hover {
+.cookies button:hover {
   background-color: #A0F8D0;
   border-color: #A0F8D0;
 }
 
-div.action-input-area {
+.action-input-area {
   position: fixed;
   top: 0;
   left: 0;
@@ -500,14 +500,14 @@ div.action-input-area {
   z-index: 1;
   display: none;
 }
-div.action-input-area div.background {
+.action-input-area .background {
   position: absolute;
   height: 100%;
   width: 100%;
   background-color: #121619;
   opacity: 30%;
 }
-div.action-input-area div.input {
+.action-input-area .input {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -516,20 +516,20 @@ div.action-input-area div.input {
   border: 1px solid #000;
   padding: 2em;
 }
-div.action-input-area div.input .title {
+.action-input-area .input .title {
   font-size: 125%;
   font-weight: bold;
   margin-bottom: 1em;
 }
-div.action-input-area div.input .buttons {
+.action-input-area .input .buttons {
   margin-top: 1em;
 }
-div.action-input-area div.input .buttons button {
+.action-input-area .input .buttons button {
   float: right;
   margin-left: 2em;
 }
 
-div.song_link_help {
+.song_link_help {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -539,14 +539,14 @@ div.song_link_help {
   width: 100%;
   display: none;
 }
-div.song_link_help div.background {
+.song_link_help .background {
   position: absolute;
   height: 100%;
   width: 100%;
   background-color: #121619;
   opacity: 30%;
 }
-div.song_link_help div.info {
+.song_link_help .info {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -554,11 +554,11 @@ div.song_link_help div.info {
   padding: 1em;
   background-color: #121619;
 }
-div.song_link_help div.info h1,
-div.song_link_help div.info p {
+.song_link_help .info h1,
+.song_link_help .info p {
   color: #FFF;
 }
-div.song_link_help div.info img {
+.song_link_help .info img {
   margin-top: 1.25em;
 }
 
