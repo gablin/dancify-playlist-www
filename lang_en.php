@@ -83,6 +83,12 @@ DEFINE( 'LNG_MENU_TRACK_DELIMITER'
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
       );
+DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_BEFORE'
+      , 'Insert placeholder before this track'
+      );
+DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_AFTER'
+      , 'Insert placeholder after this track'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
@@ -226,6 +232,9 @@ define( 'LNG_DESC_BPM_DIFFERENCE'
       );
 define( 'LNG_DESC_PLAYLIST_NAME'
       , 'Name'
+      );
+define( 'LNG_DESC_PLACEHOLDER'
+      , 'placeholder'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

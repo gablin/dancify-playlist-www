@@ -83,6 +83,12 @@ DEFINE( 'LNG_MENU_TRACK_DELIMITER'
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
       );
+DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_BEFORE'
+      , 'Lägg in platshållare före denna låt'
+      );
+DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_AFTER'
+      , 'Lägg in platshållare efter denna låt'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );
@@ -226,6 +232,9 @@ define( 'LNG_DESC_BPM_DIFFERENCE'
       );
 define( 'LNG_DESC_PLAYLIST_NAME'
       , 'Namn'
+      );
+define( 'LNG_DESC_PLACEHOLDER'
+      , 'platshållare'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

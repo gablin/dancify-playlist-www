@@ -92,13 +92,15 @@ a:hover {
   white-space: nowrap;
 }
 
-.menu {
+.menu,
+.mouse-menu {
   border-bottom: 1px solid #121619;
   font-family: 'Roboto Condensed', sans-serif;
   background-color: #121619;
   overflow: hidden;
 }
-.menu a {
+.menu a,
+.mouse-menu a {
   display: inline-block;
   color: #FFF;
   padding: .5em 1em .5em 1em;
@@ -109,7 +111,8 @@ a:hover {
   border-right: 1px solid #2D4739;
 }
 .menu a:hover,
-.menu .dropdown-content a:hover {
+.menu .dropdown-content a:hover,
+.mouse-menu a:hover {
   background-color: #2D4739;
   text-decoration: none;
 }
@@ -117,12 +120,14 @@ a:hover {
   float: left;
   overflow: hidden;
 }
-.menu .dropdown-content {
+.menu .dropdown-content,
+.mouse-menu {
   display: none;
   position: absolute;
   z-index: 1;
 }
-.menu .dropdown-content a {
+.menu .dropdown-content a,
+.mouse-menu a {
   display: block;
   background-color: #121619;
   letter-spacing: normal;
@@ -214,7 +219,8 @@ table th {
   display: none;
 }
 .playlist table tbody tr.track:hover,
-.playlist table tbody tr.empty-track:hover {
+.playlist table tbody tr.empty-track:hover,
+.playlist table tbody tr.right-clicked {
   background-color: #eee;
 }
 .playlist.drag-mode table tbody tr.track:hover {
@@ -288,7 +294,9 @@ table th {
   background-color: rgba(12, 167, 97, 0.3);
 }
 .playlist table tr.track.selected:hover,
-.playlist table tr.empty-track.selected:hover {
+.playlist table tr.track.selected.right-clicked,
+.playlist table tr.empty-track.selected:hover,
+.playlist table tr.empty-track.selected.right-clicked {
   background-color: rgba(12, 167, 97, 0.4);
   cursor: pointer;
 }

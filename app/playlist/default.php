@@ -236,10 +236,9 @@ $(document).ready(
     setupTrackDelimiter();
     setupScratchpad();
 
-    // TODO: color by genre
     // TODO: automatic saving
     // TODO: restore to original playlist
-    // TODO: add/remove track placeholders
+    // TODO: color by genre
     // TODO: add tracks
     // TODO: search function
 
@@ -261,6 +260,8 @@ $(document).ready(
 </div>
 
 <div class="drag-insertion-point"></div>
+
+<div class="mouse-menu"></div>
 
 <?php
 }

@@ -22,6 +22,10 @@ function setupPlaylist() {
                 );
 }
 
+function getTableOfTr(tr) {
+  return tr.closest('table');
+}
+
 function loadPlaylist(playlist_id) {
   var body = $(document.body);
   body.addClass('loading');
@@ -457,6 +461,7 @@ function buildTrackRow(table, track) {
     addTrackPreviewHandling(tr);
     addTrackSelectHandling(tr);
     addTrackDragHandling(tr);
+    addTrackRightClickMenu(tr);
     renderTrackBpm(tr);
     addTrackBpmHandling(tr);
     addTrackGenreHandling(tr);
@@ -476,6 +481,7 @@ function buildTrackRow(table, track) {
     tr.find('td.length').text(track.length);
     addTrackSelectHandling(tr);
     addTrackDragHandling(tr);
+    addTrackRightClickMenu(tr);
   }
   return tr;
 }
@@ -540,6 +546,16 @@ function renderPlaylist() {
 
 function renderScratchpad() {
   renderTable(getScratchpadTable(), 0);
+}
+
+function renderTableOfTr(tr) {
+  var t = getTableOfTr(tr);
+  if (t.hasClass('scratchpad')) {
+    renderTable(t, 0);
+  }
+  else {
+    renderTable(t, PLAYLIST_TRACK_DELIMITER);
+  }
 }
 
 function formatTrackTitle(artists, name) {
@@ -762,6 +778,71 @@ function addTrackDragHandling(tr) {
       }
 
       $(document).mousemove(move).mouseup(up);
+    }
+  );
+}
+
+function addTrackRightClickMenu(tr) {
+  function buildMenu(menu, clicked_tr, close_f) {
+    function buildPlaceholderTr() {
+      var track = createPlaylistPlaceholderObject( '<?= LNG_DESC_PLACEHOLDER ?>'
+                                                 , ''
+                                                 , ''
+                                                 , ''
+                                                 )
+      return buildTrackRow(getTableOfTr(clicked_tr), track);
+    }
+    const actions =
+      [ [ '<?= LNG_MENU_INSERT_PLACEHOLDER_BEFORE ?>'
+        , function() {
+            var new_tr = buildPlaceholderTr();
+            clicked_tr.before(new_tr);
+            renderTableOfTr(clicked_tr);
+            close_f();
+          }
+        ]
+      , [ '<?= LNG_MENU_INSERT_PLACEHOLDER_AFTER ?>'
+        , function() {
+            var new_tr = buildPlaceholderTr();
+            clicked_tr.after(new_tr);
+            renderTableOfTr(clicked_tr);
+            close_f();
+          }
+        ]
+      ];
+    menu.empty();
+    for (var i = 0; i < actions.length; i++) {
+      var a = $('<a href="#" />');
+      a.text(actions[i][0]);
+      a.click(actions[i][1]);
+      menu.append(a);
+    }
+  }
+
+  tr.bind(
+    'contextmenu'
+  , function(e) {
+      function close() {
+        tr.removeClass('right-clicked');
+        menu.hide();
+      }
+      tr.addClass('right-clicked');
+      var menu = $('.mouse-menu');
+      buildMenu(menu, tr, close);
+      menu.css({ top: e.pageY + 'px', left: e.pageX + 'px' });
+      menu.show();
+
+      function hide(e) {
+        if ($(e.target).closest('.mouse-menu').length == 0) {
+          close();
+        }
+        $(document).unbind('mousedown', hide);
+      }
+      $(document).mousedown(hide);
+
+      // Prevent browser right-click menu from appearing
+      e.preventDefault();
+      return false;
     }
   );
 }
