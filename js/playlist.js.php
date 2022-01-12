@@ -734,13 +734,13 @@ function addTrackDragHandling(tr) {
             else {
               tr_insert_point.after(selected_trs);
             }
+            if (tr_insert_point.hasClass('empty-track')) {
+              tr_insert_point.remove();
+            }
             renderPlaylist();
             renderScratchpad();
           }
           tr_insert_point.removeClass('insert-above insert-below');
-          if (tr_insert_point.hasClass('empty-track')) {
-            tr_insert_point.remove();
-          }
         }
 
         // Remove info block and insertion-point bar
