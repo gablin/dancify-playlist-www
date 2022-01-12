@@ -505,11 +505,14 @@ function renderTable(table, delimiter) {
   table.find('tr.delimiter').remove();
   if (delimiter > 0) {
     var num_cols = getTableTrackTrTemplate(table).find('td').length;
-    table.find('tr.track:nth-child(' + delimiter + 'n+1)').after(
-      $( '<tr class="delimiter"><td colspan="' + num_cols + '"><div /></td>' +
-         '</tr>'
-       )
-    );
+    table
+      .find('tr.track, tr.empty-track')
+      .filter(':nth-child(' + delimiter + 'n+1)')
+      .after(
+        $( '<tr class="delimiter"><td colspan="' + num_cols + '"><div /></td>' +
+           '</tr>'
+         )
+      );
 
     // Remove dangling delimiter, if any
     var trs = table.find('tr.track, tr.delimiter');
