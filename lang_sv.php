@@ -89,6 +89,9 @@ DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_BEFORE'
 DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_AFTER'
       , 'Lägg in platshållare efter denna låt'
       );
+DEFINE( 'LNG_MENU_DELETE_SELECTED'
+      , 'Ta bort markerade låtar'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );

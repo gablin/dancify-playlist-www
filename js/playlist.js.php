@@ -598,6 +598,10 @@ function clearTrackSelection() {
   $('.playlist tr.selected').removeClass('selected');
 }
 
+function getSelectedTracks() {
+  return $('.playlist tr.selected');
+}
+
 function updateTrackSelection(tr, multi_select_mode, span_mode) {
   // Remove active selection in other playlist areas
   $('.playlist').each(
@@ -757,7 +761,7 @@ function addTrackDragHandling(tr) {
               tr_insert_point.next().hasClass('selected')
             );
           if (!dropped_adjacent_to_selected) {
-            var selected_trs = $('tr.selected');
+            var selected_trs = getSelectedTracks();
 
             // If appropriate, insert placeholders where selected tracks used to be
             var source_table = getTableOfTr($(selected_trs[0]));
@@ -823,6 +827,7 @@ function addTrackRightClickMenu(tr) {
             renderTableOfTr(clicked_tr);
             close_f();
           }
+        , function(a) {}
         ]
       , [ '<?= LNG_MENU_INSERT_PLACEHOLDER_AFTER ?>'
         , function() {
@@ -831,6 +836,32 @@ function addTrackRightClickMenu(tr) {
             renderTableOfTr(clicked_tr);
             close_f();
           }
+        , function(a) {}
+        ]
+      , [ '<?= LNG_MENU_DELETE_SELECTED ?>'
+        , function() {
+            var trs = getSelectedTracks();
+            if (trs.length == 0) {
+              return;
+            }
+
+            var t = getTableOfTr($(trs[0]));
+            var is_playlist = t.is(getPlaylistTable());
+            trs.remove();
+            if (is_playlist) {
+              renderPlaylist();
+            }
+            else {
+              renderScratchpad();
+            }
+            close_f();
+          }
+        , function(a) {
+            var trs = getSelectedTracks();
+            if (trs.length == 0) {
+              a.addClass('disabled');
+            }
+          }
         ]
       ];
     menu.empty();
@@ -838,6 +869,7 @@ function addTrackRightClickMenu(tr) {
       var a = $('<a href="#" />');
       a.text(actions[i][0]);
       a.click(actions[i][1]);
+      actions[i][2](a);
       menu.append(a);
     }
   }
@@ -858,8 +890,8 @@ function addTrackRightClickMenu(tr) {
       function hide(e) {
         if ($(e.target).closest('.mouse-menu').length == 0) {
           close();
+          $(document).unbind('mousedown', hide);
         }
-        $(document).unbind('mousedown', hide);
       }
       $(document).mousedown(hide);
 

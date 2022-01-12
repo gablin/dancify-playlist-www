@@ -133,6 +133,9 @@ a:hover {
   letter-spacing: normal;
   text-transform: none;
 }
+.mouse-menu a.disabled {
+  color: #777;
+}
 .menu .dropdown-content a.logout:hover {
   background-color: #810909;
 }

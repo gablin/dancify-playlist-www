@@ -89,6 +89,9 @@ DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_BEFORE'
 DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_AFTER'
       , 'Insert placeholder after this track'
       );
+DEFINE( 'LNG_MENU_DELETE_SELECTED'
+      , 'Delete selected tracks'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
