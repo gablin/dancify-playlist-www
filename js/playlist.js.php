@@ -766,15 +766,46 @@ function addTrackDragHandling(tr) {
             // If appropriate, insert placeholders where selected tracks used to be
             var source_table = getTableOfTr($(selected_trs[0]));
             if (isUsingTrackDelimiter() && source_table.is(getPlaylistTable())) {
-              selected_trs.each(
-                function() {
-                  if (!$(this).hasClass('empty-track')) {
-                    var o = createPlaylistPlaceholderObject();
-                    var tr = buildTrackRow(source_table, o);
-                    $(this).before(tr);
+              // Ignore tracks that covers an entire dance block
+              rows_to_keep = [];
+              function isTrackRow(tr) {
+                return tr.hasClass('track') || tr.hasClass('empty-track');
+              }
+              for (var i = 0; i < selected_trs.length; i++) {
+                var tr = $(selected_trs[i]);
+                if (!isTrackRow(tr.prev())) {
+                  var skip = false;
+                  var j = i;
+                  do {
+                    var next_tr = tr.next();
+                    if (!isTrackRow(next_tr)) {
+                      skip = true;
+                      break;
+                    }
+                    j++;
+                    if (j == selected_trs.length) {
+                      break;
+                    }
+                    tr = $(selected_trs[j]);
+                    if (!tr.is(next_tr)) {
+                      break;
+                    }
+                  } while (true);
+                  if (skip) {
+                    i = j;
+                    continue;
                   }
                 }
-              );
+                rows_to_keep.push(tr);
+              }
+              for (var i = 0; i < rows_to_keep.length; i++) {
+                var old_tr = $(rows_to_keep[i]);
+                if (!old_tr.hasClass('empty-track')) {
+                  var o = createPlaylistPlaceholderObject();
+                  var new_tr = buildTrackRow(source_table, o);
+                  old_tr.before(new_tr);
+                }
+              }
             }
 
             // Move selected
