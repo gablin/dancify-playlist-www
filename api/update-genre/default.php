@@ -41,7 +41,7 @@ $res = queryDb( "SELECT genre FROM genre " .
                 "WHERE song = '$tid_sql' AND user = '$cid_sql'"
               );
 if ($res->num_rows == 1) {
-  if ($genre != 0) {
+  if ($genre_sql != 0) {
     queryDb( "UPDATE genre SET genre = $genre_sql " .
              "WHERE song = '$tid_sql' AND user = '$cid_sql'"
            );
@@ -51,7 +51,7 @@ if ($res->num_rows == 1) {
   }
 }
 else {
-  if (strlen($genre) > 0) {
+  if (strlen($genre_sql) > 0) {
     queryDb( "INSERT INTO genre (song, user, genre) " .
              "VALUES ('$tid_sql', '$cid_sql', $genre_sql)"
            );

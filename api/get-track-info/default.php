@@ -54,11 +54,28 @@ else {
 }
 
 $tracks = $api->getTracks($track_ids)->tracks;
-$audio_feats = loadTrackAudioFeatures($api, $tracks);
 
 connectDb();
 $genres = [];
 $client_id_sql = escapeSqlValue($session->getClientId());
+
+// Load BPM data
+$audio_feats = loadTrackAudioFeatures($api, $tracks);
+$res = queryDb( "SELECT song, bpm FROM bpm " .
+                "WHERE song IN (" .
+                join( ','
+                    , array_map(
+                        function($t) { return "'" . escapeSqlValue($t) . "'"; }
+                      , $track_ids
+                      )
+                    ) .
+                ")"
+              );
+while ($row = $res->fetch_assoc()) {
+  $bpms[] = [$row['song'], $row['bpm']];
+}
+
+// Load genre data
 $res = queryDb( "SELECT song, genre FROM genre " .
                 "WHERE song IN (" .
                 join( ','
@@ -72,10 +89,17 @@ $res = queryDb( "SELECT song, genre FROM genre " .
 while ($row = $res->fetch_assoc()) {
   $genres[] = [$row['song'], $row['genre']];
 }
+
+// Build result
 $tracks_res = [];
 for ($i = 0; $i < count($tracks); $i++) {
   $t = $tracks[$i];
-  $bpm = (int) $audio_feats[$i]->tempo;
+  $bpm = array_values( // To reset indices
+           array_filter( $bpms
+           , function($b) use ($t) { return $b[0] === $t->id; }
+           )
+         );
+  $bpm = count($bpm) > 0 ? $bpm[0][1] : (int) $audio_feats[$i]->tempo;
   $genre = array_values( // To reset indices
              array_filter( $genres
              , function($g) use ($t) { return $g[0] === $t->id; }
