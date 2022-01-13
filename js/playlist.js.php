@@ -508,7 +508,7 @@ function replaceTracks(table, tracks) {
 
 function renderTable(table, delimiter) {
   // Assign indices
-  var trs = table.find('tr.track');
+  var trs = table.find('tr.track, tr.empty-track');
   for (var i = 0; i < trs.length; i++) {
     var tr = $(trs[i]);
     tr.find('td.index').text(i+1);
