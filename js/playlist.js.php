@@ -146,11 +146,14 @@ function addTrackBpmHandling(tr) {
 
       // Save new BPM to database
       var data = { trackId: tid, bpm: bpm };
+      setStatus('<?= LNG_DESC_SAVING ?>...');
       callApi( '/api/update-bpm/'
              , data
-             , function(d) {}
+             , function(d) {
+                 clearStatus();
+               }
              , function(msg) {
-                 alert('<?= LNG_ERR_FAILED_UPDATE_BPM ?>');
+                 setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
                }
              );
 
@@ -222,11 +225,14 @@ function addTrackGenreHandling(tr) {
       // Save new genre to database
       var genre = parseInt(s.find(':selected').val().trim());
       var data = { trackId: tid, genre: genre };
+      setStatus('<?= LNG_DESC_SAVING ?>...');
       callApi( '/api/update-genre/'
              , data
-             , function(d) {}
+             , function(d) {
+                 clearStatus();
+               }
              , function(msg) {
-                 alert('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>');
+                 setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
                }
              );
 
