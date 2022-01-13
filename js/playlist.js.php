@@ -316,7 +316,7 @@ function getTrackData(table) {
 }
 
 function removePlaceholdersFromTracks(tracks) {
-  return tracks.filter( function(t) { return t.trackId === undefined } );
+  return tracks.filter( function(t) { return t.trackId !== undefined } );
 }
 
 function getPlaylistTrackData() {

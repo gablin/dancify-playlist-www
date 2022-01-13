@@ -229,6 +229,7 @@ function getBpmSettings() {
 
 function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
   var playlist = getPlaylistTrackData().concat(getScratchpadTrackData());
+  playlist = removePlaceholdersFromTracks(playlist);
   var new_playlist = [];
   for (var i = 0, range_index = 0; i < track_order.length; i++) {
     var tid = track_order[i];
