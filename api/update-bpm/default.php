@@ -31,14 +31,14 @@ if (!array_key_exists('bpm', $json)) {
 connectDb();
 
 // Check if entry exists
-$tid = $json['trackId'];
-$bpm = $json['bpm'];
-$res = queryDb("SELECT bpm FROM bpm WHERE song = '$tid'");
+$tid_sql = escapeSqlValue($json['trackId']);
+$bpm_sql = escapeSqlValue($json['bpm']);
+$res = queryDb("SELECT bpm FROM bpm WHERE song = '$tid_sql'");
 if ($res->num_rows == 1) {
-  queryDb("UPDATE bpm SET bpm = $bpm WHERE song = '$tid'");
+  queryDb("UPDATE bpm SET bpm = $bpm_sql WHERE song = '$tid_sql'");
 }
 else {
-  queryDb("INSERT INTO bpm (song, bpm) VALUES ('$tid', $bpm)");
+  queryDb("INSERT INTO bpm (song, bpm) VALUES ('$tid_sql', $bpm_sql)");
 }
 
 echo(toJson(['status' => 'OK']));

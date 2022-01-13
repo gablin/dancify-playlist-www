@@ -34,26 +34,26 @@ if (!is_int($json['genre'])) {
 connectDb();
 
 // Check if entry exists
-$tid = $json['trackId'];
-$cid = getSession()->getClientId();
-$genre = $json['genre'];
+$tid_sql = escapeSqlValue($json['trackId']);
+$cid_sql = escapeSqlValue(getSession()->getClientId());
+$genre_sql = escapeSqlValue($json['genre']);
 $res = queryDb( "SELECT genre FROM genre " .
-                "WHERE song = '$tid' AND user = '$cid'"
+                "WHERE song = '$tid_sql' AND user = '$cid_sql'"
               );
 if ($res->num_rows == 1) {
   if ($genre != 0) {
-    queryDb( "UPDATE genre SET genre = $genre " .
-             "WHERE song = '$tid' AND user = '$cid'"
+    queryDb( "UPDATE genre SET genre = $genre_sql " .
+             "WHERE song = '$tid_sql' AND user = '$cid_sql'"
            );
   }
   else {
-    queryDb("DELETE FROM genre WHERE song = '$tid' AND user = '$cid'");
+    queryDb("DELETE FROM genre WHERE song = '$tid_sql' AND user = '$cid_sql'");
   }
 }
 else {
   if (strlen($genre) > 0) {
     queryDb( "INSERT INTO genre (song, user, genre) " .
-             "VALUES ('$tid', '$cid', $genre)"
+             "VALUES ('$tid_sql', '$cid_sql', $genre_sql)"
            );
   }
 }

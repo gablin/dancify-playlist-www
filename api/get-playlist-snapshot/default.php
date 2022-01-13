@@ -26,10 +26,10 @@ if (is_null($json)) {
 if (!array_key_exists('playlistId', $json)) {
   fail('playlistId missing');
 }
-$playlist_id = $json['playlistId'];
 
 connectDb();
-$res = queryDb("SELECT snapshot FROM snapshots WHERE playlist = '$playlist_id'");
+$pid_sql = escapeSqlValue($json['playlistId']);
+$res = queryDb("SELECT snapshot FROM snapshots WHERE playlist = '$pid_sql'");
 if ($res->num_rows == 0) {
   echo(toJson(['status' => 'NOT-FOUND']));
   die();

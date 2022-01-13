@@ -31,15 +31,17 @@ if (!array_key_exists('snapshot', $json)) {
 connectDb();
 
 // Check if entry exists
-$pid = $json['playlistId'];
-$snapshot = toJson($json['snapshot']);
-$res = queryDb("SELECT playlist FROM snapshots WHERE playlist = '$pid'");
+$pid_sql = escapeSqlValue($json['playlistId']);
+$snapshot_sql = escapeSqlValue(toJson($json['snapshot']));
+$res = queryDb("SELECT playlist FROM snapshots WHERE playlist = '$pid_sql'");
 if ($res->num_rows == 1) {
-  queryDb("UPDATE snapshots SET snapshot = '$snapshot' WHERE playlist = '$pid'");
+  queryDb( "UPDATE snapshots SET snapshot = '$snapshot_sql' " .
+           "WHERE playlist = '$pid_sql'"
+         );
 }
 else {
   queryDb( "INSERT INTO snapshots (playlist, snapshot) " .
-           "VALUES ('$pid', '$snapshot')"
+           "VALUES ('$pid_sql', '$snapshot_sql')"
          );
 }
 

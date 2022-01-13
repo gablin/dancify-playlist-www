@@ -628,6 +628,18 @@ function queryDb($sql, $fail_on_error = true) {
 }
 
 /**
+ * Escape a given value to make it safe to use in an SQL query.
+ *
+ * @param string $s Value to escape.
+ * @return Escaped string.
+ */
+function escapeSqlValue($s) {
+  global $DH_DB_CONN;
+  if (!$DH_DB_CONN) throw new Exception("no database connection");
+  return $DH_DB_CONN->real_escape_string($s);
+}
+
+/**
  * Converts JSON string into an associative array of JSON data.
  *
  * @param string $s JSON string.

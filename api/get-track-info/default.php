@@ -56,13 +56,18 @@ else {
 $tracks = $api->getTracks($track_ids)->tracks;
 $audio_feats = loadTrackAudioFeatures($api, $tracks);
 
-$genres = [];
-$client_id = $session->getClientId();
 connectDb();
+$genres = [];
+$client_id_sql = escapeSqlValue($session->getClientId());
 $res = queryDb( "SELECT song, genre FROM genre " .
                 "WHERE song IN (" .
-                join(',', array_map(function($t) { return "'$t'"; }, $track_ids)) .
-                ") AND user = '$client_id'"
+                join( ','
+                    , array_map(
+                        function($t) { return "'" . escapeSqlValue($t) . "'"; }
+                      , $track_ids
+                      )
+                    ) .
+                ") AND user = '$client_id_sql'"
               );
 while ($row = $res->fetch_assoc()) {
   $genres[] = [$row['song'], $row['genre']];
