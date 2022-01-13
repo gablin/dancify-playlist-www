@@ -100,7 +100,8 @@ a:hover {
   overflow: hidden;
 }
 .menu a,
-.mouse-menu a {
+.mouse-menu a,
+.menu .saving-status {
   display: inline-block;
   color: #FFF;
   padding: .5em 1em .5em 1em;
@@ -109,6 +110,17 @@ a:hover {
   letter-spacing: .1em;
   text-transform: uppercase;
   border-right: 1px solid #2D4739;
+}
+.menu .saving-status {
+  position: absolute;
+  right: 0;
+  font-size: 100%;
+  letter-spacing: normal;
+  text-transform: none;
+  border: none;
+}
+.menu .saving-status.failed {
+  color: #E60000;
 }
 .menu a:hover,
 .menu .dropdown-content a:hover,

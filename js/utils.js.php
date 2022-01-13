@@ -17,13 +17,12 @@ function callApi(url, data, success_f, fail_f) {
     .done(
       function(res) {
         json = JSON.parse(res);
-        if (json.status == 'OK') {
-          success_f(json);
-        }
-        else if (json.status == 'FAILED') {
+        if (json.status == 'FAILED') {
           console.log(json.msg);
           fail_f(json.msg);
+          return;
         }
+        success_f(json);
       }
     )
     .fail(

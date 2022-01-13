@@ -149,6 +149,9 @@ define( 'LNG_DESC_INSTRUCTIONS'
 define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
       , 'Must specify a track to insert'
       );
+define( 'LNG_ERR_FAILED_TO_SAVE'
+      , 'Failed to save'
+      );
 define( 'LNG_ERR_FAILED_LOAD_PLAYLIST'
       , 'failed to load playlist'
       );
@@ -237,7 +240,13 @@ define( 'LNG_DESC_PLAYLIST_NAME'
       , 'Name'
       );
 define( 'LNG_DESC_PLACEHOLDER'
-      , 'placeholder'
+      , 'Placeholder'
+      );
+define( 'LNG_DESC_SAVING'
+      , 'Saving'
+      );
+define( 'LNG_DESC_LOADING'
+      , 'Loading'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

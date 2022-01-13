@@ -36,6 +36,7 @@ function mkHtmlNavMenu($entries) {
         <a href="/app/logout" class="logout"><?= LNG_MENU_LOGOUT ?></a>
       </div>
     </div>
+    <span class="saving-status"></span>
   </div>
   <?php
 }

@@ -1,0 +1,7 @@
+- disable DB checking through config
+- escape SQL input data
+- check for changes in Spotify list
+- restore to original playlist
+- color by genre
+- add tracks
+- search function

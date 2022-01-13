@@ -19,6 +19,7 @@ function setupFormElementsForTrackDelimiter() {
       var data = getTrackDelimiterData();
       setTrackDelimiter(data.delimiterFreq);
       renderPlaylist();
+      savePlaylistSnapshot();
       show_btn.prop('disabled', true);
       hide_btn.prop('disabled', false);
       clearActionInputs();
@@ -28,6 +29,7 @@ function setupFormElementsForTrackDelimiter() {
     function() {
       setTrackDelimiter(0);
       renderPlaylist();
+      savePlaylistSnapshot();
       hide_btn.prop('disabled', true);
       show_btn.prop('disabled', false)
       clearActionInputs();

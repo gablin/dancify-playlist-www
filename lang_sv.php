@@ -146,6 +146,9 @@ define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
 define( 'LNG_DESC_INSTRUCTIONS'
       , 'Instruktioner'
       );
+define( 'LNG_ERR_FAILED_TO_SAVE'
+      , 'Misslyckades att spara'
+      );
 define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
       , 'Måste ange en låt att lägga in'
       );
@@ -237,7 +240,13 @@ define( 'LNG_DESC_PLAYLIST_NAME'
       , 'Namn'
       );
 define( 'LNG_DESC_PLACEHOLDER'
-      , 'platshållare'
+      , 'Platshållare'
+      );
+define( 'LNG_DESC_SAVING'
+      , 'Sparar'
+      );
+define( 'LNG_DESC_LOADING'
+      , 'Laddar'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

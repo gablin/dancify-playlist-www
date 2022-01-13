@@ -228,19 +228,13 @@ $(document).ready(
     // Disable default form submission when pressing Enter
     form.submit(function() { return false; });
 
-    setupPlaylist();
+    setupPlaylist('<?= $playlist_id ?>');
     loadPlaylist('<?= $playlist_id ?>');
     setupSaveNewPlaylist(<?= $playlist_info->public ? 'true' : 'false' ?>);
     setupRandomizeByBpm();
     setupInsertTrack();
     setupTrackDelimiter();
     setupScratchpad();
-
-    // TODO: automatic saving
-    // TODO: restore to original playlist
-    // TODO: color by genre
-    // TODO: add tracks
-    // TODO: search function
 
     function limitPlaylistHeight() {
       var screen_vh = window.innerHeight;

@@ -2,13 +2,15 @@
 require '../autoload.php';
 ?>
 
+var PLAYLIST_ID = '';
 var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_TRACK_DELIMITER = 0;
 var TRACK_DRAG_STATE = 0;
 const BPM_MIN = 0;
 const BPM_MAX = 255;
 
-function setupPlaylist() {
+function setupPlaylist(playlist_id) {
+  PLAYLIST_ID = playlist_id;
   addTableHead(getPlaylistTable());
   addTableHead(getScratchpadTable());
   addTrTemplate(getPlaylistTable());
@@ -29,14 +31,27 @@ function getTableOfTr(tr) {
 function loadPlaylist(playlist_id) {
   var body = $(document.body);
   body.addClass('loading');
+  setStatus('<?= LNG_DESC_LOADING ?>...');
+  function success() {
+    body.removeClass('loading');
+    clearStatus();
+  }
+  function fail(msg) {
+    alert('ERROR: <?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
+    body.removeClass('loading');
+    clearStatus();
+  }
+  function noSnapshot() {
+    loadPlaylistFromSpotify(playlist_id, success, fail);
+  }
+  loadPlaylistFromSnapshot(playlist_id, success, noSnapshot, fail);
+}
+
+function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
   function load(offset) {
     var data = { playlistId: playlist_id
                , offset: offset
                };
-    function fail(msg) {
-      body.removeClass('loading');
-      alert('ERROR: <?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
-    }
     callApi( '/api/get-playlist-tracks/'
            , data
            , function(d) {
@@ -64,13 +79,13 @@ function loadPlaylist(playlist_id) {
                           }
                           else {
                             renderPlaylist();
-                            body.removeClass('loading');
+                            success_f();
                           }
                         }
-                      , fail
+                      , fail_f
                       )
              }
-           , fail
+           , fail_f
            );
   }
   load(0);
@@ -266,13 +281,9 @@ function getTrTitleText(tr) {
   return '';
 }
 
-function verifyPlaylistData() {
-  // TODO: implement
-}
-
 function getTrackData(table) {
   var playlist = [];
-  table.find('tr').each(
+  table.find('tr.track, tr.empty-track').each(
     function() {
       var tr = $(this);
       if (tr.hasClass('track')) {
@@ -291,8 +302,12 @@ function getTrackData(table) {
                        }
                      );
       }
-      else {
-        // TODO: handle
+      else{
+        var title = tr.find('td.title').text().trim();
+        var length = tr.find('td.length').text().trim();
+        var bpm = tr.find('td.bpm').text().trim();
+        var genre = tr.find('td.genre').text().trim();
+        playlist.push(createPlaylistPlaceholderObject(title, length, bpm, genre));
       }
     }
   );
@@ -300,14 +315,16 @@ function getTrackData(table) {
   return playlist;
 }
 
-function getPlaylistData()
-{
+function removePlaceholdersFromTracks(tracks) {
+  return tracks.filter( function(t) { return t.trackId === undefined } );
+}
+
+function getPlaylistTrackData() {
   var table = getPlaylistTable();
   return getTrackData(table);
 }
 
-function getScratchpadData()
-{
+function getScratchpadTrackData() {
   var table = getScratchpadTable();
   return getTrackData(table);
 }
@@ -506,7 +523,9 @@ function replaceTracks(table, tracks) {
   appendTracks(table, tracks);
 }
 
-function renderTable(table, delimiter) {
+function renderTable(table) {
+  const delimiter = (table.is(getPlaylistTable())) ? PLAYLIST_TRACK_DELIMITER : 0;
+
   // Assign indices
   var trs = table.find('tr.track, tr.empty-track');
   for (var i = 0; i < trs.length; i++) {
@@ -548,21 +567,11 @@ function renderTable(table, delimiter) {
 }
 
 function renderPlaylist() {
-  renderTable(getPlaylistTable(), PLAYLIST_TRACK_DELIMITER);
+  renderTable(getPlaylistTable());
 }
 
 function renderScratchpad() {
-  renderTable(getScratchpadTable(), 0);
-}
-
-function renderTableOfTr(tr) {
-  var t = getTableOfTr(tr);
-  if (t.hasClass('scratchpad')) {
-    renderTable(t, 0);
-  }
-  else {
-    renderTable(t, PLAYLIST_TRACK_DELIMITER);
-  }
+  renderTable(getScratchpadTable());
 }
 
 function formatTrackTitle(artists, name) {
@@ -820,6 +829,7 @@ function addTrackDragHandling(tr) {
             }
             renderPlaylist();
             renderScratchpad();
+            savePlaylistSnapshot();
           }
           tr_insert_point.removeClass('insert-above insert-below');
         }
@@ -855,7 +865,8 @@ function addTrackRightClickMenu(tr) {
         , function() {
             var new_tr = buildPlaceholderTr();
             clicked_tr.before(new_tr);
-            renderTableOfTr(clicked_tr);
+            renderTable(getTableOfTr(clicked_tr));
+            savePlaylistSnapshot();
             close_f();
           }
         , function(a) {}
@@ -864,7 +875,8 @@ function addTrackRightClickMenu(tr) {
         , function() {
             var new_tr = buildPlaceholderTr();
             clicked_tr.after(new_tr);
-            renderTableOfTr(clicked_tr);
+            renderTable(getTableOfTr(clicked_tr));
+            savePlaylistSnapshot();
             close_f();
           }
         , function(a) {}
@@ -885,6 +897,7 @@ function addTrackRightClickMenu(tr) {
             else {
               renderScratchpad();
             }
+            savePlaylistSnapshot();
             close_f();
           }
         , function(a) {
@@ -931,4 +944,130 @@ function addTrackRightClickMenu(tr) {
       return false;
     }
   );
+}
+
+function savePlaylistSnapshot() {
+  setStatus('<?= LNG_DESC_SAVING ?>...');
+
+  function getTrackId(t) {
+    if (t.trackId === undefined) {
+      return '';
+    }
+    return t.trackId;
+  }
+  playlist_tracks = getPlaylistTrackData().map(getTrackId);
+  scratchpad_tracks = getScratchpadTrackData().map(getTrackId);
+  data = { playlistId: PLAYLIST_ID
+         , snapshot: { playlistData: playlist_tracks
+                     , scratchpadData: scratchpad_tracks
+                     , delimiter: PLAYLIST_TRACK_DELIMITER
+                     }
+         };
+  callApi( '/api/save-playlist-snapshot/'
+         , data
+         , function(d) {
+             clearStatus();
+           }
+         , function(msg) {
+             setStatus('<?= LNG_ERR_FAILED_TO_SAVE ?>', true);
+           }
+         );
+}
+
+function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
+  var status = [false, false];
+  const track_limit = 50;
+  function done(table, status_offset) {
+    status[status_offset] = true;
+    renderTable(table);
+    if (status.every(x => x)) {
+      success_f();
+    }
+  }
+  function load(table, status_offset, track_ids, track_offset) {
+    function hasTrackAt(o) {
+      return track_ids[o].length > 0;
+    }
+
+    if (track_offset >= track_ids.length) {
+      done(table, status_offset);
+      return;
+    }
+    if (hasTrackAt(track_offset)) {
+      // Currently at a track entry; add tracks until next placeholder entry
+      var tracks_to_load = [];
+      var o = track_offset;
+      for ( ; o < track_ids.length &&
+              o - track_offset <= track_limit &&
+              hasTrackAt(o)
+            ; o++
+          )
+      {
+        tracks_to_load.push(track_ids[o]);
+      }
+      callApi( '/api/get-track-info/'
+             , { trackIds: tracks_to_load }
+             , function(d) {
+                 var tracks = [];
+                 for (var i = 0; i < d.tracks.length; i++) {
+                   var t = d.tracks[i];
+                   var obj = createPlaylistTrackObject( t.trackId
+                                                      , t.artists
+                                                      , t.name
+                                                      , t.length
+                                                      , t.bpm
+                                                      , t.genre
+                                                      , t.preview_url
+                                                      );
+                   tracks.push(obj);
+                 }
+                 appendTracks(table, tracks);
+                 load(table, status_offset, track_ids, o);
+               }
+             , fail_f
+             );
+    }
+    else {
+      // Currently at a placeholder entry; add such until next track entry
+      var placeholders = [];
+      var o = track_offset;
+      for (; o < track_ids.length && !hasTrackAt(o); o++) {
+        placeholders.push(createPlaylistPlaceholderObject());
+      }
+      appendTracks(table, placeholders);
+      load(table, status_offset, track_ids, o);
+    }
+  }
+  callApi( '/api/get-playlist-snapshot/'
+         , { playlistId: playlist_id }
+         , function(res) {
+             if (res.status == 'OK') {
+               PLAYLIST_TRACK_DELIMITER = res.snapshot.delimiter;
+               load(getPlaylistTable(), 0, res.snapshot.playlistData, 0);
+               load(getScratchpadTable(), 1, res.snapshot.scratchpadData, 0);
+               if (res.snapshot.scratchpadData.length > 0) {
+                 showScratchpad();
+               }
+             }
+             else if (res.status == 'NOT-FOUND') {
+               no_snap_f();
+             }
+           }
+         , fail_f
+         );
+}
+
+function setStatus(s, indicate_failure = false) {
+  var status = $('.saving-status');
+  status.text(s);
+  status.removeClass('failed');
+  if (indicate_failure) {
+    status.addClass('failed');
+  }
+}
+
+function clearStatus() {
+  var status = $('.saving-status');
+  status.empty();
+  status.removeClass('failed');
 }

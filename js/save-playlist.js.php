@@ -26,10 +26,10 @@ function setupSaveNewPlaylist(make_public) {
       }
 
       // Save new playlist
-      var playlist_data = getPlaylistData();
+      var tracks = getPlaylistTrackData();
       var track_ids = [];
-      for (var i = 0; i < playlist_data.length; i++) {
-          track_ids.push(playlist_data[i].trackId);
+      for (var i = 0; i < tracks.length; i++) {
+          track_ids.push(tracks[i].trackId);
       }
       var data = { trackIdList: track_ids
                  , playlistName: name

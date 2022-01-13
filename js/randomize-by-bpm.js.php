@@ -22,7 +22,8 @@ function setupFormElementsForRandomizeByBpm() {
         b.removeClass('loading');
       };
 
-      var playlist_data = getPlaylistData().concat(getScratchpadData());
+      var playlist_data = getPlaylistTrackData().concat(getScratchpadTrackData());
+      playlist_data = removePlaceholdersFromTracks(playlist_data);
       var track_ids = [];
       var bpms = [];
       var categories = [];
@@ -227,7 +228,7 @@ function getBpmSettings() {
 }
 
 function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
-  var playlist = getPlaylistData().concat(getScratchpadData());
+  var playlist = getPlaylistTrackData().concat(getScratchpadTrackData());
   var new_playlist = [];
   for (var i = 0, range_index = 0; i < track_order.length; i++) {
     var tid = track_order[i];
@@ -275,4 +276,5 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
     renderScratchpad();
     showScratchpad();
   }
+  savePlaylistSnapshot();
 }

@@ -37,7 +37,7 @@ function setupFormElementsForInsertTrack() {
                                                    , d.genre
                                                    , d.preview_url
                                                    );
-                 var tracks = getPlaylistData();
+                 var tracks = getPlaylistTrackData();
                  var new_tracks = [];
                  for (var i = 0; i < tracks.length; i++) {
                      if (i > 0 && i % data.insertFreq == 0) {
@@ -47,6 +47,7 @@ function setupFormElementsForInsertTrack() {
                  }
                  replaceTracks(getPlaylistTable(), new_tracks);
                  renderPlaylist();
+                 savePlaylistSnapshot();
                  restoreButton();
                  clearActionInputs();
                }

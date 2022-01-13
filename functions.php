@@ -575,6 +575,7 @@ function checkDbTables() {
               'CREATE TABLE bpm' .
               ' ( song CHAR(22) NOT NULL' .
               ' , bpm TINYINT UNSIGNED NOT NULL' .
+              ' , PRIMARY KEY (playlist)' .
               ' )'
             , 'genre' =>
               'CREATE TABLE genre' .
@@ -582,6 +583,12 @@ function checkDbTables() {
               ' , user CHAR(32) NOT NULL' .
               ' , genre TINYINT UNSIGNED NOT NULL' .
               ' , PRIMARY KEY (song, user)' .
+              ' )'
+            , 'snapshots' =>
+              'CREATE TABLE snapshots' .
+              ' ( playlist CHAR(22) NOT NULL' .
+              ' , snapshot TEXT NOT NULL' .
+              ' , PRIMARY KEY (playlist)' .
               ' )'
             ];
 
