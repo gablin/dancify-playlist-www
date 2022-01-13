@@ -569,8 +569,14 @@ function connectDb() {
 
 /**
  * Checks that all database tables exists, and creates them if not.
+ * Set $DH_DB_NO_CHECKING=true to disable this check when not needed in order to
+ * improve performance.
  */
 function checkDbTables() {
+  if (isset($DH_DB_NO_CHECKING) && $DH_DB_NO_CHECKING) {
+    return;
+  }
+
   $tables = [ 'bpm' =>
               'CREATE TABLE bpm' .
               ' ( song CHAR(22) NOT NULL' .
