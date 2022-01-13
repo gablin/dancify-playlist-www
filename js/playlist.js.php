@@ -1049,6 +1049,9 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
          , function(res) {
              if (res.status == 'OK') {
                PLAYLIST_TRACK_DELIMITER = res.snapshot.delimiter;
+               if (PLAYLIST_TRACK_DELIMITER > 0) {
+                 setDelimiterAsShowing();
+               }
                load(getPlaylistTable(), 0, res.snapshot.playlistData, 0);
                load(getScratchpadTable(), 1, res.snapshot.scratchpadData, 0);
                if (res.snapshot.scratchpadData.length > 0) {

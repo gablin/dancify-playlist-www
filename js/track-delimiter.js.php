@@ -6,11 +6,19 @@ function setupTrackDelimiter() {
   setupFormElementsForTrackDelimiter();
 }
 
+function getShowDelimiterButton() {
+  return getPlaylistForm().find('button[id=showTrackDelimiterBtn]');
+}
+
+function getHideDelimiterButton() {
+  return getPlaylistForm().find('button[id=hideTrackDelimiterBtn]');
+}
+
 function setupFormElementsForTrackDelimiter() {
   var form = getPlaylistForm();
   var table = getPlaylistTable();
-  var show_btn = form.find('button[id=showTrackDelimiterBtn]');
-  var hide_btn = form.find('button[id=hideTrackDelimiterBtn]');
+  var show_btn = getShowDelimiterButton();
+  var hide_btn = getHideDelimiterButton();
   show_btn.click(
     function() {
       if (!checkTrackDelimiterInput()) {
@@ -20,8 +28,7 @@ function setupFormElementsForTrackDelimiter() {
       setTrackDelimiter(data.delimiterFreq);
       renderPlaylist();
       savePlaylistSnapshot();
-      show_btn.prop('disabled', true);
-      hide_btn.prop('disabled', false);
+      setDelimiterAsShowing();
       clearActionInputs();
     }
   );
@@ -30,8 +37,7 @@ function setupFormElementsForTrackDelimiter() {
       setTrackDelimiter(0);
       renderPlaylist();
       savePlaylistSnapshot();
-      hide_btn.prop('disabled', true);
-      show_btn.prop('disabled', false)
+      setDelimiterAsHidden();
       clearActionInputs();
     }
   );
@@ -63,4 +69,14 @@ function checkTrackDelimiterInput() {
   }
 
   return true;
+}
+
+function setDelimiterAsShowing() {
+  getShowDelimiterButton().prop('disabled', true);
+  getHideDelimiterButton().prop('disabled', false);
+}
+
+function setDelimiterAsHidden() {
+  getShowDelimiterButton().prop('disabled', false);
+  getHideDelimiterButton().prop('disabled', true);
 }
