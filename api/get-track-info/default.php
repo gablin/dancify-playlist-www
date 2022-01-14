@@ -71,6 +71,7 @@ $res = queryDb( "SELECT song, bpm FROM bpm " .
                     ) .
                 ")"
               );
+$bpms = [];
 while ($row = $res->fetch_assoc()) {
   $bpms[] = [$row['song'], $row['bpm']];
 }
@@ -95,7 +96,8 @@ $tracks_res = [];
 for ($i = 0; $i < count($tracks); $i++) {
   $t = $tracks[$i];
   $bpm = array_values( // To reset indices
-           array_filter( $bpms
+           array_filter(
+             $bpms
            , function($b) use ($t) { return $b[0] === $t->id; }
            )
          );
