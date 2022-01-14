@@ -59,6 +59,9 @@ define( 'LNG_BTN_SHOW'
 define( 'LNG_BTN_HIDE'
       , 'Göm'
       );
+define( 'LNG_BTN_RESTORE'
+      , 'Återställ'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -82,6 +85,9 @@ DEFINE( 'LNG_MENU_TRACK_DELIMITER'
       );
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
+      );
+DEFINE( 'LNG_MENU_RESTORE_PLAYLIST'
+      , 'Återställ spellista'
       );
 DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_BEFORE'
       , 'Lägg in platshållare före denna låt'
@@ -149,38 +155,41 @@ define( 'LNG_DESC_INSTRUCTIONS'
 define( 'LNG_ERR_FAILED_TO_SAVE'
       , 'Misslyckades att spara'
       );
+define( 'LNG_ERR_FAILED_TO_RESTORE'
+      , 'Återställning misslyckades'
+      );
 define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
       , 'Måste ange en låt att lägga in'
       );
 define( 'LNG_ERR_FAILED_LOAD_PLAYLIST'
-      , 'misslyckades att ladda spellista'
+      , 'Misslyckades att ladda spellista'
       );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
-      , 'misslyckades att ladda låt'
+      , 'Misslyckades att ladda låt'
       );
 define( 'LNG_ERR_FAILED_UPDATE_BPM'
-      , 'misslyckades att uppdatera BPM'
+      , 'Misslyckades att uppdatera BPM'
       );
 define( 'LNG_ERR_FAILED_UPDATE_GENRE'
-      , 'misslyckades att uppdatera kategori'
+      , 'Misslyckades att uppdatera kategori'
       );
 define( 'LNG_ERR_FAILED_INSERT_TRACK'
-      , 'misslyckades att lägga in låt'
+      , 'Misslyckades att lägga in låt'
       );
 define( 'LNG_ERR_INVALID_TRACK_FORMAT'
-      , 'felaktigt låtformat'
+      , 'Felaktigt låtformat'
       );
 define( 'LNG_ERR_FREQ_NOT_INT'
-      , 'frekvens är inte ett heltal'
+      , 'Frekvens är inte ett heltal'
       );
 define( 'LNG_ERR_FREQ_MUST_BE_GT'
-      , 'frekvens måste vara större än %s'
+      , 'Frekvens måste vara större än %s'
       );
 define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
-      , 'misslyckades att lägga in låtar i ny spellista'
+      , 'Misslyckades att lägga in låtar i ny spellista'
       );
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
-      , 'misslyckades att köra randomiseringen'
+      , 'Randomiseringen misslyckades'
       );
 define( 'LNG_INSTR_SELECT_PLAYLIST'
       , 'Välj spellista'
@@ -251,10 +260,17 @@ define( 'LNG_DESC_LOADING'
 define( 'LNG_DESC_WARNING'
       , 'Varning'
       );
+define( 'LNG_DESC_RESTORING'
+      , 'Återställer'
+      );
 define( 'LNG_DESC_THIS_WILL_REMOVE_ALL_WORK'
-      , <<<EOT
-Detta kommer upphäva all ändringar gjorda i spellistan och scratchpaden.
-EOT
+      , 'Detta kommer förstöra all ändringar gjorda i spellistan och scratchpaden.'
+      );
+define( 'LNG_DESC_RESTORE_PLAYLIST'
+      , 'Återställ spellistan så den ser ut exakt som den ser ut i Spotify.'
+      );
+define( 'LNG_DESC_NO_WAY_TO_UNDO'
+      , 'Det kommer inte gå att ångra detta.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

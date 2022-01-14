@@ -1,6 +1,5 @@
 - add undo/redo
 - check for changes in Spotify list
-- restore to original playlist
 - color by genre
 - add tracks
 - search function

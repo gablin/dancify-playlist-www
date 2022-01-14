@@ -59,6 +59,9 @@ define( 'LNG_BTN_SHOW'
 define( 'LNG_BTN_HIDE'
       , 'Hide'
       );
+define( 'LNG_BTN_RESTORE'
+      , 'Restore'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -82,6 +85,9 @@ DEFINE( 'LNG_MENU_TRACK_DELIMITER'
       );
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
+      );
+DEFINE( 'LNG_MENU_RESTORE_PLAYLIST'
+      , 'Restore playlist'
       );
 DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_BEFORE'
       , 'Insert placeholder before this track'
@@ -151,6 +157,9 @@ define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
       );
 define( 'LNG_ERR_FAILED_TO_SAVE'
       , 'Failed to save'
+      );
+define( 'LNG_ERR_FAILED_TO_RESTORE'
+      , 'Failed to restore'
       );
 define( 'LNG_ERR_FAILED_LOAD_PLAYLIST'
       , 'failed to load playlist'
@@ -251,10 +260,17 @@ define( 'LNG_DESC_LOADING'
 define( 'LNG_DESC_WARNING'
       , 'Warning'
       );
+define( 'LNG_DESC_RESTORING'
+      , 'Restoring'
+      );
 define( 'LNG_DESC_THIS_WILL_REMOVE_ALL_WORK'
-      , <<<EOT
-This will undo all changes made to the playlist and scratchpad.
-EOT
+      , 'This will destroy all changes made to the playlist and scratchpad.'
+      );
+define( 'LNG_DESC_RESTORE_PLAYLIST'
+      , 'Restore playlist to appear exactly as it appears in Spotify.'
+      );
+define( 'LNG_DESC_NO_WAY_TO_UNDO'
+      , 'It will not be possible to undone this.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

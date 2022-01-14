@@ -9,12 +9,13 @@ $api = createWebApi($session);
 connectDb();
 beginPage();
 mkHtmlNavMenu(
-  [ [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
-  , [ LNG_MENU_TRACK_DELIMITER, '#', 'track-delimiter' ]
+  [ [ LNG_MENU_TRACK_DELIMITER, '#', 'track-delimiter' ]
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , [ LNG_MENU_SAVE_AS_NEW_PLAYLIST, '#', 'save-as-new-playlist' ]
+  , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
+  , [ LNG_MENU_RESTORE_PLAYLIST, '#', 'restore-playlist' ]
   ]
 );
 beginContent();
@@ -46,6 +47,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   <div class="background"></div>
   <div class="input">
     <div class="title"><?= LNG_MENU_RANDOMIZE_BY_BPM ?></div>
+
     <table class="bpm-range-area">
       <tbody>
         <tr class="range">
@@ -99,6 +101,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <span><?= LNG_DESC_WARNING ?>:</span>
       <?= LNG_DESC_THIS_WILL_REMOVE_ALL_WORK ?>
     </p>
+
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
@@ -186,6 +189,30 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   </div>
 </div>
 
+<div class="action-input-area" name="restore-playlist">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_RESTORE_PLAYLIST ?></div>
+
+    <p>
+      <?= LNG_DESC_RESTORE_PLAYLIST ?>
+    </p>
+    <p class="warning">
+      <span><?= LNG_DESC_WARNING ?>:</span>
+      <?= LNG_DESC_THIS_WILL_REMOVE_ALL_WORK ?>
+      <br />
+      <?= strtoupper(LNG_DESC_NO_WAY_TO_UNDO) ?>
+    </p>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="restorePlaylistBtn"><?= LNG_BTN_RESTORE ?></button>
+    </div>
+  </div>
+</div>
+
 <div class="playlists-wrapper">
 
 <div class="playlist">
@@ -221,6 +248,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/randomize-by-bpm.js.php"></script>
 <script src="/js/track-delimiter.js.php"></script>
 <script src="/js/scratchpad.js.php"></script>
+<script src="/js/restore-playlist.js.php"></script>
 <script type="text/javascript">
 $(document).ready(
   function() {
@@ -239,6 +267,7 @@ $(document).ready(
     setupInsertTrack();
     setupTrackDelimiter();
     setupScratchpad();
+    setupRestorePlaylist('<?= $playlist_id ?>');
 
     function limitPlaylistHeight() {
       var screen_vh = window.innerHeight;
