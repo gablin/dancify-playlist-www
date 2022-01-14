@@ -248,6 +248,14 @@ define( 'LNG_DESC_SAVING'
 define( 'LNG_DESC_LOADING'
       , 'Loading'
       );
+define( 'LNG_DESC_WARNING'
+      , 'Warning'
+      );
+define( 'LNG_DESC_THIS_WILL_REMOVE_ALL_WORK'
+      , <<<EOT
+This will undo all changes made to the playlist and scratchpad.
+EOT
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
       );

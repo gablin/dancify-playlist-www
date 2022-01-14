@@ -95,6 +95,10 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <span class="checkmark"></span>
       <?= LNG_DESC_DANCE_SLOT_SAME_GENRE ?>
     </label>
+    <p class="warning">
+      <span><?= LNG_DESC_WARNING ?>:</span>
+      <?= LNG_DESC_THIS_WILL_REMOVE_ALL_WORK ?>
+    </p>
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>

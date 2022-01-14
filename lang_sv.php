@@ -248,6 +248,14 @@ define( 'LNG_DESC_SAVING'
 define( 'LNG_DESC_LOADING'
       , 'Laddar'
       );
+define( 'LNG_DESC_WARNING'
+      , 'Varning'
+      );
+define( 'LNG_DESC_THIS_WILL_REMOVE_ALL_WORK'
+      , <<<EOT
+Detta kommer upphäva all ändringar gjorda i spellistan och scratchpaden.
+EOT
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
       );

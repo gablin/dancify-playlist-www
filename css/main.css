@@ -643,3 +643,9 @@ a.ui-button:active,
 .ui-widget-header {
   background: rgba(12, 167, 97, 0.3);
 }
+.warning {
+  font-weight: bold;
+}
+.warning span {
+  color: #E60000;
+}

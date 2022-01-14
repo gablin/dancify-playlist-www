@@ -1,4 +1,3 @@
-- add warning when randomizing
 - add undo/redo
 - check for changes in Spotify list
 - restore to original playlist
