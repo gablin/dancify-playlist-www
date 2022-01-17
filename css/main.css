@@ -371,10 +371,16 @@ table th {
 form div.input {
   margin: .1em 0;
 }
-input {
+input,
+select {
+  background-color: #fff;
   border: 1px solid #09814A;
   padding: .2em .4em;
   font-family: 'Roboto', sans-serif;
+}
+select {
+  padding-left: 0;
+  padding-right: 0;
 }
 input.number {
   width: 1.5em;
@@ -387,7 +393,6 @@ input.bpm {
   padding-right: .4em;
   text-align: right;
 }
-select.genre {}
 input.invalid {
   border-color: #f00;
 }
