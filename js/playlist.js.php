@@ -1147,8 +1147,10 @@ function saveUndoState() {
 
   var playlist = getPlaylistTable().clone(true, true);
   playlist.find('tr.selected').removeClass('selected');
+  playlist.find('tr.delimiter').remove();
   var scratchpad = getScratchpadTable().clone(true, true);
   scratchpad.find('tr.selected').removeClass('selected');
+  scratchpad.find('tr.delimiter').remove();
   UNDO_STACK[offset] = { playlistTable: playlist, scratchpadTable: scratchpad };
 
   renderUndoRedoButtons();
@@ -1182,6 +1184,8 @@ function performRedo() {
 function restoreState(state) {
   getPlaylistTable().replaceWith(state.playlistTable.clone(true, true));
   getScratchpadTable().replaceWith(state.scratchpadTable.clone(true, true));
+  renderPlaylist();
+  renderScratchpad();
   savePlaylistSnapshot();
 }
 
