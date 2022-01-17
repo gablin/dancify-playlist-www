@@ -1,3 +1,4 @@
+- fix bpm order GUI in randomize-by-bpm
 - check for changes in Spotify list
 - color by genre
 - add tracks
