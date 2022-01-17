@@ -28,9 +28,19 @@ function mkHtmlNavMenu($entries, $add_undo_redo_buttons = false) {
             </a>
             <?php
           }
+          else if (count($e) == 0) {
+            ?>
+            <div class="sep"><div></div></div>
+            <?php
+          }
           else {
             die("invalid argument: " . var_dump($e));
           }
+        }
+        if (count($entries) > 0) {
+          ?>
+          <div class="sep"><div></div></div>
+          <?php
         }
         ?>
         <a href="/app/logout" class="logout"><?= LNG_MENU_LOGOUT ?></a>

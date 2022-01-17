@@ -13,8 +13,9 @@ mkHtmlNavMenu(
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
-  , [ LNG_MENU_SAVE_AS_NEW_PLAYLIST, '#', 'save-as-new-playlist' ]
+  , []
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
+  , [ LNG_MENU_SAVE_AS_NEW_PLAYLIST, '#', 'save-as-new-playlist' ]
   , [ LNG_MENU_RESTORE_PLAYLIST, '#', 'restore-playlist' ]
   ]
 , true

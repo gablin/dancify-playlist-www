@@ -153,7 +153,8 @@ a:hover {
   z-index: 1;
 }
 .menu .dropdown-content a,
-.mouse-menu a {
+.mouse-menu a,
+.menu .dropdown-content .sep {
   display: block;
   background-color: #121619;
   letter-spacing: normal;
@@ -170,6 +171,13 @@ a:hover {
 }
 .menu .dropdown:hover .dropdown-content {
   display: block;
+}
+.menu .dropdown-content .sep {
+  padding: 0.25em 0;
+}
+.menu .dropdown-content .sep div {
+  border-top: 1px solid #2D4739;
+  opacity: 0.5;
 }
 
 .login {
