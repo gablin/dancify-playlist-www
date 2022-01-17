@@ -2,24 +2,24 @@
 require '../autoload.php';
 ?>
 
-var PLAYLIST_FORM = null;
-var PLAYLIST_TABLE = null;
-var SCRATCHPAD_TABLE = null;
+var PLAYLIST_FORM_S = null;
+var PLAYLIST_TABLE_S = null;
+var SCRATCHPAD_TABLE_S = null;
 
-function initPlaylistGlobals(form, p_table, s_table) {
-  PLAYLIST_FORM = form;
-  PLAYLIST_TABLE = p_table;
-  SCRATCHPAD_TABLE = s_table;
+function initPlaylistGlobals(form_s, p_table_s, s_table_s) {
+  PLAYLIST_FORM_S = form_s;
+  PLAYLIST_TABLE_S = p_table_s;
+  SCRATCHPAD_TABLE_S = s_table_s;
 }
 
 function getPlaylistForm() {
-  return PLAYLIST_FORM;
+  return $(PLAYLIST_FORM_S);
 }
 
 function getPlaylistTable() {
-  return PLAYLIST_TABLE;
+  return $(PLAYLIST_TABLE_S);
 }
 
 function getScratchpadTable() {
-  return SCRATCHPAD_TABLE;
+  return $(SCRATCHPAD_TABLE_S);
 }

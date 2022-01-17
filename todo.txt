@@ -1,4 +1,3 @@
-- add undo/redo
 - check for changes in Spotify list
 - color by genre
 - add tracks

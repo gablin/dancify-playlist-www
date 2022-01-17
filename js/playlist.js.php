@@ -6,6 +6,10 @@ var PLAYLIST_ID = '';
 var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_TRACK_DELIMITER = 0;
 var TRACK_DRAG_STATE = 0;
+var UNDO_STACK_LIMIT = 10;
+var UNDO_STACK = Array(UNDO_STACK_LIMIT).fill(null);
+var UNDO_STACK_OFFSET = -1;
+
 const BPM_MIN = 0;
 const BPM_MAX = 255;
 
@@ -35,6 +39,7 @@ function loadPlaylist(playlist_id) {
   function success() {
     body.removeClass('loading');
     clearStatus();
+    saveUndoState();
   }
   function fail(msg) {
     alert('ERROR: <?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
@@ -835,7 +840,7 @@ function addTrackDragHandling(tr) {
             }
             renderPlaylist();
             renderScratchpad();
-            savePlaylistSnapshot();
+            indicateStateUpdate();
           }
           tr_insert_point.removeClass('insert-above insert-below');
         }
@@ -872,7 +877,7 @@ function addTrackRightClickMenu(tr) {
             var new_tr = buildPlaceholderTr();
             clicked_tr.before(new_tr);
             renderTable(getTableOfTr(clicked_tr));
-            savePlaylistSnapshot();
+            indicateStateUpdate();
             close_f();
           }
         , function(a) {}
@@ -882,7 +887,7 @@ function addTrackRightClickMenu(tr) {
             var new_tr = buildPlaceholderTr();
             clicked_tr.after(new_tr);
             renderTable(getTableOfTr(clicked_tr));
-            savePlaylistSnapshot();
+            indicateStateUpdate();
             close_f();
           }
         , function(a) {}
@@ -903,7 +908,7 @@ function addTrackRightClickMenu(tr) {
             else {
               renderScratchpad();
             }
-            savePlaylistSnapshot();
+            indicateStateUpdate();
             close_f();
           }
         , function(a) {
@@ -1079,4 +1084,92 @@ function clearStatus() {
   var status = $('.saving-status');
   status.empty();
   status.removeClass('failed');
+}
+
+function indicateStateUpdate() {
+  saveUndoState();
+  savePlaylistSnapshot();
+}
+
+function saveUndoState() {
+  const limit = UNDO_STACK_LIMIT;
+
+  // Find slot to save state
+  if (UNDO_STACK_OFFSET+1 == limit) {
+    // Remove first and shift all states
+    for (var i = 1; i < limit; i++) {
+      UNDO_STACK[i-1] = UNDO_STACK[i];
+    }
+  }
+  else {
+    UNDO_STACK_OFFSET++;
+  }
+  const offset = UNDO_STACK_OFFSET;
+
+  // Destroy obsolete redo states
+  for (var o = offset; o < limit; o++) {
+    if (UNDO_STACK[o] !== null) {
+      var state = UNDO_STACK[o];
+      state.playlistTable.remove();
+      state.scratchpadTable.remove();
+      UNDO_STACK[o] = null;
+    }
+  }
+
+  var playlist = getPlaylistTable().clone(true, true);
+  playlist.find('tr.selected').removeClass('selected');
+  var scratchpad = getScratchpadTable().clone(true, true);
+  scratchpad.find('tr.selected').removeClass('selected');
+  UNDO_STACK[offset] = { playlistTable: playlist, scratchpadTable: scratchpad };
+
+  renderUndoRedoButtons();
+}
+
+function performUndo() {
+  if (UNDO_STACK_OFFSET <= 0) {
+    return;
+  }
+
+  const offset = --UNDO_STACK_OFFSET;
+  var state = UNDO_STACK[offset];
+  restoreState(state);
+  renderUndoRedoButtons();
+}
+
+function performRedo() {
+  if ( UNDO_STACK_OFFSET+1 == UNDO_STACK_LIMIT ||
+       UNDO_STACK[UNDO_STACK_OFFSET+1] === null
+     )
+  {
+    return;
+  }
+
+  const offset = ++UNDO_STACK_OFFSET;
+  var state = UNDO_STACK[offset];
+  restoreState(state);
+  renderUndoRedoButtons();
+}
+
+function restoreState(state) {
+  getPlaylistTable().replaceWith(state.playlistTable.clone(true, true));
+  getScratchpadTable().replaceWith(state.scratchpadTable.clone(true, true));
+  savePlaylistSnapshot();
+}
+
+function renderUndoRedoButtons() {
+  const offset = UNDO_STACK_OFFSET;
+  var undo_b = $('#undoBtn');
+  var redo_b = $('#redoBtn');
+  if (offset > 0) {
+    undo_b.removeClass('disabled');
+  }
+  else {
+    undo_b.addClass('disabled');
+  }
+  if (offset+1 < UNDO_STACK_LIMIT && UNDO_STACK[offset+1] !== null) {
+    redo_b.removeClass('disabled');
+  }
+  else {
+    redo_b.addClass('disabled');
+  }
 }

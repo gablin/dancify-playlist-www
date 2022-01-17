@@ -277,5 +277,5 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
     renderScratchpad();
     showScratchpad();
   }
-  savePlaylistSnapshot();
+  indicateStateUpdate();
 }

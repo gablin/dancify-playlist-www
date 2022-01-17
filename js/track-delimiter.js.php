@@ -27,7 +27,7 @@ function setupFormElementsForTrackDelimiter() {
       var data = getTrackDelimiterData();
       setTrackDelimiter(data.delimiterFreq);
       renderPlaylist();
-      savePlaylistSnapshot();
+      indicateStateUpdate();
       setDelimiterAsShowing();
       clearActionInputs();
     }
@@ -36,7 +36,7 @@ function setupFormElementsForTrackDelimiter() {
     function() {
       setTrackDelimiter(0);
       renderPlaylist();
-      savePlaylistSnapshot();
+      indicateStateUpdate();
       setDelimiterAsHidden();
       clearActionInputs();
     }

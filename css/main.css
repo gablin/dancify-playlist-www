@@ -111,6 +111,20 @@ a:hover {
   text-transform: uppercase;
   border-right: 1px solid #2D4739;
 }
+.menu a.undo-redo {
+  font-size: 150%;
+  padding: 0.1em .4em 0.11em 0.4em;
+  border: none;
+}
+.menu a.undo-redo.disabled {
+  color: #777;
+}
+.menu a.undo-redo.disabled:hover {
+  background-color: inherit;
+}
+.menu #undoBtn {
+  transform: scalex(-1);
+}
 .menu .saving-status {
   position: absolute;
   right: 0;
@@ -147,6 +161,9 @@ a:hover {
 }
 .mouse-menu a.disabled {
   color: #777;
+}
+.mouse-menu a.disabled:hover {
+  background-color: inherit;
 }
 .menu .dropdown-content a.logout:hover {
   background-color: #810909;

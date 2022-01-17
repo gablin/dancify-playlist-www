@@ -8,7 +8,7 @@
  *                           3. action area name (optional)
  * @returns string HTML code.
  */
-function mkHtmlNavMenu($entries) {
+function mkHtmlNavMenu($entries, $add_undo_redo_buttons = false) {
   ?>
   <div class="menu">
     <div class="dropdown">
@@ -36,6 +36,18 @@ function mkHtmlNavMenu($entries) {
         <a href="/app/logout" class="logout"><?= LNG_MENU_LOGOUT ?></a>
       </div>
     </div>
+    <?php
+    if ($add_undo_redo_buttons) {
+      ?>
+    <a class="undo-redo disabled" id="undoBtn" onclick="performUndo()" href="#">
+      &#10150;
+    </a><!-- No whitespace
+ --><a class="undo-redo disabled" id="redoBtn" onclick="performRedo()" href="#">
+      &#10150;
+    </a>
+      <?php
+    }
+    ?>
     <span class="saving-status"></span>
   </div>
   <?php

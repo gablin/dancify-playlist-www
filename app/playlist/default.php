@@ -17,6 +17,7 @@ mkHtmlNavMenu(
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
   , [ LNG_MENU_RESTORE_PLAYLIST, '#', 'restore-playlist' ]
   ]
+, true
 );
 beginContent();
 try {
@@ -252,13 +253,13 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script type="text/javascript">
 $(document).ready(
   function() {
-    var form = $('form[id=playlistForm]');
-    var p_table = $('table[id=playlist]');
-    var s_table = $('table[id=scratchpad]');
-    initPlaylistGlobals(form, p_table, s_table);
+    var form_s = 'form[id=playlistForm]';
+    var p_table_s = 'table[id=playlist]';
+    var s_table_s = 'table[id=scratchpad]';
+    initPlaylistGlobals(form_s, p_table_s, s_table_s);
 
     // Disable default form submission when pressing Enter
-    form.submit(function() { return false; });
+    $(form_s).submit(function() { return false; });
 
     setupPlaylist('<?= $playlist_id ?>');
     loadPlaylist('<?= $playlist_id ?>');

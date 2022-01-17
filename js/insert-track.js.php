@@ -47,7 +47,7 @@ function setupFormElementsForInsertTrack() {
                  }
                  replaceTracks(getPlaylistTable(), new_tracks);
                  renderPlaylist();
-                 savePlaylistSnapshot();
+                 indicateStateUpdate();
                  restoreButton();
                  clearActionInputs();
                }
