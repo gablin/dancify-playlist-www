@@ -872,7 +872,36 @@ function addTrackRightClickMenu(tr) {
       return buildTrackRow(getTableOfTr(clicked_tr), o);
     }
     const actions =
-      [ [ '<?= LNG_MENU_INSERT_PLACEHOLDER_BEFORE ?>'
+      [ [ '<?= LNG_MENU_SELECT_IDENTICAL_TRACKS ?>'
+        , function() {
+            clicked_tid_input = clicked_tr.find('input[name=track_id]');
+            if (clicked_tid_input.length == 0) {
+              return;
+            }
+            var clicked_tid = clicked_tid_input.val().trim();
+            getTableOfTr(clicked_tr).find('tr').each(
+              function() {
+                var tr = $(this);
+                var tr_tid_input = tr.find('input[name=track_id]');
+                if (tr_tid_input.length == 0) {
+                  return;
+                }
+                var tr_tid = tr_tid_input.val().trim();
+                if (tr_tid == clicked_tid) {
+                  tr.addClass('selected');
+                }
+              }
+            );
+            close_f();
+          }
+        , function(a) {
+            clicked_tid_input = clicked_tr.find('input[name=track_id]');
+            if (clicked_tid_input.length == 0) {
+              a.addClass('disabled');
+            }
+          }
+        ]
+      , [ '<?= LNG_MENU_INSERT_PLACEHOLDER_BEFORE ?>'
         , function() {
             var new_tr = buildPlaceholderTr();
             clicked_tr.before(new_tr);

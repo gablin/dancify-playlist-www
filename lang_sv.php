@@ -98,6 +98,9 @@ DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_AFTER'
 DEFINE( 'LNG_MENU_DELETE_SELECTED'
       , 'Ta bort markerade låtar'
       );
+DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
+      , 'Markera låtar som är identiska med denna'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );

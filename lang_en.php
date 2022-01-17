@@ -98,6 +98,9 @@ DEFINE( 'LNG_MENU_INSERT_PLACEHOLDER_AFTER'
 DEFINE( 'LNG_MENU_DELETE_SELECTED'
       , 'Delete selected tracks'
       );
+DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
+      , 'Select tracks identical to this one'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
