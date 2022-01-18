@@ -226,9 +226,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
     <div class="title"><?= LNG_DESC_PLAYLIST_UPDATES_DETECTED ?></div>
     <p><!-- ENTER APPROPRIATE TEXT --></p>
     <div class="buttons">
-      <button class="cancel" onclick="clearActionInputs();">
-        <?= LNG_BTN_DO_NOTHING ?>
-      </button>
+      <button class="cancel"><?= LNG_BTN_DO_NOTHING ?></button>
       <button id="inconPlaylistBtn2"><!-- ENTER APPROPRIATE TITLE --></button>
       <button id="inconPlaylistBtn1"><!-- ENTER APPROPRIATE TITLE --></button>
     </div>

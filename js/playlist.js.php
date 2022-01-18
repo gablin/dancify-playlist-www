@@ -185,6 +185,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     a.find('p').text('<?= LNG_DESC_TRACK_ADDITIONS_DETECTED ?>');
     var btn1 = a.find('#inconPlaylistBtn1');
     var btn2 = a.find('#inconPlaylistBtn2');
+    var cancel_btn = btn1.closest('div').find('button.cancel');
     btn1.text('<?= LNG_BTN_APPEND_TO_PLAYLIST ?>');
     btn2.text('<?= LNG_BTN_APPEND_TO_SCRATCHPAD ?>');
     btn1.click(
@@ -198,6 +199,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
         showScratchpad();
       }
     );
+    cancel_btn.click(finalize);
     a.show();
 
     function esc_f(e) {
@@ -283,6 +285,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     var btn2 = a.find('#inconPlaylistBtn2');
     btn1.text('<?= LNG_BTN_REMOVE ?>');
     btn2.text('<?= LNG_BTN_MOVE_TO_SCRATCHPAD ?>');
+    var cancel_btn = btn1.closest('div').find('button.cancel');
     btn1.click(
       function() {
         popTracks(removed_track_ids);
@@ -303,6 +306,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
         finalize();
       }
     );
+    cancel_btn.click(finalize);
     a.show();
 
     function esc_f(e) {
