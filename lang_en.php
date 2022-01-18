@@ -44,6 +44,9 @@ define( 'LNG_BTN_SAVE'
 define( 'LNG_BTN_CANCEL'
       , 'Cancel'
       );
+define( 'LNG_BTN_DO_NOTHING'
+      , 'Do nothing'
+      );
 define( 'LNG_BTN_RANDOMIZE'
       , 'Randomize'
       );
@@ -61,6 +64,18 @@ define( 'LNG_BTN_HIDE'
       );
 define( 'LNG_BTN_RESTORE'
       , 'Restore'
+      );
+define( 'LNG_BTN_APPEND_TO_PLAYLIST'
+      , 'Append to playlist'
+      );
+define( 'LNG_BTN_APPEND_TO_SCRATCHPAD'
+      , 'Append to scratchpad'
+      );
+define( 'LNG_BTN_REMOVE'
+      , 'Remove'
+      );
+define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
+      , 'Move to scratchpad'
       );
 define( 'LNG_MENU'
       , 'Menu'
@@ -274,6 +289,17 @@ define( 'LNG_DESC_RESTORE_PLAYLIST'
       );
 define( 'LNG_DESC_NO_WAY_TO_UNDO'
       , 'It will not be possible to undone this.'
+      );
+DEFINE( 'LNG_DESC_PLAYLIST_UPDATES_DETECTED'
+      , 'Playlist updates detected'
+      );
+DEFINE( 'LNG_DESC_TRACK_ADDITIONS_DETECTED'
+      , 'New tracks have been added to this playlist on Spotify. ' .
+        'How do you want to handle this?'
+      );
+DEFINE( 'LNG_DESC_TRACK_DELETIONS_DETECTED'
+      , 'Tracks have been removed to this playlist on Spotify. ' .
+        'How do you want to handle this?'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

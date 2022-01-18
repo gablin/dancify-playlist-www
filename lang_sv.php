@@ -44,6 +44,9 @@ define( 'LNG_BTN_SAVE'
 define( 'LNG_BTN_CANCEL'
       , 'Avbryt'
       );
+define( 'LNG_BTN_DO_NOTHING'
+      , 'Gör ingenting'
+      );
 define( 'LNG_BTN_RANDOMIZE'
       , 'Slumpa'
       );
@@ -61,6 +64,18 @@ define( 'LNG_BTN_HIDE'
       );
 define( 'LNG_BTN_RESTORE'
       , 'Återställ'
+      );
+define( 'LNG_BTN_APPEND_TO_PLAYLIST'
+      , 'Lägg till i spellistan'
+      );
+define( 'LNG_BTN_APPEND_TO_SCRATCHPAD'
+      , 'Lägg till i scratchpad'
+      );
+define( 'LNG_BTN_REMOVE'
+      , 'Ta bort'
+      );
+define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
+      , 'Flytta till scratchpad'
       );
 define( 'LNG_MENU'
       , 'Meny'
@@ -274,6 +289,17 @@ define( 'LNG_DESC_RESTORE_PLAYLIST'
       );
 define( 'LNG_DESC_NO_WAY_TO_UNDO'
       , 'Det kommer inte gå att ångra detta.'
+      );
+DEFINE( 'LNG_DESC_PLAYLIST_UPDATES_DETECTED'
+      , 'Spellisteuppdateringar har upptäckts'
+      );
+DEFINE( 'LNG_DESC_TRACK_ADDITIONS_DETECTED'
+      , 'Nya låtar har lagts till i denna spellista på Spotify. ' .
+        'Hur vill du hantera detta?'
+      );
+DEFINE( 'LNG_DESC_TRACK_DELETIONS_DETECTED'
+      , 'Låtar har tagits bort från denna spellista på Spotify. ' .
+        'Hur vill du hantera detta?'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

@@ -42,14 +42,17 @@ function loadPlaylist(playlist_id) {
     saveUndoState();
   }
   function fail(msg) {
-    alert('ERROR: <?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
+    setStatus('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>', true);
     body.removeClass('loading');
-    clearStatus();
+  }
+  function snapshot_success() {
+    success();
+    checkForChangesInSpotifyPlaylist(playlist_id);
   }
   function noSnapshot() {
     loadPlaylistFromSpotify(playlist_id, success, fail);
   }
-  loadPlaylistFromSnapshot(playlist_id, success, noSnapshot, fail);
+  loadPlaylistFromSnapshot(playlist_id, snapshot_success, noSnapshot, fail);
 }
 
 function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
@@ -91,6 +94,253 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                       )
              }
            , fail_f
+           );
+  }
+  load(0);
+}
+
+function checkForChangesInSpotifyPlaylist(playlist_id) {
+  var body = $(document.body);
+  function fail(msg) {
+    setStatus('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>', true);
+    body.removeClass('loading');
+  }
+  function getActionArea() {
+    return $('.action-input-area[name=playlist-inconsistencies]');
+  }
+  function checkForAdditions(snapshot_tracks, spotify_track_ids, callback_f) {
+    body.addClass('loading');
+    setStatus('<?= LNG_DESC_LOADING ?>...');
+    function cleanup() {
+      body.removeClass('loading');
+      clearStatus();
+    }
+
+    // Find tracks appearing Spotify but not in snapshot
+    var new_track_ids = [];
+    for (var i = 0; i < spotify_track_ids.length; i++) {
+      var tid = spotify_track_ids[i];
+      var t = getTrackWithMatchingId(snapshot_tracks, tid);
+      if (t === null) {
+        new_track_ids.push(tid);
+      }
+    }
+    if (new_track_ids.length == 0) {
+      cleanup();
+      callback_f();
+      return;
+    }
+
+    var has_finalized = false;
+    function finalize() {
+      if (!has_finalized) {
+        cleanup();
+        clearActionInputs();
+        callback_f();
+      }
+      has_finalized = true;
+    }
+    function loadTracks(offset, dest_table) {
+      var tracks_to_load = [];
+      var o = offset;
+      for ( var o = offset
+          ; o < new_track_ids.length && o - offset <= LOAD_TRACKS_LIMIT
+          ; o++
+          )
+      {
+        tracks_to_load.push(new_track_ids[o]);
+      }
+      callApi( '/api/get-track-info/'
+             , { trackIds: tracks_to_load }
+             , function(d) {
+                 var tracks = [];
+                 for (var i = 0; i < d.tracks.length; i++) {
+                   var t = d.tracks[i];
+                   var o = createPlaylistTrackObject( t.trackId
+                                                    , t.artists
+                                                    , t.name
+                                                    , t.length
+                                                    , t.bpm
+                                                    , t.genre
+                                                    , t.preview_url
+                                                    );
+                   tracks.push(o);
+                 }
+                 appendTracks(dest_table, tracks);
+                 var next_offset = offset + tracks.length;
+                 if (next_offset < d.total) {
+                   loadTracks(next_offset, dest_table);
+                 }
+                 else {
+                   renderTable(dest_table);
+                   indicateStateUpdate();
+                   finalize();
+                 }
+               }
+             , fail
+             );
+    }
+
+    var a = getActionArea();
+    a.find('p').text('<?= LNG_DESC_TRACK_ADDITIONS_DETECTED ?>');
+    var btn1 = a.find('#inconPlaylistBtn1');
+    var btn2 = a.find('#inconPlaylistBtn2');
+    btn1.text('<?= LNG_BTN_APPEND_TO_PLAYLIST ?>');
+    btn2.text('<?= LNG_BTN_APPEND_TO_SCRATCHPAD ?>');
+    btn1.click(
+      function() {
+        loadTracks(0, getPlaylistTable());
+      }
+    );
+    btn2.click(
+      function() {
+        loadTracks(0, getScratchpadTable());
+        showScratchpad();
+      }
+    );
+    a.show();
+
+    function esc_f(e) {
+      if (e.key == 'Escape') {
+        finalize();
+        $(document).unbind('keyup', esc_f);
+      }
+    }
+    $(document).on('keyup', esc_f);
+  }
+  function checkForDeletions(snapshot_tracks, spotify_track_ids, callback_f) {
+    // Find tracks not appearing Spotify but in snapshot
+    var removed_track_ids = [];
+    for (var i = 0; i < snapshot_tracks.length; i++) {
+      var tid = snapshot_tracks[i].trackId;
+      if (tid === undefined) {
+        continue;
+      }
+      var found = false;
+      for (var j = 0; j < spotify_track_ids.length; j++) {
+        if (spotify_track_ids[j] == tid) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        removed_track_ids.push(tid);
+      }
+    }
+    if (removed_track_ids.length == 0) {
+      callback_f();
+      return;
+    }
+
+    var has_finalized = false;
+    function finalize() {
+      if (!has_finalized) {
+        clearActionInputs();
+        callback_f();
+      }
+      has_finalized = true;
+    }
+    function popTracks(tracks_to_remove) {
+      var removed_tracks = [];
+
+      // Pop from playlist
+      var has_removed = false;
+      var playlist_tracks = getPlaylistTrackData();
+      for (var i = 0; i < tracks_to_remove.length; i++) {
+        var res = popTrackWithMatchingId(playlist_tracks, tracks_to_remove[i]);
+        playlist_tracks = res[0];
+        var removed_t = res[1];
+        if (removed_t !== null) {
+          removed_tracks.push(removed_t);
+          has_removed = true;
+        }
+      }
+      if (has_removed) {
+        replaceTracks(getPlaylistTable(), playlist_tracks);
+      }
+
+      // Pop from scratchpad
+      has_removed = false;
+      var scratchpad_tracks = getScratchpadTrackData();
+      for (var i = 0; i < tracks_to_remove.length; i++) {
+        var res = popTrackWithMatchingId(scratchpad_tracks, tracks_to_remove[i]);
+        scratchpad_tracks = res[0];
+        var removed_t = res[1];
+        if (removed_t !== null) {
+          removed_tracks.push(removed_t);
+          has_removed = true;
+        }
+      }
+      if (has_removed) {
+        replaceTracks(getScratchpadTable(), scratchpad_tracks);
+      }
+
+      return removed_tracks;
+    }
+    var a = getActionArea();
+    a.find('p').text('<?= LNG_DESC_TRACK_DELETIONS_DETECTED ?>');
+    var btn1 = a.find('#inconPlaylistBtn1');
+    var btn2 = a.find('#inconPlaylistBtn2');
+    btn1.text('<?= LNG_BTN_REMOVE ?>');
+    btn2.text('<?= LNG_BTN_MOVE_TO_SCRATCHPAD ?>');
+    btn1.click(
+      function() {
+        popTracks(removed_track_ids);
+        renderTable(getScratchpadTable());
+        indicateStateUpdate();
+        finalize();
+      }
+    );
+    btn2.click(
+      function() {
+        var removed_tracks = popTracks(removed_track_ids);
+        var scratchpad_data = getScratchpadTrackData();
+        var new_scratchpad_data = scratchpad_data.concat(removed_tracks);
+        replaceTracks(getScratchpadTable(), new_scratchpad_data);
+        renderTable(getScratchpadTable());
+        indicateStateUpdate();
+        showScratchpad();
+        finalize();
+      }
+    );
+    a.show();
+
+    function esc_f(e) {
+      if (e.key == 'Escape') {
+        finalize();
+        $(document).unbind('keyup', esc_f);
+      }
+    }
+    $(document).on('keyup', esc_f);
+  }
+  var spotify_track_ids = [];
+  function load(offset) {
+    var data = { playlistId: playlist_id
+               , offset: offset
+               };
+    callApi( '/api/get-playlist-tracks/'
+           , data
+           , function(d) {
+               spotify_track_ids = spotify_track_ids.concat(d.tracks);
+               var next_offset = offset + d.tracks.length;
+               if (next_offset < d.total) {
+                 load(next_offset);
+               }
+               else {
+                 var snapshot_tracks =
+                   getPlaylistTrackData().concat(getScratchpadTrackData());
+                 checkForAdditions( snapshot_tracks
+                                  , spotify_track_ids
+                                  , function () {
+                                      checkForDeletions( snapshot_tracks
+                                                       , spotify_track_ids
+                                                       , function() {}
+                                                       );
+                                    }
+                                  );
+               }
+             }
+           , fail
            );
   }
   load(0);
@@ -376,6 +626,17 @@ function createPlaylistPlaceholderObject( title_text
          , bpm: bpm_text
          , genre: genre_text
          }
+}
+
+function popTrackWithMatchingId(track_list, track_id) {
+  var i = 0;
+  for (; i < track_list.length && track_list[i].trackId != track_id; i++) {}
+  if (i < track_list.length) {
+    var t = track_list[i];
+    track_list.splice(i, 1);
+    return [track_list, t];
+  }
+  return [track_list, null];
 }
 
 function getTrackWithMatchingId(track_list, track_id) {
@@ -1016,7 +1277,6 @@ function savePlaylistSnapshot() {
 
 function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
   var status = [false, false];
-  const track_limit = 50;
   function done(table, status_offset) {
     status[status_offset] = true;
     renderTable(table);
@@ -1038,7 +1298,7 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
       var tracks_to_load = [];
       var o = track_offset;
       for ( ; o < track_ids.length &&
-              o - track_offset <= track_limit &&
+              o - track_offset <= LOAD_TRACKS_LIMIT &&
               hasTrackAt(o)
             ; o++
           )
