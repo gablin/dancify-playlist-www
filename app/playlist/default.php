@@ -71,6 +71,11 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
           <td></td>
           <td class="label">
             <?= LNG_DESC_BPM_DIFFERENCE ?>: <span></span>
+            <select name="direction">
+              <option value="+1"><?= LNG_DESC_FASTER ?></option>
+              <option value="-1"><?= LNG_DESC_SLOWER ?></option>
+              <option></option>
+            </select>
           </td>
           <td class="difference-controller">
             <div></div>

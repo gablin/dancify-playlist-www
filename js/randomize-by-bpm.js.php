@@ -17,9 +17,12 @@ function setupFormElementsForRandomizeByBpm() {
       var b = $(this);
       b.prop('disabled', true);
       b.addClass('loading');
+      var body = $(document.body);
+      body.addClass('loading');
       function restoreButton() {
         b.prop('disabled', false);
         b.removeClass('loading');
+        body.removeClass('loading');
       };
 
       var playlist_data = getPlaylistTrackData().concat(getScratchpadTrackData());
@@ -214,10 +217,18 @@ function getBpmSettings() {
           data.bpmRangeList.push([v1, v2]);
         }
       );
-      tr.find('td.difference-controller > div').each(
+      tr.find('.difference-controller > div').each(
         function() {
           v1 = $(this).slider('values', 0);
           v2 = $(this).slider('values', 1);
+          var tr = $(this).closest('tr');
+          var direction =
+            parseInt(tr.find('select[name=direction] :selected').val());
+          if (direction < 0) {
+            var tmp = v1;
+            v1 = -v2;
+            v2 = -tmp;
+          }
           data.bpmDifferenceList.push([v1, v2]);
         }
       );

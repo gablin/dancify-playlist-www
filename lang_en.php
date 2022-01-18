@@ -301,6 +301,12 @@ DEFINE( 'LNG_DESC_TRACK_DELETIONS_DETECTED'
       , 'Tracks have been removed to this playlist on Spotify. ' .
         'How do you want to handle this?'
       );
+DEFINE( 'LNG_DESC_FASTER'
+      , 'faster'
+      );
+DEFINE( 'LNG_DESC_SLOWER'
+      , 'slower'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
       );

@@ -1,4 +1,3 @@
-- fix bpm order GUI in randomize-by-bpm
 - color by genre
 - add tracks
 - search function
