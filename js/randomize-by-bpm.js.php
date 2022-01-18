@@ -276,7 +276,7 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
   for (var i = 0; i < playlist.length; i++) {
     var track = playlist[i]
     var tid = track.trackId;
-    if (getTrackWithMatchingId(new_playlist, tid) == null) {
+    if (getTrackWithMatchingId(new_playlist, tid) === null) {
       new_scratchpad.push(track);
     }
   }
@@ -287,6 +287,10 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
     replaceTracks(getScratchpadTable(), new_scratchpad);
     renderScratchpad();
     showScratchpad();
+  }
+  else {
+    clearTable(getScratchpadTable());
+    renderScratchpad();
   }
   indicateStateUpdate();
 }
