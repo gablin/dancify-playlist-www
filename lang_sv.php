@@ -322,4 +322,52 @@ define( 'LNG_GENRE_ROCK'
 define( 'LNG_GENRE_POP'
       , 'pop'
       );
+define( 'LNG_GENRE_SCHLAGER'
+      , 'schlager'
+      );
+define( 'LNG_GENRE_METAL'
+      , 'metal'
+      );
+define( 'LNG_GENRE_PUNK'
+      , 'punk'
+      );
+define( 'LNG_GENRE_DISCO'
+      , 'disco'
+      );
+define( 'LNG_GENRE_RNB'
+      , 'rnb'
+      );
+define( 'LNG_GENRE_BLUES'
+      , 'blues'
+      );
+define( 'LNG_GENRE_JAZZ'
+      , 'jazz'
+      );
+define( 'LNG_GENRE_HIP_HOP'
+      , 'hip hop'
+      );
+define( 'LNG_GENRE_ELECTRONIC'
+      , 'elektronisk'
+      );
+define( 'LNG_GENRE_HOUSE'
+      , 'house'
+      );
+define( 'LNG_GENRE_CLASSICAL'
+      , 'klassisk'
+      );
+define( 'LNG_GENRE_SOUL'
+      , 'soul'
+      );
+define( 'LNG_GENRE_LATIN'
+      , 'latin'
+      );
+define( 'LNG_GENRE_REGGAE'
+      , 'reggae'
+      );
+define( 'LNG_GENRE_TANGO'
+      , 'tango'
+      );
+define( 'LNG_GENRE_OPERA'
+      , 'opera'
+      );
 ?>
