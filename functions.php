@@ -156,7 +156,8 @@ function showCookieInfo() {
 function createApiSession() {
   global $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET;
 
-  $callback = "http://{$_SERVER['SERVER_NAME']}/auth/callback/";
+  $callback = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}" .
+              "/auth/callback/";
   $session = new SpotifyWebAPI\Session( $SPOTIFY_CLIENT_ID
                                       , $SPOTIFY_CLIENT_SECRET
                                       , $callback
