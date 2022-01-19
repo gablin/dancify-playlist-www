@@ -495,42 +495,38 @@ function fromCOOKIE($k, $allow_empty = false) {
 }
 
 /**
- * Checks if user has set a language.
- *
- * @returns string Language setting.
- */
-function isLangSet() {
-  $k = 'lang';
-  return hasCOOKIE($k) || hasGET($k);
-}
-
-/**
  * Gets language setting.
  *
  * @returns string Language setting.
  * @throws Exception If language is not set.
  */
 function getLang() {
+  $lang = '';
   $k = 'lang';
   if (hasGET($k)) {
-    return fromGET($k);
+    $lang = fromGET($k);
   }
   else if (hasCOOKIE($k)) {
-    return fromCOOKIE($k);
+    $lang = fromCOOKIE($k);
   }
   else {
-    throw new Exception('no language set');
+    return 'en';
   }
+
+  if (!in_array($lang, ['en', 'sv'])) {
+    $lang = 'en';
+  }
+  return $lang;
 }
 
 /**
  * Saves current language setting.
+ *
+ * @param string $lang Language setting to save.
  */
-function saveLang() {
-  if (isLangSet()) {
-    $one_year = time() + 60*60*24*365;
-    setcookie('lang', getLang(), $one_year, '/');
-  }
+function saveLang($lang) {
+  $one_year = time() + 60*60*24*365;
+  setcookie('lang', getLang(), $one_year, '/');
 }
 
 /**

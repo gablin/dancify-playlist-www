@@ -6,7 +6,6 @@ ensureSession();
 $session = getSession();
 $api = createWebApi($session);
 
-connectDb();
 beginPage();
 mkHtmlNavMenu(
   [ [ LNG_MENU_TRACK_DELIMITER, '#', 'track-delimiter' ]
