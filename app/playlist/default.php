@@ -51,6 +51,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <?= LNG_DESC_PLAYLIST_NAME ?>:
       <input type="text" name="new-playlist-name" />
     </label>
+    <p><?= LNG_DESC_INFO_ON_SAVING ?></p>
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>

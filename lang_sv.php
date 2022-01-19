@@ -344,6 +344,9 @@ define( 'LNG_DESC_FIRST_TIME'
         'ändringar ska synas i Spotify måste du välja ' .
         '"' . LNG_BTN_SAVE_AS_NEW_PLAYLIST . '" i menyn till vänster.'
       );
+define( 'LNG_DESC_INFO_ON_SAVING'
+      , 'Notera att låtar i scratchpad-listan kommer INTE att sparas.'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
       );

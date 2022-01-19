@@ -343,6 +343,9 @@ define( 'LNG_DESC_FIRST_TIME'
         'to see your changes in Spotify, you must select ' .
         '"' . LNG_BTN_SAVE_AS_NEW_PLAYLIST . '" in the menu to the left.'
       );
+define( 'LNG_DESC_INFO_ON_SAVING'
+      , 'Note that tracks appearing in the scratchpad list will NOT be saved.'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
       );
