@@ -49,6 +49,9 @@ define( 'LNG_BTN_SAVE'
 define( 'LNG_BTN_CANCEL'
       , 'Avbryt'
       );
+define( 'LNG_BTN_CLOSE'
+      , 'Stäng'
+      );
 define( 'LNG_BTN_DO_NOTHING'
       , 'Gör ingenting'
       );
@@ -120,6 +123,9 @@ DEFINE( 'LNG_MENU_DELETE_SELECTED'
       );
 DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
       , 'Markera låtar som är identiska med denna'
+      );
+DEFINE( 'LNG_MENU_DONATE'
+      , 'Donera'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
@@ -317,6 +323,11 @@ DEFINE( 'LNG_DESC_BPM_INFO'
         'stämmer inte alltid till 100%. Verifiera alltid värdet genom att ' .
         'använda en BPM-mätare (finns tillgänliga som app till din telefon) och ' .
         'justera värdet om det inte stämmer.'
+      );
+DEFINE( 'LNG_DESC_DONATE_TEXT'
+      , 'Många timmar har gått till att bygga detta verktyg. Om du har nytta av ' .
+        'det och vill visa din uppskattning kan du donera ett valfritt belopp ' .
+        'genom att klicka på antingen Paypal eller Swish nedanför.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

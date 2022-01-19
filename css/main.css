@@ -53,6 +53,9 @@ a:hover {
 .centered {
   margin: auto;
 }
+.center-text {
+  text-align: center;
+}
 
 .content {
   margin: 2em 4vw 0 4vw;
@@ -683,4 +686,20 @@ a.ui-button:active,
 
 .bpm-info {
   font-size: 80%;
+}
+
+.donate img {
+  margin: 0 1em;
+  vertical-align: middle;
+}
+
+img.swish-qr {
+  width: 50vw;
+}
+
+.swish-logo {
+  height: auto;
+  width: auto;
+  max-height: 50px;
+  max-width: 120px;
 }

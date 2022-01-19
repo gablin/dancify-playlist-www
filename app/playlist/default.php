@@ -17,6 +17,8 @@ mkHtmlNavMenu(
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
   , [ LNG_MENU_SAVE_AS_NEW_PLAYLIST, '#', 'save-as-new-playlist' ]
   , [ LNG_MENU_RESTORE_PLAYLIST, '#', 'restore-playlist' ]
+  , []
+  , [ LNG_MENU_DONATE, '#', 'donate' ]
   ]
 , true
 );
@@ -220,6 +222,62 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   </div>
 </div>
 
+<div class="action-input-area" name="donate">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_DONATE ?></div>
+    <p><?= LNG_DESC_DONATE_TEXT ?></p>
+    <p class="donate center-text">
+      <a href="#" onclick="triggerPaypalDonation()">
+        <?php
+        if (getLang() == 'en') {
+          ?>
+          <img src="https://www.paypalobjects.com/en_US/SE/i/btn/btn_donateCC_LG.gif" title="Donate with Paypal" />
+          <?php
+        }
+        else if (getLang() == 'sv') {
+          ?>
+          <img src="https://www.paypalobjects.com/sv_SE/SE/i/btn/btn_donateCC_LG.gif" title="Donera med Paypal" />
+          <?php
+        }
+        else {
+          showError('ERROR: unknown language');
+        }
+        ?>
+      </a>
+      <a href="#" onclick="triggerSwishDonation()">
+        <?php
+        if (getLang() == 'en') {
+          ?>
+          <img class="swish-logo" src="/images/swish-logo.svg" title="Donate with Swish" />
+          <?php
+        }
+        else if (getLang() == 'sv') {
+          ?>
+          <img class="swish-logo" src="/images/swish-logo.svg" title="Donera med Swish" />
+          <?php
+        }
+        else {
+          showError('ERROR: unknown language');
+        }
+        ?>
+      </a>
+    </p>
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs()">
+        <?= LNG_BTN_CLOSE ?>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="swish-qr">
+  <div class="background"></div>
+  <div class="input">
+    <img class="swish-qr" src="/images/swish-qr.svg" />
+  </div>
+</div>
+
 <div class="action-input-area" name="playlist-inconsistencies">
   <div class="background"></div>
   <div class="input">
@@ -270,6 +328,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/track-delimiter.js.php"></script>
 <script src="/js/scratchpad.js.php"></script>
 <script src="/js/restore-playlist.js.php"></script>
+<script src="/js/donations.js.php"></script>
 <script type="text/javascript">
 $(document).ready(
   function() {

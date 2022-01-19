@@ -48,6 +48,9 @@ define( 'LNG_BTN_SAVE'
 define( 'LNG_BTN_CANCEL'
       , 'Cancel'
       );
+define( 'LNG_BTN_CLOSE'
+      , 'Close'
+      );
 define( 'LNG_BTN_DO_NOTHING'
       , 'Do nothing'
       );
@@ -119,6 +122,9 @@ DEFINE( 'LNG_MENU_DELETE_SELECTED'
       );
 DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
       , 'Select tracks identical to this one'
+      );
+DEFINE( 'LNG_MENU_DONATE'
+      , 'Donate'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
@@ -316,6 +322,11 @@ DEFINE( 'LNG_DESC_BPM_INFO'
         'are not always 100% accurate. Always verify the value by using a BPM ' .
         'tapper (available as app on your phone) and adjust the value if not ' .
         'accurate.'
+      );
+DEFINE( 'LNG_DESC_DONATE_TEXT'
+      , 'Many hours have been devoted to building this tool. If you find it ' .
+        'useful and wish to show your appreciation, feel free to donate a ' .
+        'amount of your chosing by clicking on either Paypal or Swish below.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
