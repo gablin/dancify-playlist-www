@@ -127,8 +127,8 @@ DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
 DEFINE( 'LNG_MENU_DONATE'
       , 'Donera'
       );
-DEFINE( 'LNG_MENU_INFORMATION'
-      , 'Information'
+DEFINE( 'LNG_MENU_FIRST_TIME_INFORMATION'
+      , 'Första gången-information'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'

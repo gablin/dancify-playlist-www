@@ -33,7 +33,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
      <?php if (!hasCOOKIE('first-time')) { echo('style="display: block"'); } ?>>
   <div class="background"></div>
   <div class="input">
-    <div class="title"><?= LNG_MENU_INFORMATION ?></div>
+    <div class="title"><?= LNG_MENU_FIRST_TIME_INFORMATION ?></div>
     <p><?= LNG_DESC_FIRST_TIME ?></p>
     <div class="buttons">
       <button class="cancel" onclick="markFirstTimeShown()">
