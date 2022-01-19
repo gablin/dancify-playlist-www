@@ -1,4 +1,4 @@
-- fix persistent playlist change detection
+- add more genres
 - color by genre
 - add tracks
 - search function

@@ -9,6 +9,7 @@ var TRACK_DRAG_STATE = 0;
 var UNDO_STACK_LIMIT = 10;
 var UNDO_STACK = Array(UNDO_STACK_LIMIT).fill(null);
 var UNDO_STACK_OFFSET = -1;
+var LAST_SPOTIFY_PLAYLIST_HASH = '';
 
 const BPM_MIN = 0;
 const BPM_MAX = 255;
@@ -56,6 +57,10 @@ function loadPlaylist(playlist_id) {
 }
 
 function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
+  function updatePlaylistHash() {
+    var track_ids = getPlaylistTrackData().map(t => t.trackId);
+    LAST_SPOTIFY_PLAYLIST_HASH = computePlaylistHash(track_ids);
+  }
   function load(offset) {
     var data = { playlistId: playlist_id
                , offset: offset
@@ -87,6 +92,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                           }
                           else {
                             renderPlaylist();
+                            updatePlaylistHash();
                             success_f();
                           }
                         }
@@ -331,6 +337,11 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                  load(next_offset);
                }
                else {
+                 var playlist_hash = computePlaylistHash(spotify_track_ids);
+                 if (playlist_hash == LAST_SPOTIFY_PLAYLIST_HASH) {
+                   return;
+                 }
+                 LAST_SPOTIFY_PLAYLIST_HASH = playlist_hash;
                  var snapshot_tracks =
                    getPlaylistTrackData().concat(getScratchpadTrackData());
                  checkForAdditions( snapshot_tracks
@@ -348,6 +359,25 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
            );
   }
   load(0);
+}
+
+function computePlaylistHash(track_ids) {
+  // https://stackoverflow.com/a/52171480
+  function cyrb53(str, seed = 0) {
+    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0, ch; i < str.length; i++) {
+      ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^
+         Math.imul(h2 ^ (h2>>>13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^
+         Math.imul(h1 ^ (h1>>>13), 3266489909);
+    return 4294967296 * (2097151 & h2) + (h1>>>0);
+  };
+
+  return cyrb53(track_ids.join(''));
 }
 
 function playPreview(jlink, preview_url, playing_text, stop_text) {
@@ -1266,6 +1296,7 @@ function savePlaylistSnapshot() {
          , snapshot: { playlistData: playlist_tracks
                      , scratchpadData: scratchpad_tracks
                      , delimiter: PLAYLIST_TRACK_DELIMITER
+                     , spotifyPlaylistHash: LAST_SPOTIFY_PLAYLIST_HASH
                      }
          };
   callApi( '/api/save-playlist-snapshot/'
@@ -1347,6 +1378,7 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
          , function(res) {
              if (res.status == 'OK') {
                PLAYLIST_TRACK_DELIMITER = res.snapshot.delimiter;
+               LAST_SPOTIFY_PLAYLIST_HASH = res.snapshot.spotifyPlaylistHash;
                if (PLAYLIST_TRACK_DELIMITER > 0) {
                  setDelimiterAsShowing();
                }
