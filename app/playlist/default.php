@@ -34,7 +34,8 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   <div class="background"></div>
   <div class="input">
     <div class="title"><?= LNG_MENU_FIRST_TIME_INFORMATION ?></div>
-    <p><?= LNG_DESC_FIRST_TIME ?></p>
+    <p><?= LNG_DESC_FIRST_TIME_PART1 ?></p>
+    <p><?= LNG_DESC_FIRST_TIME_PART2 ?></p>
     <div class="buttons">
       <button class="cancel" onclick="markFirstTimeShown()">
         <?= LNG_BTN_CLOSE ?>

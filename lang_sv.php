@@ -338,11 +338,16 @@ define( 'LNG_DESC_UNDO'
 define( 'LNG_DESC_REDO'
       , 'Gör om'
       );
-define( 'LNG_DESC_FIRST_TIME'
+define( 'LNG_DESC_FIRST_TIME_PART1'
       , 'Oavsett vad du gör här kan du aldrig förstöra en befintlig spellista i ' .
         'Spotify; alla ändringar sparas separat på webbsidan. För att dina ' .
         'ändringar ska synas i Spotify måste du välja ' .
         '"' . LNG_BTN_SAVE_AS_NEW_PLAYLIST . '" i menyn till vänster.'
+      );
+define( 'LNG_DESC_FIRST_TIME_PART2'
+      , 'Se till att du använder en dator. Webbsidan förlitar sig till stor del ' .
+        'på klick-och-drag och högerklick, vilket inte fungerar som tänkt på ' .
+        'en mobil.'
       );
 define( 'LNG_DESC_INFO_ON_SAVING'
       , 'Notera att låtar i scratchpad-listan kommer INTE att sparas.'
