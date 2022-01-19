@@ -29,6 +29,20 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 
 <form id="playlistForm">
 
+<div class="action-input-area" name="first-time"
+     <?php if (!hasCOOKIE('first-time')) { echo('style="display: block"'); } ?>>
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_INFORMATION ?></div>
+    <p><?= LNG_DESC_FIRST_TIME ?></p>
+    <div class="buttons">
+      <button class="cancel" onclick="markFirstTimeShown()">
+        <?= LNG_BTN_CLOSE ?>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="action-input-area" name="save-as-new-playlist">
   <div class="background"></div>
   <div class="input">
@@ -329,6 +343,11 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/restore-playlist.js.php"></script>
 <script src="/js/donations.js.php"></script>
 <script type="text/javascript">
+function markFirstTimeShown() {
+  clearActionInputs();
+  Cookies.set('first-time', 'true', { expires: 365*5 });
+}
+
 $(document).ready(
   function() {
     var form_s = 'form[id=playlistForm]';

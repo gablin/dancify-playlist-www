@@ -126,6 +126,9 @@ DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
 DEFINE( 'LNG_MENU_DONATE'
       , 'Donate'
       );
+DEFINE( 'LNG_MENU_INFORMATION'
+      , 'Information'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
@@ -333,6 +336,12 @@ define( 'LNG_DESC_UNDO'
       );
 define( 'LNG_DESC_REDO'
       , 'Redo'
+      );
+define( 'LNG_DESC_FIRST_TIME'
+      , 'No matter what you do here, you can never destroy an existing playlist ' .
+        'in Spotify; all changes are saved separately on the website. In order ' .
+        'to see your changes in Spotify, you must select ' .
+        '"' . LNG_BTN_SAVE_AS_NEW_PLAYLIST . '" in the menu to the left.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

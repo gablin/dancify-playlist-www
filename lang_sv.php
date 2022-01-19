@@ -127,6 +127,9 @@ DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
 DEFINE( 'LNG_MENU_DONATE'
       , 'Donera'
       );
+DEFINE( 'LNG_MENU_INFORMATION'
+      , 'Information'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );
@@ -334,6 +337,12 @@ define( 'LNG_DESC_UNDO'
       );
 define( 'LNG_DESC_REDO'
       , 'Gör om'
+      );
+define( 'LNG_DESC_FIRST_TIME'
+      , 'Oavsett vad du gör här kan du aldrig förstöra en befintlig spellista i ' .
+        'Spotify; alla ändringar sparas separat på webbsidan. För att dina ' .
+        'ändringar ska synas i Spotify måste du välja ' .
+        '"' . LNG_BTN_SAVE_AS_NEW_PLAYLIST . '" i menyn till vänster.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
