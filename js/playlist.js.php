@@ -539,9 +539,7 @@ function addTrackGenreHandling(tr) {
   );
 }
 
-function renderTrackGenre(tr) {
-  // TODO: implement
-}
+function renderTrackGenre(tr) {}
 
 function checkBpmInput(str, report_on_fail = true) {
   bpm = parseInt(str);

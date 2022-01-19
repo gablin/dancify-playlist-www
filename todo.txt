@@ -1,4 +1,3 @@
 - add more genres
-- color by genre
 - add tracks
 - search function
