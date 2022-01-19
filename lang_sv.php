@@ -2,16 +2,21 @@
 define( 'LNG_SLOGAN'
       , 'Dancify'
       );
-define( 'LNG_TXT_INTRO'
+
+define( 'LNG_TXT_INTRO_PART1'
       , <<<EOT
-Denna webbsida är ett verktyg för att förenkla byggandet av Spotify-spellistor
-för dansevenemang. Till exempel, har du nån gång haft en spellista där du
-behövt lägga in en ljudeffekt av något slag &ndash; som tystnad eller ett
-<em>dinnnnng!</em> &ndash; varannan eller var tredje låt? Då vet du hur tråkigt
-och tidsödande det är. Och då kommer du bli extra glad över att veta att du
-aldrig behöver göra detta för hand, eftersom denna webbsida kan göra det åt dig!
-Logga bara in, välj vilken lista du vill <em>dingifiera</em>, skriv in
-ljudeffektslåt och frekvens, och spara som ny spellista. Klart!
+Denna webbsida är ett verktyg för att bygga Spotify-spellistor för dansevenemang.
+Att flytta om låtordning, till exempel, är drygt att göra i Spotify, och även
+att lägga in speciella ljudeffekter eller tystnad varannan eller var tredje låt.
+Hemsidan förenklar detta enormt genom att tillhandahålla drag-och-släpp, automatisk
+inläggning av låtar, låtval, och slumpning. Dessutom tillhandahåller den även
+taggning av BPM och genre per låt.
+EOT
+      );
+define( 'LNG_TXT_INTRO_PART2'
+      , <<<EOT
+Notera att denna hemsida baseras till stor del på klick-och-drag och högerklick,
+vilket betyder att den inte kommer fungera som tänkt på en telefon.
 EOT
       );
 define( 'LNG_TXT_COOKIES'

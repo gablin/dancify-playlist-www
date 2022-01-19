@@ -2,16 +2,20 @@
 define( 'LNG_SLOGAN'
       , 'Dancify'
       );
-define( 'LNG_TXT_INTRO'
+define( 'LNG_TXT_INTRO_PART1'
       , <<<EOT
-This website is a tool to simplify building of Spotify playlists for dance
-events. For example, have you ever had a playlist where you would need to insert
-a sound effect of some sort &ndash; like silence or a <em>dinnnnng!</em> &ndash;
-every second or third song? Then you know how tedious and time-consuming that
-task is. And then you will be especially happy to know that you no longer need
-to do that manually, because this website can do that for you! Just log in,
-select the playlist you edit, enter sound-effect track and frequency, and then
-save as new playlist. Done!
+This website is a tool for building Spotify playlists for dance
+events. Rearranging track order, for example, is cumbersome to do in Spotify, as
+is inserting special sound effects or silence every second or third song. The
+website greatly simplifies those tasks by providing drag-and-dropping, automatic
+track insertion, track selection, and randomization. Moreover, it also provides
+BPM and genre tagging per song.
+EOT
+      );
+define( 'LNG_TXT_INTRO_PART2'
+      , <<<EOT
+Note that this website relies heavily on click-and-drag and right-clicking, meaning
+it will not work as intended when viewed on a phone.
 EOT
       );
 define( 'LNG_TXT_COOKIES'

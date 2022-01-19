@@ -29,6 +29,7 @@ p {}
 
 p.intro {
   max-width: 600px;
+  margin-bottom: 1em;
 }
 
 h1 {
