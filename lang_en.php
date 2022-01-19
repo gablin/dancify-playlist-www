@@ -328,6 +328,12 @@ DEFINE( 'LNG_DESC_DONATE_TEXT'
         'useful and wish to show your appreciation, feel free to donate a ' .
         'amount of your chosing by clicking on either Paypal or Swish below.'
       );
+define( 'LNG_DESC_UNDO'
+      , 'Undo'
+      );
+define( 'LNG_DESC_REDO'
+      , 'Redo'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
       );

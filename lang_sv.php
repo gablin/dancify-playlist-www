@@ -329,6 +329,12 @@ DEFINE( 'LNG_DESC_DONATE_TEXT'
         'det och vill visa din uppskattning kan du donera ett valfritt belopp ' .
         'genom att klicka på antingen Paypal eller Swish nedanför.'
       );
+define( 'LNG_DESC_UNDO'
+      , 'Ångra'
+      );
+define( 'LNG_DESC_REDO'
+      , 'Gör om'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
       );

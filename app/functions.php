@@ -49,10 +49,12 @@ function mkHtmlNavMenu($entries, $add_undo_redo_buttons = false) {
     <?php
     if ($add_undo_redo_buttons) {
       ?>
-    <a class="undo-redo disabled" id="undoBtn" onclick="performUndo()" href="#">
+    <a class="undo-redo disabled" id="undoBtn" onclick="performUndo()"
+       href="#" title="<?= LNG_DESC_UNDO ?>">
       &#10150;
     </a><!-- No whitespace
- --><a class="undo-redo disabled" id="redoBtn" onclick="performRedo()" href="#">
+ --><a class="undo-redo disabled" id="redoBtn" onclick="performRedo()"
+       href="#" title="<?= LNG_DESC_REDO ?>">
       &#10150;
     </a>
       <?php
