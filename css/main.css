@@ -680,3 +680,7 @@ a.ui-button:active,
 .warning span {
   color: #E60000;
 }
+
+.bpm-info {
+  font-size: 80%;
+}

@@ -312,6 +312,12 @@ DEFINE( 'LNG_DESC_FASTER'
 DEFINE( 'LNG_DESC_SLOWER'
       , 'långsammare'
       );
+DEFINE( 'LNG_DESC_BPM_INFO'
+      , 'BPM-värdena beräknas automatiskt av Spotify, vilket betyder att de ' .
+        'stämmer inte alltid till 100%. Verifiera alltid värdet genom att ' .
+        'använda en BPM-mätare (finns tillgänliga som app till din telefon) och ' .
+        'justera värdet om det inte stämmer.'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
       );
