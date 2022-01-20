@@ -519,13 +519,14 @@ label.checkbox .checkmark:after {
 
 .cookies {
   position: fixed;
+  bottom: 0;
   z-index: 1;
   width: 100%;
-  bottom: 0;
+  padding: 0 2em;
+  box-sizing: border-box;
   border-top: 1px solid #121619;
   background-color: #09814A;
   color: #FFF;
-  padding: 0 10%;
 }
 .cookies table {
   margin: 0;
