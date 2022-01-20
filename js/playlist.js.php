@@ -403,6 +403,14 @@ function playPreview(jlink, preview_url, playing_text, stop_text) {
   PREVIEW_AUDIO.get(0).play();
 }
 
+function updateBpmInDb(track_id, bpm, success_f, fail_f) {
+  callApi( '/api/update-bpm/'
+         , { trackId: track_id, bpm: bpm }
+         , function(d) { success_f(d); }
+         , function(msg) { fail_f(msg); }
+         );
+}
+
 function addTrackBpmHandling(tr) {
   var input = tr.find('input[name=bpm]');
   input.click(
@@ -413,6 +421,7 @@ function addTrackBpmHandling(tr) {
   input.focus(
     function() {
       $(this).css('background-color', '#fff');
+      $(this).data('old-value', $(this).val().trim());
     }
   );
   input.blur(
@@ -441,20 +450,17 @@ function addTrackBpmHandling(tr) {
         input.addClass('invalid');
         return;
       }
+      bpm = parseInt(bpm);
       input.removeClass('invalid');
 
-      // Save new BPM to database
-      var data = { trackId: tid, bpm: bpm };
       setStatus('<?= LNG_DESC_SAVING ?>...');
-      callApi( '/api/update-bpm/'
-             , data
-             , function(d) {
-                 clearStatus();
-               }
-             , function(msg) {
-                 setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
-               }
-             );
+      updateBpmInDb( tid
+                   , bpm
+                   , clearStatus
+                   , function(msg) {
+                       setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
+                     }
+                   );
 
       // Update BPM on all duplicate tracks (if any)
       input.closest('table').find('input[name=track_id][value=' + tid + ']').each(
@@ -468,7 +474,31 @@ function addTrackBpmHandling(tr) {
         }
       );
 
+      var old_value = parseInt(input.data('old-value'));
+      // .data() must be read here or else it will disappear upon undo/redo
+      setCurrentUndoStateCallback(
+        function() {
+          updateBpmInDb( tid
+                       , old_value
+                       , function() {}
+                       , function(msg) {
+                           setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
+                         }
+                       );
+        }
+      );
       indicateStateUpdate();
+      setCurrentUndoStateCallback(
+        function() {
+          updateBpmInDb( tid
+                       , bpm
+                       , function() {}
+                       , function(msg) {
+                           setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
+                         }
+                       );
+        }
+      );
     }
   );
 }
@@ -501,11 +531,24 @@ function renderTrackBpm(tr) {
   }
 }
 
+function updateGenreInDb(track_id, genre, success_f, fail_f) {
+  callApi( '/api/update-genre/'
+         , { trackId: track_id, genre: genre }
+         , function(d) { success_f(d); }
+         , function(msg) { fail_f(msg); }
+         );
+}
+
 function addTrackGenreHandling(tr) {
   var select = tr.find('select[name=genre]');
   select.click(
     function(e) {
       e.stopPropagation(); // Prevent row selection
+    }
+  );
+  select.focus(
+    function() {
+      $(this).data('old-value', $(this).find(':selected').val().trim());
     }
   );
   select.change(
@@ -523,32 +566,52 @@ function addTrackGenreHandling(tr) {
         return;
       }
 
-      // Save new genre to database
       var genre = parseInt(s.find(':selected').val().trim());
-      var data = { trackId: tid, genre: genre };
       setStatus('<?= LNG_DESC_SAVING ?>...');
-      callApi( '/api/update-genre/'
-             , data
-             , function(d) {
-                 clearStatus();
-               }
-             , function(msg) {
-                 setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
-               }
-             );
+      updateGenreInDb( tid
+                     , genre
+                     , clearStatus
+                     , function(msg) {
+                         setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
+                       }
+                     );
 
       // Update genre on all duplicate tracks (if any)
       s.closest('table').find('input[name=track_id][value=' + tid + ']').each(
         function() {
           var tr = $(this).closest('tr');
-          tr.closest('tr')
-            .find('select[name=genre] option[value=' + genre + ']')
+          tr.find('select[name=genre] option').attr('selected', false);
+          tr.find('select[name=genre] option[value=' + genre + ']')
             .attr('selected', true);
           renderTrackGenre(tr);
         }
       );
 
+      var old_value = parseInt(s.data('old-value'));
+      // .data() must be read here or else it will disappear upon undo/redo
+      setCurrentUndoStateCallback(
+        function() {
+          updateGenreInDb( tid
+                         , old_value
+                         , function() {}
+                         , function(msg) {
+                             setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
+                           }
+                         );
+        }
+      );
       indicateStateUpdate();
+      setCurrentUndoStateCallback(
+        function() {
+          updateGenreInDb( tid
+                         , genre
+                         , function() {}
+                         , function(msg) {
+                             setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
+                           }
+                         );
+        }
+      );
     }
   );
 }
@@ -1476,9 +1539,22 @@ function saveUndoState() {
   var scratchpad = getScratchpadTable().clone(true, true);
   scratchpad.find('tr.selected').removeClass('selected');
   scratchpad.find('tr.delimiter').remove();
-  UNDO_STACK[offset] = { playlistTable: playlist, scratchpadTable: scratchpad };
+  var state = { playlistTable: playlist
+              , scratchpadTable: scratchpad
+              , callback: function() {}
+              };
+  UNDO_STACK[offset] = state;
 
   renderUndoRedoButtons();
+}
+
+function setCurrentUndoStateCallback(callback_f) {
+  if (UNDO_STACK_OFFSET < 0 || UNDO_STACK_OFFSET >= UNDO_STACK_LIMIT) {
+    console.log('illegal undo-stack offset value: ' + UNDO_STACK_OFFSET);
+    return;
+  }
+
+  UNDO_STACK[UNDO_STACK_OFFSET].callback = callback_f;
 }
 
 function performUndo() {
@@ -1489,6 +1565,7 @@ function performUndo() {
   const offset = --UNDO_STACK_OFFSET;
   var state = UNDO_STACK[offset];
   restoreState(state);
+  state.callback();
   renderUndoRedoButtons();
 }
 
@@ -1503,6 +1580,7 @@ function performRedo() {
   const offset = ++UNDO_STACK_OFFSET;
   var state = UNDO_STACK[offset];
   restoreState(state);
+  state.callback();
   renderUndoRedoButtons();
 }
 

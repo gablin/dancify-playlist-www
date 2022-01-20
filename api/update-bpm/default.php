@@ -27,6 +27,9 @@ if (!array_key_exists('trackId', $json)) {
 if (!array_key_exists('bpm', $json)) {
   fail('bpm missing');
 }
+if (!is_int($json['bpm'])) {
+  fail('not an integer: bpm');
+}
 
 connectDb();
 
