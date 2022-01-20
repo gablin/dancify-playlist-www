@@ -410,6 +410,16 @@ function addTrackBpmHandling(tr) {
       e.stopPropagation(); // Prevent row selection
     }
   );
+  input.focus(
+    function() {
+      $(this).css('background-color', '#fff');
+    }
+  );
+  input.blur(
+    function() {
+      renderTrackBpm($(this).closest('tr'));
+    }
+  );
   input.change(
     function() {
       var input = $(this);
