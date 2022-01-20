@@ -84,6 +84,9 @@ define( 'LNG_BTN_REMOVE'
 define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
       , 'Move to scratchpad'
       );
+DEFINE( 'LNG_BTN_SORT'
+      , 'Sort'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -128,6 +131,9 @@ DEFINE( 'LNG_MENU_DONATE'
       );
 DEFINE( 'LNG_MENU_FIRST_TIME_INFORMATION'
       , 'First-time information'
+      );
+DEFINE( 'LNG_MENU_SORT'
+      , 'Sort'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
@@ -243,6 +249,9 @@ define( 'LNG_INSTR_PLEASE_ENTER_NAME'
 define( 'LNG_INSTR_SELECT_APP'
       , 'Select what you want to do'
       );
+define( 'LNG_INSTR_SORT_TRACKS_BY_BPM'
+      , 'Arrange tracks in playlist in %s BPM order.'
+      );
 define( 'LNG_APP_INSERT_DING'
       , 'Insert ding into playlist'
       );
@@ -297,6 +306,10 @@ define( 'LNG_DESC_RESTORING'
 define( 'LNG_DESC_THIS_WILL_REMOVE_ALL_WORK'
       , 'This will destroy all changes made to the playlist and scratchpad.'
       );
+define( 'LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK'
+      , 'This will destroy all changes made to the playlist (scratchpad will ' .
+        'not be affected).'
+      );
 define( 'LNG_DESC_RESTORE_PLAYLIST'
       , 'Restore playlist to appear exactly as it appears in Spotify.'
       );
@@ -350,6 +363,12 @@ define( 'LNG_DESC_FIRST_TIME_PART2'
       );
 define( 'LNG_DESC_INFO_ON_SAVING'
       , 'Note that tracks appearing in the scratchpad list will NOT be saved.'
+      );
+define( 'LNG_DESC_RISING'
+      , 'rising'
+      );
+define( 'LNG_DESC_FALLING'
+      , 'falling'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

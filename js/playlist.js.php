@@ -582,10 +582,11 @@ function getTrackData(table) {
       if (tr.hasClass('track')) {
         var track_id = tr.find('input[name=track_id]').val().trim();
         var preview_url = tr.find('input[name=preview_url]').val().trim();
-        var bpm = tr.find('input[name=bpm]').val().trim();
-        var genre = tr.find('select[name=genre] option:selected').val().trim();
+        var bpm = parseInt(tr.find('input[name=bpm]').val().trim());
+        var genre =
+          parseInt(tr.find('select[name=genre] option:selected').val().trim());
         var title = getTrTitleText(tr);
-        var len = tr.find('input[name=length_ms]').val().trim();
+        var len = parseInt(tr.find('input[name=length_ms]').val().trim());
         playlist.push( { trackId: track_id
                        , title: title
                        , length: len

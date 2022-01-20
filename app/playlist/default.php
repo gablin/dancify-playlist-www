@@ -11,6 +11,7 @@ mkHtmlNavMenu(
   [ [ LNG_MENU_TRACK_DELIMITER, '#', 'track-delimiter' ]
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
+  , [ LNG_MENU_SORT, '#', 'sort' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , []
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
@@ -131,6 +132,31 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
         <?= LNG_BTN_CANCEL ?>
       </button>
       <button id="randomizeBtn"><?= LNG_BTN_RANDOMIZE ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="sort">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_SORT ?></div>
+    <p>
+      <?= sprintf( LNG_INSTR_SORT_TRACKS_BY_BPM
+                 , "<select name=\"order\" />" .
+                     "<option value=\"+1\">" . LNG_DESC_RISING . "</option>" .
+                     "<option value=\"-1\">" . LNG_DESC_FALLING . "</option>" .
+                   "</select>"
+                 ) ?>
+    </p>
+    <p class="warning">
+      <span><?= LNG_DESC_WARNING ?>:</span>
+      <?= LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK ?>
+    </p>
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="sortBtn"><?= LNG_BTN_SORT ?></button>
     </div>
   </div>
 </div>
@@ -344,6 +370,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/scratchpad.js.php"></script>
 <script src="/js/restore-playlist.js.php"></script>
 <script src="/js/donations.js.php"></script>
+<script src="/js/sort.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -368,6 +395,7 @@ $(document).ready(
     setupTrackDelimiter();
     setupScratchpad();
     setupRestorePlaylist('<?= $playlist_id ?>');
+    setupSort();
 
     function limitPlaylistHeight() {
       var screen_vh = window.innerHeight;

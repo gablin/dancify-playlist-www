@@ -85,6 +85,9 @@ define( 'LNG_BTN_REMOVE'
 define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
       , 'Flytta till scratchpad'
       );
+DEFINE( 'LNG_BTN_SORT'
+      , 'Sortera'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -129,6 +132,9 @@ DEFINE( 'LNG_MENU_DONATE'
       );
 DEFINE( 'LNG_MENU_FIRST_TIME_INFORMATION'
       , 'Första gången-information'
+      );
+DEFINE( 'LNG_MENU_SORT'
+      , 'Sortera'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
@@ -244,6 +250,9 @@ define( 'LNG_INSTR_PLEASE_ENTER_NAME'
 define( 'LNG_INSTR_SELECT_APP'
       , 'Välj vad du vill göra'
       );
+define( 'LNG_INSTR_SORT_TRACKS_BY_BPM'
+      , 'Ordna låtar i spellistan i %s BPM-ordning.'
+      );
 define( 'LNG_APP_INSERT_DING'
       , 'Lägg in ding i spellista'
       );
@@ -298,6 +307,10 @@ define( 'LNG_DESC_RESTORING'
 define( 'LNG_DESC_THIS_WILL_REMOVE_ALL_WORK'
       , 'Detta kommer förstöra all ändringar gjorda i spellistan och scratchpaden.'
       );
+define( 'LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK'
+      , 'Detta kommer förstöra all ändringar gjorda i spellistan (scratchpaden ' .
+        'kommer inte påverkas).'
+      );
 define( 'LNG_DESC_RESTORE_PLAYLIST'
       , 'Återställ spellistan så den ser ut exakt som den ser ut i Spotify.'
       );
@@ -351,6 +364,12 @@ define( 'LNG_DESC_FIRST_TIME_PART2'
       );
 define( 'LNG_DESC_INFO_ON_SAVING'
       , 'Notera att låtar i scratchpad-listan kommer INTE att sparas.'
+      );
+define( 'LNG_DESC_RISING'
+      , 'stigande'
+      );
+define( 'LNG_DESC_FALLING'
+      , 'fallande'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
