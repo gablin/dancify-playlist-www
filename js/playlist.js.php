@@ -467,6 +467,8 @@ function addTrackBpmHandling(tr) {
           );
         }
       );
+
+      indicateStateUpdate();
     }
   );
 }
@@ -545,6 +547,8 @@ function addTrackGenreHandling(tr) {
           renderTrackGenre(tr);
         }
       );
+
+      indicateStateUpdate();
     }
   );
 }
