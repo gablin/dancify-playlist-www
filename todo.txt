@@ -1,2 +1,3 @@
-- add tracks
+- add insert silence function
 - search function
+- add tracks
