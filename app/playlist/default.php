@@ -11,6 +11,7 @@ mkHtmlNavMenu(
   [ [ LNG_MENU_TRACK_DELIMITER, '#', 'track-delimiter' ]
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
+  , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, '#', 'insert-silence-at-interval' ]
   , [ LNG_MENU_SORT, '#', 'sort' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , []
@@ -183,7 +184,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       </div>
       <div>
         <?= sprintf( LNG_INSTR_INSERT_TRACK_ENTER_FREQ
-                   , "<input type=\"text\" name=\"insertion-freq\" class=\"number centered\" />"
+                   , "<input type=\"text\" name=\"track-insertion-freq\" class=\"number centered\" />"
                    ) ?>
       </div>
     </div>
@@ -193,6 +194,55 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
         <?= LNG_BTN_CANCEL ?>
       </button>
       <button id="insertTrackBtn"><?= LNG_BTN_INSERT ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="insert-silence-at-interval">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_INSERT_SILENCE_AT_INTERVAL ?></div>
+
+    <div>
+      <div>
+        <?= LNG_INSTR_CHOOSE_SILENCE_LENGTH ?>:
+        <select name="silence-to-insert">
+          <?php
+          $silence_tracks = [ [  '5s', '37y25dG9sw4I5zoL17RhcV' ]
+                            , [ '10s', '2kLGdOul5dz2mKtTwvXf2r' ]
+                            , [ '15s', '6HCeE4rWf4AIEskHZeLkOz' ]
+                            , [ '20s', '5fKCBiLEHnnOFFUxQhogGO' ]
+                            , [ '30s', '0smMqKMlcdRwNBMVR91EWQ' ]
+                            , [ '40s', '7kj6uEhhZTfanELdgVFk36' ]
+                            , [ '50s', '6A6dK5HzbAcxq7iVsjvqJs' ]
+                            , [  '1m', '6ZfRjAcExubAvJFOkZfGtI' ]
+                            , [  '2m', '2EeLn1LGhXQO9uFERlb2gE' ]
+                            , [  '3m', '5nbMQjQKOwHuBsP2mGvvvn' ]
+                            , [  '4m', '0MOoNgDUyEgVPi1fbvJFLZ' ]
+                            , [  '5m', '4zJFlydxSMdcQfXMzCiLbq' ]
+                            ];
+          foreach($silence_tracks as $t) {
+            $len = $t[0];
+            $track_id = $t[1];
+            ?>
+            <option value="<?= $track_id ?>"><?= $len ?></option>
+            <?php
+          }
+          ?>
+        </select>
+      </div>
+      <div style="margin-top: .4em;">
+        <?= sprintf( LNG_INSTR_INSERT_SILENCE_ENTER_FREQ
+                   , "<input type=\"text\" name=\"silence-insertion-freq\" class=\"number centered\" />"
+                   ) ?>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="insertSilenceBtn"><?= LNG_BTN_INSERT ?></button>
     </div>
   </div>
 </div>
@@ -365,6 +415,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/playlist.js.php"></script>
 <script src="/js/save-playlist.js.php"></script>
 <script src="/js/insert-track.js.php"></script>
+<script src="/js/insert-silence.js.php"></script>
 <script src="/js/randomize-by-bpm.js.php"></script>
 <script src="/js/track-delimiter.js.php"></script>
 <script src="/js/scratchpad.js.php"></script>
@@ -392,6 +443,7 @@ $(document).ready(
     setupSaveNewPlaylist(<?= $playlist_info->public ? 'true' : 'false' ?>);
     setupRandomizeByBpm();
     setupInsertTrack();
+    setupInsertSilence();
     setupTrackDelimiter();
     setupScratchpad();
     setupRestorePlaylist('<?= $playlist_id ?>');

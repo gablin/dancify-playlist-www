@@ -105,6 +105,9 @@ define( 'LNG_MENU_RANDOMIZE_BY_BPM'
 define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
       , 'Insert track at interval'
       );
+define( 'LNG_MENU_INSERT_SILENCE_AT_INTERVAL'
+      , 'Insert silence at interval'
+      );
 DEFINE( 'LNG_MENU_TRACK_DELIMITER'
       , 'Track delimiter'
       );
@@ -234,8 +237,14 @@ define( 'LNG_INSTR_SELECT_PLAYLIST'
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Enter "%s" or "%s"'
       );
+define( 'LNG_INSTR_CHOOSE_SILENCE_LENGTH'
+      , 'Choose length of silence'
+      );
 define( 'LNG_INSTR_INSERT_TRACK_ENTER_FREQ'
       , 'Insert above track after every %s track in playlist'
+      );
+define( 'LNG_INSTR_INSERT_SILENCE_ENTER_FREQ'
+      , 'Insert above silence after every %s track in playlist'
       );
 define( 'LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ'
       , 'Insert delimiter every %s track in playlist'

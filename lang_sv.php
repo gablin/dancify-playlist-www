@@ -106,6 +106,9 @@ define( 'LNG_MENU_RANDOMIZE_BY_BPM'
 define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
       , 'Lägg in låt vid intervall'
       );
+define( 'LNG_MENU_INSERT_SILENCE_AT_INTERVAL'
+      , 'Lägg in tystnad vid intervall'
+      );
 DEFINE( 'LNG_MENU_TRACK_DELIMITER'
       , 'Låtavgränsning'
       );
@@ -235,8 +238,14 @@ define( 'LNG_INSTR_SELECT_PLAYLIST'
 define( 'LNG_INSTR_ENTER_SONG'
       , 'Skriv in "%s" eller "%s"'
       );
+define( 'LNG_INSTR_CHOOSE_SILENCE_LENGTH'
+      , 'Välj längd på tystnad'
+      );
 define( 'LNG_INSTR_INSERT_TRACK_ENTER_FREQ'
       , 'Lägg in ovanstående låt efter varje %s låt i spellistan'
+      );
+define( 'LNG_INSTR_INSERT_SILENCE_ENTER_FREQ'
+      , 'Lägg in ovanstående tystnad efter varje %s låt i spellistan'
       );
 define( 'LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ'
       , 'Lägg in avgränsning efter varje %s låt i spellistan'

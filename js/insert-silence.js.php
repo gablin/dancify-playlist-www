@@ -2,14 +2,10 @@
 require '../autoload.php';
 ?>
 
-function setupInsertTrack() {
-  setupFormElementsForInsertTrack();
-}
-
-function setupFormElementsForInsertTrack() {
+function setupInsertSilence() {
   var form = getPlaylistForm();
 
-  form.find('button[id=insertTrackBtn]').click(
+  form.find('button[id=insertSilenceBtn]').click(
     function() {
       var b = $(this);
       b.prop('disabled', true);
@@ -19,13 +15,13 @@ function setupFormElementsForInsertTrack() {
         b.removeClass('loading');
       };
 
-      if (!checkTrackInsertInput(form)) {
+      if (!checkSilenceInsertInput(form)) {
         restoreButton();
         return;
       }
 
-      var data = getTrackInsertData(form);
-      var track_data = { trackUrl: data.trackUrl };
+      var data = getSilenceInsertData(form);
+      var track_data = { trackId: data.trackId };
       callApi( '/api/get-track-info/'
              , track_data
              , function(d) {
@@ -61,22 +57,18 @@ function setupFormElementsForInsertTrack() {
   );
 }
 
-function getTrackInsertData() {
+function getSilenceInsertData() {
   var form = getPlaylistForm();
-  return { trackUrl: form.find('input[name=track-to-insert]').val().trim()
-         , insertFreq: form.find('input[name=track-insertion-freq]').val().trim()
+  return { trackId:
+             form.find('select[name=silence-to-insert] :selected').val().trim()
+         , insertFreq: form.find('input[name=silence-insertion-freq]').val().trim()
          };
 }
 
-function checkTrackInsertInput() {
+function checkSilenceInsertInput() {
   var form = getPlaylistForm();
-  var track_link = form.find('input[name=track-to-insert]').val().trim();
-  if (track_link.length == 0) {
-    alert('<?= LNG_ERR_SPECIFY_TRACK_TO_INSERT ?>');
-    return false;
-  }
 
-  var freq_str = form.find('input[name=track-insertion-freq]').val().trim();
+  var freq_str = form.find('input[name=silence-insertion-freq]').val().trim();
   freq = parseInt(freq_str);
   if (isNaN(freq)) {
     alert('<?= LNG_ERR_FREQ_NOT_INT ?>');
