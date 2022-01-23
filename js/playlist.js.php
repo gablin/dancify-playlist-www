@@ -516,7 +516,7 @@ function renderTrackBpm(tr) {
                  , [ 100, [255, 255,   0] ] // Yellow
                  , [ 160, [255,   0,   0] ] // Red
                  , [ 200, [255,   0, 255] ] // Purple
-                 , [ 255, [255,   0, 255] ] // Purple
+                 , [ 255, [  0,   0, 255] ] // Blue
                  ];
   for (var i = 0; i < colors.length; i++) {
     if (i == colors.length-2 || bpm < colors[i+1][0]) {
