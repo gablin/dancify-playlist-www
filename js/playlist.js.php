@@ -421,6 +421,7 @@ function addTrackBpmHandling(tr) {
   input.focus(
     function() {
       $(this).css('background-color', '#fff');
+      $(this).css('color', '#000');
       $(this).data('old-value', $(this).val().trim());
     }
   );
@@ -526,6 +527,8 @@ function renderTrackBpm(tr) {
         c[j] += Math.round((colors[i+1][1][j] - c[j]) * p);
       }
       input.css('background-color', 'rgb(' + c.join(',') + ')');
+      $text_color = (bpm < 25 || bpm  > 210) ? '#fff' : '#000';
+      input.css('color', $text_color);
       return;
     }
   }
