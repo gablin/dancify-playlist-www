@@ -459,6 +459,9 @@ function loadTrackAudioFeatures($api, $ts) {
   for ($o = 0; $o < count($ts); $o += $limit) {
     $ids = [];
     for ($i = $o; $i < $o + $limit && $i < count($ts); $i++) {
+      if (is_null($ts[$i])) {
+        continue;
+      }
       $ids[] = $ts[$i]->id;
     }
     $res = $api->getAudioFeatures($ids);

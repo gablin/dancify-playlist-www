@@ -95,6 +95,10 @@ while ($row = $res->fetch_assoc()) {
 $tracks_res = [];
 for ($i = 0; $i < count($tracks); $i++) {
   $t = $tracks[$i];
+  if (is_null($t)) {
+    continue;
+  }
+
   $bpm = array_values( // To reset indices
            array_filter(
              $bpms
@@ -123,6 +127,9 @@ if (array_key_exists('trackIds', $json)) {
   $res['tracks'] = $tracks_res;
 }
 else {
+  if (count($tracks_res) == 0) {
+    fail("no track with ID: $track_ids[0]");
+  }
   $res = array_merge($res, $tracks_res[0]);
 }
 echo(toJson($res));
