@@ -186,6 +186,13 @@ The scratchpad is an area to which tracks can be dragged-and-dropped in to simpl
 playlist edits.
 EOT
       );
+define( 'LNG_DESC_DELIMITER'
+      , <<<EOT
+This adds a visual mark to indicate which songs belong to the same dance slot.
+The delimiters have no impact on the playlist in Spotify once saved; it is only for
+visualization.
+EOT
+      );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'New playlist added to your Spotify'
       );

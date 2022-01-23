@@ -252,6 +252,10 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   <div class="input">
     <div class="title"><?= LNG_MENU_TRACK_DELIMITER ?></div>
 
+    <p>
+      <?= LNG_DESC_DELIMITER ?>
+    </p>
+
     <div>
       <div>
         <?= sprintf( LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ

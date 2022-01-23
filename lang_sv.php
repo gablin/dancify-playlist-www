@@ -187,6 +187,13 @@ Scratchpaden är ett område till vilken låtar kan dras och släppas för att f
 redigering av spellistan.
 EOT
       );
+define( 'LNG_DESC_DELIMITER'
+      , <<<EOT
+Detta lägger till en visuell markering för att visa vilka låtar som tillhör samma
+dansslot. Avgränsningarna har ingen påverkan på spellistan i Spotify efter att ha
+sparats; det är endast för visualisering.
+EOT
+      );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'Ny spellista har lagts till i din Spotify'
       );
