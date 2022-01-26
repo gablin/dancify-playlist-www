@@ -150,7 +150,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       var tracks_to_load = [];
       var o = offset;
       for ( var o = offset
-          ; o < new_track_ids.length && o - offset <= LOAD_TRACKS_LIMIT
+          ; o < new_track_ids.length && tracks_to_load.length < LOAD_TRACKS_LIMIT
           ; o++
           )
       {
@@ -1428,8 +1428,8 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
       var tracks_to_load = [];
       var o = track_offset;
       for ( ; o < track_ids.length &&
-              o - track_offset <= LOAD_TRACKS_LIMIT &&
-              hasTrackAt(o)
+              hasTrackAt(o) &&
+              tracks_to_load.length < LOAD_TRACKS_LIMIT
             ; o++
           )
       {
