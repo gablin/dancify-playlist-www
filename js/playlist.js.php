@@ -793,6 +793,8 @@ function addTrTemplate(table) {
                , [ 18, '<?= strtolower(LNG_GENRE_REGGAE) ?>']
                , [ 19, '<?= strtolower(LNG_GENRE_TANGO) ?>']
                , [ 20, '<?= strtolower(LNG_GENRE_OPERA) ?>']
+               , [ 21, '<?= strtolower(LNG_GENRE_SALSA) ?>']
+               , [ 22, '<?= strtolower(LNG_GENRE_KIZOMBA) ?>']
                ];
   genres.sort( function(a, b) {
                  if (a[0] == 0) return -1;

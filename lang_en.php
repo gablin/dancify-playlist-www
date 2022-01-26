@@ -449,4 +449,10 @@ define( 'LNG_GENRE_TANGO'
 define( 'LNG_GENRE_OPERA'
       , 'opera'
       );
+define( 'LNG_GENRE_SALSA'
+      , 'salsa'
+      );
+define( 'LNG_GENRE_KIZOMBA'
+      , 'kizomba'
+      );
 ?>
