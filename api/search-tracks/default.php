@@ -38,23 +38,22 @@ $offset = array_key_exists('offset', $json) ? $json['offset'] : 0;
 if (!is_int($offset) || $offset < 0) {
   fail("illegal offset value: $offset");
 }
-$only_in_client_playlist =
-  array_key_exists('onlyInClientPlaylists', $json) ? $json['onlyInClientPlaylists']
+$only_in_my_playlist =
+  array_key_exists('onlyInMyPlaylists', $json) ? $json['onlyInMyPlaylists']
                                                  : false;
-if (!is_bool($only_in_client_playlist)) {
-  fail("illegal onlyInClientPlaylists value: $only_client_playlist");
+if (!is_bool($only_in_my_playlist)) {
+  fail("illegal onlyInMyPlaylists value: $only_in_my_playlist");
 }
 
 connectDb();
 $genre_sql = escapeSqlValue($genre);
 $limit_sql = escapeSqlValue($limit);
 $offset_sql = escapeSqlValue($offset);
-$client_id_sql = escapeSqlValue($session->getClientId());
 
 // Find tracks
 $sql = "SELECT song FROM genre WHERE genre = $genre_sql";
-if ($only_in_client_playlist) {
-  $sql .= " AND client = '$client_id_sql'";
+if ($only_in_my_playlist) {
+  $sql .= " AND user = '" . escapeSqlValue(getThisUserId($api)) . "'";
 }
 $sql .= " LIMIT $limit_sql OFFSET $offset_sql";
 $res = queryDb($sql);

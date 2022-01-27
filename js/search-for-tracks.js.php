@@ -57,8 +57,8 @@ function setupSearchForTracksButtons() {
   function search() {
     var genre = action_area.find('select[name=search-by-genre] :selected').val();
     var bpm_range = getSearchForTracksBpmValues();
-    var in_client_playlists_only =
-      action_area.find('input[name=search-client-playlists-only]').prop('checked');
+    var in_my_playlists_only =
+      action_area.find('input[name=search-my-playlists-only]').prop('checked');
 
     var body = $(document.body);
     body.addClass('loading');
@@ -100,14 +100,14 @@ function setupSearchForTracksButtons() {
       finalize();
     }
 
-    searchForTracks(genre, bpm_range, in_client_playlists_only, done, fail);
+    searchForTracks(genre, bpm_range, in_my_playlists_only, done, fail);
   }
   search_btn.on('click', search);
 }
 
 function searchForTracks( genre
                         , bpm_range
-                        , in_client_playlists_only
+                        , in_my_playlists_only
                         , done_f
                         , fail_f
                         )
@@ -136,7 +136,7 @@ function searchForTracks( genre
 
     callApi( '/api/search-tracks/'
            , { genre: genre
-             , onlyInClientPlaylists: in_client_playlists_only
+             , onlyInMyPlaylists: in_my_playlists_only
              , limit: SEARCH_LIMIT
              , offset: offset
              }

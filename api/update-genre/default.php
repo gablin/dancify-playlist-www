@@ -10,6 +10,8 @@ try {
 if (!hasSession()) {
   fail('no session');
 }
+$session = getSession();
+$api = createWebApi($session);
 
 // Parse JSON data
 if (!isset($_POST['data'])) {
@@ -35,25 +37,25 @@ connectDb();
 
 // Check if entry exists
 $tid_sql = escapeSqlValue($json['trackId']);
-$cid_sql = escapeSqlValue(getSession()->getClientId());
+$user_sql = escapeSqlValue(getThisUserId($api));
 $genre_sql = escapeSqlValue($json['genre']);
 $res = queryDb( "SELECT genre FROM genre " .
-                "WHERE song = '$tid_sql' AND user = '$cid_sql'"
+                "WHERE song = '$tid_sql' AND user = '$user_sql'"
               );
 if ($res->num_rows == 1) {
   if ($genre_sql != 0) {
     queryDb( "UPDATE genre SET genre = $genre_sql " .
-             "WHERE song = '$tid_sql' AND user = '$cid_sql'"
+             "WHERE song = '$tid_sql' AND user = '$user_sql'"
            );
   }
   else {
-    queryDb("DELETE FROM genre WHERE song = '$tid_sql' AND user = '$cid_sql'");
+    queryDb("DELETE FROM genre WHERE song = '$tid_sql' AND user = '$user_sql'");
   }
 }
 else {
   if (strlen($genre_sql) > 0) {
     queryDb( "INSERT INTO genre (song, user, genre) " .
-             "VALUES ('$tid_sql', '$cid_sql', $genre_sql)"
+             "VALUES ('$tid_sql', '$user_sql', $genre_sql)"
            );
   }
 }

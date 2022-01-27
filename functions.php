@@ -202,6 +202,17 @@ function getSession() {
 }
 
 /**
+ * Gets the Spotify ID of this user.
+ *
+ * @param SpotifyWebAPI\SpotifyWebAPI api API object.
+ * @returns string
+ * @throws SpotifyWebAPI\SpotifyWebAPIException If something fails.
+ */
+function getThisUserId($api) {
+  return $api->me()->id;
+}
+
+/**
  * Updates the tokens of an active session. It is assumed that a PHP session
  * has already been started.
  *
@@ -586,16 +597,14 @@ function checkDbTables() {
             , 'genre' =>
               'CREATE TABLE genre' .
               ' ( song CHAR(22) NOT NULL' .
-              ' , user CHAR(32) NOT NULL' .
+              ' , user TINYTEXT NOT NULL' .
               ' , genre TINYINT UNSIGNED NOT NULL' .
-              ' , PRIMARY KEY (song, user)' .
               ' )'
             , 'snapshots' =>
               'CREATE TABLE snapshots' .
               ' ( playlist CHAR(22) NOT NULL' .
-              ' , user CHAR(32) NOT NULL' .
+              ' , user TINYTEXT NOT NULL' .
               ' , snapshot TEXT NOT NULL' .
-              ' , PRIMARY KEY (playlist, user)' .
               ' )'
             ];
 

@@ -57,7 +57,7 @@ $tracks = $api->getTracks($track_ids)->tracks;
 
 connectDb();
 $genres = [];
-$client_id_sql = escapeSqlValue($session->getClientId());
+$user_sql = escapeSqlValue(getThisUserId($api));
 
 // Load BPM data
 $audio_feats = loadTrackAudioFeatures($api, $tracks);
@@ -85,7 +85,7 @@ $res = queryDb( "SELECT song, genre FROM genre " .
                       , $track_ids
                       )
                     ) .
-                ") AND user = '$client_id_sql'"
+                ") AND user = '$user_sql'"
               );
 while ($row = $res->fetch_assoc()) {
   $genres[] = [$row['song'], $row['genre']];

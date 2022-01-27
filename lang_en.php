@@ -407,7 +407,7 @@ define( 'LNG_DESC_FALLING'
 define( 'LNG_DESC_SEARCH_BY_GENRE'
       , 'Find tracks with matching genre'
       );
-define( 'LNG_DESC_SEARCH_CLIENT_PLAYLISTS_ONLY'
+define( 'LNG_DESC_SEARCH_MY_PLAYLISTS_ONLY'
       , 'Search only in my playlists'
       );
 define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'

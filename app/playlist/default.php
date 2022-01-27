@@ -273,9 +273,9 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
     </table>
     <div class="more-input">
       <label class="checkbox">
-        <input type="checkbox" name="search-client-playlists-only" value="true" />
+        <input type="checkbox" name="search-my-playlists-only" value="true" />
         <span class="checkmark"></span>
-        <?= LNG_DESC_SEARCH_CLIENT_PLAYLISTS_ONLY ?>
+        <?= LNG_DESC_SEARCH_MY_PLAYLISTS_ONLY ?>
       </label>
     </div>
 

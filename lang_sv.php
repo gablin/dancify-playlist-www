@@ -408,7 +408,7 @@ define( 'LNG_DESC_FALLING'
 define( 'LNG_DESC_SEARCH_BY_GENRE'
       , 'Hitta låtar med matchande genre'
       );
-define( 'LNG_DESC_SEARCH_CLIENT_PLAYLISTS_ONLY'
+define( 'LNG_DESC_SEARCH_MY_PLAYLISTS_ONLY'
       , 'Sök endast i mina spellistor'
       );
 define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'

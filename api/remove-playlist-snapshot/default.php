@@ -10,6 +10,8 @@ try {
 if (!hasSession()) {
   fail('no session');
 }
+$session = getSession();
+$api = createWebApi($session);
 
 // Parse JSON data
 if (!isset($_POST['data'])) {
@@ -27,8 +29,10 @@ if (!array_key_exists('playlistId', $json)) {
 
 connectDb();
 $pid_sql = escapeSqlValue($json['playlistId']);
-$cid_sql = escapeSqlValue(getSession()->getClientId());
-queryDb("DELETE FROM snapshots WHERE playlist = '$pid_sql' AND user = '$cid_sql'");
+$user_sql = escapeSqlValue(getThisUserId($api));
+queryDb( "DELETE FROM snapshots " .
+         "WHERE playlist = '$pid_sql' AND user = '$user_sql'"
+       );
 echo(toJson(['status' => 'OK']));
 
 } // End try
