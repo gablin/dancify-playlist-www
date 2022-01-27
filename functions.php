@@ -593,8 +593,9 @@ function checkDbTables() {
             , 'snapshots' =>
               'CREATE TABLE snapshots' .
               ' ( playlist CHAR(22) NOT NULL' .
+              ' , user CHAR(32) NOT NULL' .
               ' , snapshot TEXT NOT NULL' .
-              ' , PRIMARY KEY (playlist)' .
+              ' , PRIMARY KEY (playlist, user)' .
               ' )'
             ];
 

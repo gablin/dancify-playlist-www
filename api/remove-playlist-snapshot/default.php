@@ -27,7 +27,8 @@ if (!array_key_exists('playlistId', $json)) {
 
 connectDb();
 $pid_sql = escapeSqlValue($json['playlistId']);
-queryDb("DELETE FROM snapshots WHERE playlist = '$pid_sql'");
+$cid_sql = escapeSqlValue(getSession()->getClientId());
+queryDb("DELETE FROM snapshots WHERE playlist = '$pid_sql' AND user = '$cid_sql'");
 echo(toJson(['status' => 'OK']));
 
 } // End try

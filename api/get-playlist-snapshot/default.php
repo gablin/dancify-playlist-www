@@ -29,7 +29,10 @@ if (!array_key_exists('playlistId', $json)) {
 
 connectDb();
 $pid_sql = escapeSqlValue($json['playlistId']);
-$res = queryDb("SELECT snapshot FROM snapshots WHERE playlist = '$pid_sql'");
+$cid_sql = escapeSqlValue(getSession()->getClientId());
+$res = queryDb( "SELECT snapshot FROM snapshots " .
+                "WHERE playlist = '$pid_sql' AND user = '$cid_sql'"
+              );
 if ($res->num_rows == 0) {
   echo(toJson(['status' => 'NOT-FOUND']));
   die();

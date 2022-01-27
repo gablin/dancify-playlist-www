@@ -32,16 +32,19 @@ connectDb();
 
 // Check if entry exists
 $pid_sql = escapeSqlValue($json['playlistId']);
+$cid_sql = escapeSqlValue(getSession()->getClientId());
 $snapshot_sql = escapeSqlValue(toJson($json['snapshot']));
-$res = queryDb("SELECT playlist FROM snapshots WHERE playlist = '$pid_sql'");
+$res = queryDb( "SELECT playlist FROM snapshots " .
+                "WHERE playlist = '$pid_sql' AND user = '$cid_sql'"
+              );
 if ($res->num_rows == 1) {
   queryDb( "UPDATE snapshots SET snapshot = '$snapshot_sql' " .
-           "WHERE playlist = '$pid_sql'"
+           "WHERE playlist = '$pid_sql' AND user = '$cid_sql'"
          );
 }
 else {
-  queryDb( "INSERT INTO snapshots (playlist, snapshot) " .
-           "VALUES ('$pid_sql', '$snapshot_sql')"
+  queryDb( "INSERT INTO snapshots (playlist, user, snapshot) " .
+           "VALUES ('$pid_sql', '$cid_sql', '$snapshot_sql')"
          );
 }
 
