@@ -88,6 +88,18 @@ define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
 DEFINE( 'LNG_BTN_SORT'
       , 'Sortera'
       );
+DEFINE( 'LNG_BTN_SEARCH'
+      , 'Sök'
+      );
+DEFINE( 'LNG_BTN_STOP'
+      , 'Stanna'
+      );
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
+      , 'Lägg till i spellista'
+      );
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
+      , 'Lägg till i scratchpad'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -138,6 +150,9 @@ DEFINE( 'LNG_MENU_FIRST_TIME_INFORMATION'
       );
 DEFINE( 'LNG_MENU_SORT'
       , 'Sortera'
+      );
+DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
+      , 'Sök efter låtar'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
@@ -238,6 +253,9 @@ define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       );
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
       , 'Randomiseringen misslyckades'
+      );
+define( 'LNG_ERR_FAILED_TO_SEARCH'
+      , 'Sökningen misslyckades'
       );
 define( 'LNG_INSTR_SELECT_PLAYLIST'
       , 'Välj spellista'
@@ -386,6 +404,22 @@ define( 'LNG_DESC_RISING'
       );
 define( 'LNG_DESC_FALLING'
       , 'fallande'
+      );
+define( 'LNG_DESC_SEARCH_BY_GENRE'
+      , 'Hitta låtar med matchande genre'
+      );
+define( 'LNG_DESC_SEARCH_CLIENT_PLAYLISTS_ONLY'
+      , 'Sök endast i mina spellistor'
+      );
+define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'
+      , 'Välj önskvärda låtar att lägga till. Tryck SHIFT/CTRL för ' .
+        'sammanhängande/individuell markering.'
+      );
+define( 'LNG_DESC_SEARCH_RESULTS'
+      , 'Sökresultat'
+      );
+define( 'LNG_DESC_SEARCH_RESULTS_NONE'
+      , 'Inga låtar hittades'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

@@ -581,10 +581,43 @@ label.checkbox .checkmark:after {
 }
 .action-input-area .input .buttons {
   margin-top: 1em;
+  overflow: auto;
 }
 .action-input-area .input .buttons button {
   float: right;
   margin-left: 2em;
+}
+.action-input-area .input .more-input {
+  margin-top: .4em;
+  overflow: auto;
+}
+.action-input-area .search-results {
+  margin-top: 2em;
+  max-width: 60vw;
+  height: 50vh;
+}
+.action-input-area .search-results .info {
+  font-size: 80%;
+}
+.action-input-area .search-results .error {
+  display: none;
+  color: #E60000;
+  font-weight: bold;
+}
+.action-input-area .search-results .none-found,
+.action-input-area .search-results .tracks-found {
+  display: none;
+}
+.action-input-area .search-results .tracks-found .buttons {
+  margin-top: 1em;
+  text-align: center;
+}
+.action-input-area .search-results .tracks-found .buttons button {
+  margin-left: 1em;
+  float: none;
+}
+.action-input-area .search-results .tracks-found .buttons button:first-child {
+  margin-left: 0;
 }
 
 .song_link_help {

@@ -87,6 +87,18 @@ define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
 DEFINE( 'LNG_BTN_SORT'
       , 'Sort'
       );
+DEFINE( 'LNG_BTN_SEARCH'
+      , 'Search'
+      );
+DEFINE( 'LNG_BTN_STOP'
+      , 'Stop'
+      );
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
+      , 'Add to playlist'
+      );
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
+      , 'Add to scratchpad'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -137,6 +149,9 @@ DEFINE( 'LNG_MENU_FIRST_TIME_INFORMATION'
       );
 DEFINE( 'LNG_MENU_SORT'
       , 'Sort'
+      );
+DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
+      , 'Search for tracks'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
@@ -237,6 +252,9 @@ define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       );
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
       , 'failed to run randomization'
+      );
+define( 'LNG_ERR_FAILED_TO_SEARCH'
+      , 'Search failed'
       );
 define( 'LNG_INSTR_SELECT_PLAYLIST'
       , 'Select playlist'
@@ -385,6 +403,22 @@ define( 'LNG_DESC_RISING'
       );
 define( 'LNG_DESC_FALLING'
       , 'falling'
+      );
+define( 'LNG_DESC_SEARCH_BY_GENRE'
+      , 'Find tracks with matching genre'
+      );
+define( 'LNG_DESC_SEARCH_CLIENT_PLAYLISTS_ONLY'
+      , 'Search only in my playlists'
+      );
+define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'
+      , 'Select desired tracks to add. Press SHIFT/CTRL for ' +
+        'consecutive/individual selection.'
+      );
+define( 'LNG_DESC_SEARCH_RESULTS'
+      , 'Search results'
+      );
+define( 'LNG_DESC_SEARCH_RESULTS_NONE'
+      , 'No tracks found'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

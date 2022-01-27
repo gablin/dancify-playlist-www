@@ -12,6 +12,7 @@ mkHtmlNavMenu(
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
   , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, '#', 'insert-silence-at-interval' ]
+  , [ LNG_MENU_SEARCH_FOR_TRACKS, '#', 'search-for-tracks' ]
   , [ LNG_MENU_SORT, '#', 'sort' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , []
@@ -231,7 +232,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
           ?>
         </select>
       </div>
-      <div style="margin-top: .4em;">
+      <div class="more-input">
         <?= sprintf( LNG_INSTR_INSERT_SILENCE_ENTER_FREQ
                    , "<input type=\"text\" name=\"silence-insertion-freq\" class=\"number centered\" />"
                    ) ?>
@@ -243,6 +244,82 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
         <?= LNG_BTN_CANCEL ?>
       </button>
       <button id="insertSilenceBtn"><?= LNG_BTN_INSERT ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="search-for-tracks">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_SEARCH_FOR_TRACKS ?></div>
+
+    <div>
+      <label>
+        <?= LNG_DESC_SEARCH_BY_GENRE ?>:
+        <select name="search-by-genre"></select>
+      </label>
+    </div>
+    <table class="bpm-range-area">
+      <tbody>
+        <tr class="range">
+          <td class="label">
+            <?= LNG_DESC_BPM ?>: <span></span>
+          </td>
+          <td class="range-controller">
+            <div></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="more-input">
+      <label class="checkbox">
+        <input type="checkbox" name="search-client-playlists-only" value="true" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SEARCH_CLIENT_PLAYLISTS_ONLY ?>
+      </label>
+    </div>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="searchTracksBtn"><?= LNG_BTN_SEARCH ?></button>
+    </div>
+
+    <div class="search-results">
+      <div class="error"></div>
+      <div class="none-found"></div>
+      <div class="tracks-found">
+        <div class="title">
+          <?= LNG_DESC_SEARCH_RESULTS ?>
+        </div>
+        <p class="info">
+          <?= LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP ?>
+        </p>
+        <div class="playlist">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th><?= LNG_HEAD_TITLE ?></th>
+                  <th class="bpm"><?= LNG_HEAD_BPM ?></th>
+                  <th class="length"><?= LNG_HEAD_LENGTH ?></th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class="buttons">
+            <button id="addSearchToPlaylistBtn">
+              <?= LNG_BTN_ADD_SEARCH_TO_PLAYLIST ?>
+            </button>
+            <button id="addSearchToScratchpadBtn">
+              <?= LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD ?>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -426,6 +503,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/restore-playlist.js.php"></script>
 <script src="/js/donations.js.php"></script>
 <script src="/js/sort.js.php"></script>
+<script src="/js/search-for-tracks.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -452,13 +530,16 @@ $(document).ready(
     setupScratchpad();
     setupRestorePlaylist('<?= $playlist_id ?>');
     setupSort();
+    setupSearchForTracks();
 
     function limitPlaylistHeight() {
       var screen_vh = window.innerHeight;
       var table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
       var footer_vh = $('div.footer').outerHeight();
       var playlist_vh = screen_vh - table_offset - footer_vh;
-      $('div.playlist .table-wrapper').css('height', playlist_vh + 'px');
+      var playlist_px = playlist_vh + 'px';
+      getPlaylistTable().closest('.table-wrapper').css('height', playlist_px);
+      getScratchpadTable().closest('.table-wrapper').css('height', playlist_px);
     };
     $(window).resize(limitPlaylistHeight);
     limitPlaylistHeight();

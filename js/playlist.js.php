@@ -771,7 +771,7 @@ function addTableHead(table) {
   table.find('thead').append(tr);
 }
 
-function addTrTemplate(table) {
+function addOptionsToGenreSelect(s, ignore_empty = false) {
   var genres = [ [  0, '']
                , [  1, '<?= strtolower(LNG_GENRE_DANCEBAND) ?>']
                , [  2, '<?= strtolower(LNG_GENRE_COUNTRY) ?>']
@@ -796,12 +796,24 @@ function addTrTemplate(table) {
                , [ 21, '<?= strtolower(LNG_GENRE_SALSA) ?>']
                , [ 22, '<?= strtolower(LNG_GENRE_KIZOMBA) ?>']
                ];
+  if (ignore_empty) {
+    genres.shift();
+  }
   genres.sort( function(a, b) {
                  if (a[0] == 0) return -1;
                  if (b[0] == 0) return  1;
                  return strcmp(a[1], b[1]);
                }
              );
+  genres.map(
+    function(g) {
+      var o = $('<option value="' + g[0] + '">' + g[1] + '</value>');
+      s.append(o);
+    }
+  )
+}
+
+function addTrTemplate(table) {
   var tr =
     $( '<tr class="template">' +
        '  <input type="hidden" name="track_id" value="" />' +
@@ -812,13 +824,7 @@ function addTrTemplate(table) {
        '    <input type="text" name="bpm" class="bpm" value="" />' +
        '  </td>' +
        '  <td class="genre">' +
-       '    <select class="genre" name="genre">' +
-              genres.map(
-                function(g) {
-                  return '<option value="' + g[0] + '">' + g[1] + '</value>';
-                }
-              ).join('') +
-       '    </select>' +
+       '    <select class="genre" name="genre"></select>' +
        '  </td>' +
        '  <td class="title" />' +
        '  <td class="length" />' +
@@ -828,6 +834,7 @@ function addTrTemplate(table) {
        '  <td class="length" />' +
        '</tr>'
      );
+  addOptionsToGenreSelect(tr.find('select[name=genre]'));
   table.find('tbody').append(tr);
 }
 

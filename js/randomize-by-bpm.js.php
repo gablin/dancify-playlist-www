@@ -9,6 +9,7 @@ function setupRandomizeByBpm() {
 function setupFormElementsForRandomizeByBpm() {
   var form = getPlaylistForm();
   var table = getPlaylistTable();
+  var action_area = $('div[name=randomize-by-bpm]');
 
   // Randomize button
   var rnd_b = form.find('button[id=randomizeBtn]');
@@ -98,7 +99,7 @@ function setupFormElementsForRandomizeByBpm() {
       }
     );
   };
-  $('table.bpm-range-area tr.difference').each(
+  action_area.find('table.bpm-range-area tr.difference').each(
     function() { buildBpmDiffSlider($(this)); }
   );
 
@@ -166,14 +167,14 @@ function setupFormElementsForRandomizeByBpm() {
     );
   };
   var enableRemoveButtons = function() {
-    $('table.bpm-range-area button.remove').each(
+    action_area.find('table.bpm-range-area button.remove').each(
       function() {
         $(this).prop('disabled', false);
       }
     );
   };
   var disableRemoveButtonsIfNeeded = function() {
-    var table = $('table.bpm-range-area');
+    var table = action_area.find('table.bpm-range-area');
     var num_ranges = table.find('tr.range').length;
     if (num_ranges <= 2) {
       table.find('button.remove').each(
@@ -184,13 +185,13 @@ function setupFormElementsForRandomizeByBpm() {
     }
   };
   var updateBpmRangeTrackCounters = function() {
-    $('table.bpm-range-area tr > td.track > span').each(
+    action_area.find('table.bpm-range-area tr > td.track > span').each(
       function(i) {
         $(this).text(i+1);
       }
     );
   };
-  $('table.bpm-range-area tr.range').each(
+  action_area.find('table.bpm-range-area tr.range').each(
     function() {
       var tr = $(this);
       buildBpmRangeSlider(tr);
@@ -206,8 +207,9 @@ function getBpmSettings() {
   var data = { bpmRangeList: []
              , bpmDifferenceList: []
              };
+  var action_area = $('div[name=randomize-by-bpm]');
 
-  form.find('table.bpm-range-area tr').each(
+  action_area.find('table.bpm-range-area tr').each(
     function() {
       var tr = $(this);
       tr.find('td.range-controller > div').each(
