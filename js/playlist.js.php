@@ -585,9 +585,9 @@ function addTrackGenreHandling(tr) {
         table.find('input[name=track_id][value=' + tid + ']').each(
           function() {
             var tr = $(this).closest('tr');
-            tr.find('select[name=genre] option').attr('selected', false);
+            tr.find('select[name=genre] option').prop('selected', false);
             tr.find('select[name=genre] option[value=' + genre + ']')
-              .attr('selected', true);
+              .prop('selected', true);
             renderTrackGenre(tr);
           }
         );
