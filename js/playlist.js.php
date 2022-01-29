@@ -1,5 +1,9 @@
 <?php
 require '../autoload.php';
+
+ensureSession();
+$session = getSession();
+$api = createWebApi($session);
 ?>
 
 var PLAYLIST_ID = '';
@@ -1325,6 +1329,24 @@ function addTrackRightClickMenu(tr) {
           }
         , function(a) {}
         ]
+      , [ '<?= LNG_MENU_SHOW_PLAYLISTS_WITH_TRACK ?>'
+        , function() {
+            clicked_tid_input = clicked_tr.find('input[name=track_id]');
+            if (clicked_tid_input.length == 0) {
+              return;
+            }
+            var clicked_tid = clicked_tid_input.val().trim();
+            var clicked_title = getTrTitleText(clicked_tr);
+            showPlaylistsWithTrack(clicked_tid, clicked_title);
+            close_f();
+          }
+        , function(a) {
+            clicked_tid_input = clicked_tr.find('input[name=track_id]');
+            if (clicked_tid_input.length == 0) {
+              a.addClass('disabled');
+            }
+          }
+        ]
       , [ '<?= LNG_MENU_DELETE_SELECTED ?>'
         , function() {
             var trs = getSelectedTracks();
@@ -1610,4 +1632,140 @@ function renderUndoRedoButtons() {
   else {
     redo_b.addClass('disabled');
   }
+}
+
+function showPlaylistsWithTrack(tid, title) {
+  var action_area = $('.action-input-area[name=show-playlists-with-track]');
+  function setTableHeight() {
+    var search_results_area = action_area.find('.search-results');
+    var search_area_bottom =
+      search_results_area.offset().top + search_results_area.height();
+    var table = search_results_area.find('.table-wrapper');
+    var table_top = table.offset().top;
+    var table_height = search_area_bottom - table_top;
+    table.css('height', table_height + 'px');
+  }
+  action_area.find('p').text(title);
+  action_area.find('button.cancel').on('click', close);
+  var search_results_area = action_area.find('table tbody');
+  search_results_area.empty();
+  clearProgress();
+  action_area.show();
+  setTableHeight();
+
+  var body = $(document.body);
+  body.addClass('loading');
+
+  var cancel_loading = false;
+  function finalize() {
+    body.removeClass('loading');
+  }
+  function close() {
+    cancel_loading = true;
+    clearActionInputs();
+    finalize();
+  }
+  function loadDone() {
+    loads_finished++; // Protection not needed for browser JS
+    renderProgress();
+    if (loads_finished == total_loads) {
+      finalize();
+    }
+  }
+  function loadFail(msg) {
+    cancel_loading = true;
+    finalize();
+  }
+
+  var total_loads = 0;
+  var loads_finished = 0;
+  function clearProgress() {
+    var bar = action_area.find('.progress-bar');
+    bar.css('width', 0);
+  }
+  function initProgress(total) {
+    total_loads = total;
+    var bar = action_area.find('.progress-bar');
+    bar.css('width', 0);
+  }
+  function hasInitProgress() {
+    return total_loads > 0;
+  }
+  function renderProgress() {
+    var bar = action_area.find('.progress-bar');
+    bar.css('width', (loads_finished / total_loads)*100 + '%');
+  }
+
+  function loadPlaylists(offset) {
+    if (cancel_loading) {
+      return;
+    }
+    callApi( '/api/get-user-playlists/'
+           , { userId: '<?= getThisUserId($api) ?>'
+             , offset: offset
+             }
+           , function(d) {
+               if (!hasInitProgress()) {
+                 initProgress(d.total);
+               }
+
+               for (var i = 0; i < d.playlists.length; i++) {
+                 if (cancel_loading) {
+                   return;
+                 }
+                 var pid = d.playlists[i].id;
+                 var pname = d.playlists[i].name;
+                 if (pid != PLAYLIST_ID) {
+                   loadPlaylistTracks(pid, pname, 0);
+                 }
+                 else {
+                   loadDone();
+                 }
+               }
+               offset += d.playlists.length;
+               if (offset == d.total) {
+                 return;
+               }
+               loadPlaylists(offset);
+             }
+           , loadFail
+           );
+  }
+  function loadPlaylistTracks(playlist_id, playlist_name, offset) {
+    if (cancel_loading) {
+      return;
+    }
+    callApi( '/api/get-playlist-tracks/'
+           , { playlistId: playlist_id
+             , offset: offset
+             }
+           , function(d) {
+               for (var i = 0; i < d.tracks.length; i++) {
+                 if (cancel_loading) {
+                   return;
+                 }
+                 if (d.tracks[i] == tid) {
+                   search_results_area.append(
+                     '<tr>' +
+                       '<td>' +
+                         playlist_name +
+                       '</td>' +
+                     '</tr>'
+                   );
+                   loadDone();
+                   return;
+                 }
+               }
+
+               offset += d.tracks.length;
+               if (offset == d.total) {
+                 loadDone();
+                 return;
+               }
+               loadPlaylistTracks(playlist_id, playlist_name, offset);
+             }
+           , loadFail
+           );
+  }
+  loadPlaylists(0);
 }

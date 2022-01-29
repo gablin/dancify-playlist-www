@@ -141,6 +141,9 @@ DEFINE( 'LNG_MENU_DELETE_SELECTED'
 DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
       , 'Select tracks identical to this one'
       );
+DEFINE( 'LNG_MENU_SHOW_PLAYLISTS_WITH_TRACK'
+      , 'Show other playlists containing this track'
+      );
 DEFINE( 'LNG_MENU_DONATE'
       , 'Donate'
       );

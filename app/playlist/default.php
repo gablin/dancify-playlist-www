@@ -290,9 +290,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <div class="error"></div>
       <div class="none-found"></div>
       <div class="tracks-found">
-        <div class="title">
-          <?= LNG_DESC_SEARCH_RESULTS ?>
-        </div>
+        <div class="title"><?= LNG_DESC_SEARCH_RESULTS ?></div>
         <p class="info">
           <?= LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP ?>
         </p>
@@ -459,6 +457,33 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <button class="cancel"><?= LNG_BTN_DO_NOTHING ?></button>
       <button id="inconPlaylistBtn2"><!-- ENTER APPROPRIATE TITLE --></button>
       <button id="inconPlaylistBtn1"><!-- ENTER APPROPRIATE TITLE --></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="show-playlists-with-track">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_SHOW_PLAYLISTS_WITH_TRACK ?></div>
+    <p></p>
+
+    <div class="buttons">
+      <button class="cancel"><?= LNG_BTN_CLOSE ?></button>
+    </div>
+
+    <div class="search-results">
+      <div class="title"><?= LNG_DESC_SEARCH_RESULTS ?></div>
+      <div class="progress-bar"></div>
+      <div class="error"></div>
+      <div class="none-found"></div>
+      <div class="playlists-found">
+        <div class="table-wrapper">
+          <table>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>

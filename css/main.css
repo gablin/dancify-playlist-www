@@ -619,6 +619,15 @@ label.checkbox .checkmark:after {
 .action-input-area .search-results .tracks-found .buttons button:first-child {
   margin-left: 0;
 }
+.action-input-area .search-results .progress-bar {
+  height: .1em;
+  width: 0;
+  background-color: #09814A;
+  margin-bottom: .5em;
+}
+.action-input-area .search-results .table-wrapper {
+  overflow-y: auto;
+}
 
 .song_link_help {
   position: fixed;

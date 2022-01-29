@@ -142,6 +142,9 @@ DEFINE( 'LNG_MENU_DELETE_SELECTED'
 DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
       , 'Markera låtar som är identiska med denna'
       );
+DEFINE( 'LNG_MENU_SHOW_PLAYLISTS_WITH_TRACK'
+      , 'Visa andra spellistor som innehåller denna låt'
+      );
 DEFINE( 'LNG_MENU_DONATE'
       , 'Skänk en slant'
       );
