@@ -172,6 +172,9 @@ define( 'LNG_HEAD_GENRE'
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
       );
+define( 'LNG_HEAD_COMMENTS'
+      , 'Kommentar'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );
@@ -237,7 +240,10 @@ define( 'LNG_ERR_FAILED_UPDATE_BPM'
       , 'Misslyckades att uppdatera BPM'
       );
 define( 'LNG_ERR_FAILED_UPDATE_GENRE'
-      , 'Misslyckades att uppdatera kategori'
+      , 'Misslyckades att uppdatera genre'
+      );
+define( 'LNG_ERR_FAILED_UPDATE_COMMENTS'
+      , 'Misslyckades att uppdatera kommentarer'
       );
 define( 'LNG_ERR_FAILED_INSERT_TRACK'
       , 'Misslyckades att lägga in låt'

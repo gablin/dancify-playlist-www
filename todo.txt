@@ -1,3 +1,2 @@
-- add track comments (after length)
 - show track genre selected by others
 - make snapshots sharable

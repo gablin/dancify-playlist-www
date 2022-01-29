@@ -283,6 +283,7 @@ function setupSearchForTracksAddSearchResultsButtons() {
                                          , t.length
                                          , t.bpm
                                          , t.genre
+                                         , t.comments
                                          , t.preview_url
                                          );
         tracks.push(o);

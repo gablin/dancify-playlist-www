@@ -171,6 +171,9 @@ define( 'LNG_HEAD_GENRE'
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
       );
+define( 'LNG_HEAD_COMMENTS'
+      , 'Comments'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );
@@ -237,6 +240,9 @@ define( 'LNG_ERR_FAILED_UPDATE_BPM'
       );
 define( 'LNG_ERR_FAILED_UPDATE_GENRE'
       , 'failed to update genre'
+      );
+define( 'LNG_ERR_FAILED_UPDATE_COMMENTS'
+      , 'failed to update comments'
       );
 define( 'LNG_ERR_FAILED_INSERT_TRACK'
       , 'failed to insert track'

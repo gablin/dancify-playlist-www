@@ -83,6 +83,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                                                              , t.length
                                                              , t.bpm
                                                              , t.genre
+                                                             , t.comments
                                                              , t.preview_url
                                                              );
                             tracks.push(o);
@@ -170,6 +171,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                                                     , t.length
                                                     , t.bpm
                                                     , t.genre
+                                                    , t.comments
                                                     , t.preview_url
                                                     );
                    tracks.push(o);
@@ -432,6 +434,9 @@ function addTrackBpmHandling(tr) {
       renderTrackBpm($(this).closest('tr'));
     }
   );
+  function fail(msg) {
+    setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
+  }
   input.change(
     function() {
       var input = $(this);
@@ -460,9 +465,7 @@ function addTrackBpmHandling(tr) {
       updateBpmInDb( tid
                    , bpm
                    , clearStatus
-                   , function(msg) {
-                       setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
-                     }
+                   , fail
                    );
 
       // Update BPM on all duplicate tracks (if any)
@@ -485,9 +488,7 @@ function addTrackBpmHandling(tr) {
           updateBpmInDb( tid
                        , old_value
                        , function() {}
-                       , function(msg) {
-                           setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
-                         }
+                       , fail
                        );
         }
       );
@@ -497,9 +498,7 @@ function addTrackBpmHandling(tr) {
           updateBpmInDb( tid
                        , bpm
                        , function() {}
-                       , function(msg) {
-                           setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
-                         }
+                       , fail
                        );
         }
       );
@@ -509,6 +508,10 @@ function addTrackBpmHandling(tr) {
 
 function renderTrackBpm(tr) {
   var input = tr.find('input[name=bpm]');
+  if (input.length == 0) {
+    return;
+  }
+
   var bpm = input.val().trim();
   if (!checkBpmInput(bpm, false)) {
     return;
@@ -537,97 +540,6 @@ function renderTrackBpm(tr) {
   }
 }
 
-function updateGenreInDb(track_id, genre, success_f, fail_f) {
-  callApi( '/api/update-genre/'
-         , { trackId: track_id, genre: genre }
-         , function(d) { success_f(d); }
-         , function(msg) { fail_f(msg); }
-         );
-}
-
-function addTrackGenreHandling(tr) {
-  var select = tr.find('select[name=genre]');
-  select.click(
-    function(e) {
-      e.stopPropagation(); // Prevent row selection
-    }
-  );
-  select.focus(
-    function() {
-      $(this).data('old-value', $(this).find(':selected').val().trim());
-    }
-  );
-  select.change(
-    function() {
-      var s = $(this);
-
-      // Find corresponding track ID
-      var tid_input = s.closest('tr').find('input[name=track_id]');
-      if (tid_input.length == 0) {
-        console.log('could not find track ID');
-        return;
-      }
-      var tid = tid_input.val().trim();
-      if (tid.length == 0) {
-        return;
-      }
-
-      var genre = parseInt(s.find(':selected').val().trim());
-      setStatus('<?= LNG_DESC_SAVING ?>...');
-      updateGenreInDb( tid
-                     , genre
-                     , clearStatus
-                     , function(msg) {
-                         setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
-                       }
-                     );
-
-      // Update genre on all duplicate tracks (if any)
-      function update(table, tid) {
-        table.find('input[name=track_id][value=' + tid + ']').each(
-          function() {
-            var tr = $(this).closest('tr');
-            tr.find('select[name=genre] option').prop('selected', false);
-            tr.find('select[name=genre] option[value=' + genre + ']')
-              .prop('selected', true);
-            renderTrackGenre(tr);
-          }
-        );
-      }
-      update(getPlaylistTable(), tid);
-      update(getScratchpadTable(), tid);
-
-      var old_value = parseInt(s.data('old-value'));
-      // .data() must be read here or else it will disappear upon undo/redo
-      setCurrentUndoStateCallback(
-        function() {
-          updateGenreInDb( tid
-                         , old_value
-                         , function() {}
-                         , function(msg) {
-                             setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
-                           }
-                         );
-        }
-      );
-      indicateStateUpdate();
-      setCurrentUndoStateCallback(
-        function() {
-          updateGenreInDb( tid
-                         , genre
-                         , function() {}
-                         , function(msg) {
-                             setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
-                           }
-                         );
-        }
-      );
-    }
-  );
-}
-
-function renderTrackGenre(tr) {}
-
 function checkBpmInput(str, report_on_fail = true) {
   bpm = parseInt(str);
   if (isNaN(bpm)) {
@@ -649,6 +561,193 @@ function checkBpmInput(str, report_on_fail = true) {
     return false;
   }
   return true;
+}
+
+function updateGenreInDb(track_id, genre, success_f, fail_f) {
+  callApi( '/api/update-genre/'
+         , { trackId: track_id, genre: genre }
+         , function(d) { success_f(d); }
+         , function(msg) { fail_f(msg); }
+         );
+}
+
+function addTrackGenreHandling(tr) {
+  var select = tr.find('select[name=genre]');
+  select.click(
+    function(e) {
+      e.stopPropagation(); // Prevent row selection
+    }
+  );
+  select.focus(
+    function() {
+      $(this).data('old-value', $(this).find(':selected').val().trim());
+    }
+  );
+  function fail(msg) {
+    setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
+  }
+  select.change(
+    function() {
+      var s = $(this);
+
+      // Find corresponding track ID
+      var tid_input = s.closest('tr').find('input[name=track_id]');
+      if (tid_input.length == 0) {
+        console.log('could not find track ID');
+        return;
+      }
+      var tid = tid_input.val().trim();
+      if (tid.length == 0) {
+        return;
+      }
+
+      var genre = parseInt(s.find(':selected').val().trim());
+      setStatus('<?= LNG_DESC_SAVING ?>...');
+      updateGenreInDb( tid
+                     , genre
+                     , clearStatus
+                     , fail
+                     );
+
+      // Update genre on all duplicate tracks (if any)
+      function update(table, tid) {
+        table.find('input[name=track_id][value=' + tid + ']').each(
+          function() {
+            var tr = $(this).closest('tr');
+            tr.find('select[name=genre] option').prop('selected', false);
+            tr.find('select[name=genre] option[value=' + genre + ']')
+              .prop('selected', true);
+          }
+        );
+      }
+      update(getPlaylistTable(), tid);
+      update(getScratchpadTable(), tid);
+
+      var old_value = parseInt(s.data('old-value'));
+      // .data() must be read here or else it will disappear upon undo/redo
+      setCurrentUndoStateCallback(
+        function() {
+          updateGenreInDb( tid
+                         , old_value
+                         , function() {}
+                         , fail
+                         );
+        }
+      );
+      indicateStateUpdate();
+      setCurrentUndoStateCallback(
+        function() {
+          updateGenreInDb( tid
+                         , genre
+                         , function() {}
+                         , fail
+                         );
+        }
+      );
+    }
+  );
+}
+
+function updateCommentsInDb(track_id, comments, success_f, fail_f) {
+  callApi( '/api/update-comments/'
+         , { trackId: track_id, comments: comments }
+         , function(d) { success_f(d); }
+         , function(msg) { fail_f(msg); }
+         );
+}
+
+function addTrackCommentsHandling(tr) {
+  var textarea = tr.find('textarea[name=comments]');
+  textarea.click(
+    function(e) {
+      e.stopPropagation(); // Prevent row selection
+    }
+  );
+  textarea.focus(
+    function() {
+      $(this).data('old-value', $(this).val().trim());
+    }
+  );
+  function fail(msg) {
+    setStatus('<?= LNG_ERR_FAILED_UPDATE_COMMENTS ?>', true);
+  }
+  textarea.change(
+    function() {
+      var textarea = $(this);
+      renderTrackComments(textarea.closest('tr'));
+
+      // Find corresponding track ID
+      var tid_input = textarea.closest('tr').find('input[name=track_id]');
+      if (tid_input.length == 0) {
+        console.log('could not find track ID');
+        return;
+      }
+      var tid = tid_input.val().trim();
+      if (tid.length == 0) {
+        return;
+      }
+
+      var comments = textarea.val().trim();
+      setStatus('<?= LNG_DESC_SAVING ?>...');
+      updateCommentsInDb( tid
+                        , comments
+                        , clearStatus
+                        , fail
+                        );
+
+      // Update comments on all duplicate tracks (if any)
+      function update(table, tid) {
+        table.find('input[name=track_id][value=' + tid + ']').each(
+          function() {
+            var tr = $(this).closest('tr');
+            tr.find('textarea[name=comments]').val(comments);
+            renderTrackComments(tr);
+          }
+        );
+      }
+      update(getPlaylistTable(), tid);
+      update(getScratchpadTable(), tid);
+
+      var old_value = parseInt(textarea.data('old-value'));
+      // .data() must be read here or else it will disappear upon undo/redo
+      setCurrentUndoStateCallback(
+        function() {
+          updateCommentsInDb( tid
+                            , old_value
+                            , function() {}
+                            , fail
+                            );
+        }
+      );
+      indicateStateUpdate();
+      setCurrentUndoStateCallback(
+        function() {
+          updateCommentsInDb( tid
+                            , comments
+                            , function() {}
+                            , fail
+                            );
+        }
+      );
+    }
+  );
+}
+
+function renderTrackComments(tr) {
+  var textarea = tr.find('textarea[name=comments]');
+  if (textarea.length == 0) {
+    return;
+  }
+
+  // Adjust height
+  if (textarea.data('defaultHeight') === undefined) {
+    textarea.data('defaultHeight', textarea.height());
+  }
+  textarea.css('height', textarea.data('defaultHeight'));
+  textarea.css( 'height'
+              , textarea.prop('scrollHeight')+2 + 'px'
+                // +2 is to prevent scrollbars that appear otherwise
+              );
 }
 
 function getTrTitleText(tr) {
@@ -716,6 +815,7 @@ function createPlaylistTrackObject( track_id
                                   , length_ms
                                   , bpm
                                   , genre
+                                  , comments
                                   , preview_url
                                   )
 {
@@ -724,6 +824,7 @@ function createPlaylistTrackObject( track_id
          , length: length_ms
          , bpm: bpm
          , genre: genre
+         , comments: comments
          , previewUrl: preview_url
          }
 }
@@ -772,6 +873,7 @@ function initTable(table) {
        '  <th class="bpm"><?= LNG_HEAD_BPM ?></th>' +
        '  <th class="genre"><?= LNG_HEAD_GENRE ?></th>' +
        '  <th><?= LNG_HEAD_TITLE ?></th>' +
+       '  <th class="comments"><?= LNG_HEAD_COMMENTS ?></th>' +
        '  <th class="length"><?= LNG_HEAD_LENGTH ?></th>' +
        '</tr>'
      );
@@ -835,6 +937,10 @@ function buildNewTableTrackTr() {
        '    <select class="genre" name="genre"></select>' +
        '  </td>' +
        '  <td class="title" />' +
+       '  <td class="comments">' +
+       '    <textarea name="comments" class="comments" maxlength="255">' +
+           '</textarea>' +
+       '  </td>' +
        '  <td class="length" />' +
        '</tr>'
      );
@@ -844,7 +950,7 @@ function buildNewTableTrackTr() {
 
 function buildNewTableSummaryRow() {
   return $( '<tr class="summary">' +
-             '  <td colspan="4" />' +
+             '  <td colspan="5" />' +
              '  <td class="length" />' +
              '</tr>'
           );
@@ -893,11 +999,12 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('input[name=bpm]').prop('value', track.bpm);
     tr.find('select[name=genre] option[value=' + track.genre + ']')
       .prop('selected', true);
+    tr.find('textarea[name=comments]').text(track.comments);
     tr.find('td.length').text(formatTrackLength(track.length));
     addTrackPreviewHandling(tr);
-    renderTrackBpm(tr);
     addTrackBpmHandling(tr);
     addTrackGenreHandling(tr);
+    addTrackCommentsHandling(tr);
   }
   else {
     tr.removeClass('track').addClass('empty-track');
@@ -923,6 +1030,8 @@ function appendTracks(table, tracks) {
   for (var i = 0; i < tracks.length; i++) {
     var new_tr = buildNewTableTrackTrFromTrackObject(tracks[i]);
     table.append(new_tr);
+    renderTrackBpm(new_tr);
+    renderTrackComments(new_tr);
   }
   table.append(getTableSummaryTr(table)); // Move summary to last
 }
@@ -1472,6 +1581,7 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                                                       , t.length
                                                       , t.bpm
                                                       , t.genre
+                                                      , t.comments
                                                       , t.preview_url
                                                       );
                    tracks.push(obj);

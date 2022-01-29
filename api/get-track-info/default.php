@@ -57,6 +57,7 @@ $tracks = $api->getTracks($track_ids)->tracks;
 
 connectDb();
 $genres = [];
+$comments = [];
 $user_sql = escapeSqlValue(getThisUserId($api));
 
 // Load BPM data
@@ -91,6 +92,21 @@ while ($row = $res->fetch_assoc()) {
   $genres[] = [$row['song'], $row['genre']];
 }
 
+// Load comments data
+$res = queryDb( "SELECT song, comments FROM comments " .
+                "WHERE song IN (" .
+                join( ','
+                    , array_map(
+                        function($t) { return "'" . escapeSqlValue($t) . "'"; }
+                      , $track_ids
+                      )
+                    ) .
+                ") AND user = '$user_sql'"
+              );
+while ($row = $res->fetch_assoc()) {
+  $comments[] = [$row['song'], $row['comments']];
+}
+
 // Build result
 $tracks_res = [];
 for ($i = 0; $i < count($tracks); $i++) {
@@ -112,12 +128,19 @@ for ($i = 0; $i < count($tracks); $i++) {
              )
            );
   $genre = count($genre) > 0 ? $genre[0][1] : 0;
+  $cmnt = array_values( // To reset indices
+            array_filter( $comments
+            , function($c) use ($t) { return $c[0] === $t->id; }
+            )
+          );
+  $cmnt = count($cmnt) > 0 ? $cmnt[0][1] : '';
   $tracks_res[] = [ 'trackId' => $t->id
                   , 'name' => $t->name
                   , 'artists' => formatArtists($t)
                   , 'length' => $t->duration_ms
                   , 'bpm' => $bpm
                   , 'genre' => $genre
+                  , 'comments' => $cmnt
                   , 'preview_url' => $t->preview_url
                   ];
 }

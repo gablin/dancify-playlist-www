@@ -604,6 +604,12 @@ function checkDbTables() {
               ' , user TINYTEXT NOT NULL' .
               ' , genre TINYINT UNSIGNED NOT NULL' .
               ' )'
+            , 'comments' =>
+              'CREATE TABLE comments' .
+              ' ( song CHAR(22) NOT NULL' .
+              ' , user TINYTEXT NOT NULL' .
+              ' , comments TINYTEXT NOT NULL' .
+              ' )'
             , 'snapshots' =>
               'CREATE TABLE snapshots' .
               ' ( playlist CHAR(22) NOT NULL' .

@@ -259,9 +259,6 @@ table th {
 .playlist table tbody tr {
   user-select: none;
 }
-.playlist table tbody tr.template {
-  display: none;
-}
 .playlist table tbody tr.track:hover,
 .playlist table tbody tr.empty-track:hover,
 .playlist table tbody tr.right-clicked {
@@ -296,6 +293,19 @@ table th {
 .playlist table td.length {
   width: 6em;
 }
+.playlist table th.comments,
+.playlist table td.comments {
+  width: 10em;
+}
+.playlist table textarea.comments {
+  height: 2em;
+  min-height: 2em;
+  resize: vertical;
+  padding-top: .1em;
+  padding-bottom: .1em;
+  box-sizing: border-box;
+}
+
 .playlist table .summary {}
 .playlist table tr.delimiter td {
   padding: 0.5em 0;
@@ -344,6 +354,7 @@ table th {
   background-color: rgba(12, 167, 97, 0.4);
   cursor: pointer;
 }
+
 .grabbed {
   cursor: move !important;
 }
@@ -384,7 +395,8 @@ form div.input {
   margin: .1em 0;
 }
 input,
-select {
+select,
+textarea {
   background-color: #fff;
   border: 1px solid #09814A;
   padding: .2em .4em;
