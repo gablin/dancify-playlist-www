@@ -195,17 +195,17 @@ function searchForTracks( genre
                   '</tr>'
                 );
       tr.data('trackData', t);
-      addTrackSelectHandling(tr);
+      addSearchTrackSelectHandling(tr);
       table.append(tr);
     }
   }
 }
 
-function addTrackSelectHandling(tr) {
+function addSearchTrackSelectHandling(tr) {
   tr.click(
     function(e) {
       if (TRACK_DRAG_STATE == 0) {
-        updateTrackSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+        updateSearchTrackSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
       }
       else {
         TRACK_DRAG_STATE = 0;
@@ -214,7 +214,7 @@ function addTrackSelectHandling(tr) {
   );
 }
 
-function updateTrackSelection(tr, multi_select_mode, span_mode) {
+function updateSearchTrackSelection(tr, multi_select_mode, span_mode) {
   function renderButtons() {
     var table = getSearchForTracksResultsArea().find('table');
     var playlist_btn = $('#addSearchToPlaylistBtn');
