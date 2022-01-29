@@ -143,7 +143,7 @@ DEFINE( 'LNG_MENU_SELECT_IDENTICAL_TRACKS'
       , 'Markera låtar som är identiska med denna'
       );
 DEFINE( 'LNG_MENU_DONATE'
-      , 'Donera'
+      , 'Skänk en slant'
       );
 DEFINE( 'LNG_MENU_FIRST_TIME_INFORMATION'
       , 'Första gången-information'
