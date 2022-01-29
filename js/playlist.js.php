@@ -464,16 +464,17 @@ function addTrackBpmHandling(tr) {
                    );
 
       // Update BPM on all duplicate tracks (if any)
-      input.closest('table').find('input[name=track_id][value=' + tid + ']').each(
-        function() {
-          $(this).closest('tr').find('input[name=bpm]').each(
-            function() {
-              $(this).val(bpm);
-              renderTrackBpm($(this).closest('tr'));
-            }
-          );
-        }
-      );
+      function update(table, tid) {
+        table.find('input[name=track_id][value=' + tid + ']').each(
+          function() {
+            var tr = $(this).closest('tr');
+            tr.find('input[name=bpm]').val(bpm);
+            renderTrackBpm(tr);
+          }
+        );
+      }
+      update(getPlaylistTable(), tid);
+      update(getScratchpadTable(), tid);
 
       var old_value = parseInt(input.data('old-value'));
       // .data() must be read here or else it will disappear upon undo/redo
@@ -580,15 +581,19 @@ function addTrackGenreHandling(tr) {
                      );
 
       // Update genre on all duplicate tracks (if any)
-      s.closest('table').find('input[name=track_id][value=' + tid + ']').each(
-        function() {
-          var tr = $(this).closest('tr');
-          tr.find('select[name=genre] option').attr('selected', false);
-          tr.find('select[name=genre] option[value=' + genre + ']')
-            .attr('selected', true);
-          renderTrackGenre(tr);
-        }
-      );
+      function update(table, tid) {
+        table.find('input[name=track_id][value=' + tid + ']').each(
+          function() {
+            var tr = $(this).closest('tr');
+            tr.find('select[name=genre] option').attr('selected', false);
+            tr.find('select[name=genre] option[value=' + genre + ']')
+              .attr('selected', true);
+            renderTrackGenre(tr);
+          }
+        );
+      }
+      update(getPlaylistTable(), tid);
+      update(getScratchpadTable(), tid);
 
       var old_value = parseInt(s.data('old-value'));
       // .data() must be read here or else it will disappear upon undo/redo
