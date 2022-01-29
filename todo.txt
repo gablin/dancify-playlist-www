@@ -2,4 +2,3 @@
 - show playlists where track appears in
 - show track genre selected by others
 - make snapshots sharable
-- add tracks
