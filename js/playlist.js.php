@@ -20,10 +20,8 @@ const BPM_MAX = 255;
 
 function setupPlaylist(playlist_id) {
   PLAYLIST_ID = playlist_id;
-  addTableHead(getPlaylistTable());
-  addTableHead(getScratchpadTable());
-  addTrTemplate(getPlaylistTable());
-  addTrTemplate(getScratchpadTable());
+  initTable(getPlaylistTable());
+  initTable(getScratchpadTable());
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == 'Escape') {
@@ -767,8 +765,8 @@ function getTrackWithMatchingId(track_list, track_id) {
   return i < track_list.length ? track_list[i] : null;
 }
 
-function addTableHead(table) {
-  var tr =
+function initTable(table) {
+  var head_tr =
     $( '<tr>' +
        '  <th class="index">#</th>' +
        '  <th class="bpm"><?= LNG_HEAD_BPM ?></th>' +
@@ -777,7 +775,8 @@ function addTableHead(table) {
        '  <th class="length"><?= LNG_HEAD_LENGTH ?></th>' +
        '</tr>'
      );
-  table.find('thead').append(tr);
+  table.find('thead').append(head_tr);
+  table.append(buildNewTableSummaryRow());
 }
 
 function addOptionsToGenreSelect(s, ignore_empty = false) {
@@ -822,9 +821,9 @@ function addOptionsToGenreSelect(s, ignore_empty = false) {
   )
 }
 
-function addTrTemplate(table) {
+function buildNewTableTrackTr() {
   var tr =
-    $( '<tr class="template">' +
+    $( '<tr class="track">' +
        '  <input type="hidden" name="track_id" value="" />' +
        '  <input type="hidden" name="preview_url" value="" />' +
        '  <input type="hidden" name="length_ms" value="" />' +
@@ -837,19 +836,18 @@ function addTrTemplate(table) {
        '  </td>' +
        '  <td class="title" />' +
        '  <td class="length" />' +
-       '</tr>' +
-       '<tr class="summary">' +
-       '  <td colspan="4" />' +
-       '  <td class="length" />' +
        '</tr>'
      );
   addOptionsToGenreSelect(tr.find('select[name=genre]'));
-  table.find('tbody').append(tr);
+  return tr;
 }
 
-function getTableTrackTrTemplate(table) {
-  var tr = table.find('tr.template')[0];
-  return $(tr);
+function buildNewTableSummaryRow() {
+  return $( '<tr class="summary">' +
+             '  <td colspan="4" />' +
+             '  <td class="length" />' +
+             '</tr>'
+          );
 }
 
 function getTableSummaryTr(table) {
@@ -858,11 +856,8 @@ function getTableSummaryTr(table) {
 }
 
 function clearTable(table) {
-  var track_tr_template = getTableTrackTrTemplate(table).clone(true, true);
-  var summary_tr = getTableSummaryTr(table).clone(true, true);
   table.find('tbody tr').remove();
-  table.append(track_tr_template);
-  table.append(summary_tr);
+  table.append(buildNewTableSummaryRow());
 }
 
 function addTrackPreviewHandling(tr) {
@@ -888,10 +883,8 @@ function addTrackPreviewHandling(tr) {
   tr.find('td.title').append(link);
 }
 
-function buildTrackRow(table, track) {
-  var tr = getTableTrackTrTemplate(table).clone(true, true);
-  tr.removeClass('template');
-  tr.addClass('track');
+function buildNewTableTrackTrFromTrackObject(track) {
+  var tr = buildNewTableTrackTr();
   if ('trackId' in track) {
     tr.find('td.title').text(track.title);
     tr.find('input[name=track_id]').prop('value', track.trackId);
@@ -902,9 +895,6 @@ function buildTrackRow(table, track) {
       .prop('selected', true);
     tr.find('td.length').text(formatTrackLength(track.length));
     addTrackPreviewHandling(tr);
-    addTrackSelectHandling(tr);
-    addTrackDragHandling(tr);
-    addTrackRightClickMenu(tr);
     renderTrackBpm(tr);
     addTrackBpmHandling(tr);
     addTrackGenreHandling(tr);
@@ -922,16 +912,16 @@ function buildTrackRow(table, track) {
     genre_td.find('select').remove();
     genre_td.text(track.genre);
     tr.find('td.length').text(track.length);
-    addTrackSelectHandling(tr);
-    addTrackDragHandling(tr);
-    addTrackRightClickMenu(tr);
   }
+  addTrackSelectHandling(tr);
+  addTrackDragHandling(tr);
+  addTrackRightClickMenu(tr);
   return tr;
 }
 
 function appendTracks(table, tracks) {
   for (var i = 0; i < tracks.length; i++) {
-    var new_tr = buildTrackRow(table, tracks[i]);
+    var new_tr = buildNewTableTrackTrFromTrackObject(tracks[i]);
     table.append(new_tr);
   }
   table.append(getTableSummaryTr(table)); // Move summary to last
@@ -955,7 +945,7 @@ function renderTable(table) {
   // Insert delimiters
   table.find('tr.delimiter').remove();
   if (delimiter > 0) {
-    var num_cols = getTableTrackTrTemplate(table).find('td').length;
+    var num_cols = buildNewTableTrackTr(table).find('td').length;
     table
       .find('tr.track, tr.empty-track')
       .filter(':nth-child(' + delimiter + 'n+1)')
@@ -1230,7 +1220,7 @@ function addTrackDragHandling(tr) {
                 var old_tr = $(rows_to_keep[i]);
                 if (!old_tr.hasClass('empty-track')) {
                   var o = createPlaylistPlaceholderObject();
-                  var new_tr = buildTrackRow(source_table, o);
+                  var new_tr = buildNewTableTrackTrFromTrackObject(o);
                   old_tr.before(new_tr);
                 }
               }
@@ -1277,7 +1267,7 @@ function addTrackRightClickMenu(tr) {
   function buildMenu(menu, clicked_tr, close_f) {
     function buildPlaceholderTr() {
       var o = createPlaylistPlaceholderObject();
-      return buildTrackRow(getTableOfTr(clicked_tr), o);
+      return buildNewTableTrackTrFromTrackObject(o);
     }
     const actions =
       [ [ '<?= LNG_MENU_SELECT_IDENTICAL_TRACKS ?>'
