@@ -1099,8 +1099,6 @@ function addTrackDragHandling(tr) {
         );
       var mb = $('.grabbed-info-block');
       mb.find('span').text(selected_trs.length);
-      mb.css({ top: e.pageY + 'px', left: e.pageX + 'px' });
-      mb.show();
 
       $('.playlist').toggleClass('drag-mode');
 
@@ -1110,6 +1108,7 @@ function addTrackDragHandling(tr) {
         // Move info block
         const of = 5; // To prevent grabbed-info-block to appear as target
         mb.css({ top: e.pageY+of + 'px', left: e.pageX+of + 'px' });
+        mb.show();
 
         TRACK_DRAG_STATE = 1; // tr.click() and mouseup may both reset this.
                               // This is to prevent deselection if drag stops on
