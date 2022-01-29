@@ -492,6 +492,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 
 <script src="/js/utils.js.php"></script>
 <script src="/js/globals.js.php"></script>
+<script src="/js/status.js.php"></script>
 <script src="/js/actions.js.php"></script>
 <script src="/js/playlist.js.php"></script>
 <script src="/js/save-playlist.js.php"></script>

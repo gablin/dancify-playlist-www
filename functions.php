@@ -421,6 +421,10 @@ function loadPlaylists($api) {
   for ($i = 0; ; $i += $limit) {
     $options = [ 'limit' => $limit, 'offset' => $i ];
     $ps = $api->getUserPlaylists($user_uri, $options);
+
+    var_dump($ps);
+    die();
+
     foreach ($ps->items as $p) {
       array_push($playlists, $p);
     }

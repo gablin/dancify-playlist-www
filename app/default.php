@@ -12,29 +12,25 @@ beginContent();
 try {
 ?>
 
-<?php
-$playlists = loadPlaylists($api);
-?>
-
 <div class="instruction">
   <?php echo(LNG_INSTR_SELECT_PLAYLIST); ?>
 </div>
 
-<table>
-  <?php
-  foreach ($playlists as $p) {
-    $name = $p->name;
-    $id = $p->id;
-    ?>
-    <tr>
-      <td>
-        <a href="./playlist/?id=<?php echo($id); ?>"><?php echo($name); ?></a>
-      </td>
-    </tr>
-    <?php
-  }
-  ?>
+<table id="playlists">
+  <tbody>
+  </tbod>
 </table>
+
+<script src="/js/utils.js.php"></script>
+<script src="/js/status.js.php"></script>
+<script src="/js/user.js.php"></script>
+<script type="text/javascript">
+$(document).ready(
+  function() {
+    loadUserPlaylists('<?= getThisUserId($api) ?>');
+  }
+);
+</script>
 
 <?php
 }
