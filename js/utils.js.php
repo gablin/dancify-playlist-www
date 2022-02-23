@@ -43,8 +43,19 @@ function callApi(url, data, success_f, fail_f) {
  * @param s2 Second string.
  * @return int
  */
-function strcmp(str1, str2) {
-  return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1;
+function strcmp(s1, s2) {
+  return (s1 == s2) ? 0 : (s1 > s2) ? 1 : -1;
+}
+
+/**
+ * Same as strcmp but for integers.
+ *
+ * @param i1 First integer.
+ * @param i2 Second integer.
+ * @return int
+ */
+function intcmp(i1, i2) {
+  return (i1 == i2) ? 0 : (i1 > i2) ? 1 : -1;
 }
 
 /**

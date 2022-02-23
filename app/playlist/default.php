@@ -143,10 +143,14 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   <div class="input">
     <div class="title"><?= LNG_MENU_SORT ?></div>
     <p>
-      <?= sprintf( LNG_INSTR_SORT_TRACKS_BY_BPM
-                 , "<select name=\"order\" />" .
+      <?= sprintf( LNG_INSTR_SORT_TRACKS
+                 , "<select name=\"order_direction\" />" .
                      "<option value=\"+1\">" . LNG_DESC_RISING . "</option>" .
                      "<option value=\"-1\">" . LNG_DESC_FALLING . "</option>" .
+                   "</select>"
+                 , "<select name=\"order_field\" />" .
+                     "<option value=\"bpm\">" . LNG_DESC_BPM . "</option>" .
+                     "<option value=\"genre\">" . LNG_DESC_GENRE . "</option>" .
                    "</select>"
                  ) ?>
     </p>
@@ -158,7 +162,8 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
       </button>
-      <button id="sortBtn"><?= LNG_BTN_SORT ?></button>
+      <button id="sortScratchpadBtn"><?= LNG_BTN_SORT_SCRATCHPAD ?></button>
+      <button id="sortPlaylistBtn"><?= LNG_BTN_SORT_PLAYLIST ?></button>
     </div>
   </div>
 </div>

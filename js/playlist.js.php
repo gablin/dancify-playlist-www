@@ -881,31 +881,45 @@ function initTable(table) {
   table.append(buildNewTableSummaryRow());
 }
 
+function getGenreList() {
+  return [ [  1, '<?= strtolower(LNG_GENRE_DANCEBAND) ?>']
+         , [  2, '<?= strtolower(LNG_GENRE_COUNTRY) ?>']
+         , [  3, '<?= strtolower(LNG_GENRE_ROCK) ?>']
+         , [  4, '<?= strtolower(LNG_GENRE_POP) ?>']
+         , [  5, '<?= strtolower(LNG_GENRE_SCHLAGER) ?>']
+         , [  6, '<?= strtolower(LNG_GENRE_METAL) ?>']
+         , [  7, '<?= strtolower(LNG_GENRE_PUNK) ?>']
+         , [  8, '<?= strtolower(LNG_GENRE_DISCO) ?>']
+         , [  9, '<?= strtolower(LNG_GENRE_RNB) ?>']
+         , [ 10, '<?= strtolower(LNG_GENRE_BLUES) ?>']
+         , [ 11, '<?= strtolower(LNG_GENRE_JAZZ) ?>']
+         , [ 12, '<?= strtolower(LNG_GENRE_HIP_HOP) ?>']
+         , [ 13, '<?= strtolower(LNG_GENRE_ELECTRONIC) ?>']
+         , [ 14, '<?= strtolower(LNG_GENRE_HOUSE) ?>']
+         , [ 15, '<?= strtolower(LNG_GENRE_CLASSICAL) ?>']
+         , [ 16, '<?= strtolower(LNG_GENRE_SOUL) ?>']
+         , [ 17, '<?= strtolower(LNG_GENRE_LATIN) ?>']
+         , [ 18, '<?= strtolower(LNG_GENRE_REGGAE) ?>']
+         , [ 19, '<?= strtolower(LNG_GENRE_TANGO) ?>']
+         , [ 20, '<?= strtolower(LNG_GENRE_OPERA) ?>']
+         , [ 21, '<?= strtolower(LNG_GENRE_SALSA) ?>']
+         , [ 22, '<?= strtolower(LNG_GENRE_KIZOMBA) ?>']
+         ];
+}
+
+function genreToString(g) {
+  const g_list = getGenreList();
+  for (let i = 0; i < g_list.length; i++) {
+    e = g_list[i];
+    if (e[0] == g) {
+      return e[1];
+    }
+  }
+  return '';
+}
+
 function addOptionsToGenreSelect(s, ignore_empty = false) {
-  var genres = [ [  0, '']
-               , [  1, '<?= strtolower(LNG_GENRE_DANCEBAND) ?>']
-               , [  2, '<?= strtolower(LNG_GENRE_COUNTRY) ?>']
-               , [  3, '<?= strtolower(LNG_GENRE_ROCK) ?>']
-               , [  4, '<?= strtolower(LNG_GENRE_POP) ?>']
-               , [  5, '<?= strtolower(LNG_GENRE_SCHLAGER) ?>']
-               , [  6, '<?= strtolower(LNG_GENRE_METAL) ?>']
-               , [  7, '<?= strtolower(LNG_GENRE_PUNK) ?>']
-               , [  8, '<?= strtolower(LNG_GENRE_DISCO) ?>']
-               , [  9, '<?= strtolower(LNG_GENRE_RNB) ?>']
-               , [ 10, '<?= strtolower(LNG_GENRE_BLUES) ?>']
-               , [ 11, '<?= strtolower(LNG_GENRE_JAZZ) ?>']
-               , [ 12, '<?= strtolower(LNG_GENRE_HIP_HOP) ?>']
-               , [ 13, '<?= strtolower(LNG_GENRE_ELECTRONIC) ?>']
-               , [ 14, '<?= strtolower(LNG_GENRE_HOUSE) ?>']
-               , [ 15, '<?= strtolower(LNG_GENRE_CLASSICAL) ?>']
-               , [ 16, '<?= strtolower(LNG_GENRE_SOUL) ?>']
-               , [ 17, '<?= strtolower(LNG_GENRE_LATIN) ?>']
-               , [ 18, '<?= strtolower(LNG_GENRE_REGGAE) ?>']
-               , [ 19, '<?= strtolower(LNG_GENRE_TANGO) ?>']
-               , [ 20, '<?= strtolower(LNG_GENRE_OPERA) ?>']
-               , [ 21, '<?= strtolower(LNG_GENRE_SALSA) ?>']
-               , [ 22, '<?= strtolower(LNG_GENRE_KIZOMBA) ?>']
-               ];
+  var genres = [ [  0, ''] ].concat(getGenreList());
   if (ignore_empty) {
     genres.shift();
   }

@@ -87,6 +87,12 @@ define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
 DEFINE( 'LNG_BTN_SORT'
       , 'Sort'
       );
+DEFINE( 'LNG_BTN_SORT_PLAYLIST'
+      , 'Sort playlist'
+      );
+DEFINE( 'LNG_BTN_SORT_SCRATCHPAD'
+      , 'Sort scratchpad'
+      );
 DEFINE( 'LNG_BTN_SEARCH'
       , 'Search'
       );
@@ -292,8 +298,8 @@ define( 'LNG_INSTR_PLEASE_ENTER_NAME'
 define( 'LNG_INSTR_SELECT_APP'
       , 'Select what you want to do'
       );
-define( 'LNG_INSTR_SORT_TRACKS_BY_BPM'
-      , 'Arrange tracks in playlist in %s BPM order.'
+define( 'LNG_INSTR_SORT_TRACKS'
+      , 'Arrange tracks in playlist in %s %s order.'
       );
 define( 'LNG_APP_INSERT_DING'
       , 'Insert ding into playlist'
@@ -331,6 +337,9 @@ define( 'LNG_DESC_BPM_DIFFERENCE'
 define( 'LNG_DESC_PLAYLIST_NAME'
       , 'Name'
       );
+define( 'LNG_DESC_GENRE'
+      , 'genre'
+      );
 define( 'LNG_DESC_PLACEHOLDER'
       , 'Placeholder'
       );
@@ -350,8 +359,8 @@ define( 'LNG_DESC_THIS_WILL_REMOVE_ALL_WORK'
       , 'This will destroy all changes made to the playlist and scratchpad.'
       );
 define( 'LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK'
-      , 'This will destroy all changes made to the playlist (scratchpad will ' .
-        'not be affected).'
+      , 'This will destroy all changes made to the playlist or scratchpad, ' .
+        'depending on which to sort.'
       );
 define( 'LNG_DESC_RESTORE_PLAYLIST'
       , 'Restore playlist to appear exactly as it appears in Spotify.'
