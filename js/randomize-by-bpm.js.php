@@ -85,8 +85,8 @@ function setupFormElementsForRandomizeByBpm() {
         }
         $(this).slider(
           { range: true
-          , min: -128
-          , max: 128
+          , min: 0
+          , max: 255
           , values: [10, 40]
           , slide: function(event, ui) {
               printValues(ui.values[0], ui.values[1]);
