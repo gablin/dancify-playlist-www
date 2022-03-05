@@ -27,6 +27,7 @@ function setupSaveNewPlaylist(make_public) {
 
       // Save new playlist
       var tracks = getPlaylistTrackData();
+      tracks = removePlaceholdersFromTracks(tracks);
       var track_ids = [];
       for (var i = 0; i < tracks.length; i++) {
           track_ids.push(tracks[i].trackId);
