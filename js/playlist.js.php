@@ -1663,9 +1663,6 @@ function saveUndoState() {
   // Destroy obsolete redo states
   for (var o = offset; o < limit; o++) {
     if (UNDO_STACK[o] !== null) {
-      var state = UNDO_STACK[o];
-      state.playlistTable.remove();
-      state.scratchpadTable.remove();
       UNDO_STACK[o] = null;
     }
   }
@@ -1676,8 +1673,8 @@ function saveUndoState() {
   var scratchpad = getScratchpadTable().clone(true, true);
   scratchpad.find('tr.selected').removeClass('selected');
   scratchpad.find('tr.delimiter').remove();
-  var state = { playlistTable: playlist
-              , scratchpadTable: scratchpad
+  var state = { playlistTracks: getPlaylistTrackData()
+              , scratchpadTracks: getScratchpadTrackData()
               , callback: function() {}
               };
   UNDO_STACK[offset] = state;
@@ -1722,8 +1719,8 @@ function performRedo() {
 }
 
 function restoreState(state) {
-  getPlaylistTable().replaceWith(state.playlistTable.clone(true, true));
-  getScratchpadTable().replaceWith(state.scratchpadTable.clone(true, true));
+  replaceTracks(getPlaylistTable(), state.playlistTracks);
+  replaceTracks(getScratchpadTable(), state.scratchpadTracks);
   renderPlaylist();
   renderScratchpad();
   savePlaylistSnapshot();
