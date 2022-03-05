@@ -71,8 +71,8 @@ constraint
 forall (i in index_set_1of2(diffs))
 ( let { int: v1 = diffs[i, 1]
       , int: v2 = diffs[i, 2]
-      , int: min_d = if v1 > 0 then min(v1, v2) else max(v1, v2) endif
-      , int: max_d = if v1 > 0 then max(v1, v2) else min(v1, v2) endif
+      , int: min_d = if v1 >= 0 /\ v2 > 0 then min(v1, v2) else max(v1, v2) endif
+      , int: max_d = if v1 >= 0 /\ v2 > 0 then max(v1, v2) else min(v1, v2) endif
       }
   in forall ( j in OrderSet
               where (j mod card(RangeSet)) == (i mod card(RangeSet))
@@ -81,20 +81,18 @@ forall (i in index_set_1of2(diffs))
              , "differences have non-matching signs: \(v1), \(v2)"
              , true
              ) /\
-       if min_d != 0
-       then (has_track[j] /\ has_track[j+1]) ->
-            if min_d > 0
-            then bpm[order[j+1]] - bpm[order[j]] >= min_d
-            else bpm[order[j+1]] - bpm[order[j]] <= min_d
-            endif
-       endif /\
-       if max_d != 0
-       then (has_track[j] /\ has_track[j+1]) ->
-            if max_d > 0
-            then bpm[order[j+1]] - bpm[order[j]] <= max_d
-            else bpm[order[j+1]] - bpm[order[j]] >= max_d
-            endif
-       endif
+       ( (has_track[j] /\ has_track[j+1]) ->
+         if max_d > 0
+         then bpm[order[j+1]] - bpm[order[j]] >= min_d
+         else bpm[order[j+1]] - bpm[order[j]] <= min_d
+         endif
+       ) /\
+       ( (has_track[j] /\ has_track[j+1]) ->
+         if max_d > 0
+         then bpm[order[j+1]] - bpm[order[j]] <= max_d
+         else bpm[order[j+1]] - bpm[order[j]] >= max_d
+         endif
+       )
      )
 );
 
