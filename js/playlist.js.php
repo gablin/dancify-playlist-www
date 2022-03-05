@@ -1071,7 +1071,7 @@ function renderTable(table) {
     var num_cols = buildNewTableTrackTr(table).find('td').length;
     table
       .find('tr.track, tr.empty-track')
-      .filter(':nth-child(' + delimiter + 'n+1)')
+      .filter(':nth-child(' + delimiter + 'n)')
       .after(
         $( '<tr class="delimiter"><td colspan="' + num_cols + '"><div /></td>' +
            '</tr>'
