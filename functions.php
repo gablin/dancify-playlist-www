@@ -421,16 +421,65 @@ function loadPlaylists($api) {
   for ($i = 0; ; $i += $limit) {
     $options = [ 'limit' => $limit, 'offset' => $i ];
     $ps = $api->getUserPlaylists($user_uri, $options);
-
-    var_dump($ps);
-    die();
-
     foreach ($ps->items as $p) {
       array_push($playlists, $p);
     }
     if (count($ps->items) < $limit) break;
   }
   return $playlists;
+}
+
+/**
+ * Deletes a playlist from the current user.
+ *
+ * @param SpotifyWebAPI\SpotifyWebAPI api API object.
+ * @param string id Playlist ID.
+ * @throws SpotifyWebAPI\SpotifyWebAPIException If something fails.
+ */
+function deletePlaylist($api, $id) {
+  $api->unfollowPlaylistForCurrentUser($id);
+}
+
+/**
+ * Adds tracks to a given playlist.
+ *
+ * @param SpotifyWebAPI\SpotifyWebAPI api API object.
+ * @param string id Playlist ID.
+ * @param array List of track IDs.
+ * @throws SpotifyWebAPI\SpotifyWebAPIException If something fails.
+ */
+function addPlaylistTracks($api, $id, $tracks) {
+  // Due to API restrictions, we insert a limited number at a time. For more
+  // information, see: https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/
+  $limit = 100;
+  for ($i = 0; $i < count($tracks); $i += $limit) {
+    $ts = array_slice($tracks, $i, $limit);
+    $res = $api->addPlaylistTracks($id, $ts);
+    if (!$res) {
+      throw new Exception();
+    }
+  }
+}
+
+/**
+ * Removes tracks from a given playlist.
+ *
+ * @param SpotifyWebAPI\SpotifyWebAPI api API object.
+ * @param string id Playlist ID.
+ * @param array List of track IDs.
+ * @throws SpotifyWebAPI\SpotifyWebAPIException If something fails.
+ */
+function deletePlaylistTracks($api, $id, $tracks) {
+  // Due to API limitations, we can only get a limited number of tracks at a
+  // time. For more information, see:
+  // https://developer.spotify.com/documentation/web-api/reference/playlists/
+  //   delete-playlists-tracks/
+  $limit = 100;
+  for ($i = 0; $i < count($tracks); $i += $limit) {
+    $ts = array_slice($tracks, $i, $limit);
+    $tobjs = array_map(function($t) { return [ 'id' => $t ]; }, $ts);
+    $api->deletePlaylistTracks($id, [ 'tracks' => $tobjs ]);
+  }
 }
 
 /**

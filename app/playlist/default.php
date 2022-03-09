@@ -17,7 +17,7 @@ mkHtmlNavMenu(
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , []
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
-  , [ LNG_MENU_SAVE_AS_NEW_PLAYLIST, '#', 'save-as-new-playlist' ]
+  , [ LNG_MENU_SAVE_CHANGES_TO_SPOTIFY, '#', 'save-changes-to-spotify' ]
   , [ LNG_MENU_RESTORE_PLAYLIST, '#', 'restore-playlist' ]
   , []
   , [ LNG_MENU_DONATE, '#', 'donate' ]
@@ -47,20 +47,29 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   </div>
 </div>
 
-<div class="action-input-area" name="save-as-new-playlist">
+<div class="action-input-area" name="save-changes-to-spotify">
   <div class="background"></div>
   <div class="input">
-    <div class="title"><?= LNG_MENU_SAVE_AS_NEW_PLAYLIST ?></div>
-    <label>
-      <?= LNG_DESC_PLAYLIST_NAME ?>:
-      <input type="text" name="new-playlist-name" />
-    </label>
+    <div class="title"><?= LNG_MENU_SAVE_CHANGES_TO_SPOTIFY ?></div>
+    <div>
+      <label>
+        <?= LNG_DESC_PLAYLIST_NAME ?>:
+        <input type="text" name="new-playlist-name" />
+      </label>
+    </div>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="overwrite-existing-playlist" value="true" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_OVERWRITE_EXISTING_PLAYLIST ?>
+      </label>
+    </p>
     <p><?= LNG_DESC_INFO_ON_SAVING ?></p>
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
       </button>
-      <button id="saveAsNewPlaylistBtn"><?= LNG_BTN_SAVE ?></button>
+      <button id="saveChangesToSpotifyBtn"><?= LNG_BTN_SAVE ?></button>
     </div>
   </div>
 </div>
@@ -525,7 +534,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/status.js.php"></script>
 <script src="/js/actions.js.php"></script>
 <script src="/js/playlist.js.php"></script>
-<script src="/js/save-playlist.js.php"></script>
+<script src="/js/save-changes-to-spotify.js.php"></script>
 <script src="/js/insert-track.js.php"></script>
 <script src="/js/insert-silence.js.php"></script>
 <script src="/js/randomize-by-bpm.js.php"></script>
@@ -553,7 +562,9 @@ $(document).ready(
 
     setupPlaylist('<?= $playlist_id ?>');
     loadPlaylist('<?= $playlist_id ?>');
-    setupSaveNewPlaylist(<?= $playlist_info->public ? 'true' : 'false' ?>);
+    setupSaveChangesToSpotify( '<?= $playlist_id ?>'
+                             , <?= $playlist_info->public ? 'true' : 'false' ?>
+                             );
     setupRandomizeByBpm();
     setupInsertTrack();
     setupInsertSilence();

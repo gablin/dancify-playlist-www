@@ -39,8 +39,8 @@ define( 'LNG_BTN_LOGIN'
 define( 'LNG_BTN_PREVIEW_RESULT'
       , 'Preview result'
       );
-define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
-      , 'Save as new playlist'
+define( 'LNG_BTN_SAVE_CHANGES_TO_SPOTIFY'
+      , 'Save changes to Spotify'
       );
 define( 'LNG_BTN_SAVE'
       , 'Save'
@@ -114,8 +114,8 @@ define( 'LNG_MENU_LOGOUT'
 define( 'LNG_MENU_CHANGE_PLAYLIST'
       , 'Change playlist'
       );
-define( 'LNG_MENU_SAVE_AS_NEW_PLAYLIST'
-      , 'Save as new playlist'
+define( 'LNG_BTN_SAVE_CHANGES_TO_SPOTIFY'
+      , 'Save changes to Spotify'
       );
 define( 'LNG_MENU_RANDOMIZE_BY_BPM'
       , 'Randomize by BPM'
@@ -263,7 +263,12 @@ define( 'LNG_ERR_FREQ_MUST_BE_GT'
       , 'frequency must be greater than 0'
       );
 define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
-      , 'failed to add tracks to new playlist'
+      , 'Failed to add tracks to new playlist'
+      );
+define( 'LNG_ERR_FAILED_TO_SAVE_CHANGES_TO_SPOTIFY'
+      , 'Failed to save changes to Spotify. If your original playlist was ' .
+        'destroyed in the process, a backup playlist with same name ending with ' .
+        '"- BACKUP" was made before it was destroyed.'
       );
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
       , 'failed to run randomization'
@@ -403,10 +408,9 @@ define( 'LNG_DESC_REDO'
       , 'Redo'
       );
 define( 'LNG_DESC_FIRST_TIME_PART1'
-      , 'No matter what you do here, you can never destroy an existing playlist ' .
-        'in Spotify; all changes are saved separately on the website. In order ' .
-        'to see your changes in Spotify, you must select ' .
-        '"' . LNG_BTN_SAVE_AS_NEW_PLAYLIST . '" in the menu to the left.'
+      , 'All changes done here to your playlists are saved separately on the ' .
+        'website. To make the changes appear in Spotify, you must select ' .
+        '"' . LNG_MENU_SAVE_CHANGES_TO_SPOTIFY . '" in the menu to the left.'
       );
 define( 'LNG_DESC_FIRST_TIME_PART2'
       , 'Make sure you use a computer. This website relies heavily on ' .
@@ -437,6 +441,12 @@ define( 'LNG_DESC_SEARCH_RESULTS'
       );
 define( 'LNG_DESC_SEARCH_RESULTS_NONE'
       , 'No tracks found'
+      );
+define( 'LNG_DESC_OVERWRITE_EXISTING_PLAYLIST'
+      , 'Overwrite existing playlist in Spotify'
+      );
+define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
+      , 'Changes saved to Spotify'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

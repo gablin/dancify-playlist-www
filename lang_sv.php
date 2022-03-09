@@ -40,8 +40,8 @@ define( 'LNG_BTN_LOGIN'
 define( 'LNG_BTN_PREVIEW_RESULT'
       , 'Förhandsgranska resultat'
       );
-define( 'LNG_BTN_SAVE_AS_NEW_PLAYLIST'
-      , 'Spara som ny spellista'
+define( 'LNG_BTN_SAVE_CHANGES_TO_SPOTIFY'
+      , 'Spara ändringar till Spotify'
       );
 define( 'LNG_BTN_SAVE'
       , 'Spara'
@@ -115,8 +115,8 @@ define( 'LNG_MENU_LOGOUT'
 define( 'LNG_MENU_CHANGE_PLAYLIST'
       , 'Byt spellista'
       );
-define( 'LNG_MENU_SAVE_AS_NEW_PLAYLIST'
-      , 'Spara som ny spellista'
+define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
+      , 'Spara ändringar till Spotify'
       );
 define( 'LNG_MENU_RANDOMIZE_BY_BPM'
       , 'Slumpa efter BPM'
@@ -266,6 +266,11 @@ define( 'LNG_ERR_FREQ_MUST_BE_GT'
 define( 'LNG_ERR_FAILED_TO_ADD_SONGS_TO_NEW_PLAYLIST'
       , 'Misslyckades att lägga in låtar i ny spellista'
       );
+define( 'LNG_ERR_FAILED_TO_SAVE_CHANGES_TO_SPOTIFY'
+      , 'Misslyckades att spara ändringar till Spotify. Om din ordinarie ' .
+        'spellista förstördes i processen så skapades en backup-spellista med ' .
+        'samma namn och "- BACKUP" på slutet innan den förstördes.'
+      );
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
       , 'Randomiseringen misslyckades'
       );
@@ -404,10 +409,9 @@ define( 'LNG_DESC_REDO'
       , 'Gör om'
       );
 define( 'LNG_DESC_FIRST_TIME_PART1'
-      , 'Oavsett vad du gör här kan du aldrig förstöra en befintlig spellista i ' .
-        'Spotify; alla ändringar sparas separat på webbsidan. För att dina ' .
-        'ändringar ska synas i Spotify måste du välja ' .
-        '"' . LNG_BTN_SAVE_AS_NEW_PLAYLIST . '" i menyn till vänster.'
+      , 'Alla ändringar gjorda här i dina spellistor sparas separat på ' .
+        'webbsidan. För att ändringarna ska synas i Spotify måste du välja ' .
+        '"' . LNG_MENU_SAVE_CHANGES_TO_SPOTIFY . '" i menyn till vänster.'
       );
 define( 'LNG_DESC_FIRST_TIME_PART2'
       , 'Se till att du använder en dator. Webbsidan förlitar sig till stor del ' .
@@ -438,6 +442,12 @@ define( 'LNG_DESC_SEARCH_RESULTS'
       );
 define( 'LNG_DESC_SEARCH_RESULTS_NONE'
       , 'Inga låtar hittades'
+      );
+define( 'LNG_DESC_OVERWRITE_EXISTING_PLAYLIST'
+      , 'Skriv över befintlig spellista på Spotify'
+      );
+define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
+      , 'Ändringarna har sparats till Spotify'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
