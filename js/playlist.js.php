@@ -1249,32 +1249,53 @@ function addTrackDragHandling(tr) {
           .removeClass('insert-above insert-below');
 
         // Hide insertion-point bar if we are not over a playlist
-        var tr = $(e.target.closest('tr'));
-        if (tr.length == 0 || tr.closest('.playlist').length == 0) {
+        if ($(e.target).closest('.playlist').length == 0) {
           ins_point.hide();
           return;
         }
 
-        // We have moved over a playlist
-
-        // If moved over empty-track tr, mark entire tr as insertion point
-        if (tr.hasClass('empty-track')) {
-          tr.addClass('insert-above');
-          ins_point.hide();
-          return;
-        }
-
-        // If moving over table head, move insertion point to next visible tbody tr
-        if (tr.closest('thead').length > 0) {
-          tr = $(tr.closest('table').find('tbody tr')[0]);
-          while (!tr.is(':visible')) {
-            tr = tr.next();
+        var tr = $(e.target).closest('tr');
+        var insert_above = false;
+        if (tr.length == 1) {
+          // We have moved over a table row
+          // If moved over empty-track tr, mark entire tr as insertion point
+          if (tr.hasClass('empty-track')) {
+            tr.addClass('insert-above');
+            ins_point.hide();
+            return;
           }
+
+          // If moving over table head, move insertion point to next visible
+          // tbody tr
+          if (tr.closest('thead').length > 0) {
+            tr = $(tr.closest('table').find('tbody tr')[0]);
+            while (!tr.is(':visible')) {
+              tr = tr.next();
+            }
+          }
+
+          var tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
+          insert_above = tr_y_half <= 0 || tr.hasClass('summary');
+        }
+        else {
+          // We have moved over the table but outside of any rows
+          // Find summary row
+          tr = $(e.target).closest('.table-wrapper').find('tr.summary');
+          if (tr.length == 0) {
+            ins_point.hide();
+            return;
+          }
+
+          // Check that we are underneath the summary row; otherwise do nothing
+          if (e.pageY < tr.offset().top) {
+            ins_point.hide();
+            return;
+          }
+
+          insert_above = true;
         }
 
         // Mark insertion point and draw insertion-point bar
-        var tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
-        var insert_above = tr_y_half <= 0 || tr.hasClass('summary');
         tr.addClass(insert_above ? 'insert-above' : 'insert-below');
         ins_point.css( { width: tr.width() + 'px'
                        , left: tr.offset().left + 'px'
@@ -1287,7 +1308,7 @@ function addTrackDragHandling(tr) {
         ins_point.show();
       }
 
-      function up(e) {
+      function up() {
         var tr_insert_point =
           $('.playlist tr.insert-above, .playlist tr.insert-below');
         if (tr_insert_point.length == 1) {
