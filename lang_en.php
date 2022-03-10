@@ -114,7 +114,7 @@ define( 'LNG_MENU_LOGOUT'
 define( 'LNG_MENU_CHANGE_PLAYLIST'
       , 'Change playlist'
       );
-define( 'LNG_BTN_SAVE_CHANGES_TO_SPOTIFY'
+define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
       , 'Save changes to Spotify'
       );
 define( 'LNG_MENU_RANDOMIZE_BY_BPM'
