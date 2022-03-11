@@ -31,7 +31,8 @@ if (count($track_ids) == 0) {
   fail('no track IDs');
 }
 $overwrite_playlist =
-  array_key_exists('overwritePlaylist', $json) ? $json['overwritePlaylist'] : true;
+  array_key_exists('overwritePlaylist', $json) ? $json['overwritePlaylist']
+                                               : false;
 if (!is_bool($overwrite_playlist)) {
   fail('illegal overwritePlaylist value');
 }
@@ -47,6 +48,10 @@ if ($overwrite_playlist) {
 else {
   if (!array_key_exists('playlistName', $json)) {
     fail('playlistName missing');
+  }
+  $playlist_name = $json['playlistName'];
+  if (strlen($playlist_name) == 0) {
+    fail('no playlist name');
   }
   if (!array_key_exists('publicPlaylist', $json)) {
     fail('publicPlaylist missing');
