@@ -904,7 +904,7 @@ function getGenreList() {
          , [ 20, '<?= strtolower(LNG_GENRE_OPERA) ?>']
          , [ 21, '<?= strtolower(LNG_GENRE_SALSA) ?>']
          , [ 22, '<?= strtolower(LNG_GENRE_KIZOMBA) ?>']
-         , [ 23, '<?= strtolower(LNG_GENRE_ROCKABILITY) ?>']
+         , [ 23, '<?= strtolower(LNG_GENRE_ROCKABILLY) ?>']
          ];
 }
 

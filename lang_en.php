@@ -517,7 +517,7 @@ define( 'LNG_GENRE_SALSA'
 define( 'LNG_GENRE_KIZOMBA'
       , 'kizomba'
       );
-define( 'LNG_GENRE_ROCKABILITY'
-      , 'rockability'
+define( 'LNG_GENRE_ROCKABILLY'
+      , 'rockabilly'
       );
 ?>
