@@ -532,4 +532,7 @@ define( 'LNG_GENRE_FUNK'
 define( 'LNG_GENRE_VISPOP'
       , 'vispop'
       );
+define( 'LNG_GENRE_FOLK_MUSIC'
+      , 'folk music'
+      );
 ?>

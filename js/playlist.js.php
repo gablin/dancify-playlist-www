@@ -909,6 +909,7 @@ function getGenreList() {
          , [ 25, '<?= strtolower(LNG_GENRE_BALLAD) ?>']
          , [ 26, '<?= strtolower(LNG_GENRE_FUNK) ?>']
          , [ 27, '<?= strtolower(LNG_GENRE_VISPOP) ?>']
+         , [ 28, '<?= strtolower(LNG_GENRE_FOLK_MUSIC) ?>']
          ];
 }
 
