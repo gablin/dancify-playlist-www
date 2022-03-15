@@ -520,4 +520,16 @@ define( 'LNG_GENRE_KIZOMBA'
 define( 'LNG_GENRE_ROCKABILLY'
       , 'rockabilly'
       );
+define( 'LNG_GENRE_ACOUSTIC'
+      , 'acoustic'
+      );
+define( 'LNG_GENRE_BALLAD'
+      , 'ballad'
+      );
+define( 'LNG_GENRE_FUNK'
+      , 'funk'
+      );
+define( 'LNG_GENRE_VISPOP'
+      , 'vispop'
+      );
 ?>

@@ -905,6 +905,10 @@ function getGenreList() {
          , [ 21, '<?= strtolower(LNG_GENRE_SALSA) ?>']
          , [ 22, '<?= strtolower(LNG_GENRE_KIZOMBA) ?>']
          , [ 23, '<?= strtolower(LNG_GENRE_ROCKABILLY) ?>']
+         , [ 24, '<?= strtolower(LNG_GENRE_ACOUSTIC) ?>']
+         , [ 25, '<?= strtolower(LNG_GENRE_BALLAD) ?>']
+         , [ 26, '<?= strtolower(LNG_GENRE_FUNK) ?>']
+         , [ 27, '<?= strtolower(LNG_GENRE_VISPOP) ?>']
          ];
 }
 
