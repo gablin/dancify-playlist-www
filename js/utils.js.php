@@ -59,6 +59,16 @@ function intcmp(i1, i2) {
 }
 
 /**
+ * Returns a new array containing only unique values.
+ *
+ * @param a Array.
+ * @return New array.
+ */
+function uniq(a) {
+  return [...new Set(a)];
+}
+
+/**
  * Fix of jQuery's clone() function to also copy values of select and textarea
  * elements.
  *

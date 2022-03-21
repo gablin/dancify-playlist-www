@@ -58,7 +58,8 @@ $tracks = $api->getTracks($track_ids)->tracks;
 connectDb();
 $genres = [];
 $comments = [];
-$user_sql = escapeSqlValue(getThisUserId($api));
+$user = getThisUserId($api);
+$user_sql = escapeSqlValue($user);
 
 // Load BPM data
 $audio_feats = loadTrackAudioFeatures($api, $tracks);
@@ -78,7 +79,7 @@ while ($row = $res->fetch_assoc()) {
 }
 
 // Load genre data
-$res = queryDb( "SELECT song, genre FROM genre " .
+$res = queryDb( "SELECT song, genre, user FROM genre " .
                 "WHERE song IN (" .
                 join( ','
                     , array_map(
@@ -86,10 +87,10 @@ $res = queryDb( "SELECT song, genre FROM genre " .
                       , $track_ids
                       )
                     ) .
-                ") AND user = '$user_sql'"
+                ")"
               );
 while ($row = $res->fetch_assoc()) {
-  $genres[] = [$row['song'], $row['genre']];
+  $genres[] = [$row['song'], $row['genre'], $row['user']];
 }
 
 // Load comments data
@@ -122,12 +123,24 @@ for ($i = 0; $i < count($tracks); $i++) {
            )
          );
   $bpm = count($bpm) > 0 ? $bpm[0][1] : (int) $audio_feats[$i]->tempo;
-  $genre = array_values( // To reset indices
-             array_filter( $genres
-             , function($g) use ($t) { return $g[0] === $t->id; }
-             )
-           );
-  $genre = count($genre) > 0 ? $genre[0][1] : 0;
+  $genres_by_user = array_values( // To reset indices
+                      array_filter(
+                        $genres
+                      , function($g) use ($t, $user) {
+                          return $g[0] === $t->id && $g[2] === $user;
+                        }
+                      )
+                    );
+  $genres_by_others = array_values( // To reset indices
+                        array_filter(
+                          $genres
+                        , function($g) use ($t, $user) {
+                            return $g[0] === $t->id && $g[2] !== $user;
+                          }
+                        )
+                      );
+  $genre_by_user = count($genres_by_user) > 0 ? $genres_by_user[0][1] : 0;
+  $genres_by_others = array_map(function($t) { return $t[1]; }, $genres_by_others);
   $cmnt = array_values( // To reset indices
             array_filter( $comments
             , function($c) use ($t) { return $c[0] === $t->id; }
@@ -139,7 +152,9 @@ for ($i = 0; $i < count($tracks); $i++) {
                   , 'artists' => formatArtists($t)
                   , 'length' => $t->duration_ms
                   , 'bpm' => $bpm
-                  , 'genre' => $genre
+                  , 'genre' => [ 'by_user' => $genre_by_user
+                               , 'by_others' => $genres_by_others
+                               ]
                   , 'comments' => $cmnt
                   , 'preview_url' => $t->preview_url
                   ];

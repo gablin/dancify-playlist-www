@@ -355,6 +355,10 @@ table th {
   cursor: pointer;
 }
 
+select.chosen-by-others {
+  font-style: italic;
+}
+
 .grabbed {
   cursor: move !important;
 }
@@ -739,7 +743,7 @@ a.ui-button:active,
   color: #E60000;
 }
 
-.bpm-info {
+.sub-info {
   font-size: 80%;
 }
 

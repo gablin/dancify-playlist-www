@@ -82,7 +82,8 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                                                              , t.name
                                                              , t.length
                                                              , t.bpm
-                                                             , t.genre
+                                                             , t.genre.by_user
+                                                             , t.genre.by_others
                                                              , t.comments
                                                              , t.preview_url
                                                              );
@@ -170,7 +171,8 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                                                     , t.name
                                                     , t.length
                                                     , t.bpm
-                                                    , t.genre
+                                                    , t.genre.by_user
+                                                    , t.genre.by_others
                                                     , t.comments
                                                     , t.preview_url
                                                     );
@@ -573,77 +575,81 @@ function updateGenreInDb(track_id, genre, success_f, fail_f) {
 
 function addTrackGenreHandling(tr) {
   var select = tr.find('select[name=genre]');
+  function clicked(s) {
+    function fail(msg) {
+      setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
+    }
+
+    var genre = parseInt(s.find(':selected').val().trim());
+    var old_value = parseInt(s.data('old-value'));
+    if (genre == old_value && !s.hasClass('chosen-by-others')) {
+      return;
+    }
+    s.removeClass('chosen-by-others');
+
+    console.log('running');
+
+    // Find corresponding track ID
+    var tid_input = s.closest('tr').find('input[name=track_id]');
+    if (tid_input.length == 0) {
+      console.log('could not find track ID');
+      return;
+    }
+    var tid = tid_input.val().trim();
+    if (tid.length == 0) {
+      return;
+    }
+
+    setStatus('<?= LNG_DESC_SAVING ?>...');
+    updateGenreInDb( tid
+                   , genre
+                   , clearStatus
+                   , fail
+                   );
+
+    // Update genre on all duplicate tracks (if any)
+    function update(table, tid) {
+      table.find('input[name=track_id][value=' + tid + ']').each(
+        function() {
+          var tr = $(this).closest('tr');
+          tr.find('select[name=genre] option').prop('selected', false);
+          tr.find('select[name=genre] option[value=' + genre + ']')
+            .prop('selected', true);
+        }
+      );
+    }
+    update(getPlaylistTable(), tid);
+    update(getScratchpadTable(), tid);
+
+    setCurrentUndoStateCallback(
+      function() {
+        updateGenreInDb( tid
+                       , old_value
+                       , function() {}
+                       , fail
+                       );
+      }
+    );
+    indicateStateUpdate();
+    setCurrentUndoStateCallback(
+      function() {
+        updateGenreInDb( tid
+                       , genre
+                       , function() {}
+                       , fail
+                       );
+      }
+    );
+  }
   select.click(
     function(e) {
       e.stopPropagation(); // Prevent row selection
+      clicked($(this));
     }
   );
   select.focus(
     function() {
       $(this).data('old-value', $(this).find(':selected').val().trim());
-    }
-  );
-  function fail(msg) {
-    setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
-  }
-  select.change(
-    function() {
-      var s = $(this);
-
-      // Find corresponding track ID
-      var tid_input = s.closest('tr').find('input[name=track_id]');
-      if (tid_input.length == 0) {
-        console.log('could not find track ID');
-        return;
-      }
-      var tid = tid_input.val().trim();
-      if (tid.length == 0) {
-        return;
-      }
-
-      var genre = parseInt(s.find(':selected').val().trim());
-      setStatus('<?= LNG_DESC_SAVING ?>...');
-      updateGenreInDb( tid
-                     , genre
-                     , clearStatus
-                     , fail
-                     );
-
-      // Update genre on all duplicate tracks (if any)
-      function update(table, tid) {
-        table.find('input[name=track_id][value=' + tid + ']').each(
-          function() {
-            var tr = $(this).closest('tr');
-            tr.find('select[name=genre] option').prop('selected', false);
-            tr.find('select[name=genre] option[value=' + genre + ']')
-              .prop('selected', true);
-          }
-        );
-      }
-      update(getPlaylistTable(), tid);
-      update(getScratchpadTable(), tid);
-
-      var old_value = parseInt(s.data('old-value'));
-      // .data() must be read here or else it will disappear upon undo/redo
-      setCurrentUndoStateCallback(
-        function() {
-          updateGenreInDb( tid
-                         , old_value
-                         , function() {}
-                         , fail
-                         );
-        }
-      );
-      indicateStateUpdate();
-      setCurrentUndoStateCallback(
-        function() {
-          updateGenreInDb( tid
-                         , genre
-                         , function() {}
-                         , fail
-                         );
-        }
-      );
     }
   );
 }
@@ -814,7 +820,8 @@ function createPlaylistTrackObject( track_id
                                   , name
                                   , length_ms
                                   , bpm
-                                  , genre
+                                  , genre_by_user
+                                  , genres_by_others
                                   , comments
                                   , preview_url
                                   )
@@ -823,7 +830,9 @@ function createPlaylistTrackObject( track_id
          , title: formatTrackTitle(artists, name)
          , length: length_ms
          , bpm: bpm
-         , genre: genre
+         , genre: { by_user: genre_by_user
+                  , by_others: genres_by_others
+                  }
          , comments: comments
          , previewUrl: preview_url
          }
@@ -1017,10 +1026,24 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('input[name=preview_url]').prop('value', track.previewUrl);
     tr.find('input[name=length_ms]').prop('value', track.length);
     tr.find('input[name=bpm]').prop('value', track.bpm);
-    tr.find('select[name=genre] option[value=' + track.genre + ']')
-      .prop('selected', true);
     tr.find('textarea[name=comments]').text(track.comments);
     tr.find('td.length').text(formatTrackLength(track.length));
+
+    // Genre
+    var genre_select = tr.find('select[name=genre]');
+    var genres_by_others = uniq(track.genre.by_others);
+    if (track.genre.by_user != 0) {
+      genre_select.find('option[value=' + track.genre.by_user + ']')
+        .prop('selected', true);
+    }
+    else if (genres_by_others.length > 0) {
+      genre_select.find('option[value=' + genres_by_others[0] + ']')
+        .prop('selected', true);
+      if (track.genre.by_user == 0) {
+        genre_select.addClass('chosen-by-others');
+      }
+    }
+
     addTrackPreviewHandling(tr);
     addTrackBpmHandling(tr);
     addTrackGenreHandling(tr);
@@ -1621,7 +1644,8 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                                                       , t.name
                                                       , t.length
                                                       , t.bpm
-                                                      , t.genre
+                                                      , t.genre.by_user
+                                                      , t.genre.by_others
                                                       , t.comments
                                                       , t.preview_url
                                                       );

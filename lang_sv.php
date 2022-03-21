@@ -397,6 +397,12 @@ DEFINE( 'LNG_DESC_BPM_INFO'
         'använda en BPM-mätare (finns tillgänliga som app till din telefon) och ' .
         'justera värdet om det inte stämmer.'
       );
+DEFINE( 'LNG_DESC_GENRE_INFO'
+      , 'Låtar med genre i kursiv stil betyder att du har ännu inte valt en ' .
+        'genre för låten men någon annan har. För att spara genren som ditt ' .
+        'eget val eller för att ändra det, klicka på listan och välj samma ' .
+        'eller annan genre.'
+      );
 DEFINE( 'LNG_DESC_DONATE_TEXT'
       , 'Många timmar har gått till att bygga detta verktyg. Om du har nytta av ' .
         'det och vill visa din uppskattning kan du donera ett valfritt belopp ' .

@@ -30,7 +30,8 @@ function setupInsertSilence() {
                                                    , d.name
                                                    , d.length
                                                    , d.bpm
-                                                   , d.genre
+                                                   , d.genre.by_user
+                                                   , d.genre.by_others
                                                    , d.comments
                                                    , d.preview_url
                                                    );

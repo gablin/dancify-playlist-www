@@ -396,6 +396,12 @@ DEFINE( 'LNG_DESC_BPM_INFO'
         'tapper (available as app on your phone) and adjust the value if not ' .
         'accurate.'
       );
+DEFINE( 'LNG_DESC_GENRE_INFO'
+      , 'Tracks with italic genres means you have not yet selected a genre for ' .
+        'the song but someone else has. To save the genre as your own ' .
+        'selection or change it, click the drop-down and select same or ' .
+        'different genre.'
+      );
 DEFINE( 'LNG_DESC_DONATE_TEXT'
       , 'Many hours have been devoted to building this tool. If you find it ' .
         'useful and wish to show your appreciation, feel free to donate a ' .

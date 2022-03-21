@@ -282,7 +282,8 @@ function setupSearchForTracksAddSearchResultsButtons() {
                                          , t.name
                                          , t.length
                                          , t.bpm
-                                         , t.genre
+                                         , t.genre.by_user
+                                         , t.genre.by_others
                                          , t.comments
                                          , t.preview_url
                                          );

@@ -511,7 +511,8 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   <thead></thead>
   <tbody></tbody>
 </table>
-<p class="bpm-info"><?= LNG_DESC_BPM_INFO ?></p>
+<p class="sub-info"><?= LNG_DESC_BPM_INFO ?></p>
+<p class="sub-info"><?= LNG_DESC_GENRE_INFO ?></p>
 </div>
 </div>
 
