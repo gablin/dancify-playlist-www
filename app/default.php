@@ -18,7 +18,7 @@ try {
 
 <table id="playlists">
   <tbody>
-  </tbod>
+  </tbody>
 </table>
 
 <script src="/js/utils.js.php"></script>
