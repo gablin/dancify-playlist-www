@@ -8,7 +8,7 @@ function fail($msg) {
 try {
 
 if (!hasSession()) {
-  fail('no session');
+  throw new NoSessionException();
 }
 
 // Parse JSON data
@@ -138,6 +138,9 @@ $clean_up_fun();
 echo(toJson(['status' => 'OK', 'trackOrder' => $new_track_list]));
 
 } // End try
+catch (NoSessionException $e) {
+  echo(toJson(['status' => 'NOSESSION']));
+}
 catch (\Exception $e) {
   echo(toJson(['status' => 'FAILED', 'msg' => $e->getMessage()]));
 }

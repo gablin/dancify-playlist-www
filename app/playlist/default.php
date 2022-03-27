@@ -545,6 +545,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/donations.js.php"></script>
 <script src="/js/sort.js.php"></script>
 <script src="/js/search-for-tracks.js.php"></script>
+<script src="/js/heartbeat.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -574,6 +575,7 @@ $(document).ready(
     setupRestorePlaylist('<?= $playlist_id ?>');
     setupSort();
     setupSearchForTracks();
+    setupHeartbeat();
 
     function limitPlaylistHeight() {
       var screen_vh = window.innerHeight;

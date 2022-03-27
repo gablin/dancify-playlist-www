@@ -157,7 +157,7 @@ function createApiSession() {
   global $SPOTIFY_CLIENT_ID, $SPOTIFY_CLIENT_SECRET;
 
   $callback = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}" .
-              "/auth/callback/";
+              getAuthCallbackUrl();
   $session = new SpotifyWebAPI\Session( $SPOTIFY_CLIENT_ID
                                       , $SPOTIFY_CLIENT_SECRET
                                       , $callback
@@ -177,12 +177,26 @@ function hasSession() {
 }
 
 /**
+ * Returns the URL to be used for acquiring authorization.
+ */
+function getAuthUrl() {
+  return '/auth/';
+}
+
+/**
+ * Returns the URL to be used for acquiring authorization.
+ */
+function getAuthCallbackUrl() {
+  return '/auth/callback/';
+}
+
+/**
  * Checks whether a session is active. If not, the client is redirected to the
  * login page.
  */
 function ensureSession() {
   if (!hasSession()) {
-    header('Location: /auth/');
+      header('Location: ' . getAuthUrl());
     die();
   }
 }
@@ -823,5 +837,10 @@ function toIntString($s) {
   }
   return (int) $s;
 }
+
+/**
+ * Exception for representing failure due to having no active Spotify session.
+ */
+class NoSessionException extends \Exception {}
 
 ?>

@@ -8,7 +8,7 @@ function fail($msg) {
 try {
 
 if (!hasSession()) {
-  fail('no session');
+  throw new NoSessionException();
 }
 $session = getSession();
 $api = createWebApi($session);
@@ -41,6 +41,9 @@ $snapshot = fromJson($res->fetch_assoc()['snapshot']);
 echo(toJson(['status' => 'OK', 'snapshot' => $snapshot]));
 
 } // End try
+catch (NoSessionException $e) {
+  echo(toJson(['status' => 'NOSESSION']));
+}
 catch (\Exception $e) {
   echo(toJson(['status' => 'FAILED', 'msg' => $e->getMessage()]));
 }

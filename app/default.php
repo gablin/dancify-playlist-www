@@ -24,9 +24,11 @@ try {
 <script src="/js/utils.js.php"></script>
 <script src="/js/status.js.php"></script>
 <script src="/js/user.js.php"></script>
+<script src="/js/heartbeat.js.php"></script>
 <script type="text/javascript">
 $(document).ready(
   function() {
+    setupHeartbeat();
     loadUserPlaylists('<?= getThisUserId($api) ?>');
   }
 );

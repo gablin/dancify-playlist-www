@@ -22,6 +22,9 @@ function callApi(url, data, success_f, fail_f) {
           fail_f(json.msg);
           return;
         }
+        else if (json.status == 'NOSESSION') {
+          window.location.href = '<?= getAuthUrl() ?>';
+        }
         success_f(json);
       }
     )
