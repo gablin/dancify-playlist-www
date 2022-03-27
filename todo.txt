@@ -1,4 +1,3 @@
 - add link to tutorial
 - replace 'var' with 'let' where appropriate
-- show track genre selected by others
 - make snapshots sharable
