@@ -9,6 +9,5 @@ function setupHeartbeat() {
 }
 
 function sendHeartbeat() {
-  console.log('beating...');
   callApi('/api/heartbeat/', {}, function() {}, function() {});
 }
