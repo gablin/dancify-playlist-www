@@ -575,7 +575,7 @@ function updateGenreInDb(track_id, genre, success_f, fail_f) {
 
 function addTrackGenreHandling(tr) {
   var select = tr.find('select[name=genre]');
-  function clicked(s) {
+  function update(s) {
     function fail(msg) {
       setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
     }
@@ -586,6 +586,7 @@ function addTrackGenreHandling(tr) {
       return;
     }
     s.removeClass('chosen-by-others');
+    s.data('old-value', genre);
 
     // Find corresponding track ID
     var tid_input = s.closest('tr').find('input[name=track_id]');
@@ -642,9 +643,10 @@ function addTrackGenreHandling(tr) {
   select.click(
     function(e) {
       e.stopPropagation(); // Prevent row selection
-      clicked($(this));
+      update($(this));
     }
   );
+  select.change(function() { update($(this)); });
   select.focus(
     function() {
       $(this).data('old-value', $(this).find(':selected').val().trim());
