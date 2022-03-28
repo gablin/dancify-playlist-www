@@ -587,8 +587,6 @@ function addTrackGenreHandling(tr) {
     }
     s.removeClass('chosen-by-others');
 
-    console.log('running');
-
     // Find corresponding track ID
     var tid_input = s.closest('tr').find('input[name=track_id]');
     if (tid_input.length == 0) {
