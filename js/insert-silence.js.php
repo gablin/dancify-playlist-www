@@ -25,9 +25,9 @@ function setupInsertSilence() {
       callApi( '/api/get-track-info/'
              , track_data
              , function(d) {
+                 var title = formatTrackTitle(d.artists, d.name);
                  var to = createPlaylistTrackObject( d.trackId
-                                                   , d.artists
-                                                   , d.name
+                                                   , title
                                                    , d.length
                                                    , d.bpm
                                                    , d.genre.by_user

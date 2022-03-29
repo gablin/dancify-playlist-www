@@ -277,9 +277,9 @@ function setupSearchForTracksAddSearchResultsButtons() {
       function() {
         var tr = $(this);
         var t = tr.data('trackData');
+        var title = formatTrackTitle(t.artists, t.name);
         var o = createPlaylistTrackObject( t.trackId
-                                         , t.artists
-                                         , t.name
+                                         , title
                                          , t.length
                                          , t.bpm
                                          , t.genre.by_user

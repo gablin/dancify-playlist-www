@@ -77,9 +77,9 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                           var tracks = [];
                           for (var i = 0; i < dd.tracks.length; i++) {
                             var t = dd.tracks[i];
+                            var title = formatTrackTitle(t.artists, t.name);
                             var o = createPlaylistTrackObject( t.trackId
-                                                             , t.artists
-                                                             , t.name
+                                                             , title
                                                              , t.length
                                                              , t.bpm
                                                              , t.genre.by_user
@@ -166,9 +166,9 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                  var tracks = [];
                  for (var i = 0; i < d.tracks.length; i++) {
                    var t = d.tracks[i];
+                   var title = formatTrackTitle(t.artists, t.name);
                    var o = createPlaylistTrackObject( t.trackId
-                                                    , t.artists
-                                                    , t.name
+                                                    , title
                                                     , t.length
                                                     , t.bpm
                                                     , t.genre.by_user
@@ -775,18 +775,27 @@ function getTrackData(table) {
         var track_id = tr.find('input[name=track_id]').val().trim();
         var preview_url = tr.find('input[name=preview_url]').val().trim();
         var bpm = parseInt(tr.find('input[name=bpm]').val().trim());
-        var genre =
+        var genre_by_user =
           parseInt(tr.find('select[name=genre] option:selected').val().trim());
+        var genres_by_others_text =
+          tr.find('input[name=genres_by_others]').val().trim();
+        var genres_by_others =
+          genres_by_others_text.length > 0
+            ? genres_by_others_text.split(',').map(s => parseInt(s))
+            : [];
         var title = getTrTitleText(tr);
-        var len = parseInt(tr.find('input[name=length_ms]').val().trim());
-        playlist.push( { trackId: track_id
-                       , title: title
-                       , length: len
-                       , bpm: bpm
-                       , genre: genre
-                       , previewUrl: preview_url
-                       }
-                     );
+        var len_ms = parseInt(tr.find('input[name=length_ms]').val().trim());
+        var comments = tr.find('textarea[name=comments]').val().trim();
+        var o = createPlaylistTrackObject( track_id
+                                         , title
+                                         , len_ms
+                                         , bpm
+                                         , genre_by_user
+                                         , genres_by_others
+                                         , comments
+                                         , preview_url
+                                         );
+        playlist.push(o);
       }
       else{
         var title = tr.find('td.title').text().trim();
@@ -816,8 +825,7 @@ function getScratchpadTrackData() {
 }
 
 function createPlaylistTrackObject( track_id
-                                  , artists
-                                  , name
+                                  , title
                                   , length_ms
                                   , bpm
                                   , genre_by_user
@@ -827,7 +835,7 @@ function createPlaylistTrackObject( track_id
                                   )
 {
   return { trackId: track_id
-         , title: formatTrackTitle(artists, name)
+         , title: title
          , length: length_ms
          , bpm: bpm
          , genre: { by_user: genre_by_user
@@ -958,6 +966,7 @@ function buildNewTableTrackTr() {
        '  <input type="hidden" name="track_id" value="" />' +
        '  <input type="hidden" name="preview_url" value="" />' +
        '  <input type="hidden" name="length_ms" value="" />' +
+       '  <input type="hidden" name="genres_by_others" value="" />' +
        '  <td class="index" />' +
        '  <td class="bpm">' +
        '    <input type="text" name="bpm" class="bpm" value="" />' +
@@ -1026,6 +1035,8 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('input[name=preview_url]').prop('value', track.previewUrl);
     tr.find('input[name=length_ms]').prop('value', track.length);
     tr.find('input[name=bpm]').prop('value', track.bpm);
+    tr.find('input[name=genres_by_others]')
+      .prop('value', track.genre.by_others.join(','));
     tr.find('textarea[name=comments]').text(track.comments);
     tr.find('td.length').text(formatTrackLength(track.length));
 
@@ -1055,6 +1066,8 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('input[name=track_id]').remove();
     tr.find('input[name=preview_url]').remove();
     tr.find('input[name=length_ms]').remove();
+    tr.find('input[name=genres_by_others]').remove();
+    tr.find('textarea[name=comments]').remove();
     bpm_td = tr.find('input[name=bpm]').closest('td');
     bpm_td.find('input').remove();
     bpm_td.text(track.bpm);
@@ -1639,9 +1652,9 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                  var tracks = [];
                  for (var i = 0; i < d.tracks.length; i++) {
                    var t = d.tracks[i];
+                   var title = formatTrackTitle(t.artists, t.name);
                    var obj = createPlaylistTrackObject( t.trackId
-                                                      , t.artists
-                                                      , t.name
+                                                      , title
                                                       , t.length
                                                       , t.bpm
                                                       , t.genre.by_user
