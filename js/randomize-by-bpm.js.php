@@ -30,17 +30,24 @@ function setupFormElementsForRandomizeByBpm() {
       playlist_data = removePlaceholdersFromTracks(playlist_data);
       var track_ids = [];
       var bpms = [];
-      var categories = [];
+      var genres = [];
       for (var i = 0; i < playlist_data.length; i++) {
         var track = playlist_data[i];
         track_ids.push(track.trackId)
         bpms.push(track.bpm);
-        categories.push(track.genre);
+        var genre = 0;
+        if (track.genre.by_user != 0) {
+          genre = track.genre.by_user;
+        }
+        else if (track.genre.by_others.length > 0) {
+          genre = track.genre.by_others[0];
+        }
+        genres.push(genre);
       }
       var bpm_data = getBpmSettings();
       var data = { trackIdList: track_ids
                  , trackBpmList: bpms
-                 , trackGenreList: categories
+                 , trackGenreList: genres
                  , bpmRangeList: bpm_data.bpmRangeList
                  , bpmDifferenceList: bpm_data.bpmDifferenceList
                  , danceSlotSameGenre:
