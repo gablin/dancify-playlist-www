@@ -273,6 +273,7 @@ table th {
   padding-right: 1em;
 }
 .playlist table .length,
+.playlist table tr.delimiter td.length,
 .playlist table th.bpm,
 .playlist table td.bpm {
   text-align: right;
@@ -327,7 +328,8 @@ table th {
 .playlist table tr.empty-track.insert-below:hover {
   background-color: #0CA761;
 }
-.playlist table tr.summary .length {
+.playlist table tr.summary .length,
+.playlist table tr.delimiter td.length {
   padding-top: .5em;
   font-weight: bold;
 }

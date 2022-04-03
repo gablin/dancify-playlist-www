@@ -1111,24 +1111,32 @@ function renderTable(table) {
   table.find('tr.delimiter').remove();
   if (delimiter > 0) {
     var num_cols = buildNewTableTrackTr(table).find('td').length;
+    console.log(num_cols);
     table
       .find('tr.track, tr.empty-track')
       .filter(':nth-child(' + delimiter + 'n)')
       .after(
-        $( '<tr class="delimiter"><td colspan="' + num_cols + '"><div /></td>' +
+        $( '<tr class="delimiter">' +
+             '<td colspan="' + (num_cols-1) + '"><div /></td>' +
+             '<td class="length"></td>' +
            '</tr>'
          )
       );
-
-    // Remove dangling delimiter, if any
-    var trs = table.find('tr.track, tr.delimiter');
-    if (trs.length > 0) {
-      var last_tr = $(trs[trs.length-1]);
-      if (last_tr.hasClass('delimiter')) {
-        last_tr.remove();
+  }
+  var i = 0;
+  var dance_length = 0;
+  table.find('tr.track, tr.delimiter').each(
+    function() {
+      var tr = $(this);
+      if (tr.hasClass('track')) {
+        dance_length += parseInt(tr.find('input[name=length_ms]').val());
+      }
+      else if (tr.hasClass('delimiter')) {
+        tr.find('td.length').text(formatTrackLength(dance_length));
+        dance_length = 0;
       }
     }
-  }
+  );
 
   // Compute total length
   var total_length = 0;
