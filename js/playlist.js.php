@@ -8,7 +8,7 @@ $api = createWebApi($session);
 
 var PLAYLIST_ID = '';
 var PREVIEW_AUDIO = $('<audio />');
-var PLAYLIST_TRACK_DELIMITER = 0;
+var PLAYLIST_DANCE_DELIMITER = 0;
 var TRACK_DRAG_STATE = 0;
 var UNDO_STACK_LIMIT = 100;
 var UNDO_STACK = Array(UNDO_STACK_LIMIT).fill(null);
@@ -1098,7 +1098,7 @@ function replaceTracks(table, tracks) {
 }
 
 function renderTable(table) {
-  const delimiter = (table.is(getPlaylistTable())) ? PLAYLIST_TRACK_DELIMITER : 0;
+  const delimiter = (table.is(getPlaylistTable())) ? PLAYLIST_DANCE_DELIMITER : 0;
 
   // Assign indices
   var trs = table.find('tr.track, tr.empty-track');
@@ -1169,12 +1169,12 @@ function formatTrackLength(ms) {
   return t.join(':');
 }
 
-function setTrackDelimiter(d) {
-  PLAYLIST_TRACK_DELIMITER = d;
+function setDanceDelimiter(d) {
+  PLAYLIST_DANCE_DELIMITER = d;
 }
 
-function isUsingTrackDelimiter() {
-  return PLAYLIST_TRACK_DELIMITER > 0;
+function isUsingDanceDelimiter() {
+  return PLAYLIST_DANCE_DELIMITER > 0;
 }
 
 function clearTrackSelection() {
@@ -1368,7 +1368,7 @@ function addTrackDragHandling(tr) {
 
             // If appropriate, insert placeholders where selected tracks used to be
             var source_table = getTableOfTr($(selected_trs[0]));
-            if (isUsingTrackDelimiter() && source_table.is(getPlaylistTable())) {
+            if (isUsingDanceDelimiter() && source_table.is(getPlaylistTable())) {
               // Ignore tracks that covers an entire dance block
               rows_to_keep = [];
               function isTrackRow(tr) {
@@ -1601,7 +1601,7 @@ function savePlaylistSnapshot() {
   data = { playlistId: PLAYLIST_ID
          , snapshot: { playlistData: playlist_tracks
                      , scratchpadData: scratchpad_tracks
-                     , delimiter: PLAYLIST_TRACK_DELIMITER
+                     , delimiter: PLAYLIST_DANCE_DELIMITER
                      , spotifyPlaylistHash: LAST_SPOTIFY_PLAYLIST_HASH
                      }
          };
@@ -1685,9 +1685,9 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
          , { playlistId: playlist_id }
          , function(res) {
              if (res.status == 'OK') {
-               PLAYLIST_TRACK_DELIMITER = res.snapshot.delimiter;
+               PLAYLIST_DANCE_DELIMITER = res.snapshot.delimiter;
                LAST_SPOTIFY_PLAYLIST_HASH = res.snapshot.spotifyPlaylistHash;
-               if (PLAYLIST_TRACK_DELIMITER > 0) {
+               if (PLAYLIST_DANCE_DELIMITER > 0) {
                  setDelimiterAsShowing();
                }
                load(getPlaylistTable(), 0, res.snapshot.playlistData, 0);

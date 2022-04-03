@@ -126,8 +126,8 @@ define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
 define( 'LNG_MENU_INSERT_SILENCE_AT_INTERVAL'
       , 'Insert silence at interval'
       );
-DEFINE( 'LNG_MENU_TRACK_DELIMITER'
-      , 'Track delimiter'
+DEFINE( 'LNG_MENU_DANCE_DELIMITER'
+      , 'Dance delimiter'
       );
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
@@ -291,8 +291,8 @@ define( 'LNG_INSTR_INSERT_TRACK_ENTER_FREQ'
 define( 'LNG_INSTR_INSERT_SILENCE_ENTER_FREQ'
       , 'Insert above silence after every %s track in playlist'
       );
-define( 'LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ'
-      , 'Insert delimiter every %s track in playlist'
+define( 'LNG_INSTR_DANCE_DELIMITER_ENTER_FREQ'
+      , 'Each dance is %s song(s)'
       );
 define( 'LNG_INSTR_ENTER_NAME_OF_NEW_PLAYLIST'
       , 'Enter name of new playlist'

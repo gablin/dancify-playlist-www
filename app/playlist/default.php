@@ -8,7 +8,7 @@ $api = createWebApi($session);
 
 beginPage();
 mkHtmlNavMenu(
-  [ [ LNG_MENU_TRACK_DELIMITER, '#', 'track-delimiter' ]
+  [ [ LNG_MENU_DANCE_DELIMITER, '#', 'dance-delimiter' ]
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
   , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, '#', 'insert-silence-at-interval' ]
@@ -336,10 +336,10 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   </div>
 </div>
 
-<div class="action-input-area" name="track-delimiter">
+<div class="action-input-area" name="dance-delimiter">
   <div class="background"></div>
   <div class="input">
-    <div class="title"><?= LNG_MENU_TRACK_DELIMITER ?></div>
+    <div class="title"><?= LNG_MENU_DANCE_DELIMITER ?></div>
 
     <p>
       <?= LNG_DESC_DELIMITER ?>
@@ -347,7 +347,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 
     <div>
       <div>
-        <?= sprintf( LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ
+        <?= sprintf( LNG_INSTR_DANCE_DELIMITER_ENTER_FREQ
                    , "<input type=\"text\" name=\"delimiter-freq\" class=\"number centered\" />"
                    ) ?>
       </div>
@@ -357,8 +357,8 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
       </button>
-      <button id="hideTrackDelimiterBtn"><?= LNG_BTN_HIDE ?></button>
-      <button id="showTrackDelimiterBtn"><?= LNG_BTN_SHOW ?></button>
+      <button id="hideDanceDelimiterBtn"><?= LNG_BTN_HIDE ?></button>
+      <button id="showDanceDelimiterBtn"><?= LNG_BTN_SHOW ?></button>
     </div>
   </div>
 </div>
@@ -539,7 +539,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/insert-track.js.php"></script>
 <script src="/js/insert-silence.js.php"></script>
 <script src="/js/randomize-by-bpm.js.php"></script>
-<script src="/js/track-delimiter.js.php"></script>
+<script src="/js/dance-delimiter.js.php"></script>
 <script src="/js/scratchpad.js.php"></script>
 <script src="/js/restore-playlist.js.php"></script>
 <script src="/js/donations.js.php"></script>
@@ -570,7 +570,7 @@ $(document).ready(
     setupRandomizeByBpm();
     setupInsertTrack();
     setupInsertSilence();
-    setupTrackDelimiter();
+    setupDanceDelimiter();
     setupScratchpad();
     setupRestorePlaylist('<?= $playlist_id ?>');
     setupSort();

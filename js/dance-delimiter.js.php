@@ -2,39 +2,39 @@
 require '../autoload.php';
 ?>
 
-function setupTrackDelimiter() {
-  setupFormElementsForTrackDelimiter();
+function setupDanceDelimiter() {
+  setupFormElementsForDanceDelimiter();
 }
 
 function getShowDelimiterButton() {
-  return getPlaylistForm().find('button[id=showTrackDelimiterBtn]');
+  return getPlaylistForm().find('button[id=showDanceDelimiterBtn]');
 }
 
 function getHideDelimiterButton() {
-  return getPlaylistForm().find('button[id=hideTrackDelimiterBtn]');
+  return getPlaylistForm().find('button[id=hideDanceDelimiterBtn]');
 }
 
-function setupFormElementsForTrackDelimiter() {
+function setupFormElementsForDanceDelimiter() {
   var form = getPlaylistForm();
   var table = getPlaylistTable();
   var show_btn = getShowDelimiterButton();
   var hide_btn = getHideDelimiterButton();
   show_btn.click(
     function() {
-      if (!checkTrackDelimiterInput()) {
+      if (!checkDanceDelimiterInput()) {
         return;
       }
-      var data = getTrackDelimiterData();
-      setTrackDelimiter(data.delimiterFreq);
+      var data = getDanceDelimiterData();
+      setDanceDelimiter(data.delimiterFreq);
       renderPlaylist();
       savePlaylistSnapshot(); // Do not invoke indicateStateUpdate() here
       setDelimiterAsShowing();
       clearActionInputs();
     }
   );
-  form.find('button[id=hideTrackDelimiterBtn]').click(
+  form.find('button[id=hideDanceDelimiterBtn]').click(
     function() {
-      setTrackDelimiter(0);
+      setDanceDelimiter(0);
       renderPlaylist();
       savePlaylistSnapshot(); // Do not invoke indicateStateUpdate() here
       setDelimiterAsHidden();
@@ -50,12 +50,12 @@ function setupFormElementsForTrackDelimiter() {
   );
 }
 
-function getTrackDelimiterData() {
+function getDanceDelimiterData() {
   var form = getPlaylistForm();
   return { delimiterFreq: form.find('input[name=delimiter-freq]').val().trim() };
 }
 
-function checkTrackDelimiterInput() {
+function checkDanceDelimiterInput() {
   var form = getPlaylistForm();
   var freq_str = form.find('input[name=delimiter-freq]').val().trim();
   freq = parseInt(freq_str);

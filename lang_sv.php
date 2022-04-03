@@ -127,8 +127,8 @@ define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
 define( 'LNG_MENU_INSERT_SILENCE_AT_INTERVAL'
       , 'Lägg in tystnad vid intervall'
       );
-DEFINE( 'LNG_MENU_TRACK_DELIMITER'
-      , 'Låtavgränsning'
+DEFINE( 'LNG_MENU_DANCE_DELIMITER'
+      , 'Dansavgränsning'
       );
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
@@ -292,8 +292,8 @@ define( 'LNG_INSTR_INSERT_TRACK_ENTER_FREQ'
 define( 'LNG_INSTR_INSERT_SILENCE_ENTER_FREQ'
       , 'Lägg in ovanstående tystnad efter varje %s låt i spellistan'
       );
-define( 'LNG_INSTR_TRACK_DELIMITER_ENTER_FREQ'
-      , 'Lägg in avgränsning efter varje %s låt i spellistan'
+define( 'LNG_INSTR_DANCE_DELIMITER_ENTER_FREQ'
+      , 'Varje dans är %s låt(ar)'
       );
 define( 'LNG_INSTR_ENTER_NAME_OF_NEW_PLAYLIST'
       , 'Skriv in namn på ny spellista'
