@@ -1111,7 +1111,6 @@ function renderTable(table) {
   table.find('tr.delimiter').remove();
   if (delimiter > 0) {
     var num_cols = buildNewTableTrackTr(table).find('td').length;
-    console.log(num_cols);
     table
       .find('tr.track, tr.empty-track')
       .filter(':nth-child(' + delimiter + 'n)')
