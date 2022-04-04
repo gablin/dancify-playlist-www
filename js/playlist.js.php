@@ -523,18 +523,21 @@ function renderTrackBpm(tr) {
   bpm = parseInt(bpm);
   let cs = getBpmRgbColor(bpm);
   input.css('background-color', 'rgb(' + cs.join(',') + ')');
-  $text_color = (bpm < 25 || bpm  > 210) ? '#fff' : '#000';
+  $text_color = (bpm <= 50 || bpm  > 210) ? '#fff' : '#000';
   input.css('color', $text_color);
 }
 
 function getBpmRgbColor(bpm) {
   //               bpm    color (RGB)
-  const colors = [ [   0, [  0,   0, 255] ] // Blue
-                 , [  40, [  0, 255,   0] ] // Green
-                 , [ 100, [255, 255,   0] ] // Yellow
-                 , [ 160, [255,   0,   0] ] // Red
-                 , [ 200, [255,   0, 255] ] // Purple
-                 , [ 255, [  0,   0, 255] ] // Blue
+  const colors = [ [   0, [  0,   0,   0] ] // Black
+                 , [  40, [  0,   0, 255] ] // Blue
+                 , [  65, [  0, 255, 255] ] // Turquoise
+                 , [  80, [  0, 255,   0] ] // Green
+                 , [  95, [255, 255,   0] ] // Yellow
+                 , [ 140, [255,   0,   0] ] // Red
+                 , [ 180, [255,   0, 255] ] // Purple
+                 , [ 210, [  0,   0, 255] ] // Blue
+                 , [ 255, [  0,   0,   0] ] // Black
                  ];
   for (var i = 0; i < colors.length; i++) {
     if (i == colors.length-2 || bpm < colors[i+1][0]) {
