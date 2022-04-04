@@ -1219,7 +1219,7 @@ class SpotifyWebAPI
         $headers = $this->authHeaders();
 
         $userId = $this->uriToId($userId, 'user');
-        $uri = '/v1/users/' . $userId;
+        $uri = '/v1/users/' . urlencode($userId);
 
         $this->lastResponse = $this->sendRequest('GET', $uri, [], $headers);
 
@@ -1269,7 +1269,7 @@ class SpotifyWebAPI
         $headers = $this->authHeaders();
 
         $userId = $this->uriToId($userId, 'user');
-        $uri = '/v1/users/' . $userId . '/playlists';
+        $uri = '/v1/users/' . urlencode($userId) . '/playlists';
 
         $this->lastResponse = $this->sendRequest('GET', $uri, $options, $headers);
 
