@@ -185,9 +185,7 @@ function searchForTracks( genre
     for (var i = 0; i < tracks.length; i++) {
       var t = tracks[i];
       var tr = $( '<tr class="track">' +
-                    '<td>' +
-                      formatTrackTitle(t.artists, t.name) +
-                    '</td>' +
+                    '<td>' + formatTrackTitleAsText(t.artists, t.name) + '</td>' +
                     '<td class="bpm">' + t.bpm + '</td>' +
                     '<td class="length">' +
                       formatTrackLength(t.length) +
@@ -277,9 +275,9 @@ function setupSearchForTracksAddSearchResultsButtons() {
       function() {
         var tr = $(this);
         var t = tr.data('trackData');
-        var title = formatTrackTitle(t.artists, t.name);
         var o = createPlaylistTrackObject( t.trackId
-                                         , title
+                                         , t.artists
+                                         , t.name
                                          , t.length
                                          , t.bpm
                                          , t.genre.by_user

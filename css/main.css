@@ -308,9 +308,6 @@ table th {
 }
 
 .playlist table .summary {}
-.playlist table tr.delimiter td {
-  padding: 0.5em 0;
-}
 .playlist table tr.delimiter div {
   border-top: 1px solid #09814A;
   opacity: 0.5;
@@ -332,6 +329,13 @@ table th {
 .playlist table tr.delimiter td.length {
   padding-top: .5em;
   font-weight: bold;
+}
+.playlist table td.title {
+  padding: .5em 0;
+}
+.playlist table td.title div.artists {
+  font-size: 80%;
+  color: #2D4739;
 }
 .playlist table td.title a {
   font-size: 130%;

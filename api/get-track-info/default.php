@@ -149,7 +149,9 @@ for ($i = 0; $i < count($tracks); $i++) {
   $cmnt = count($cmnt) > 0 ? $cmnt[0][1] : '';
   $tracks_res[] = [ 'trackId' => $t->id
                   , 'name' => $t->name
-                  , 'artists' => formatArtists($t)
+                  , 'artists' => array_map( function($a) { return $a->name; }
+                                          , $t->artists
+                                          )
                   , 'length' => $t->duration_ms
                   , 'bpm' => $bpm
                   , 'genre' => [ 'by_user' => $genre_by_user

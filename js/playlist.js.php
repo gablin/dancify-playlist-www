@@ -77,9 +77,9 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                           var tracks = [];
                           for (var i = 0; i < dd.tracks.length; i++) {
                             var t = dd.tracks[i];
-                            var title = formatTrackTitle(t.artists, t.name);
                             var o = createPlaylistTrackObject( t.trackId
-                                                             , title
+                                                             , t.artists
+                                                             , t.name
                                                              , t.length
                                                              , t.bpm
                                                              , t.genre.by_user
@@ -166,9 +166,9 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                  var tracks = [];
                  for (var i = 0; i < d.tracks.length; i++) {
                    var t = d.tracks[i];
-                   var title = formatTrackTitle(t.artists, t.name);
                    var o = createPlaylistTrackObject( t.trackId
-                                                    , title
+                                                    , t.artists
+                                                    , t.name
                                                     , t.length
                                                     , t.bpm
                                                     , t.genre.by_user
@@ -773,6 +773,9 @@ function getTrackData(table) {
       var tr = $(this);
       if (tr.hasClass('track')) {
         var track_id = tr.find('input[name=track_id]').val().trim();
+        var artists = tr.find('input[name=artists]').val().trim();
+        artists = artists.length > 0 ? artists.split(',') : [];
+        var name = tr.find('input[name=name]').val().trim();
         var preview_url = tr.find('input[name=preview_url]').val().trim();
         var bpm = parseInt(tr.find('input[name=bpm]').val().trim());
         var genre_by_user =
@@ -787,7 +790,8 @@ function getTrackData(table) {
         var len_ms = parseInt(tr.find('input[name=length_ms]').val().trim());
         var comments = tr.find('textarea[name=comments]').val().trim();
         var o = createPlaylistTrackObject( track_id
-                                         , title
+                                         , artists
+                                         , name
                                          , len_ms
                                          , bpm
                                          , genre_by_user
@@ -798,11 +802,11 @@ function getTrackData(table) {
         playlist.push(o);
       }
       else{
-        var title = tr.find('td.title').text().trim();
+        var name = tr.find('td.title').text().trim();
         var length = tr.find('td.length').text().trim();
         var bpm = tr.find('td.bpm').text().trim();
         var genre = tr.find('td.genre').text().trim();
-        playlist.push(createPlaylistPlaceholderObject(title, length, bpm, genre));
+        playlist.push(createPlaylistPlaceholderObject(name, length, bpm, genre));
       }
     }
   );
@@ -825,7 +829,8 @@ function getScratchpadTrackData() {
 }
 
 function createPlaylistTrackObject( track_id
-                                  , title
+                                  , artists
+                                  , name
                                   , length_ms
                                   , bpm
                                   , genre_by_user
@@ -835,7 +840,8 @@ function createPlaylistTrackObject( track_id
                                   )
 {
   return { trackId: track_id
-         , title: title
+         , artists: artists
+         , name: name
          , length: length_ms
          , bpm: bpm
          , genre: { by_user: genre_by_user
@@ -846,20 +852,20 @@ function createPlaylistTrackObject( track_id
          }
 }
 
-function createPlaylistPlaceholderObject( title_text
+function createPlaylistPlaceholderObject( name_text
                                         , length_text
                                         , bpm_text
                                         , genre_text
                                         )
 {
-  if (title_text === undefined) {
-    return { title: '<?= LNG_DESC_PLACEHOLDER ?>'
+  if (name_text === undefined) {
+    return { name: '<?= LNG_DESC_PLACEHOLDER ?>'
            , length: ''
            , bpm: ''
            , genre: ''
            }
   }
-  return { title: title_text
+  return { name: name_text
          , length: length_text
          , bpm: bpm_text
          , genre: genre_text
@@ -964,6 +970,8 @@ function buildNewTableTrackTr() {
   var tr =
     $( '<tr class="track">' +
        '  <input type="hidden" name="track_id" value="" />' +
+       '  <input type="hidden" name="artists" value="" />' +
+       '  <input type="hidden" name="name" value="" />' +
        '  <input type="hidden" name="preview_url" value="" />' +
        '  <input type="hidden" name="length_ms" value="" />' +
        '  <input type="hidden" name="genres_by_others" value="" />' +
@@ -1024,14 +1032,16 @@ function addTrackPreviewHandling(tr) {
       e.stopPropagation(); // Prevent row selection
     }
   );
-  tr.find('td.title').append(link);
+  tr.find('td.title div.name').append(link);
 }
 
 function buildNewTableTrackTrFromTrackObject(track) {
   var tr = buildNewTableTrackTr();
   if ('trackId' in track) {
-    tr.find('td.title').text(track.title);
+    tr.find('td.title').append(formatTrackTitleAsHtml(track.artists, track.name));
     tr.find('input[name=track_id]').prop('value', track.trackId);
+    tr.find('input[name=artists]').prop('value', track.artists.join(','));
+    tr.find('input[name=name]').prop('value', track.name);
     tr.find('input[name=preview_url]').prop('value', track.previewUrl);
     tr.find('input[name=length_ms]').prop('value', track.length);
     tr.find('input[name=bpm]').prop('value', track.bpm);
@@ -1062,7 +1072,7 @@ function buildNewTableTrackTrFromTrackObject(track) {
   }
   else {
     tr.removeClass('track').addClass('empty-track');
-    tr.find('td.title').text(track.title);
+    tr.find('td.title').text(track.name);
     tr.find('input[name=track_id]').remove();
     tr.find('input[name=preview_url]').remove();
     tr.find('input[name=length_ms]').remove();
@@ -1155,8 +1165,16 @@ function renderScratchpad() {
   renderTable(getScratchpadTable());
 }
 
-function formatTrackTitle(artists, name) {
+function formatTrackTitleAsText(artists, name) {
   return artists + ' - ' + name;
+}
+
+function formatTrackTitleAsHtml(artists, name) {
+  return $( '<div class="title">' +
+              '<div class="name">' + name + '</div>' +
+              '<div class="artists">' + artists + '</div>' +
+            '</div>'
+          );
 }
 
 function formatTrackLength(ms) {
@@ -1659,9 +1677,9 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                  var tracks = [];
                  for (var i = 0; i < d.tracks.length; i++) {
                    var t = d.tracks[i];
-                   var title = formatTrackTitle(t.artists, t.name);
                    var obj = createPlaylistTrackObject( t.trackId
-                                                      , title
+                                                      , t.artists
+                                                      , t.name
                                                       , t.length
                                                       , t.bpm
                                                       , t.genre.by_user
