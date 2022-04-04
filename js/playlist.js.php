@@ -29,6 +29,7 @@ function setupPlaylist(playlist_id) {
                     }
                   }
                 );
+  $(window).resize(setPlaylistHeight);
 }
 
 function getTableOfTr(tr) {
@@ -1158,6 +1159,7 @@ function renderTable(table) {
 }
 
 function renderPlaylist() {
+  setPlaylistHeight();
   renderTable(getPlaylistTable());
 }
 
@@ -1967,4 +1969,14 @@ function showPlaylistsWithTrack(tid, title) {
            );
   }
   loadPlaylists(0);
+}
+
+function setPlaylistHeight() {
+  var screen_vh = window.innerHeight;
+  var table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
+  var footer_vh = $('div.footer').outerHeight();
+  var playlist_vh = screen_vh - table_offset - footer_vh;
+  var playlist_px = playlist_vh + 'px';
+  getPlaylistTable().closest('.table-wrapper').css('height', playlist_px);
+  getScratchpadTable().closest('.table-wrapper').css('height', playlist_px);
 }

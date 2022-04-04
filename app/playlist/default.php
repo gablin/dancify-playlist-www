@@ -576,18 +576,6 @@ $(document).ready(
     setupSort();
     setupSearchForTracks();
     setupHeartbeat();
-
-    function limitPlaylistHeight() {
-      var screen_vh = window.innerHeight;
-      var table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
-      var footer_vh = $('div.footer').outerHeight();
-      var playlist_vh = screen_vh - table_offset - footer_vh;
-      var playlist_px = playlist_vh + 'px';
-      getPlaylistTable().closest('.table-wrapper').css('height', playlist_px);
-      getScratchpadTable().closest('.table-wrapper').css('height', playlist_px);
-    };
-    $(window).resize(limitPlaylistHeight);
-    limitPlaylistHeight();
   }
 );
 </script>
