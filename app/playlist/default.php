@@ -10,6 +10,8 @@ beginPage();
 mkHtmlNavMenu(
   [ [ LNG_MENU_DANCE_DELIMITER, '#', 'dance-delimiter' ]
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
+  , [ LNG_MENU_BPM_OVERVIEW, '#', 'bpm-overview' ]
+  , []
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
   , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, '#', 'insert-silence-at-interval' ]
   , [ LNG_MENU_SEARCH_FOR_TRACKS, '#', 'search-for-tracks' ]
@@ -382,6 +384,25 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   </div>
 </div>
 
+<div class="action-input-area" name="bpm-overview">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_BPM_OVERVIEW ?></div>
+
+    <p>
+      <?= LNG_DESC_BPM_OVERVIEW ?>
+    </p>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="hideBpmOverviewBtn"><?= LNG_BTN_HIDE ?></button>
+      <button id="showBpmOverviewBtn"><?= LNG_BTN_SHOW ?></button>
+    </div>
+  </div>
+</div>
+
 <div class="action-input-area" name="restore-playlist">
   <div class="background"></div>
   <div class="input">
@@ -528,6 +549,8 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 
 </div>
 
+<div class="bpm-overview"></div>
+
 </form>
 
 <script src="/js/utils.js.php"></script>
@@ -546,6 +569,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/sort.js.php"></script>
 <script src="/js/search-for-tracks.js.php"></script>
 <script src="/js/heartbeat.js.php"></script>
+<script src="/js/bpm-overview.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -576,12 +600,13 @@ $(document).ready(
     setupSort();
     setupSearchForTracks();
     setupHeartbeat();
+    setupBpmOverview();
   }
 );
 </script>
 
 <div class="grabbed-info-block">
-  <span>X</span>
+  <span></span>
 </div>
 
 <div class="drag-insertion-point"></div>

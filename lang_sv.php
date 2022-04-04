@@ -133,6 +133,9 @@ DEFINE( 'LNG_MENU_DANCE_DELIMITER'
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
       );
+DEFINE( 'LNG_MENU_BPM_OVERVIEW'
+      , 'BPM-överblick'
+      );
 DEFINE( 'LNG_MENU_RESTORE_PLAYLIST'
       , 'Återställ spellista'
       );
@@ -213,6 +216,9 @@ define( 'LNG_DESC_SCRATCHPAD'
 Scratchpaden är ett område till vilken låtar kan dras och släppas för att förenkla
 redigering av spellistan.
 EOT
+      );
+define( 'LNG_DESC_BPM_OVERVIEW'
+      , 'Visa en graf som illustrerar BPM-fördelningen av låtarna i spellistan.'
       );
 define( 'LNG_DESC_DELIMITER'
       , <<<EOT

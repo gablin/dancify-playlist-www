@@ -132,6 +132,9 @@ DEFINE( 'LNG_MENU_DANCE_DELIMITER'
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
       );
+DEFINE( 'LNG_MENU_BPM_OVERVIEW'
+      , 'BPM overview'
+      );
 DEFINE( 'LNG_MENU_RESTORE_PLAYLIST'
       , 'Restore playlist'
       );
@@ -212,6 +215,10 @@ define( 'LNG_DESC_SCRATCHPAD'
 The scratchpad is an area to which tracks can be dragged-and-dropped in to simplify
 playlist edits.
 EOT
+      );
+define( 'LNG_DESC_BPM_OVERVIEW'
+      , 'Display a graph that illustrates the BPM ratio of the tracks in the ' .
+        'playlist.'
       );
 define( 'LNG_DESC_DELIMITER'
       , <<<EOT

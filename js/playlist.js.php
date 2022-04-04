@@ -30,6 +30,7 @@ function setupPlaylist(playlist_id) {
                   }
                 );
   $(window).resize(setPlaylistHeight);
+  $(window).resize(renderBpmOverview);
 }
 
 function getTableOfTr(tr) {
@@ -520,6 +521,13 @@ function renderTrackBpm(tr) {
     return;
   }
   bpm = parseInt(bpm);
+  let cs = getBpmRgbColor(bpm);
+  input.css('background-color', 'rgb(' + cs.join(',') + ')');
+  $text_color = (bpm < 25 || bpm  > 210) ? '#fff' : '#000';
+  input.css('color', $text_color);
+}
+
+function getBpmRgbColor(bpm) {
   //               bpm    color (RGB)
   const colors = [ [   0, [  0,   0, 255] ] // Blue
                  , [  40, [  0, 255,   0] ] // Green
@@ -535,12 +543,11 @@ function renderTrackBpm(tr) {
       for (var j = 0; j < c.length; j++) {
         c[j] += Math.round((colors[i+1][1][j] - c[j]) * p);
       }
-      input.css('background-color', 'rgb(' + c.join(',') + ')');
-      $text_color = (bpm < 25 || bpm  > 210) ? '#fff' : '#000';
-      input.css('color', $text_color);
-      return;
+      return c;
     }
   }
+  console.log('ERROR: getBpmColor() with arg ' + bpm);
+  return null;
 }
 
 function checkBpmInput(str, report_on_fail = true) {
@@ -1156,10 +1163,14 @@ function renderTable(table) {
     }
   );
   getTableSummaryTr(table).find('td.length').text(formatTrackLength(total_length));
+
+  if (table.is(getPlaylistTable())) {
+    renderBpmOverview();
+    setPlaylistHeight();
+  }
 }
 
 function renderPlaylist() {
-  setPlaylistHeight();
   renderTable(getPlaylistTable());
 }
 
@@ -1972,11 +1983,73 @@ function showPlaylistsWithTrack(tid, title) {
 }
 
 function setPlaylistHeight() {
-  var screen_vh = window.innerHeight;
-  var table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
-  var footer_vh = $('div.footer').outerHeight();
-  var playlist_vh = screen_vh - table_offset - footer_vh;
-  var playlist_px = playlist_vh + 'px';
+  let screen_vh = window.innerHeight;
+  let table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
+  let footer_vh = $('div.footer').outerHeight(true);
+  let bpm_overview = $('div.bpm-overview');
+  let bpm_overview_vh =
+    bpm_overview.is(':visible') ? bpm_overview.outerHeight(true) : 0;
+  let playlist_vh = screen_vh - table_offset - footer_vh - bpm_overview_vh;
+  let playlist_px = playlist_vh + 'px';
   getPlaylistTable().closest('.table-wrapper').css('height', playlist_px);
   getScratchpadTable().closest('.table-wrapper').css('height', playlist_px);
+}
+
+function renderBpmOverview() {
+  let area = $('div.bpm-overview');
+  if (!area.is(':visible')) {
+    return;
+  }
+
+  area.empty();
+
+  let tracks = getPlaylistTrackData();
+  let area_vw = area.innerWidth();
+  let area_vh = area.innerHeight();
+  const border_size = 1;
+  let bar_vw = (area_vw - border_size) / tracks.length - border_size;
+  let bar_voffset = 0;
+  $.each(
+    tracks
+  , function(i) {
+      let t = this;
+      let bar = $('<div class="bar" />');
+      let bar_vh = (t.bpm - BPM_MIN) / BPM_MAX * area_vh;
+      bar.css('width', bar_vw + 'px');
+      bar.css('height', bar_vh + 'px');
+      bar.css('left', bar_voffset + 'px');
+      let cs = getBpmRgbColor(t.bpm);
+      bar.css('background-color', 'rgb(' + cs.join(',') + ')');
+      bar_voffset += bar_vw + border_size;
+      area.append(bar);
+
+      let track_info = $( '<div class="bpm-overview-track-info">' +
+                            '#' + (i+1) + ' ' +
+                            formatTrackTitleAsText(t.artists, t.name) +
+                            '<br />' +
+                            'BPM: ' + t.bpm +
+                          '</div>'
+                        );
+      area.append(track_info);
+      bar.hover(
+        function() {
+          let bar_of = bar.position();
+          let info_vh = track_info.outerHeight();
+          let info_top_of = bar_of.top - info_vh;
+          track_info.css('top', info_top_of + 'px');
+          let info_vw = track_info.outerWidth();
+          if (bar_of.left + info_vw <= area_vw) {
+            track_info.css('left', bar_of.left + 'px');
+          }
+          else {
+            track_info.css('left', (area_vw - info_vw) + 'px');
+          }
+          track_info.show();
+        }
+      , function() {
+          track_info.hide();
+        }
+      );
+    }
+  );
 }
