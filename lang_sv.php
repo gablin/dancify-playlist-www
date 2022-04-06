@@ -178,6 +178,9 @@ define( 'LNG_HEAD_TITLE'
 define( 'LNG_HEAD_LENGTH'
       , 'Längd'
       );
+define( 'LNG_HEAD_TOTAL'
+      , 'Totalt'
+      );
 define( 'LNG_HEAD_BPM'
       , 'BPM'
       );

@@ -909,6 +909,7 @@ function initTable(table) {
        '  <th><?= LNG_HEAD_TITLE ?></th>' +
        '  <th class="comments"><?= LNG_HEAD_COMMENTS ?></th>' +
        '  <th class="length"><?= LNG_HEAD_LENGTH ?></th>' +
+       '  <th class="aggr-length"><?= LNG_HEAD_TOTAL ?></th>' +
        '</tr>'
      );
   table.find('thead').append(head_tr);
@@ -999,6 +1000,7 @@ function buildNewTableTrackTr() {
            '</textarea>' +
        '  </td>' +
        '  <td class="length" />' +
+       '  <td class="aggr-length" />' +
        '</tr>'
      );
   addOptionsToGenreSelect(tr.find('select[name=genre]'));
@@ -1009,6 +1011,7 @@ function buildNewTableSummaryRow() {
   return $( '<tr class="summary">' +
              '  <td colspan="5" />' +
              '  <td class="length" />' +
+             '  <td class="aggr-length" />' +
              '</tr>'
           );
 }
@@ -1137,8 +1140,9 @@ function renderTable(table) {
       .filter(':nth-child(' + delimiter + 'n)')
       .after(
         $( '<tr class="delimiter">' +
-             '<td colspan="' + (num_cols-1) + '"><div /></td>' +
+             '<td colspan="' + (num_cols-2) + '"><div /></td>' +
              '<td class="length"></td>' +
+             '<td><div /></td>' +
            '</tr>'
          )
       );
@@ -1159,10 +1163,12 @@ function renderTable(table) {
   );
 
   // Compute total length
-  var total_length = 0;
+  let total_length = 0;
   table.find('tr.track').each(
     function() {
-      total_length += parseInt($(this).find('input[name=length_ms]').val());
+      let tr = $(this);
+      total_length += parseInt(tr.find('input[name=length_ms]').val());
+      tr.find('td.aggr-length').text(formatTrackLength(total_length));
     }
   );
   getTableSummaryTr(table).find('td.length').text(formatTrackLength(total_length));

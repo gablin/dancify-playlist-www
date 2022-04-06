@@ -274,10 +274,15 @@ table th {
 }
 .playlist table .length,
 .playlist table tr.delimiter td.length,
+.playlist table .aggr-length,
 .playlist table th.bpm,
 .playlist table td.bpm {
   text-align: right;
   padding-right: 1em;
+}
+.playlist table td.aggr-length,
+.playlist table tr.delimiter td.length {
+  color: #2D4739;
 }
 .playlist table th.bpm,
 .playlist table td.bpm {
@@ -291,7 +296,9 @@ table th {
   width: 6.25em;
 }
 .playlist table th.length,
-.playlist table td.length {
+.playlist table td.length,
+.playlist table th.aggr-length,
+.playlist table td.aggr-length {
   width: 6em;
 }
 .playlist table th.comments,
@@ -325,8 +332,7 @@ table th {
 .playlist table tr.empty-track.insert-below:hover {
   background-color: #0CA761;
 }
-.playlist table tr.summary .length,
-.playlist table tr.delimiter td.length {
+.playlist table tr.summary .length {
   padding-top: .5em;
   font-weight: bold;
 }
