@@ -21,9 +21,13 @@ function mkHtmlNavMenu($entries, $add_undo_redo_buttons = false) {
             <a href="<?= $e[1] ?>"><?= $e[0] ?></a>
             <?php
           }
-          else if (count($e) == 3) {
+          else if (count($e) >= 3) {
+            $click_actions = "showActionInput('$e[2]');";
+            if (count($e) == 4) {
+              $click_actions = "$e[3]; $click_actions";
+            }
             ?>
-            <a href="<?= $e[1] ?>" onclick="showActionInput('<?= $e[2] ?>');">
+            <a href="<?= $e[1] ?>" onclick="<?= $click_actions ?>">
               <?= $e[0] ?>
             </a>
             <?php

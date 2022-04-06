@@ -11,6 +11,7 @@ mkHtmlNavMenu(
   [ [ LNG_MENU_DANCE_DELIMITER, '#', 'dance-delimiter' ]
   , [ LNG_MENU_SCRATCHPAD, '#', 'scratchpad' ]
   , [ LNG_MENU_BPM_OVERVIEW, '#', 'bpm-overview' ]
+  , [ LNG_MENU_DUPLICATE_CHECK, '#', 'duplicate-check', 'onShowDuplicateCheck()' ]
   , []
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, '#', 'insert-track-at-interval' ]
   , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, '#', 'insert-silence-at-interval' ]
@@ -403,6 +404,45 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   </div>
 </div>
 
+<div class="action-input-area" name="duplicate-check">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_DUPLICATE_CHECK ?></div>
+
+    <p>
+      <?= LNG_DESC_DUPLICATE_CHECK ?>
+    </p>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="checkDuplicatesBtn"><?= LNG_BTN_CHECK ?></button>
+    </div>
+
+    <div class="search-results">
+      <div class="title"><?= LNG_DESC_SEARCH_RESULTS ?></div>
+      <div class="none-found"></div>
+      <div class="duplicates-found">
+        <div class="playlist">
+          <div class="table-wrapper">
+            <table class="playlist">
+              <thead>
+                <tr>
+                  <th class="index">#</th>
+                  <th><?= LNG_HEAD_TITLE ?></th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="action-input-area" name="restore-playlist">
   <div class="background"></div>
   <div class="input">
@@ -570,6 +610,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/search-for-tracks.js.php"></script>
 <script src="/js/heartbeat.js.php"></script>
 <script src="/js/bpm-overview.js.php"></script>
+<script src="/js/duplicate-check.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -601,6 +642,7 @@ $(document).ready(
     setupSearchForTracks();
     setupHeartbeat();
     setupBpmOverview();
+    setupDuplicateCheck();
   }
 );
 </script>

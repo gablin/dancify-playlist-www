@@ -83,7 +83,7 @@ function setupSearchForTracksButtons() {
       if (getSearchForTracksResultsArea().find('table tbody tr').length == 0) {
         var none_found_area = action_area.find('.none-found');
         none_found_area.show();
-        none_found_area.text('<?= LNG_DESC_SEARCH_RESULTS_NONE ?>');
+        none_found_area.text('<?= LNG_DESC_NO_TRACKS_FOUND ?>');
       }
     }
     function stop() {

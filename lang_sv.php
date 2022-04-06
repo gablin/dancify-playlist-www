@@ -106,6 +106,9 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
       , 'Lägg till i scratchpad'
       );
+DEFINE( 'LNG_BTN_CHECK'
+      , 'Kolla'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -165,6 +168,9 @@ DEFINE( 'LNG_MENU_SORT'
       );
 DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
       , 'Sök efter låtar'
+      );
+DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
+      , 'Dublettkoll'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
@@ -452,14 +458,20 @@ define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'
 define( 'LNG_DESC_SEARCH_RESULTS'
       , 'Sökresultat'
       );
-define( 'LNG_DESC_SEARCH_RESULTS_NONE'
+define( 'LNG_DESC_NO_TRACKS_FOUND'
       , 'Inga låtar hittades'
+      );
+define( 'LNG_DESC_NO_DUPLICATES_FOUND'
+      , 'Inga dubletter hittades'
       );
 define( 'LNG_DESC_OVERWRITE_EXISTING_PLAYLIST'
       , 'Skriv över befintlig spellista på Spotify'
       );
 define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
       , 'Ändringarna har sparats till Spotify'
+      );
+define( 'LNG_DESC_DUPLICATE_CHECK'
+      , 'Kolla efter och lista låtar som är dubletter.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

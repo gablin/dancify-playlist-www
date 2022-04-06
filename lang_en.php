@@ -105,6 +105,9 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
       , 'Add to scratchpad'
       );
+DEFINE( 'LNG_BTN_CHECK'
+      , 'Check'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -164,6 +167,9 @@ DEFINE( 'LNG_MENU_SORT'
       );
 DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
       , 'Search for tracks'
+      );
+DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
+      , 'Duplicate check'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
@@ -452,14 +458,20 @@ define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'
 define( 'LNG_DESC_SEARCH_RESULTS'
       , 'Search results'
       );
-define( 'LNG_DESC_SEARCH_RESULTS_NONE'
+define( 'LNG_DESC_NO_TRACKS_FOUND'
       , 'No tracks found'
+      );
+define( 'LNG_DESC_NO_DUPLICATES_FOUND'
+      , 'No duplicates found'
       );
 define( 'LNG_DESC_OVERWRITE_EXISTING_PLAYLIST'
       , 'Overwrite existing playlist in Spotify'
       );
 define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
       , 'Changes saved to Spotify'
+      );
+define( 'LNG_DESC_DUPLICATE_CHECK'
+      , 'Check for and list tracks that are duplicates.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
