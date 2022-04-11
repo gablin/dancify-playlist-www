@@ -1411,52 +1411,8 @@ function addTrackDragHandling(tr) {
               tr_insert_point.next().hasClass('selected')
             );
           if (!dropped_adjacent_to_selected) {
-            var selected_trs = getSelectedTracks();
-
-            // If appropriate, insert placeholders where selected tracks used to be
-            var source_table = getTableOfTr($(selected_trs[0]));
-            if (isUsingDanceDelimiter() && source_table.is(getPlaylistTable())) {
-              // Ignore tracks that covers an entire dance block
-              rows_to_keep = [];
-              function isTrackRow(tr) {
-                return tr.hasClass('track') || tr.hasClass('empty-track');
-              }
-              for (var i = 0; i < selected_trs.length; i++) {
-                var tr = $(selected_trs[i]);
-                if (!isTrackRow(tr.prev())) {
-                  var skip = false;
-                  var j = i;
-                  do {
-                    var next_tr = tr.next();
-                    if (!isTrackRow(next_tr)) {
-                      skip = true;
-                      break;
-                    }
-                    j++;
-                    if (j == selected_trs.length) {
-                      break;
-                    }
-                    tr = $(selected_trs[j]);
-                    if (!tr.is(next_tr)) {
-                      break;
-                    }
-                  } while (true);
-                  if (skip) {
-                    i = j;
-                    continue;
-                  }
-                }
-                rows_to_keep.push(tr);
-              }
-              for (var i = 0; i < rows_to_keep.length; i++) {
-                var old_tr = $(rows_to_keep[i]);
-                if (!old_tr.hasClass('empty-track')) {
-                  var o = createPlaylistPlaceholderObject();
-                  var new_tr = buildNewTableTrackTrFromTrackObject(o);
-                  old_tr.before(new_tr);
-                }
-              }
-            }
+            let selected_trs = getSelectedTracks();
+            insertPlaceholdersBeforeMovingTrackTrs(selected_trs);
 
             // Move selected
             if (tr_insert_point.hasClass('insert-above')) {
@@ -1493,6 +1449,71 @@ function addTrackDragHandling(tr) {
       $(document).mousemove(move).mouseup(up);
     }
   );
+}
+
+function insertPlaceholdersBeforeMovingTrackTrs(selected_trs) {
+  let source_table = getTableOfTr($(selected_trs[0]));
+  if (isUsingDanceDelimiter() && source_table.is(getPlaylistTable())) {
+    // Ignore tracks that covers an entire dance block
+    rows_to_keep = [];
+    function isTrackRow(tr) {
+      return tr.hasClass('track') || tr.hasClass('empty-track');
+    }
+    for (let i = 0; i < selected_trs.length; i++) {
+      let tr = $(selected_trs[i]);
+      if (!isTrackRow(tr.prev())) {
+        let skip = false;
+        let j = i;
+        do {
+          let next_tr = tr.next();
+          if (!isTrackRow(next_tr)) {
+            skip = true;
+            break;
+          }
+          j++;
+          if (j == selected_trs.length) {
+            break;
+          }
+          tr = $(selected_trs[j]);
+          if (!tr.is(next_tr)) {
+            break;
+          }
+        } while (true);
+        if (skip) {
+          i = j;
+          continue;
+        }
+      }
+      rows_to_keep.push(tr);
+    }
+    for (let i = 0; i < rows_to_keep.length; i++) {
+      let old_tr = $(rows_to_keep[i]);
+      if (!old_tr.hasClass('empty-track')) {
+        let o = createPlaylistPlaceholderObject();
+        let new_tr = buildNewTableTrackTrFromTrackObject(o);
+        old_tr.before(new_tr);
+      }
+    }
+  }
+}
+
+function deleteSelectedTracks() {
+  let trs = getSelectedTracks();
+  if (trs.length == 0) {
+    return;
+  }
+
+  let t = getTableOfTr($(trs[0]));
+  let is_playlist = t.is(getPlaylistTable());
+  insertPlaceholdersBeforeMovingTrackTrs(trs);
+  trs.remove();
+  if (is_playlist) {
+    renderPlaylist();
+  }
+  else {
+    renderScratchpad();
+  }
+  indicateStateUpdate();
 }
 
 function addTrackRightClickMenu(tr) {
@@ -1571,21 +1592,7 @@ function addTrackRightClickMenu(tr) {
         ]
       , [ '<?= LNG_MENU_DELETE_SELECTED ?>'
         , function() {
-            var trs = getSelectedTracks();
-            if (trs.length == 0) {
-              return;
-            }
-
-            var t = getTableOfTr($(trs[0]));
-            var is_playlist = t.is(getPlaylistTable());
-            trs.remove();
-            if (is_playlist) {
-              renderPlaylist();
-            }
-            else {
-              renderScratchpad();
-            }
-            indicateStateUpdate();
+            deleteSelectedTracks();
             close_f();
           }
         , function(a) {
