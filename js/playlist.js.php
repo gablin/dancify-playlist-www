@@ -2042,9 +2042,12 @@ function renderBpmOverview() {
       bar_voffset += bar_vw + border_size;
       area.append(bar);
 
+      let title = t.artists !== undefined ? formatTrackTitleAsText( t.artists
+                                                                  , t.name
+                                                                  )
+                                          : t.name;
       let track_info = $( '<div class="bpm-overview-track-info">' +
-                            '#' + (i+1) + ' ' +
-                            formatTrackTitleAsText(t.artists, t.name) +
+                            '#' + (i+1) + ' ' + title +
                             '<br />' +
                             'BPM: ' + t.bpm +
                           '</div>'
