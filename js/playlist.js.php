@@ -509,6 +509,8 @@ function addTrackBpmHandling(tr) {
                        );
         }
       );
+
+      renderBpmOverview();
     }
   );
 }
