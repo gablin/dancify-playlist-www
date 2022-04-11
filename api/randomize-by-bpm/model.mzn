@@ -20,9 +20,11 @@ array[OrderSet] of var TrackSetOrNull: order;
 array[OrderSet] of var bool: has_track;
 
 set of int: DanceSlotSet = 1..card(OrderSet) div card(RangeSet);
-array[DanceSlotSet] of var 0..card(RangeSet): slot_n;
 array[DanceSlotSet] of var bool: slot_full;
 var int: n_slot_full = sum(slot_full);
+
+OrderSet: firstOrderInDanceSlot(DanceSlotSet: d) =
+  (d-1)*card(RangeSet) + 1;
 
 % Assert number of ranges is 1+ number of min BPM distances.
 constraint
@@ -96,21 +98,22 @@ forall (i in index_set_1of2(diffs))
      )
 );
 
-% Count number of tracks in each slot.
+% Either a dance slot is full, or it contains no tracks at all.
 constraint
-let { int: N = card(RangeSet) }
-in forall (i in DanceSlotSet)
-   ( slot_n[i] = sum (j in ((i-1)*N)+1..((i-1)*N)+N) (has_track[j]) );
+forall (i in DanceSlotSet)
+( let { OrderSet: fo = firstOrderInDanceSlot(i) }
+  in forall (j in fo+1..fo+card(RangeSet)-1)
+     ( has_track[fo] <-> has_track[j] )
+);
 
 % Check whether a dance slot is full.
 constraint
-let { int: N = card(RangeSet) }
-in forall (i in DanceSlotSet)
-   ( slot_full[i] <-> slot_n[i] == N );
+forall (i in DanceSlotSet)
+( slot_full[i] <-> has_track[firstOrderInDanceSlot(i)] );
 
 % Order dance slots in decreasing order of number of filled slots.
 constraint
-decreasing(slot_n);
+decreasing(slot_full);
 
 % Number of filled dance slots cannot be more than there are tracks available
 % to fill them.

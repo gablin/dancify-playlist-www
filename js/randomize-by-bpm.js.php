@@ -57,16 +57,8 @@ function setupFormElementsForRandomizeByBpm() {
       callApi( '/api/randomize-by-bpm/'
              , data
              , function(d) {
-                 unused_tracks = [];
-                 for (var i = 0; i < track_ids.length; i++) {
-                   var tid = track_ids[i];
-                   if (!d.trackOrder.includes(tid)) {
-                     unused_tracks.push(tid);
-                   }
-                 }
                  updatePlaylistAfterRandomize( d.trackOrder
                                              , data.bpmRangeList
-                                             , unused_tracks
                                              );
                  restoreButton();
                  clearActionInputs();
@@ -247,44 +239,26 @@ function getBpmSettings() {
   return data;
 }
 
-function updatePlaylistAfterRandomize(track_order, bpm_ranges) {
-  var playlist = getPlaylistTrackData().concat(getScratchpadTrackData());
+function updatePlaylistAfterRandomize(track_order, bpm_ranges, unused_tracks) {
+  let playlist = getPlaylistTrackData().concat(getScratchpadTrackData());
   playlist = removePlaceholdersFromTracks(playlist);
-  var new_playlist = [];
-  for (var i = 0, range_index = 0; i < track_order.length; i++) {
-    var tid = track_order[i];
+  let new_playlist = [];
+  for (let i = 0; i < track_order.length; i++) {
+    let tid = track_order[i];
     if (tid.length > 0) {
-      var track = getTrackWithMatchingId(playlist, tid);
+      let track = getTrackWithMatchingId(playlist, tid);
       if (track == null) {
         console.log('failed to find track with ID: ' + tid);
         continue;
       }
       new_playlist.push(track);
     }
-    else {
-      var min_bpm = bpm_ranges[range_index][0];
-      var max_bpm = bpm_ranges[range_index][1];
-      var bpm_text = min_bpm + '-' + max_bpm;
-      new_playlist.push(
-        createPlaylistPlaceholderObject(
-          '<?= LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT ?>'
-        , ''
-        , bpm_text
-        , ''
-        )
-      );
-    }
-
-    range_index++;
-    if (range_index >= bpm_ranges.length) {
-      range_index = 0;
-    }
   }
 
-  var new_scratchpad = [];
-  for (var i = 0; i < playlist.length; i++) {
-    var track = playlist[i]
-    var tid = track.trackId;
+  let new_scratchpad = [];
+  for (let i = 0; i < playlist.length; i++) {
+    let track = playlist[i]
+    let tid = track.trackId;
     if (getTrackWithMatchingId(new_playlist, tid) === null) {
       new_scratchpad.push(track);
     }
