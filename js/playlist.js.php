@@ -27,6 +27,9 @@ function setupPlaylist(playlist_id) {
                     if (e.key == 'Escape') {
                       clearTrackSelection();
                     }
+                    else if (e.key == 'Delete') {
+                      deleteSelectedTracks();
+                    }
                   }
                 );
   $(window).resize(setPlaylistHeight);
