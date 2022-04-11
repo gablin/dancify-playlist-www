@@ -476,6 +476,18 @@ define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
 define( 'LNG_DESC_DUPLICATE_CHECK'
       , 'Kolla efter och lista låtar som är dubletter.'
       );
+define( 'LNG_DESC_BPM_MIN'
+      , 'Min'
+      );
+define( 'LNG_DESC_BPM_MAX'
+      , 'Max'
+      );
+define( 'LNG_DESC_BPM_MEDIAN'
+      , 'Median'
+      );
+define( 'LNG_DESC_BPM_AVERAGE'
+      , 'Genomsnitt'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
       );

@@ -589,7 +589,10 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 
 </div>
 
-<div class="bpm-overview"></div>
+<div class="bpm-overview">
+  <div class="bar-area"></div>
+  <div class="stats">THIS MUST NOT BE EMPTY</div>
+</div>
 
 </form>
 

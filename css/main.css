@@ -368,10 +368,17 @@ table th {
 }
 
 .bpm-overview {
-  height: 10em;
   margin-top: .5em;
-  position: relative;
   display: none;
+}
+.bpm-overview .stats {
+  width: 100%;
+  font-size: 80%;
+}
+.bpm-overview .bar-area {
+  height: 10em;
+  width: 100%;
+  position: relative;
 }
 .bpm-overview .bar {
   display: inline-block;

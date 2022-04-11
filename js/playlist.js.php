@@ -2015,13 +2015,15 @@ function setPlaylistHeight() {
 }
 
 function renderBpmOverview() {
-  let area = $('div.bpm-overview');
-  if (!area.is(':visible')) {
+  let overview = $('div.bpm-overview');
+  if (!overview.is(':visible')) {
     return;
   }
 
+  let area = $('div.bpm-overview .bar-area');
   area.empty();
 
+  // Draw bars
   let tracks = getPlaylistTrackData();
   let area_vw = area.innerWidth();
   let area_vh = area.innerHeight();
@@ -2074,4 +2076,29 @@ function renderBpmOverview() {
       );
     }
   );
+
+  // Compute and show stats
+  tracks = tracks.filter(function(t) { return t.bpm !== undefined && t.bpm > 0 });
+  tracks.sort(function(a, b) { return intcmp(a.bpm, b.bpm); });
+  let bpm_min = 0;
+  let bpm_max = 0;
+  let bpm_median = 0;
+  let bpm_average = 0;
+  if (tracks.length > 0) {
+    bpm_min = tracks[0].bpm;
+    bpm_max = tracks[tracks.length-1].bpm;
+    let i = Math.floor(tracks.length / 2);
+    bpm_median = tracks.length % 2 == 1 ? tracks[i+1].bpm : tracks[i].bpm;
+    bpm_average =
+      Math.round( tracks.reduce(function(a, t) { return a + t.bpm; }, 0) /
+                  tracks.length
+                );
+  }
+  let stats = $('div.bpm-overview .stats');
+  stats.text( '<?= LNG_DESC_BPM_MIN ?>: ' + bpm_min + ' ' +
+              '<?= LNG_DESC_BPM_MAX ?>: ' + bpm_max + ' ' +
+              '<?= LNG_DESC_BPM_MEDIAN ?>: ' + bpm_median + ' ' +
+              '<?= LNG_DESC_BPM_AVERAGE ?>: ' + bpm_average
+            );
+  stats.show();
 }

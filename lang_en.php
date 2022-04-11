@@ -476,6 +476,18 @@ define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
 define( 'LNG_DESC_DUPLICATE_CHECK'
       , 'Check for and list tracks that are duplicates.'
       );
+define( 'LNG_DESC_BPM_MIN'
+      , 'Min'
+      );
+define( 'LNG_DESC_BPM_MAX'
+      , 'Max'
+      );
+define( 'LNG_DESC_BPM_MEDIAN'
+      , 'Median'
+      );
+define( 'LNG_DESC_BPM_AVERAGE'
+      , 'Average'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
       );
