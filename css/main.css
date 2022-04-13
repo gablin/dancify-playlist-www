@@ -380,7 +380,8 @@ table th {
   width: 100%;
   position: relative;
 }
-.bpm-overview .bar {
+.bpm-overview .bar,
+.bpm-overview .delimiter {
   display: inline-block;
   position: absolute;
   bottom: 0;
@@ -388,6 +389,11 @@ table th {
 }
 .bpm-overview .bar:hover {
   background-color: #09814A !important;
+}
+.bpm-overview .delimiter {
+  width: 1px;
+  background-color: #09814A;
+  border: none;
 }
 .bpm-overview-track-info {
   position: absolute;

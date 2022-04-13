@@ -2045,6 +2045,16 @@ function renderBpmOverview() {
       bar.css('background-color', 'rgb(' + cs.join(',') + ')');
       bar_voffset += bar_vw + border_size;
       area.append(bar);
+      if ( isUsingDanceDelimiter() &&
+           (i+1) % PLAYLIST_DANCE_DELIMITER == 0 &&
+           i != 0 && i != tracks.length-1
+         )
+      {
+        let delimiter = $('<div class="delimiter" />');
+        delimiter.css('height', area_vh + 'px');
+        delimiter.css('left', bar_voffset + 'px');
+        area.append(delimiter);
+      }
 
       let title = t.artists !== undefined ? formatTrackTitleAsText( t.artists
                                                                   , t.name
