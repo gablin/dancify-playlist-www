@@ -2069,6 +2069,10 @@ function renderBpmOverview() {
       area.append(track_info);
       bar.hover(
         function() {
+          let bar = $(this);
+          let new_cs = rgbVisIncr(cs, 40);
+          bar.css('background-color', 'rgb(' + new_cs.join(',') + ')');
+
           let bar_of = bar.position();
           let info_vh = track_info.outerHeight();
           let info_top_of = bar_of.top - info_vh;
@@ -2083,6 +2087,7 @@ function renderBpmOverview() {
           track_info.show();
         }
       , function() {
+          bar.css('background-color', 'rgb(' + cs.join(',') + ')');
           track_info.hide();
         }
       );

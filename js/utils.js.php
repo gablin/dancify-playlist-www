@@ -72,6 +72,40 @@ function uniq(a) {
 }
 
 /**
+ * Increments an RGB-specified color by a given amount. If one channel becomes
+ * saturated, the leftover is distributed onto the other channels, thus attempting
+ * to guarantee a visual difference.
+ *
+ * @param rgb Int array.
+ * @param inc int.
+ * @return Int array.
+ */
+function rgbVisIncr(cs, inc) {
+  let cs_indices = cs.map((c, i) => { return { val: c, index: i } });
+  cs_indices.sort((a, b) => { return -1*intcmp(a.val, b.val) } )
+  let sorted_cs = cs_indices.map(o => o.val);
+  for (let i = 0; i < sorted_cs.length; i++) {
+    let c = sorted_cs[i] + inc;
+    if (c > 255) {
+      let residue = c - 255;
+      inc += Math.round(residue / (sorted_cs.length - i - 1));
+      c = 255;
+    }
+    sorted_cs[i] = c;
+  }
+  let new_cs = [];
+  for (let i = 0; i < cs.length; i++) {
+    for (let j = 0; j < cs.length; j++) {
+      if (cs_indices[j].index == i) {
+        new_cs.push(sorted_cs[j]);
+        break;
+      }
+    }
+  }
+  return new_cs;
+}
+
+/**
  * Fix of jQuery's clone() function to also copy values of select and textarea
  * elements.
  *
