@@ -387,6 +387,12 @@ table th {
   bottom: 0;
   border: 1px solid #000;
 }
+.bpm-overview .bar.selected {
+  background-color: #000 !important;
+}
+.bpm-overview .bar.selected:hover {
+  background-color: #333 !important;
+}
 .bpm-overview .bar:hover {
   box-shadow: 0 0 .1em;
   z-index: 3;

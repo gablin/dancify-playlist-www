@@ -25,10 +25,10 @@ function setupPlaylist(playlist_id) {
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == 'Escape') {
-                      clearTrackSelection();
+                      clearTrackTrSelection();
                     }
                     else if (e.key == 'Delete') {
-                      deleteSelectedTracks();
+                      deleteSelectedTrackTrs();
                     }
                   }
                 );
@@ -1105,9 +1105,9 @@ function buildNewTableTrackTrFromTrackObject(track) {
     genre_td.text(track.genre);
     tr.find('td.length').text(track.length);
   }
-  addTrackSelectHandling(tr);
-  addTrackDragHandling(tr);
-  addTrackRightClickMenu(tr);
+  addTrackTrSelectHandling(tr);
+  addTrackTrDragHandling(tr);
+  addTrackTrRightClickMenu(tr);
   return tr;
 }
 
@@ -1229,28 +1229,58 @@ function isUsingDanceDelimiter() {
   return PLAYLIST_DANCE_DELIMITER > 0;
 }
 
-function clearTrackSelection() {
+function clearTrackTrSelection() {
   $('.playlist tr.selected').removeClass('selected');
 }
 
-function getSelectedTracks() {
+function addTrackTrSelection(table, track_index) {
+  let tr = $(table.find('.track, .empty-track')[track_index]);
+  tr.addClass('selected');
+}
+
+function removeTrackTrSelection(table, track_index) {
+  let tr = $(table.find('.track, .empty-track')[track_index]);
+  tr.removeClass('selected');
+}
+
+function toggleTrackTrSelection(table, track_index) {
+  let tr = $(table.find('.track, .empty-track')[track_index]);
+  tr.toggleClass('selected');
+}
+
+function getSelectedTrackTrs() {
   return $('.playlist tr.selected');
 }
 
-function updateTrackSelection(tr, multi_select_mode, span_mode) {
+function getTrackIndexOfTr(tr) {
+  return tr.closest('table').find('.track, .empty-track').index(tr);
+}
+
+function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
+  function isTrInPlaylistTable(tr) {
+    return tr.closest('table').is(getPlaylistTable());
+  }
+
   // Remove active selection in other playlist areas
   $('.playlist').each(
     function() {
       var p = $(this);
-      if (p[0] == tr.closest('.playlist')[0]) {
+      if (p.is(tr.closest('.playlist'))) {
         return;
       }
       p.find('tr.selected').removeClass('selected');
+
+      if (p.find('table').is(getPlaylistTable())) {
+        clearTrackBarSelection();
+      }
     }
   );
 
   if (multi_select_mode) {
     tr.toggleClass('selected');
+    if (isTrInPlaylistTable(tr)) {
+      toggleTrackBarSelection(getTrackIndexOfTr(tr));
+    }
     return;
   }
 
@@ -1259,6 +1289,9 @@ function updateTrackSelection(tr, multi_select_mode, span_mode) {
       tr.siblings().filter(function() { return $(this).hasClass('selected') });
     if (selected_sib_trs.length == 0) {
       tr.addClass('selected');
+      if (isTrInPlaylistTable(tr)) {
+        addTrackBarSelection(getTrackIndexOfTr(tr));
+      }
       return;
     }
     var first = $(selected_sib_trs[0]);
@@ -1269,8 +1302,12 @@ function updateTrackSelection(tr, multi_select_mode, span_mode) {
         ; i++
         )
     {
-      if ($(trs[i]).hasClass('track') || $(trs[i]).hasClass('empty-track')) {
-        $(trs[i]).addClass('selected');
+      let sib_tr = $(trs[i]);
+      if (sib_tr.hasClass('track') || sib_tr.hasClass('empty-track')) {
+        sib_tr.addClass('selected');
+        if (isTrInPlaylistTable(sib_tr)) {
+          addTrackBarSelection(getTrackIndexOfTr(sib_tr));
+        }
       }
     }
     return;
@@ -1278,19 +1315,41 @@ function updateTrackSelection(tr, multi_select_mode, span_mode) {
 
   var selected_sib_trs =
     tr.siblings().filter(function() { return $(this).hasClass('selected') });
-  selected_sib_trs.removeClass('selected');
+  $.each( selected_sib_trs
+        , function() {
+            let tr = $(this);
+            tr.removeClass('selected');
+            if (isTrInPlaylistTable(tr)) {
+              removeTrackBarSelection(getTrackIndexOfTr(tr));
+            }
+          }
+        );
   if (selected_sib_trs.length > 0) {
     tr.addClass('selected');
-    return
+    if (isTrInPlaylistTable(tr)) {
+      addTrackBarSelection(getTrackIndexOfTr(tr));
+    }
+    return;
   }
+
+  tr.toggleClass('selected');
+  if (isTrInPlaylistTable(tr)) {
+    toggleTrackBarSelection(getTrackIndexOfTr(tr));
+  }
+}
+
+function togglePlaylistTrackTrSelection(track_index) {
+  let table = getPlaylistTable();
+  let track_trs = table.find('.track, .empty-track');
+  let tr = $(track_trs[track_index]);
   tr.toggleClass('selected');
 }
 
-function addTrackSelectHandling(tr) {
+function addTrackTrSelectHandling(tr) {
   tr.click(
     function(e) {
       if (TRACK_DRAG_STATE == 0) {
-        updateTrackSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+        updateTrackTrSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
       }
       else {
         TRACK_DRAG_STATE = 0;
@@ -1299,7 +1358,7 @@ function addTrackSelectHandling(tr) {
   );
 }
 
-function addTrackDragHandling(tr) {
+function addTrackTrDragHandling(tr) {
   tr.mousedown(
     function(e) {
       var mousedown_tr = $(e.target).closest('tr');
@@ -1416,7 +1475,7 @@ function addTrackDragHandling(tr) {
               tr_insert_point.next().hasClass('selected')
             );
           if (!dropped_adjacent_to_selected) {
-            let selected_trs = getSelectedTracks();
+            let selected_trs = getSelectedTrackTrs();
             insertPlaceholdersBeforeMovingTrackTrs(selected_trs);
 
             // Move selected
@@ -1502,8 +1561,8 @@ function insertPlaceholdersBeforeMovingTrackTrs(selected_trs) {
   }
 }
 
-function deleteSelectedTracks() {
-  let trs = getSelectedTracks();
+function deleteSelectedTrackTrs() {
+  let trs = getSelectedTrackTrs();
   if (trs.length == 0) {
     return;
   }
@@ -1521,7 +1580,7 @@ function deleteSelectedTracks() {
   indicateStateUpdate();
 }
 
-function addTrackRightClickMenu(tr) {
+function addTrackTrRightClickMenu(tr) {
   function buildMenu(menu, clicked_tr, close_f) {
     function buildPlaceholderTr() {
       var o = createPlaylistPlaceholderObject();
@@ -1597,11 +1656,11 @@ function addTrackRightClickMenu(tr) {
         ]
       , [ '<?= LNG_MENU_DELETE_SELECTED ?>'
         , function() {
-            deleteSelectedTracks();
+            deleteSelectedTrackTrs();
             close_f();
           }
         , function(a) {
-            var trs = getSelectedTracks();
+            var trs = getSelectedTrackTrs();
             if (trs.length == 0) {
               a.addClass('disabled');
             }
@@ -2016,14 +2075,32 @@ function setPlaylistHeight() {
   getScratchpadTable().closest('.table-wrapper').css('height', playlist_px);
 }
 
+function getTrackBarArea() {
+  return $('div.bpm-overview .bar-area');
+}
+
+function isBpmOverviewShowing() {
+  return $('div.bpm-overview').is(':visible');
+}
+
 function renderBpmOverview() {
-  let overview = $('div.bpm-overview');
-  if (!overview.is(':visible')) {
+  if (!isBpmOverviewShowing()) {
     return;
   }
 
-  let area = $('div.bpm-overview .bar-area');
+  let area = getTrackBarArea();
   area.empty();
+
+  let selected_track_indices = [];
+  getSelectedTrackTrs().each(
+    function() {
+      let tr = $(this);
+      if (!tr.closest('table').is(getPlaylistTable())) {
+        return;
+      }
+      selected_track_indices.push(getTrackIndexOfTr(tr));
+    }
+  );
 
   // Draw bars
   let tracks = getPlaylistTrackData();
@@ -2034,7 +2111,7 @@ function renderBpmOverview() {
   let bar_voffset = 0;
   $.each(
     tracks
-  , function(i) {
+  , function(track_index) {
       let t = this;
       let bar = $('<div class="bar" />');
       let bar_vh = (t.bpm - BPM_MIN) / BPM_MAX * area_vh;
@@ -2046,8 +2123,8 @@ function renderBpmOverview() {
       bar_voffset += bar_vw + border_size;
       area.append(bar);
       if ( isUsingDanceDelimiter() &&
-           (i+1) % PLAYLIST_DANCE_DELIMITER == 0 &&
-           i != 0 && i != tracks.length-1
+           (track_index+1) % PLAYLIST_DANCE_DELIMITER == 0 &&
+           track_index != 0 && track_index != tracks.length-1
          )
       {
         let delimiter = $('<div class="delimiter" />');
@@ -2061,11 +2138,14 @@ function renderBpmOverview() {
                                                                   )
                                           : t.name;
       let track_info = $( '<div class="bpm-overview-track-info">' +
-                            '#' + (i+1) + ' ' + title +
+                            '#' + (track_index+1) + ' ' + title +
                             '<br />' +
                             'BPM: ' + t.bpm +
                           '</div>'
                         );
+      if (selected_track_indices.includes(track_index)) {
+        bar.addClass('selected');
+      }
       area.append(track_info);
       bar.hover(
         function() {
@@ -2091,6 +2171,7 @@ function renderBpmOverview() {
           track_info.hide();
         }
       );
+      addTrackBarSelectHandling(bar);
     }
   );
 
@@ -2118,4 +2199,109 @@ function renderBpmOverview() {
               '<?= LNG_DESC_BPM_AVERAGE ?>: ' + bpm_average
             );
   stats.show();
+}
+
+function addTrackBarSelectHandling(bar) {
+  bar.click(
+    function(e) {
+      updateTrackBarSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+    }
+  );
+}
+
+function addTrackBarSelection(track_index) {
+  if (!isBpmOverviewShowing()) {
+    return;
+  }
+
+  let area = getTrackBarArea();
+  let bars = area.find('.bar');
+  let bar = $(bars[track_index]);
+  bar.addClass('selected');
+}
+
+function removeTrackBarSelection(track_index) {
+  if (!isBpmOverviewShowing()) {
+    return;
+  }
+
+  let area = getTrackBarArea();
+  let bars = area.find('.bar');
+  let bar = $(bars[track_index]);
+  bar.removeClass('selected');
+}
+
+function toggleTrackBarSelection(track_index) {
+  if (!isBpmOverviewShowing()) {
+    return;
+  }
+
+  let area = getTrackBarArea();
+  let bars = area.find('.bar');
+  let bar = $(bars[track_index]);
+  bar.toggleClass('selected');
+}
+
+function clearTrackBarSelection() {
+  if (!isBpmOverviewShowing()) {
+    return;
+  }
+
+  let area = getTrackBarArea();
+  area.find('.bar').removeClass('selected');
+}
+
+function updateTrackBarSelection(bar, multi_select_mode, span_mode) {
+  function getTrackIndexOfBar(bar) {
+    return bar.closest('.bar-area').find('.bar').index(bar);
+  }
+
+  if (multi_select_mode) {
+    bar.toggleClass('selected');
+    toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+    return;
+  }
+
+  if (span_mode) {
+    var selected_sib_bars =
+      bar.siblings().filter(function() { return $(this).hasClass('selected') });
+    if (selected_sib_bars.length == 0) {
+      bar.addClass('selected');
+      addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+      return;
+    }
+    var first = $(selected_sib_bars[0]);
+    var last = $(selected_sib_bars[selected_sib_bars.length-1]);
+    var bars = bar.siblings().add(bar);
+    for ( var i = Math.min(bar.index(), first.index(), last.index())
+        ; i <= Math.max(bar.index(), first.index(), last.index())
+        ; i++
+        )
+    {
+      let sib_bar = $(bars[i]);
+      if (sib_bar.hasClass('bar')) {
+        sib_bar.addClass('selected');
+        addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(sib_bar));
+      }
+    }
+    return;
+  }
+
+  var selected_sib_bars =
+    bar.siblings().filter(function() { return $(this).hasClass('selected') });
+  $.each( selected_sib_bars
+        , function() {
+            let bar = $(this);
+            bar.removeClass('selected');
+            removeTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+          }
+        );
+  if (selected_sib_bars.length > 0) {
+    bar.addClass('selected');
+    addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+    return;
+  }
+
+  bar.toggleClass('selected');
+  toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
 }
