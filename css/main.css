@@ -326,10 +326,10 @@ table th {
 .playlist table tr.empty-track {
   font-style: italic;
 }
-.playlist table tr.empty-track.insert-above,
-.playlist table tr.empty-track.insert-below,
-.playlist table tr.empty-track.insert-above:hover,
-.playlist table tr.empty-track.insert-below:hover {
+.playlist table tr.empty-track.insert-before,
+.playlist table tr.empty-track.insert-after,
+.playlist table tr.empty-track.insert-before:hover,
+.playlist table tr.empty-track.insert-after:hover {
   background-color: #0CA761;
 }
 .playlist table tr.summary .length {
@@ -379,6 +379,13 @@ table th {
   height: 10em;
   width: 100%;
   position: relative;
+  overview-x: hidden;
+}
+.bpm-overview .bar-wrapper {
+  display: inline-block;
+  height: 100%;
+  position: absolute;
+  bottom: 0;
 }
 .bpm-overview .bar,
 .bpm-overview .delimiter {
@@ -387,15 +394,20 @@ table th {
   bottom: 0;
   border: 1px solid #000;
 }
-.bpm-overview .bar.selected {
+.bpm-overview .bar-wrapper.selected .bar,
+.bpm-overview .bar-area.drag-mode .bar-wrapper.selected .bar:hover {
   background-color: #000 !important;
 }
-.bpm-overview .bar.selected:hover {
+.bpm-overview .bar-wrapper.selected .bar:hover {
   background-color: #333 !important;
+  cursor: pointer;
 }
 .bpm-overview .bar:hover {
   box-shadow: 0 0 .1em;
   z-index: 3;
+}
+.bpm-overview .bar-area.drag-mode .bar:hover {
+  box-shadow: none;
 }
 .bpm-overview .delimiter {
   width: 1px;
@@ -412,7 +424,7 @@ table th {
   background-color: #09814A;
   border: .1em solid #09814A;
   border-radius: .4em;
-  z-index: 3;
+  z-index: 4;
   display: none;
 }
 
@@ -447,12 +459,21 @@ select.chosen-by-others {
   display: none;
 }
 
-.drag-insertion-point {
+.tr-drag-insertion-point {
   position: absolute;
   width: 0;
   height: .2em;
   background-color: #0CA761;
   z-index: 2;
+  display: none;
+}
+
+.bar-drag-insertion-point {
+  position: absolute;
+  width: .2em;
+  height: 0;
+  background-color: #000;
+  z-index: 3;
   display: none;
 }
 

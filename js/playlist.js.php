@@ -1253,7 +1253,11 @@ function getSelectedTrackTrs() {
 }
 
 function getTrackIndexOfTr(tr) {
-  return tr.closest('table').find('.track, .empty-track').index(tr);
+  let track_trs = tr.closest('table').find('.track, .empty-track');
+  if (tr.hasClass('track') || tr.hasClass('empty-track')) {
+    return track_trs.index(tr);
+  }
+  return track_trs.length;
 }
 
 function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
@@ -1361,26 +1365,30 @@ function addTrackTrSelectHandling(tr) {
 function addTrackTrDragHandling(tr) {
   tr.mousedown(
     function(e) {
-      var mousedown_tr = $(e.target).closest('tr');
+      let mousedown_tr = $(e.target).closest('tr');
       if (!mousedown_tr.hasClass('selected')) {
         return;
       }
-      var body = $(document.body);
+      let body = $(document.body);
       body.addClass('grabbed');
-      mousedown_tr.addClass('grabbed');
 
-      var selected_trs =
+      let selected_trs =
         mousedown_tr.siblings().add(mousedown_tr).filter(
           function() { return $(this).hasClass('selected') }
         );
-      var mb = $('.grabbed-info-block');
+      let mb = $('.grabbed-info-block');
       mb.find('span').text(selected_trs.length);
 
       $('.playlist').toggleClass('drag-mode');
 
-      var ins_point = $('.drag-insertion-point');
+      let ins_point = $('.tr-drag-insertion-point');
 
       function move(e) {
+        function clearInsertionPoint() {
+          $('.playlist tr.insert-before, .playlist tr.insert-after')
+            .removeClass('insert-before insert-after');
+        }
+
         // Move info block
         const of = 5; // To prevent grabbed-info-block to appear as target
         mb.css({ top: e.pageY+of + 'px', left: e.pageX+of + 'px' });
@@ -1391,68 +1399,74 @@ function addTrackTrDragHandling(tr) {
                               // selected tracks
 
         // Check if moving over insertion-point bar (to prevent flickering)
-        if ($(e.target).hasClass('drag-insertion-point')) {
+        if ($(e.target).hasClass('tr-drag-insertion-point')) {
           return;
         }
-
-        // Always clear previous insertion point; else we could in some cases end
-        // up with multiple insertion points
-        $('.playlist tr.insert-above, .playlist tr.insert-below')
-          .removeClass('insert-above insert-below');
 
         // Hide insertion-point bar if we are not over a playlist
         if ($(e.target).closest('.playlist').length == 0) {
           ins_point.hide();
+          clearInsertionPoint();
           return;
         }
 
-        var tr = $(e.target).closest('tr');
-        var insert_above = false;
+        let tr = $(e.target).closest('tr');
+        let insert_before = false;
         if (tr.length == 1) {
           // We have moved over a table row
           // If moved over empty-track tr, mark entire tr as insertion point
           if (tr.hasClass('empty-track')) {
-            tr.addClass('insert-above');
+            clearInsertionPoint();
+            tr.addClass('insert-before');
             ins_point.hide();
+            return;
+          }
+
+          // If moving over a delimiter
+          if (tr.hasClass('delimiter')) {
+            // Leave everything as is
             return;
           }
 
           // If moving over table head, move insertion point to next visible
           // tbody tr
           if (tr.closest('thead').length > 0) {
-            tr = $(tr.closest('table').find('tbody tr')[0]);
+            tr = tr.closest('table').find('tbody tr').first();
             while (!tr.is(':visible')) {
               tr = tr.next();
             }
           }
 
-          var tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
-          insert_above = tr_y_half <= 0 || tr.hasClass('summary');
+          let tr_y_half = e.pageY - tr.offset().top - (tr.height() / 2);
+          insert_before = tr_y_half <= 0 || tr.hasClass('summary');
         }
         else {
           // We have moved over the table but outside of any rows
           // Find summary row
           tr = $(e.target).closest('.table-wrapper').find('tr.summary');
           if (tr.length == 0) {
+            clearInsertionPoint();
             ins_point.hide();
             return;
           }
 
           // Check that we are underneath the summary row; otherwise do nothing
           if (e.pageY < tr.offset().top) {
+            clearInsertionPoint();
             ins_point.hide();
             return;
           }
 
-          insert_above = true;
+          insert_before = true;
         }
 
         // Mark insertion point and draw insertion-point bar
-        tr.addClass(insert_above ? 'insert-above' : 'insert-below');
+        clearInsertionPoint();
+        tr.addClass(insert_before ? 'insert-before' : 'insert-after');
         ins_point.css( { width: tr.width() + 'px'
                        , left: tr.offset().left + 'px'
                        , top: ( tr.offset().top +
-                                (insert_above ? 0 : tr.height()) -
+                                (insert_before ? 0 : tr.height()) -
                                 ins_point.height()/2
                               ) + 'px'
                        }
@@ -1461,49 +1475,42 @@ function addTrackTrDragHandling(tr) {
       }
 
       function up() {
-        var tr_insert_point =
-          $('.playlist tr.insert-above, .playlist tr.insert-below');
+        let tr_insert_point =
+          $('.playlist tr.insert-before, .playlist tr.insert-after');
         if (tr_insert_point.length == 1) {
           // Forbid dropping adjacent to a selected track as that causes wierd
           // reordering
-          var dropped_adjacent_to_selected =
+          let dropped_adjacent_to_selected =
             tr_insert_point.hasClass('selected') ||
-            ( tr_insert_point.hasClass('insert-above') &&
-              tr_insert_point.prev().hasClass('selected')
+            ( tr_insert_point.hasClass('insert-before') &&
+              tr_insert_point.prevAll('.track, .empty-track')
+                             .first()
+                             .hasClass('selected')
             ) ||
-            ( tr_insert_point.hasClass('insert-below') &&
-              tr_insert_point.next().hasClass('selected')
+            ( tr_insert_point.hasClass('insert-after') &&
+              tr_insert_point.nextAll('.track, .empty-track')
+                             .first()
+                             .hasClass('selected')
             );
           if (!dropped_adjacent_to_selected) {
-            let selected_trs = getSelectedTrackTrs();
-            insertPlaceholdersBeforeMovingTrackTrs(selected_trs);
-
-            // Move selected
-            if (tr_insert_point.hasClass('insert-above')) {
-              tr_insert_point.before(selected_trs);
+            let table = tr_insert_point.closest('table');
+            let ins_track_index = getTrackIndexOfTr(tr_insert_point);
+            if (tr_insert_point.hasClass('insert-after')) {
+              ins_track_index++;
             }
-            else {
-              tr_insert_point.after(selected_trs);
-            }
-            if (tr_insert_point.hasClass('empty-track')) {
-              tr_insert_point.remove();
-            }
-            renderPlaylist();
-            renderScratchpad();
-            indicateStateUpdate();
+            moveSelectedTracksTo(table, ins_track_index);
           }
-          tr_insert_point.removeClass('insert-above insert-below');
+          tr_insert_point.removeClass('insert-before insert-after');
         }
 
         // Remove info block and insertion-point bar
         mb.hide();
-        mousedown_tr.removeClass('grabbed');
         body.removeClass('grabbed');
         ins_point.hide();
 
         $('.playlist').toggleClass('drag-mode');
 
-        if (tr_insert_point[0] != mousedown_tr[0]) {
+        if (!tr_insert_point.is(tr)) {
           TRACK_DRAG_STATE = 0;
         }
 
@@ -1513,6 +1520,28 @@ function addTrackTrDragHandling(tr) {
       $(document).mousemove(move).mouseup(up);
     }
   );
+}
+
+function moveSelectedTracksTo(table, track_index) {
+  let selected_trs = getSelectedTrackTrs();
+  let trs = table.find('.track, .empty-track');
+  if (track_index < trs.length) {
+    let tr_insert_point = $(trs[track_index]);
+    insertPlaceholdersBeforeMovingTrackTrs(selected_trs);
+    tr_insert_point.before(selected_trs);
+    if (tr_insert_point.hasClass('empty-track')) {
+      tr_insert_point.remove();
+    }
+  }
+  else {
+    let tr_insert_point = $(trs[trs.length-1]);
+    insertPlaceholdersBeforeMovingTrackTrs(selected_trs);
+    tr_insert_point.after(selected_trs);
+  }
+
+  renderPlaylist();
+  renderScratchpad();
+  indicateStateUpdate();
 }
 
 function insertPlaceholdersBeforeMovingTrackTrs(selected_trs) {
@@ -1583,7 +1612,7 @@ function deleteSelectedTrackTrs() {
 function addTrackTrRightClickMenu(tr) {
   function buildMenu(menu, clicked_tr, close_f) {
     function buildPlaceholderTr() {
-      var o = createPlaylistPlaceholderObject();
+      let o = createPlaylistPlaceholderObject();
       return buildNewTableTrackTrFromTrackObject(o);
     }
     const actions =
@@ -1593,15 +1622,15 @@ function addTrackTrRightClickMenu(tr) {
             if (clicked_tid_input.length == 0) {
               return;
             }
-            var clicked_tid = clicked_tid_input.val().trim();
+            let clicked_tid = clicked_tid_input.val().trim();
             getTableOfTr(clicked_tr).find('tr').each(
               function() {
-                var tr = $(this);
-                var tr_tid_input = tr.find('input[name=track_id]');
+                let tr = $(this);
+                let tr_tid_input = tr.find('input[name=track_id]');
                 if (tr_tid_input.length == 0) {
                   return;
                 }
-                var tr_tid = tr_tid_input.val().trim();
+                let tr_tid = tr_tid_input.val().trim();
                 if (tr_tid == clicked_tid) {
                   tr.addClass('selected');
                 }
@@ -1618,7 +1647,7 @@ function addTrackTrRightClickMenu(tr) {
         ]
       , [ '<?= LNG_MENU_INSERT_PLACEHOLDER_BEFORE ?>'
         , function() {
-            var new_tr = buildPlaceholderTr();
+            let new_tr = buildPlaceholderTr();
             clicked_tr.before(new_tr);
             renderTable(getTableOfTr(clicked_tr));
             indicateStateUpdate();
@@ -1628,7 +1657,7 @@ function addTrackTrRightClickMenu(tr) {
         ]
       , [ '<?= LNG_MENU_INSERT_PLACEHOLDER_AFTER ?>'
         , function() {
-            var new_tr = buildPlaceholderTr();
+            let new_tr = buildPlaceholderTr();
             clicked_tr.after(new_tr);
             renderTable(getTableOfTr(clicked_tr));
             indicateStateUpdate();
@@ -1642,8 +1671,8 @@ function addTrackTrRightClickMenu(tr) {
             if (clicked_tid_input.length == 0) {
               return;
             }
-            var clicked_tid = clicked_tid_input.val().trim();
-            var clicked_title = getTrTitleText(clicked_tr);
+            let clicked_tid = clicked_tid_input.val().trim();
+            let clicked_title = getTrTitleText(clicked_tr);
             showPlaylistsWithTrack(clicked_tid, clicked_title);
             close_f();
           }
@@ -1660,7 +1689,7 @@ function addTrackTrRightClickMenu(tr) {
             close_f();
           }
         , function(a) {
-            var trs = getSelectedTrackTrs();
+            let trs = getSelectedTrackTrs();
             if (trs.length == 0) {
               a.addClass('disabled');
             }
@@ -1668,8 +1697,8 @@ function addTrackTrRightClickMenu(tr) {
         ]
       ];
     menu.empty();
-    for (var i = 0; i < actions.length; i++) {
-      var a = $('<a href="#" />');
+    for (let i = 0; i < actions.length; i++) {
+      let a = $('<a href="#" />');
       a.text(actions[i][0]);
       a.click(actions[i][1]);
       actions[i][2](a);
@@ -1685,7 +1714,7 @@ function addTrackTrRightClickMenu(tr) {
         menu.hide();
       }
       tr.addClass('right-clicked');
-      var menu = $('.mouse-menu');
+      let menu = $('.mouse-menu');
       buildMenu(menu, tr, close);
       menu.css({ top: e.pageY + 'px', left: e.pageX + 'px' });
       menu.show();
@@ -1735,7 +1764,7 @@ function savePlaylistSnapshot() {
 }
 
 function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
-  var status = [false, false];
+  let status = [false, false];
   function done(table, status_offset) {
     status[status_offset] = true;
     renderTable(table);
@@ -1754,8 +1783,8 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
     }
     if (hasTrackAt(track_offset)) {
       // Currently at a track entry; add tracks until next placeholder entry
-      var tracks_to_load = [];
-      var o = track_offset;
+      let tracks_to_load = [];
+      let o = track_offset;
       for ( ; o < track_ids.length &&
               hasTrackAt(o) &&
               tracks_to_load.length < LOAD_TRACKS_LIMIT
@@ -1767,10 +1796,10 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
       callApi( '/api/get-track-info/'
              , { trackIds: tracks_to_load }
              , function(d) {
-                 var tracks = [];
-                 for (var i = 0; i < d.tracks.length; i++) {
-                   var t = d.tracks[i];
-                   var obj = createPlaylistTrackObject( t.trackId
+                 let tracks = [];
+                 for (let i = 0; i < d.tracks.length; i++) {
+                   let t = d.tracks[i];
+                   let obj = createPlaylistTrackObject( t.trackId
                                                       , t.artists
                                                       , t.name
                                                       , t.length
@@ -1790,8 +1819,8 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
     }
     else {
       // Currently at a placeholder entry; add such until next track entry
-      var placeholders = [];
-      var o = track_offset;
+      let placeholders = [];
+      let o = track_offset;
       for (; o < track_ids.length && !hasTrackAt(o); o++) {
         placeholders.push(createPlaylistPlaceholderObject());
       }
@@ -1833,7 +1862,7 @@ function saveUndoState() {
   // Find slot to save state
   if (UNDO_STACK_OFFSET+1 == limit) {
     // Remove first and shift all states
-    for (var i = 1; i < limit; i++) {
+    for (let i = 1; i < limit; i++) {
       UNDO_STACK[i-1] = UNDO_STACK[i];
     }
   }
@@ -1843,19 +1872,19 @@ function saveUndoState() {
   const offset = UNDO_STACK_OFFSET;
 
   // Destroy obsolete redo states
-  for (var o = offset; o < limit; o++) {
+  for (let o = offset; o < limit; o++) {
     if (UNDO_STACK[o] !== null) {
       UNDO_STACK[o] = null;
     }
   }
 
-  var playlist = getPlaylistTable().clone(true, true);
+  let playlist = getPlaylistTable().clone(true, true);
   playlist.find('tr.selected').removeClass('selected');
   playlist.find('tr.delimiter').remove();
-  var scratchpad = getScratchpadTable().clone(true, true);
+  let scratchpad = getScratchpadTable().clone(true, true);
   scratchpad.find('tr.selected').removeClass('selected');
   scratchpad.find('tr.delimiter').remove();
-  var state = { playlistTracks: getPlaylistTrackData()
+  let state = { playlistTracks: getPlaylistTrackData()
               , scratchpadTracks: getScratchpadTrackData()
               , callback: function() {}
               };
@@ -1879,7 +1908,7 @@ function performUndo() {
   }
 
   const offset = --UNDO_STACK_OFFSET;
-  var state = UNDO_STACK[offset];
+  let state = UNDO_STACK[offset];
   restoreState(state);
   state.callback();
   renderUndoRedoButtons();
@@ -1894,7 +1923,7 @@ function performRedo() {
   }
 
   const offset = ++UNDO_STACK_OFFSET;
-  var state = UNDO_STACK[offset];
+  let state = UNDO_STACK[offset];
   restoreState(state);
   state.callback();
   renderUndoRedoButtons();
@@ -1910,8 +1939,8 @@ function restoreState(state) {
 
 function renderUndoRedoButtons() {
   const offset = UNDO_STACK_OFFSET;
-  var undo_b = $('#undoBtn');
-  var redo_b = $('#redoBtn');
+  let undo_b = $('#undoBtn');
+  let redo_b = $('#redoBtn');
   if (offset > 0) {
     undo_b.removeClass('disabled');
   }
@@ -1927,28 +1956,28 @@ function renderUndoRedoButtons() {
 }
 
 function showPlaylistsWithTrack(tid, title) {
-  var action_area = $('.action-input-area[name=show-playlists-with-track]');
+  let action_area = $('.action-input-area[name=show-playlists-with-track]');
   function setTableHeight() {
-    var search_results_area = action_area.find('.search-results');
-    var search_area_bottom =
+    let search_results_area = action_area.find('.search-results');
+    let search_area_bottom =
       search_results_area.offset().top + search_results_area.height();
-    var table = search_results_area.find('.table-wrapper');
-    var table_top = table.offset().top;
-    var table_height = search_area_bottom - table_top;
+    let table = search_results_area.find('.table-wrapper');
+    let table_top = table.offset().top;
+    let table_height = search_area_bottom - table_top;
     table.css('height', table_height + 'px');
   }
   action_area.find('p').text(title);
   action_area.find('button.cancel').on('click', close);
-  var search_results_area = action_area.find('table tbody');
+  let search_results_area = action_area.find('table tbody');
   search_results_area.empty();
   clearProgress();
   action_area.show();
   setTableHeight();
 
-  var body = $(document.body);
+  let body = $(document.body);
   body.addClass('loading');
 
-  var cancel_loading = false;
+  let cancel_loading = false;
   function finalize() {
     body.removeClass('loading');
   }
@@ -1969,22 +1998,22 @@ function showPlaylistsWithTrack(tid, title) {
     finalize();
   }
 
-  var total_loads = 0;
-  var loads_finished = 0;
+  let total_loads = 0;
+  let loads_finished = 0;
   function clearProgress() {
-    var bar = action_area.find('.progress-bar');
+    let bar = action_area.find('.progress-bar');
     bar.css('width', 0);
   }
   function initProgress(total) {
     total_loads = total;
-    var bar = action_area.find('.progress-bar');
+    let bar = action_area.find('.progress-bar');
     bar.css('width', 0);
   }
   function hasInitProgress() {
     return total_loads > 0;
   }
   function renderProgress() {
-    var bar = action_area.find('.progress-bar');
+    let bar = action_area.find('.progress-bar');
     bar.css('width', (loads_finished / total_loads)*100 + '%');
   }
 
@@ -2001,12 +2030,12 @@ function showPlaylistsWithTrack(tid, title) {
                  initProgress(d.total);
                }
 
-               for (var i = 0; i < d.playlists.length; i++) {
+               for (let i = 0; i < d.playlists.length; i++) {
                  if (cancel_loading) {
                    return;
                  }
-                 var pid = d.playlists[i].id;
-                 var pname = d.playlists[i].name;
+                 let pid = d.playlists[i].id;
+                 let pname = d.playlists[i].name;
                  if (pid != PLAYLIST_ID) {
                    loadPlaylistTracks(pid, pname, 0);
                  }
@@ -2032,7 +2061,7 @@ function showPlaylistsWithTrack(tid, title) {
              , offset: offset
              }
            , function(d) {
-               for (var i = 0; i < d.tracks.length; i++) {
+               for (let i = 0; i < d.tracks.length; i++) {
                  if (cancel_loading) {
                    return;
                  }
@@ -2113,15 +2142,19 @@ function renderBpmOverview() {
     tracks
   , function(track_index) {
       let t = this;
+      let bar_wrapper = $('<div class="bar-wrapper" />');
+      bar_wrapper.css('left', bar_voffset + 'px');
+      bar_wrapper.css('width', (bar_vw + 2*border_size) + 'px');
       let bar = $('<div class="bar" />');
       let bar_vh = (t.bpm - BPM_MIN) / BPM_MAX * area_vh;
-      bar.css('width', bar_vw + 'px');
       bar.css('height', bar_vh + 'px');
-      bar.css('left', bar_voffset + 'px');
+      bar.css('width', bar_vw + 'px');
       let cs = getBpmRgbColor(t.bpm);
       bar.css('background-color', 'rgb(' + cs.join(',') + ')');
       bar_voffset += bar_vw + border_size;
-      area.append(bar);
+      bar_wrapper.append(bar);
+      area.append(bar_wrapper);
+
       if ( isUsingDanceDelimiter() &&
            (track_index+1) % PLAYLIST_DANCE_DELIMITER == 0 &&
            track_index != 0 && track_index != tracks.length-1
@@ -2144,22 +2177,26 @@ function renderBpmOverview() {
                           '</div>'
                         );
       if (selected_track_indices.includes(track_index)) {
-        bar.addClass('selected');
+        bar_wrapper.addClass('selected');
       }
       area.append(track_info);
       bar.hover(
         function() {
           let bar = $(this);
-          let new_cs = rgbVisIncr(cs, 40);
-          bar.css('background-color', 'rgb(' + new_cs.join(',') + ')');
+          if (bar.closest('.drag-mode').length == 0) {
+            let new_cs = rgbVisIncr(cs, 40);
+            bar.css('background-color', 'rgb(' + new_cs.join(',') + ')');
+          }
 
+          let bar_wrapper = bar.closest('.bar-wrapper');
+          let bar_wrapper_of = bar_wrapper.position();
           let bar_of = bar.position();
           let info_vh = track_info.outerHeight();
           let info_top_of = bar_of.top - info_vh;
           track_info.css('top', info_top_of + 'px');
           let info_vw = track_info.outerWidth();
-          if (bar_of.left + info_vw <= area_vw) {
-            track_info.css('left', bar_of.left + 'px');
+          if (bar_wrapper_of.left + info_vw <= area_vw) {
+            track_info.css('left', bar_wrapper_of.left + 'px');
           }
           else {
             track_info.css('left', (area_vw - info_vw) + 'px');
@@ -2172,6 +2209,7 @@ function renderBpmOverview() {
         }
       );
       addTrackBarSelectHandling(bar);
+      addTrackBarDragHandling(bar);
     }
   );
 
@@ -2204,7 +2242,13 @@ function renderBpmOverview() {
 function addTrackBarSelectHandling(bar) {
   bar.click(
     function(e) {
-      updateTrackBarSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+      if (TRACK_DRAG_STATE == 0) {
+        let bar_wr = $(this).closest('.bar-wrapper');
+        updateTrackBarSelection(bar_wr, e.ctrlKey || e.metaKey, e.shiftKey);
+      }
+      else {
+        TRACK_DRAG_STATE = 0;
+      }
     }
   );
 }
@@ -2215,9 +2259,9 @@ function addTrackBarSelection(track_index) {
   }
 
   let area = getTrackBarArea();
-  let bars = area.find('.bar');
-  let bar = $(bars[track_index]);
-  bar.addClass('selected');
+  let bar_wrappers = area.find('.bar-wrapper');
+  let bar_wr = $(bar_wrappers[track_index]);
+  bar_wr.addClass('selected');
 }
 
 function removeTrackBarSelection(track_index) {
@@ -2226,9 +2270,9 @@ function removeTrackBarSelection(track_index) {
   }
 
   let area = getTrackBarArea();
-  let bars = area.find('.bar');
-  let bar = $(bars[track_index]);
-  bar.removeClass('selected');
+  let bar_wrappers = area.find('.bar-wrapper');
+  let bar_wr = $(bar_wrappers[track_index]);
+  bar_wr.removeClass('selected');
 }
 
 function toggleTrackBarSelection(track_index) {
@@ -2237,9 +2281,9 @@ function toggleTrackBarSelection(track_index) {
   }
 
   let area = getTrackBarArea();
-  let bars = area.find('.bar');
-  let bar = $(bars[track_index]);
-  bar.toggleClass('selected');
+  let bar_wrappers = area.find('.bar-wrapper');
+  let bar_wr = $(bar_wrappers[track_index]);
+  bar_wr.toggleClass('selected');
 }
 
 function clearTrackBarSelection() {
@@ -2248,60 +2292,198 @@ function clearTrackBarSelection() {
   }
 
   let area = getTrackBarArea();
-  area.find('.bar').removeClass('selected');
+  area.find('.bar-wrapper').removeClass('selected');
 }
 
-function updateTrackBarSelection(bar, multi_select_mode, span_mode) {
-  function getTrackIndexOfBar(bar) {
-    return bar.closest('.bar-area').find('.bar').index(bar);
-  }
+function getTrackIndexOfBarWrapper(bar_wr) {
+  return bar_wr.closest('.bar-area').find('.bar-wrapper').index(bar_wr);
+}
 
+function updateTrackBarSelection(bar_wr, multi_select_mode, span_mode) {
   if (multi_select_mode) {
-    bar.toggleClass('selected');
-    toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+    bar_wr.toggleClass('selected');
+    toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
     return;
   }
 
   if (span_mode) {
-    var selected_sib_bars =
-      bar.siblings().filter(function() { return $(this).hasClass('selected') });
-    if (selected_sib_bars.length == 0) {
-      bar.addClass('selected');
-      addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+    let selected_sib_bar_wrappers =
+      bar_wr.siblings().filter(
+        function() { return $(this).hasClass('selected') }
+      );
+    if (selected_sib_bar_wrappers.length == 0) {
+      bar_wr.addClass('selected');
+      addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
       return;
     }
-    var first = $(selected_sib_bars[0]);
-    var last = $(selected_sib_bars[selected_sib_bars.length-1]);
-    var bars = bar.siblings().add(bar);
-    for ( var i = Math.min(bar.index(), first.index(), last.index())
-        ; i <= Math.max(bar.index(), first.index(), last.index())
+    let first = $(selected_sib_bar_wrappers[0]);
+    let last = $(selected_sib_bar_wrappers[selected_sib_bar_wrappers.length-1]);
+    let bar_wrappers = bar_wr.siblings().add(bar_wr);
+    for ( let i = Math.min(bar_wr.index(), first.index(), last.index())
+        ; i <= Math.max(bar_wr.index(), first.index(), last.index())
         ; i++
         )
     {
-      let sib_bar = $(bars[i]);
-      if (sib_bar.hasClass('bar')) {
-        sib_bar.addClass('selected');
-        addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(sib_bar));
+      let sib_bar_wr = $(bar_wrappers[i]);
+      if (sib_bar_wr.hasClass('bar-wrapper')) {
+        sib_bar_wr.addClass('selected');
+        addTrackTrSelection( getPlaylistTable()
+                           , getTrackIndexOfBarWrapper(sib_bar_wr)
+                           );
       }
     }
     return;
   }
 
-  var selected_sib_bars =
-    bar.siblings().filter(function() { return $(this).hasClass('selected') });
-  $.each( selected_sib_bars
+  let selected_sib_bar_wrappers =
+    bar_wr.siblings().filter(function() { return $(this).hasClass('selected') });
+  $.each( selected_sib_bar_wrappers
         , function() {
-            let bar = $(this);
-            bar.removeClass('selected');
-            removeTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+            let bar_wr = $(this);
+            bar_wr.removeClass('selected');
+            removeTrackTrSelection( getPlaylistTable()
+                                  , getTrackIndexOfBarWrapper(bar_wr)
+                                  );
           }
         );
-  if (selected_sib_bars.length > 0) {
-    bar.addClass('selected');
-    addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+  if (selected_sib_bar_wrappers.length > 0) {
+    bar_wr.addClass('selected');
+    addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
     return;
   }
 
-  bar.toggleClass('selected');
-  toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBar(bar));
+  bar_wr.toggleClass('selected');
+  toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
+}
+
+function addTrackBarDragHandling(bar) {
+  function disableTextSelection(e) {
+    e.preventDefault();
+  }
+
+  bar.mousedown(
+    function(e) {
+      let mousedown_bar = $(e.target).closest('.bar');
+      let mousedown_bar_wr = mousedown_bar.closest('.bar-wrapper');
+      if (!mousedown_bar_wr.hasClass('selected')) {
+        return;
+      }
+      let body = $(document.body);
+      body.addClass('grabbed');
+
+      let selected_bars =
+        mousedown_bar_wr.siblings().add(mousedown_bar_wr).filter(
+          function() { return $(this).hasClass('selected') }
+        );
+      let mb = $('.grabbed-info-block');
+      mb.find('span').text(selected_bars.length);
+
+      let area = mousedown_bar.closest('.bar-area');
+      area.toggleClass('drag-mode');
+
+      let ins_point = $('.bar-drag-insertion-point');
+
+      function move(e) {
+        // Move info block
+        const of = 5; // To prevent grabbed-info-block to appear as target
+        mb.css({ top: e.pageY+of + 'px', left: e.pageX+of + 'px' });
+        mb.show();
+
+        TRACK_DRAG_STATE = 1; // bar.click() and mouseup may both reset this.
+                              // This is to prevent deselection if drag stops on
+                              // selected bars
+
+        // Check if moving over insertion-point bar (to prevent flickering)
+        if ($(e.target).hasClass('bar-drag-insertion-point')) {
+          return;
+        }
+
+        // Always clear previous insertion point; else we could in some cases end
+        // up with multiple insertion points
+        area.find('.insert-before, .insert-after')
+          .removeClass('insert-before insert-after');
+
+        // Hide insertion-point bar if we are not over area
+        if ($(e.target).closest('.bar-area').length == 0) {
+          ins_point.hide();
+          return;
+        }
+
+        let bar_wrapper = $(e.target).closest('.bar-wrapper');
+        let insert_before = false;
+        if (bar_wrapper.length == 1) {
+          // We have moved over a bar wrapper
+          let bar_x_half =
+            e.pageX - bar_wrapper.offset().left - (bar_wrapper.width() / 2);
+          insert_before = bar_x_half <= 0;
+        }
+        else {
+          // We have moved over the bar area but not over a bar.
+          // Don't do anything, as we assume that an insertion point has already
+          // been established from previous move
+          return;
+        }
+
+        // Mark insertion point and draw insertion-point bar
+        bar_wrapper.addClass(insert_before ? 'insert-before' : 'insert-after');
+        ins_point.css( { height: bar_wrapper.height() + 'px'
+                       , top: bar_wrapper.offset().top + 'px'
+                       , left: ( bar_wrapper.offset().left +
+                                 (insert_before ? 0 : bar_wrapper.width()) -
+                                 ins_point.width()/2
+                               ) + 'px'
+                       }
+                     );
+        ins_point.show();
+      }
+
+      function up() {
+        let area = getTrackBarArea();
+        let insert_point = area.find('.insert-before, .insert-after');
+        if (insert_point.length == 1) {
+          // Forbid dropping adjacent to a selected track as that causes wierd
+          // reordering
+          let dropped_adjacent_to_selected =
+            insert_point.find('.selected').length > 0 ||
+            ( insert_point.hasClass('insert-before') &&
+              insert_point.prevAll('.bar-wrapper')
+                          .first()
+                          .find('.selected')
+                          .length > 0
+            ) ||
+            ( insert_point.hasClass('insert-after') &&
+              insert_point.nextAll('.bar-wrapper')
+                          .first()
+                          .find('.selected')
+                          .length > 0
+            );
+          if (!dropped_adjacent_to_selected) {
+            let ins_track_index = getTrackIndexOfBarWrapper(insert_point);
+            if (insert_point.hasClass('insert-after')) {
+              ins_track_index++;
+            }
+            moveSelectedTracksTo(getPlaylistTable(), ins_track_index);
+          }
+          insert_point.removeClass('insert-before insert-after');
+        }
+
+        // Remove info block and insertion-point bar
+        mb.hide();
+        body.removeClass('grabbed');
+        ins_point.hide();
+
+        area.toggleClass('drag-mode');
+
+        if (!insert_point.is(mousedown_bar.closest('.bar-wrapper'))) {
+          TRACK_DRAG_STATE = 0;
+        }
+
+        $(document).unbind('mousemove', move).unbind('mouseup', up);
+      }
+
+      $(document).mousemove(move).mouseup(up);
+
+      return false;
+    }
+  );
 }

@@ -654,7 +654,8 @@ $(document).ready(
   <span></span>
 </div>
 
-<div class="drag-insertion-point"></div>
+<div class="tr-drag-insertion-point"></div>
+<div class="bar-drag-insertion-point"></div>
 
 <div class="mouse-menu"></div>
 
