@@ -2249,6 +2249,9 @@ function addTrackBarSelectHandling(bar) {
       else {
         TRACK_DRAG_STATE = 0;
       }
+
+      let track_index = getTrackIndexOfBarWrapper(bar.closest('.bar-wrapper'));
+      scrollPlaylistToTrackIndex(track_index);
     }
   );
 }
@@ -2486,4 +2489,16 @@ function addTrackBarDragHandling(bar) {
       return false;
     }
   );
+}
+
+function scrollPlaylistToTrackIndex(track_index) {
+  let table = getPlaylistTable();
+  let tr = $(table.find('.track, .empty-track')[track_index]);
+  let scroll_area = table.closest('.table-wrapper');
+  let scroll_area_vh = scroll_area.height();
+  let scroll_pos = tr.position().top - scroll_area_vh/2;
+  if (scroll_pos < 0) {
+    scroll_pos = 0;
+  }
+  scroll_area.scrollTop(scroll_pos);
 }
