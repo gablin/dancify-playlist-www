@@ -77,7 +77,7 @@ function setupFormElementsForRandomizeByBpm() {
   var buildBpmDiffSlider = function(tr) {
     var printValues =
       function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
-    tr.find('td.difference-controller > div').each(
+    tr.find('td.bpm-difference-controller > div').each(
       function() {
         if ($(this).children().length > 0) {
           $(this).empty();
@@ -106,7 +106,7 @@ function setupFormElementsForRandomizeByBpm() {
   var buildBpmRangeSlider = function(tr) {
     var printValues =
       function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
-    tr.find('td.range-controller > div').each(
+    tr.find('td.bpm-range-controller > div').each(
       function() {
         if ($(this).children().length > 0) {
           $(this).empty();
@@ -211,14 +211,14 @@ function getBpmSettings() {
   action_area.find('table.bpm-range-area tr').each(
     function() {
       var tr = $(this);
-      tr.find('td.range-controller > div').each(
+      tr.find('td.bpm-range-controller > div').each(
         function() {
           v1 = $(this).slider('values', 0);
           v2 = $(this).slider('values', 1);
           data.bpmRangeList.push([v1, v2]);
         }
       );
-      tr.find('.difference-controller > div').each(
+      tr.find('.bpm-difference-controller > div').each(
         function() {
           v1 = $(this).slider('values', 0);
           v2 = $(this).slider('values', 1);

@@ -24,7 +24,7 @@ function setupSearchForTracks() {
 
 function setupSearchForTracksBpmController() {
   var action_area = getSearchForTracksActionArea();
-  var bpm_slider = action_area.find('td.range-controller > div');
+  var bpm_slider = action_area.find('td.bpm-range-controller > div');
   function printValues(v1, v2) {
     bpm_slider.closest('tr').find('td.label > span').text(v1 + ' - ' + v2);
   }
@@ -45,7 +45,7 @@ function setupSearchForTracksBpmController() {
 
 function getSearchForTracksBpmValues() {
   var action_area = getSearchForTracksActionArea();
-  var bpm_slider = action_area.find('td.range-controller > div');
+  var bpm_slider = action_area.find('td.bpm-range-controller > div');
   var v1 = bpm_slider.slider('values', 0);
   var v2 = bpm_slider.slider('values', 1);
   return [v1, v2];

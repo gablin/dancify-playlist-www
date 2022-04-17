@@ -91,7 +91,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
           <td class="label">
             <?= LNG_DESC_BPM ?>: <span></span>
           </td>
-          <td class="range-controller">
+          <td class="bpm-range-controller">
             <div></div>
           </td>
           <td>
@@ -108,7 +108,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
               <option value="-1"><?= LNG_DESC_SLOWER ?></option>
             </select>
           </td>
-          <td class="difference-controller">
+          <td class="bpm-difference-controller">
             <div></div>
           </td>
           <td></td>
@@ -120,7 +120,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
           <td class="label">
             <?= LNG_DESC_BPM ?>: <span></span>
           </td>
-          <td class="range-controller">
+          <td class="bpm-range-controller">
             <div></div>
           </td>
           <td>
@@ -281,7 +281,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
           <td class="label">
             <?= LNG_DESC_BPM ?>: <span></span>
           </td>
-          <td class="range-controller">
+          <td class="bpm-range-controller">
             <div></div>
           </td>
         </tr>

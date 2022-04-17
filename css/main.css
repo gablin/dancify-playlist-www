@@ -785,8 +785,8 @@ button.loading:hover {
 .bpm-range-area .label {
   width: 10em;
 }
-.bpm-range-area .range-controller,
-.bpm-range-area .distance-controller {
+.bpm-range-area .bpm-range-controller,
+.bpm-range-area .bpm-difference-controller {
   width: 20em;
 }
 .bpm-range-area button {
