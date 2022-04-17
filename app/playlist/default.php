@@ -106,7 +106,6 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
             <select name="direction">
               <option value="+1"><?= LNG_DESC_FASTER ?></option>
               <option value="-1"><?= LNG_DESC_SLOWER ?></option>
-              <option></option>
             </select>
           </td>
           <td class="difference-controller">
