@@ -121,7 +121,7 @@ define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
       , 'Save changes to Spotify'
       );
 define( 'LNG_MENU_RANDOMIZE_BY_BPM'
-      , 'Randomize by BPM'
+      , 'Randomize order by BPM'
       );
 define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
       , 'Insert track at interval'

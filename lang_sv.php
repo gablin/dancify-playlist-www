@@ -122,7 +122,7 @@ define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
       , 'Spara ändringar till Spotify'
       );
 define( 'LNG_MENU_RANDOMIZE_BY_BPM'
-      , 'Slumpa efter BPM'
+      , 'Slumpa ordning enligt BPM'
       );
 define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
       , 'Lägg in låt vid intervall'
