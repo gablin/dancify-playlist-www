@@ -130,6 +130,19 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
         </tr>
       <tbody>
     </table>
+    <table class="dance-length-range-area">
+      <tbody>
+        <tr class="range">
+          <td class="desc"><?= LNG_DESC_DANCE_LENGTH ?></td>
+          <td class="label">
+            <span></span>
+          </td>
+          <td class="dance-length-range-controller">
+            <div></div>
+          </td>
+        </tr>
+      <tbody>
+    </table>
     <label class="checkbox">
       <input type="checkbox" name="dance-slot-has-same-genre" value="true" />
       <span class="checkmark"></span>

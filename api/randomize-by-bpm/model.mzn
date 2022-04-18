@@ -1,11 +1,14 @@
 include "globals.mzn";
 
 array[int] of int: bpm;
+array[int] of int: lengths;
 array[int] of int: genres;
 array[int, int] of int: ranges;
 array[int, int] of int: diffs;
 set of int: RangeSet = index_set_1of2(ranges);
 bool: dance_slot_same_genre;
+int: min_length;
+int: max_length;
 
 int: Null = 0;
 set of int: TrackSet = index_set(bpm);
@@ -104,6 +107,16 @@ forall (i in DanceSlotSet)
 ( let { OrderSet: fo = firstOrderInDanceSlot(i) }
   in forall (j in fo+1..fo+card(RangeSet)-1)
      ( has_track[fo] <-> has_track[j] )
+);
+
+% If a dance slot has tracks, then the totalt length of the tracks must be within
+% the specified range.
+constraint
+forall (i in DanceSlotSet)
+( let { OrderSet: fo = firstOrderInDanceSlot(i) }
+  in slot_full[i] ->
+     let { var int: l = sum (j in fo..fo+card(RangeSet)-1) (lengths[order[j]]) }
+     in ( l >= min_length /\ l <= max_length )
 );
 
 % Check whether a dance slot is full.

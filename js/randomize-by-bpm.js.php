@@ -7,18 +7,18 @@ function setupRandomizeByBpm() {
 }
 
 function setupFormElementsForRandomizeByBpm() {
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
-  var action_area = $('div[name=randomize-by-bpm]');
+  let form = getPlaylistForm();
+  let table = getPlaylistTable();
+  let action_area = $('div[name=randomize-by-bpm]');
 
   // Randomize button
-  var rnd_b = form.find('button[id=randomizeBtn]');
+  let rnd_b = form.find('button[id=randomizeBtn]');
   rnd_b.click(
     function() {
-      var b = $(this);
+      let b = $(this);
       b.prop('disabled', true);
       b.addClass('loading');
-      var body = $(document.body);
+      let body = $(document.body);
       body.addClass('loading');
       function restoreButton() {
         b.prop('disabled', false);
@@ -26,16 +26,18 @@ function setupFormElementsForRandomizeByBpm() {
         body.removeClass('loading');
       };
 
-      var playlist_data = getPlaylistTrackData().concat(getScratchpadTrackData());
+      let playlist_data = getPlaylistTrackData().concat(getScratchpadTrackData());
       playlist_data = removePlaceholdersFromTracks(playlist_data);
-      var track_ids = [];
-      var bpms = [];
-      var genres = [];
-      for (var i = 0; i < playlist_data.length; i++) {
-        var track = playlist_data[i];
-        track_ids.push(track.trackId)
+      let track_ids = [];
+      let track_lengths = [];
+      let bpms = [];
+      let genres = [];
+      for (let i = 0; i < playlist_data.length; i++) {
+        let track = playlist_data[i];
+        track_ids.push(track.trackId);
+        track_lengths.push(Math.round(track.length / 1000));
         bpms.push(track.bpm);
-        var genre = 0;
+        let genre = 0;
         if (track.genre.by_user != 0) {
           genre = track.genre.by_user;
         }
@@ -44,12 +46,14 @@ function setupFormElementsForRandomizeByBpm() {
         }
         genres.push(genre);
       }
-      var bpm_data = getBpmSettings();
-      var data = { trackIdList: track_ids
+      let settings = getRandomizeByBpmSettings();
+      let data = { trackIdList: track_ids
+                 , trackLengthList: track_lengths
                  , trackBpmList: bpms
                  , trackGenreList: genres
-                 , bpmRangeList: bpm_data.bpmRangeList
-                 , bpmDifferenceList: bpm_data.bpmDifferenceList
+                 , bpmRangeList: settings.bpmRangeList
+                 , bpmDifferenceList: settings.bpmDifferenceList
+                 , danceLengthRange: settings.danceLengthRange
                  , danceSlotSameGenre:
                      form.find('input[name=dance-slot-has-same-genre]')
                      .prop('checked')
@@ -74,7 +78,7 @@ function setupFormElementsForRandomizeByBpm() {
   );
 
   // BPM differences
-  var buildBpmDiffSlider = function(tr) {
+  function buildBpmDiffSlider(tr) {
     var printValues =
       function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
     tr.find('td.bpm-difference-controller > div').each(
@@ -86,7 +90,7 @@ function setupFormElementsForRandomizeByBpm() {
           { range: true
           , min: 0
           , max: 255
-          , values: [10, 40]
+          , values: [25, 50]
           , slide: function(event, ui) {
               printValues(ui.values[0], ui.values[1]);
             }
@@ -97,13 +101,13 @@ function setupFormElementsForRandomizeByBpm() {
                    );
       }
     );
-  };
+  }
   action_area.find('table.bpm-range-area tr.difference').each(
     function() { buildBpmDiffSlider($(this)); }
   );
 
   // BPM ranges and buttons
-  var buildBpmRangeSlider = function(tr) {
+  function buildBpmRangeSlider(tr) {
     var printValues =
       function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
     tr.find('td.bpm-range-controller > div').each(
@@ -126,8 +130,9 @@ function setupFormElementsForRandomizeByBpm() {
                    );
       }
     );
-  };
-  var setupBpmRangeButtons = function(range_tr) {
+  }
+
+  function setupBpmRangeButtons(range_tr) {
     var base_range_tr = range_tr.clone();
     var diff_tr = range_tr.next().length > 0 ? range_tr.next() : range_tr.prev();
     var base_diff_tr = diff_tr.clone();
@@ -183,7 +188,7 @@ function setupFormElementsForRandomizeByBpm() {
       );
     }
   };
-  var updateBpmRangeTrackCounters = function() {
+  function updateBpmRangeTrackCounters() {
     action_area.find('table.bpm-range-area tr > td.track > span').each(
       function(i) {
         $(this).text(i+1);
@@ -198,19 +203,53 @@ function setupFormElementsForRandomizeByBpm() {
       updateBpmRangeTrackCounters();
     }
   );
+
+  function buildDanceLengthRangeSlider(tr) {
+    function printValues(v1, v2) {
+      let t1 = formatTrackLength(v1*1000);
+      let t2 = formatTrackLength(v2*1000);
+      tr.find('td.label > span').text(t1 + ' - ' + t2);
+    }
+    tr.find('td.dance-length-range-controller > div').each(
+      function() {
+        if ($(this).children().length > 0) {
+          $(this).empty();
+        }
+        $(this).slider(
+          { range: true
+          , min: 0
+          , max: 30*60
+          , values: [4*60, 8*60]
+          , slide: function(event, ui) {
+              printValues(ui.values[0], ui.values[1]);
+            }
+          }
+        );
+        printValues( $(this).slider('values', 0)
+                   , $(this).slider('values', 1)
+                   );
+      }
+    );
+  };
+  action_area.find('table.dance-length-range-area tr.range').each(
+    function() {
+      let tr = $(this);
+      buildDanceLengthRangeSlider(tr);
+    }
+  );
   disableRemoveButtonsIfNeeded();
 }
 
-function getBpmSettings() {
-  var form = getPlaylistForm();
-  var data = { bpmRangeList: []
+function getRandomizeByBpmSettings() {
+  let form = getPlaylistForm();
+  let data = { bpmRangeList: []
              , bpmDifferenceList: []
              };
-  var action_area = $('div[name=randomize-by-bpm]');
+  let action_area = $('div[name=randomize-by-bpm]');
 
   action_area.find('table.bpm-range-area tr').each(
     function() {
-      var tr = $(this);
+      let tr = $(this);
       tr.find('td.bpm-range-controller > div').each(
         function() {
           v1 = $(this).slider('values', 0);
@@ -222,11 +261,11 @@ function getBpmSettings() {
         function() {
           v1 = $(this).slider('values', 0);
           v2 = $(this).slider('values', 1);
-          var tr = $(this).closest('tr');
-          var direction =
+          let tr = $(this).closest('tr');
+          let direction =
             parseInt(tr.find('select[name=direction] :selected').val());
           if (direction < 0) {
-            var tmp = v1;
+            let tmp = v1;
             v1 = -v2;
             v2 = -tmp;
           }
@@ -235,6 +274,14 @@ function getBpmSettings() {
       );
     }
   );
+
+  let len_slider =
+    action_area.find(
+      'table.dance-length-range-area .dance-length-range-controller > div'
+    ).first();
+  data.danceLengthRange = [ len_slider.slider('values', 0)
+                          , len_slider.slider('values', 1)
+                          ];
 
   return data;
 }

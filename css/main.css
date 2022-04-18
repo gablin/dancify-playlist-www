@@ -775,7 +775,8 @@ button.loading {
 button.loading:hover {
   cursor: wait !important;
 }
-.bpm-range-area {
+.bpm-range-area,
+.dance-length-range-area {
   margin: 1em 0;
 }
 .bpm-range-area .track {
@@ -785,9 +786,19 @@ button.loading:hover {
 .bpm-range-area .label {
   width: 10em;
 }
+.dance-length-range-area .desc {
+  width: 6em;
+  font-weight: bold;
+}
+.dance-length-range-area .label {
+  width: 7em;
+}
 .bpm-range-area .bpm-range-controller,
 .bpm-range-area .bpm-difference-controller {
   width: 20em;
+}
+.dance-length-range-area .dance-length-range-controller {
+  width: 24em;
 }
 .bpm-range-area button {
   margin: 0 .5em;

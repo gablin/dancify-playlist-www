@@ -488,6 +488,9 @@ define( 'LNG_DESC_BPM_MEDIAN'
 define( 'LNG_DESC_BPM_AVERAGE'
       , 'Genomsnitt'
       );
+define( 'LNG_DESC_DANCE_LENGTH'
+      , 'Danslängd'
+      );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
       );

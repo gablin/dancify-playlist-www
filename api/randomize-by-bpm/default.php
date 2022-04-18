@@ -24,6 +24,9 @@ if (is_null($json)) {
 if (!array_key_exists('trackIdList', $json)) {
   fail('trackIdList missing');
 }
+if (!array_key_exists('trackLengthList', $json)) {
+  fail('trackLengthList missing');
+}
 if (!array_key_exists('trackBpmList', $json)) {
   fail('trackBpmList missing');
 }
@@ -39,11 +42,19 @@ if (!array_key_exists('bpmDifferenceList', $json)) {
 if (!array_key_exists('danceSlotSameGenre', $json)) {
   fail('danceSlotSameGenre missing');
 }
+if (!array_key_exists('danceLengthRange', $json)) {
+  fail('danceLengthRange missing');
+}
 $track_ids = $json['trackIdList'];
+$track_lengths = $json['trackLengthList'];
 $bpms = $json['trackBpmList'];
 $genres = $json['trackGenreList'];
+$dance_length_range = $json['danceLengthRange'];
 if (count($track_ids) == 0) {
   fail('no track IDs');
+}
+if (count($track_lengths) == 0) {
+  fail('no track lengths');
 }
 if (count($bpms) == 0) {
   fail('no BPMs');
@@ -51,8 +62,15 @@ if (count($bpms) == 0) {
 if (count($genres) == 0) {
   fail('no genres');
 }
-if (count($track_ids) != count($bpms) || count($track_ids) != count($genres)) {
-  fail('inconsistent number of track IDs, BPMs and/or genres');
+if ( count($track_ids) != count($track_lengths) ||
+     count($track_ids) != count($bpms) ||
+     count($track_ids) != count($genres)
+   )
+{
+  fail('inconsistent number of track IDs, lengths, BPMs and/or genres');
+}
+if (count($dance_length_range) != 2) {
+  fail('unexpected number of values in danceLengthRange');
 }
 $ranges = $json['bpmRangeList'];
 $diffs = $json['bpmDifferenceList'];
@@ -67,15 +85,19 @@ if (count($ranges) != count($diffs)+1) {
 }
 
 // Randomize track order
-$a = array_zip($track_ids, $bpms, $genres);
+$a = array_zip($track_ids, $track_lengths, $bpms, $genres);
 shuffle($a);
-$track_ids = array_map(function ($l) { return $l[0]; }, $a);
-$bpms      = array_map(function ($l) { return $l[1]; }, $a);
-$genres    = array_map(function ($l) { return $l[2]; }, $a);
+$track_ids     = array_map(function ($l) { return $l[0]; }, $a);
+$track_lengths = array_map(function ($l) { return $l[1]; }, $a);
+$bpms          = array_map(function ($l) { return $l[2]; }, $a);
+$genres        = array_map(function ($l) { return $l[3]; }, $a);
 
 // Generate model input
 $dzn_content = "";
 $dzn_content .= "bpm = [" . implode(',', $bpms) . "];\n";
+$dzn_content .= "lengths = [" . implode(',', $track_lengths) . "];\n";
+$dzn_content .= "min_length = $dance_length_range[0];\n";
+$dzn_content .= "max_length = $dance_length_range[1];\n";
 $dzn_content .= "genres = [" . implode(',', $genres) . "];\n";
 $dzn_content .= "ranges = [|" .
                  implode( '|'
