@@ -108,6 +108,12 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
 DEFINE( 'LNG_BTN_CHECK'
       , 'Check'
       );
+DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
+      , 'Randomize playlist'
+      );
+DEFINE( 'LNG_BTN_RANDOMIZE_SCRATCHPAD'
+      , 'Randomize scratchpad'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -170,6 +176,9 @@ DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
       );
 DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
       , 'Duplicate check'
+      );
+DEFINE( 'LNG_MENU_RANDOMIZE'
+      , 'Randomize order'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
@@ -320,7 +329,10 @@ define( 'LNG_INSTR_SELECT_APP'
       , 'Select what you want to do'
       );
 define( 'LNG_INSTR_SORT_TRACKS'
-      , 'Arrange tracks in playlist in %s %s order.'
+      , 'Arrange tracks in %s %s order.'
+      );
+define( 'LNG_INSTR_RANDOMIZE_ORDER'
+      , 'Arrange tracks in a random order.'
       );
 define( 'LNG_APP_INSERT_DING'
       , 'Insert ding into playlist'

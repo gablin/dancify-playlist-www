@@ -106,6 +106,31 @@ function rgbVisIncr(cs, inc) {
 }
 
 /**
+ * Randomize order in given array.
+ *
+ * @param a Array.
+ * @return New array.
+ *
+ * See https://stackoverflow.com/a/2450976/426092
+ */
+function shuffle(a) {
+  let current_idx = a.length;
+  let random_idx;
+
+  // While there remain elements to shuffle.
+  while (current_idx != 0) {
+    // Pick a remaining element.
+    random_idx = Math.floor(Math.random() * current_idx);
+    current_idx--;
+
+    // And swap it with the current element.
+    [a[current_idx], a[random_idx]] = [a[random_idx], a[current_idx]];
+  }
+
+  return a;
+}
+
+/**
  * Fix of jQuery's clone() function to also copy values of select and textarea
  * elements.
  *

@@ -17,6 +17,7 @@ mkHtmlNavMenu(
   , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, '#', 'insert-silence-at-interval' ]
   , [ LNG_MENU_SEARCH_FOR_TRACKS, '#', 'search-for-tracks' ]
   , [ LNG_MENU_SORT, '#', 'sort' ]
+  , [ LNG_MENU_RANDOMIZE, '#', 'randomize' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , []
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
@@ -188,6 +189,29 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
       </button>
       <button id="sortScratchpadBtn"><?= LNG_BTN_SORT_SCRATCHPAD ?></button>
       <button id="sortPlaylistBtn"><?= LNG_BTN_SORT_PLAYLIST ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="randomize">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_RANDOMIZE ?></div>
+    <p><?= LNG_INSTR_RANDOMIZE_ORDER ?></p>
+    <p class="warning">
+      <span><?= LNG_DESC_WARNING ?>:</span>
+      <?= LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK ?>
+    </p>
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="randomizeScratchpadBtn">
+        <?= LNG_BTN_RANDOMIZE_SCRATCHPAD ?>
+      </button>
+      <button id="randomizePlaylistBtn">
+        <?= LNG_BTN_RANDOMIZE_PLAYLIST ?>
+      </button>
     </div>
   </div>
 </div>
@@ -626,6 +650,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/heartbeat.js.php"></script>
 <script src="/js/bpm-overview.js.php"></script>
 <script src="/js/duplicate-check.js.php"></script>
+<script src="/js/randomize.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -658,6 +683,7 @@ $(document).ready(
     setupHeartbeat();
     setupBpmOverview();
     setupDuplicateCheck();
+    setupRandomize();
   }
 );
 </script>

@@ -109,6 +109,12 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
 DEFINE( 'LNG_BTN_CHECK'
       , 'Kolla'
       );
+DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
+      , 'Slumpa spellista'
+      );
+DEFINE( 'LNG_BTN_RANDOMIZE_SCRATCHPAD'
+      , 'Slumpa scratchpad'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -171,6 +177,9 @@ DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
       );
 DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
       , 'Dublettkoll'
+      );
+DEFINE( 'LNG_MENU_RANDOMIZE'
+      , 'Slumpa ordning'
       );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
@@ -320,7 +329,10 @@ define( 'LNG_INSTR_SELECT_APP'
       , 'Välj vad du vill göra'
       );
 define( 'LNG_INSTR_SORT_TRACKS'
-      , 'Ordna låtar i spellistan i %s %s ordning.'
+      , 'Ordna låtar i %s %s ordning.'
+      );
+define( 'LNG_INSTR_RANDOMIZE_ORDER'
+      , 'Ordna låtar i en slumpad ordning.'
       );
 define( 'LNG_APP_INSERT_DING'
       , 'Lägg in ding i spellista'
