@@ -1525,7 +1525,10 @@ function addTrackTrDragHandling(tr) {
 function moveSelectedTracksTo(table, track_index) {
   let selected_trs = getSelectedTrackTrs();
   let trs = table.find('.track, .empty-track');
-  if (track_index < trs.length) {
+  if (trs.length == 0) {
+    table.prepend(selected_trs);
+  }
+  else if (track_index < trs.length) {
     let tr_insert_point = $(trs[track_index]);
     insertPlaceholdersBeforeMovingTrackTrs(selected_trs);
     tr_insert_point.before(selected_trs);
@@ -1534,7 +1537,7 @@ function moveSelectedTracksTo(table, track_index) {
     }
   }
   else {
-    let tr_insert_point = $(trs[trs.length-1]);
+    let tr_insert_point = trs.last();
     insertPlaceholdersBeforeMovingTrackTrs(selected_trs);
     tr_insert_point.after(selected_trs);
   }
