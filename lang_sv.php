@@ -590,4 +590,7 @@ define( 'LNG_GENRE_VISPOP'
 define( 'LNG_GENRE_FOLK_MUSIC'
       , 'folkmusik'
       );
+define( 'LNG_GENRE_BIG_BAND'
+      , 'storband'
+      );
 ?>
