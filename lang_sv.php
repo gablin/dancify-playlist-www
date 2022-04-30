@@ -421,8 +421,8 @@ DEFINE( 'LNG_DESC_SLOWER'
 DEFINE( 'LNG_DESC_BPM_INFO'
       , 'BPM-värdena beräknas automatiskt av Spotify, vilket betyder att de ' .
         'stämmer inte alltid till 100%. Verifiera alltid värdet genom att ' .
-        'använda en BPM-mätare (finns tillgänliga som app till din telefon) och ' .
-        'justera värdet om det inte stämmer.'
+        'använda en BPM-mätare (finns tillgänglig som app till din telefon) ' .
+        'och justera värdet om det inte stämmer.'
       );
 DEFINE( 'LNG_DESC_GENRE_INFO'
       , 'Låtar med genre i kursiv stil betyder att du har ännu inte valt en ' .
