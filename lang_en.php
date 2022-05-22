@@ -602,4 +602,7 @@ define( 'LNG_GENRE_FOLK_MUSIC'
 define( 'LNG_GENRE_BIG_BAND'
       , 'big band'
       );
+define( 'LNG_GENRE_SOUND_EFFECT'
+      , 'sound effect'
+      );
 ?>

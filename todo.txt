@@ -1,5 +1,5 @@
 - replace 'var' with 'let' where appropriate
-- add genre "sound effect"
+- add excel export
 - add global scratchpad
 - check if "date added" can be modified
 - add showing of album covers
