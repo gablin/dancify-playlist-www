@@ -18,10 +18,10 @@ function generateCsvContent() {
   }
 
   let headers = [ '#'
+                , '<?= LNG_HEAD_NAME ?>'
+                , '<?= LNG_HEAD_ARTIST ?>'
                 , '<?= LNG_HEAD_BPM ?>'
                 , '<?= LNG_HEAD_GENRE ?>'
-                , '<?= LNG_HEAD_ARTIST ?>'
-                , '<?= LNG_HEAD_NAME ?>'
                 , '<?= LNG_HEAD_COMMENTS ?>'
                 , '<?= LNG_HEAD_LENGTH ?>'
                 , '<?= LNG_HEAD_TOTAL ?>'
@@ -33,10 +33,10 @@ function generateCsvContent() {
   csv_data += track_data.map( t => { i++;
                                      total_length += t.length;
                                      return [ i
+                                            , t.name
+                                            , t.artists.join(', ')
                                             , t.bpm
                                             , formatGenre(t.genre.by_user)
-                                            , t.artists.join(', ')
-                                            , t.name
                                             , t.comments
                                             , formatTrackLength(t.length)
                                             , formatTrackLength(total_length)
