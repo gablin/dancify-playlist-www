@@ -45,7 +45,7 @@ function getTableOfTr(tr) {
 }
 
 function loadPlaylist(playlist_id) {
-  var body = $(document.body);
+  let body = $(document.body);
   body.addClass('loading');
   setStatus('<?= LNG_DESC_LOADING ?>...');
   function success() {
@@ -69,24 +69,24 @@ function loadPlaylist(playlist_id) {
 
 function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
   function updatePlaylistHash() {
-    var track_ids = getPlaylistTrackData().map(t => t.trackId);
+    let track_ids = getPlaylistTrackData().map(t => t.trackId);
     LAST_SPOTIFY_PLAYLIST_HASH = computePlaylistHash(track_ids);
   }
   function load(offset) {
-    var data = { playlistId: playlist_id
+    let data = { playlistId: playlist_id
                , offset: offset
                };
     callApi( '/api/get-playlist-tracks/'
            , data
            , function(d) {
-               var data = { trackIds: d.tracks };
+               let data = { trackIds: d.tracks };
                callApi( '/api/get-track-info/'
                       , data
                       , function(dd) {
-                          var tracks = [];
-                          for (var i = 0; i < dd.tracks.length; i++) {
-                            var t = dd.tracks[i];
-                            var o = createPlaylistTrackObject( t.trackId
+                          let tracks = [];
+                          for (let i = 0; i < dd.tracks.length; i++) {
+                            let t = dd.tracks[i];
+                            let o = createPlaylistTrackObject( t.trackId
                                                              , t.artists
                                                              , t.name
                                                              , t.length
@@ -99,7 +99,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                             tracks.push(o);
                           }
                           appendTracks(getPlaylistTable(), tracks);
-                          var next_offset = offset + tracks.length;
+                          let next_offset = offset + tracks.length;
                           if (next_offset < d.total) {
                             load(next_offset);
                           }
@@ -119,7 +119,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
 }
 
 function checkForChangesInSpotifyPlaylist(playlist_id) {
-  var body = $(document.body);
+  let body = $(document.body);
   function fail(msg) {
     setStatus('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>', true);
     body.removeClass('loading');
@@ -136,10 +136,10 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     }
 
     // Find tracks appearing Spotify but not in snapshot
-    var new_track_ids = [];
-    for (var i = 0; i < spotify_track_ids.length; i++) {
-      var tid = spotify_track_ids[i];
-      var t = getTrackWithMatchingId(snapshot_tracks, tid);
+    let new_track_ids = [];
+    for (let i = 0; i < spotify_track_ids.length; i++) {
+      let tid = spotify_track_ids[i];
+      let t = getTrackWithMatchingId(snapshot_tracks, tid);
       if (t === null) {
         new_track_ids.push(tid);
       }
@@ -150,7 +150,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       return;
     }
 
-    var has_finalized = false;
+    let has_finalized = false;
     function finalize() {
       if (!has_finalized) {
         cleanup();
@@ -160,9 +160,9 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       has_finalized = true;
     }
     function loadTracks(offset, dest_table) {
-      var tracks_to_load = [];
-      var o = offset;
-      for ( var o = offset
+      let tracks_to_load = [];
+      let o = offset;
+      for ( let o = offset
           ; o < new_track_ids.length && tracks_to_load.length < LOAD_TRACKS_LIMIT
           ; o++
           )
@@ -172,10 +172,10 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       callApi( '/api/get-track-info/'
              , { trackIds: tracks_to_load }
              , function(d) {
-                 var tracks = [];
-                 for (var i = 0; i < d.tracks.length; i++) {
-                   var t = d.tracks[i];
-                   var o = createPlaylistTrackObject( t.trackId
+                 let tracks = [];
+                 for (let i = 0; i < d.tracks.length; i++) {
+                   let t = d.tracks[i];
+                   let o = createPlaylistTrackObject( t.trackId
                                                     , t.artists
                                                     , t.name
                                                     , t.length
@@ -188,7 +188,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                    tracks.push(o);
                  }
                  appendTracks(dest_table, tracks);
-                 var next_offset = offset + tracks.length;
+                 let next_offset = offset + tracks.length;
                  if (next_offset < d.total) {
                    loadTracks(next_offset, dest_table);
                  }
@@ -202,11 +202,11 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
              );
     }
 
-    var a = getActionArea();
+    let a = getActionArea();
     a.find('p').text('<?= LNG_DESC_TRACK_ADDITIONS_DETECTED ?>');
-    var btn1 = a.find('#inconPlaylistBtn1');
-    var btn2 = a.find('#inconPlaylistBtn2');
-    var cancel_btn = btn1.closest('div').find('button.cancel');
+    let btn1 = a.find('#inconPlaylistBtn1');
+    let btn2 = a.find('#inconPlaylistBtn2');
+    let cancel_btn = btn1.closest('div').find('button.cancel');
     btn1.text('<?= LNG_BTN_APPEND_TO_PLAYLIST ?>');
     btn2.text('<?= LNG_BTN_APPEND_TO_SCRATCHPAD ?>');
     btn1.click(
@@ -233,14 +233,14 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
   }
   function checkForDeletions(snapshot_tracks, spotify_track_ids, callback_f) {
     // Find tracks not appearing Spotify but in snapshot
-    var removed_track_ids = [];
-    for (var i = 0; i < snapshot_tracks.length; i++) {
-      var tid = snapshot_tracks[i].trackId;
+    let removed_track_ids = [];
+    for (let i = 0; i < snapshot_tracks.length; i++) {
+      let tid = snapshot_tracks[i].trackId;
       if (tid === undefined) {
         continue;
       }
-      var found = false;
-      for (var j = 0; j < spotify_track_ids.length; j++) {
+      let found = false;
+      for (let j = 0; j < spotify_track_ids.length; j++) {
         if (spotify_track_ids[j] == tid) {
           found = true;
           break;
@@ -255,7 +255,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       return;
     }
 
-    var has_finalized = false;
+    let has_finalized = false;
     function finalize() {
       if (!has_finalized) {
         clearActionInputs();
@@ -264,15 +264,15 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       has_finalized = true;
     }
     function popTracks(tracks_to_remove) {
-      var removed_tracks = [];
+      let removed_tracks = [];
 
       // Pop from playlist
-      var has_removed = false;
-      var playlist_tracks = getPlaylistTrackData();
-      for (var i = 0; i < tracks_to_remove.length; i++) {
-        var res = popTrackWithMatchingId(playlist_tracks, tracks_to_remove[i]);
+      let has_removed = false;
+      let playlist_tracks = getPlaylistTrackData();
+      for (let i = 0; i < tracks_to_remove.length; i++) {
+        let res = popTrackWithMatchingId(playlist_tracks, tracks_to_remove[i]);
         playlist_tracks = res[0];
-        var removed_t = res[1];
+        let removed_t = res[1];
         if (removed_t !== null) {
           removed_tracks.push(removed_t);
           has_removed = true;
@@ -284,11 +284,11 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
 
       // Pop from scratchpad
       has_removed = false;
-      var scratchpad_tracks = getScratchpadTrackData();
-      for (var i = 0; i < tracks_to_remove.length; i++) {
-        var res = popTrackWithMatchingId(scratchpad_tracks, tracks_to_remove[i]);
+      let scratchpad_tracks = getScratchpadTrackData();
+      for (let i = 0; i < tracks_to_remove.length; i++) {
+        let res = popTrackWithMatchingId(scratchpad_tracks, tracks_to_remove[i]);
         scratchpad_tracks = res[0];
-        var removed_t = res[1];
+        let removed_t = res[1];
         if (removed_t !== null) {
           removed_tracks.push(removed_t);
           has_removed = true;
@@ -300,13 +300,13 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
 
       return removed_tracks;
     }
-    var a = getActionArea();
+    let a = getActionArea();
     a.find('p').text('<?= LNG_DESC_TRACK_DELETIONS_DETECTED ?>');
-    var btn1 = a.find('#inconPlaylistBtn1');
-    var btn2 = a.find('#inconPlaylistBtn2');
+    let btn1 = a.find('#inconPlaylistBtn1');
+    let btn2 = a.find('#inconPlaylistBtn2');
     btn1.text('<?= LNG_BTN_REMOVE ?>');
     btn2.text('<?= LNG_BTN_MOVE_TO_SCRATCHPAD ?>');
-    var cancel_btn = btn1.closest('div').find('button.cancel');
+    let cancel_btn = btn1.closest('div').find('button.cancel');
     btn1.click(
       function() {
         popTracks(removed_track_ids);
@@ -317,9 +317,9 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     );
     btn2.click(
       function() {
-        var removed_tracks = popTracks(removed_track_ids);
-        var scratchpad_data = getScratchpadTrackData();
-        var new_scratchpad_data = scratchpad_data.concat(removed_tracks);
+        let removed_tracks = popTracks(removed_track_ids);
+        let scratchpad_data = getScratchpadTrackData();
+        let new_scratchpad_data = scratchpad_data.concat(removed_tracks);
         replaceTracks(getScratchpadTable(), new_scratchpad_data);
         renderTable(getScratchpadTable());
         indicateStateUpdate();
@@ -338,26 +338,26 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     }
     $(document).on('keyup', esc_f);
   }
-  var spotify_track_ids = [];
+  let spotify_track_ids = [];
   function load(offset) {
-    var data = { playlistId: playlist_id
+    let data = { playlistId: playlist_id
                , offset: offset
                };
     callApi( '/api/get-playlist-tracks/'
            , data
            , function(d) {
                spotify_track_ids = spotify_track_ids.concat(d.tracks);
-               var next_offset = offset + d.tracks.length;
+               let next_offset = offset + d.tracks.length;
                if (next_offset < d.total) {
                  load(next_offset);
                }
                else {
-                 var playlist_hash = computePlaylistHash(spotify_track_ids);
+                 let playlist_hash = computePlaylistHash(spotify_track_ids);
                  if (playlist_hash == LAST_SPOTIFY_PLAYLIST_HASH) {
                    return;
                  }
                  LAST_SPOTIFY_PLAYLIST_HASH = playlist_hash;
-                 var snapshot_tracks =
+                 let snapshot_tracks =
                    getPlaylistTrackData().concat(getScratchpadTrackData());
                  checkForAdditions( snapshot_tracks
                                   , spotify_track_ids
@@ -397,8 +397,8 @@ function computePlaylistHash(track_ids) {
 
 function playPreview(jlink, preview_url, playing_text, stop_text) {
   PREVIEW_AUDIO.attr('src', ''); // Stop playing
-  var clicked_playing_preview = jlink.hasClass('playing');
-  var preview_links = $.merge( getPlaylistTable().find('tr.track .title a')
+  let clicked_playing_preview = jlink.hasClass('playing');
+  let preview_links = $.merge( getPlaylistTable().find('tr.track .title a')
                              , getScratchpadTable().find('tr.track .title a')
                              );
   preview_links.each(
@@ -427,7 +427,7 @@ function updateBpmInDb(track_id, bpm, success_f, fail_f) {
 }
 
 function addTrackBpmHandling(tr) {
-  var input = tr.find('input[name=bpm]');
+  let input = tr.find('input[name=bpm]');
   input.click(
     function(e) {
       e.stopPropagation(); // Prevent row selection
@@ -450,21 +450,21 @@ function addTrackBpmHandling(tr) {
   }
   input.change(
     function() {
-      var input = $(this);
+      let input = $(this);
 
       // Find corresponding track ID
-      var tid_input = input.closest('tr').find('input[name=track_id]');
+      let tid_input = input.closest('tr').find('input[name=track_id]');
       if (tid_input.length == 0) {
         console.log('could not find track ID');
         return;
       }
-      var tid = tid_input.val().trim();
+      let tid = tid_input.val().trim();
       if (tid.length == 0) {
         return;
       }
 
       // Check BPM value
-      var bpm = input.val().trim();
+      let bpm = input.val().trim();
       if (!checkBpmInput(bpm)) {
         input.addClass('invalid');
         return;
@@ -483,7 +483,7 @@ function addTrackBpmHandling(tr) {
       function update(table, tid) {
         table.find('input[name=track_id][value=' + tid + ']').each(
           function() {
-            var tr = $(this).closest('tr');
+            let tr = $(this).closest('tr');
             tr.find('input[name=bpm]').val(bpm);
             renderTrackBpm(tr);
           }
@@ -492,7 +492,7 @@ function addTrackBpmHandling(tr) {
       update(getPlaylistTable(), tid);
       update(getScratchpadTable(), tid);
 
-      var old_value = parseInt(input.data('old-value'));
+      let old_value = parseInt(input.data('old-value'));
       // .data() must be read here or else it will disappear upon undo/redo
       setCurrentUndoStateCallback(
         function() {
@@ -520,12 +520,12 @@ function addTrackBpmHandling(tr) {
 }
 
 function renderTrackBpm(tr) {
-  var input = tr.find('input[name=bpm]');
+  let input = tr.find('input[name=bpm]');
   if (input.length == 0) {
     return;
   }
 
-  var bpm = input.val().trim();
+  let bpm = input.val().trim();
   if (!checkBpmInput(bpm, false)) {
     return;
   }
@@ -548,11 +548,11 @@ function getBpmRgbColor(bpm) {
                  , [ 210, [  0,   0, 255] ] // Blue
                  , [ 255, [  0,   0,   0] ] // Black
                  ];
-  for (var i = 0; i < colors.length; i++) {
+  for (let i = 0; i < colors.length; i++) {
     if (i == colors.length-2 || bpm < colors[i+1][0]) {
-      var p = (bpm - colors[i][0]) / (colors[i+1][0] - colors[i][0]);
-      var c = [...colors[i][1]];
-      for (var j = 0; j < c.length; j++) {
+      let p = (bpm - colors[i][0]) / (colors[i+1][0] - colors[i][0]);
+      let c = [...colors[i][1]];
+      for (let j = 0; j < c.length; j++) {
         c[j] += Math.round((colors[i+1][1][j] - c[j]) * p);
       }
       return c;
@@ -594,14 +594,14 @@ function updateGenreInDb(track_id, genre, success_f, fail_f) {
 }
 
 function addTrackGenreHandling(tr) {
-  var select = tr.find('select[name=genre]');
+  let select = tr.find('select[name=genre]');
   function update(s) {
     function fail(msg) {
       setStatus('<?= LNG_ERR_FAILED_UPDATE_GENRE ?>', true);
     }
 
-    var genre = parseInt(s.find(':selected').val().trim());
-    var old_value = parseInt(s.data('old-value'));
+    let genre = parseInt(s.find(':selected').val().trim());
+    let old_value = parseInt(s.data('old-value'));
     if (genre == old_value && !s.hasClass('chosen-by-others')) {
       return;
     }
@@ -609,12 +609,12 @@ function addTrackGenreHandling(tr) {
     s.data('old-value', genre);
 
     // Find corresponding track ID
-    var tid_input = s.closest('tr').find('input[name=track_id]');
+    let tid_input = s.closest('tr').find('input[name=track_id]');
     if (tid_input.length == 0) {
       console.log('could not find track ID');
       return;
     }
-    var tid = tid_input.val().trim();
+    let tid = tid_input.val().trim();
     if (tid.length == 0) {
       return;
     }
@@ -630,7 +630,7 @@ function addTrackGenreHandling(tr) {
     function update(table, tid) {
       table.find('input[name=track_id][value=' + tid + ']').each(
         function() {
-          var tr = $(this).closest('tr');
+          let tr = $(this).closest('tr');
           tr.find('select[name=genre] option').prop('selected', false);
           tr.find('select[name=genre] option[value=' + genre + ']')
             .prop('selected', true);
@@ -683,7 +683,7 @@ function updateCommentsInDb(track_id, comments, success_f, fail_f) {
 }
 
 function addTrackCommentsHandling(tr) {
-  var textarea = tr.find('textarea[name=comments]');
+  let textarea = tr.find('textarea[name=comments]');
   textarea.click(
     function(e) {
       e.stopPropagation(); // Prevent row selection
@@ -699,21 +699,21 @@ function addTrackCommentsHandling(tr) {
   }
   textarea.change(
     function() {
-      var textarea = $(this);
+      let textarea = $(this);
       renderTrackComments(textarea.closest('tr'));
 
       // Find corresponding track ID
-      var tid_input = textarea.closest('tr').find('input[name=track_id]');
+      let tid_input = textarea.closest('tr').find('input[name=track_id]');
       if (tid_input.length == 0) {
         console.log('could not find track ID');
         return;
       }
-      var tid = tid_input.val().trim();
+      let tid = tid_input.val().trim();
       if (tid.length == 0) {
         return;
       }
 
-      var comments = textarea.val().trim();
+      let comments = textarea.val().trim();
       setStatus('<?= LNG_DESC_SAVING ?>...');
       updateCommentsInDb( tid
                         , comments
@@ -725,7 +725,7 @@ function addTrackCommentsHandling(tr) {
       function update(table, tid) {
         table.find('input[name=track_id][value=' + tid + ']').each(
           function() {
-            var tr = $(this).closest('tr');
+            let tr = $(this).closest('tr');
             tr.find('textarea[name=comments]').val(comments);
             renderTrackComments(tr);
           }
@@ -734,7 +734,7 @@ function addTrackCommentsHandling(tr) {
       update(getPlaylistTable(), tid);
       update(getScratchpadTable(), tid);
 
-      var old_value = parseInt(textarea.data('old-value'));
+      let old_value = parseInt(textarea.data('old-value'));
       // .data() must be read here or else it will disappear upon undo/redo
       setCurrentUndoStateCallback(
         function() {
@@ -760,7 +760,7 @@ function addTrackCommentsHandling(tr) {
 }
 
 function renderTrackComments(tr) {
-  var textarea = tr.find('textarea[name=comments]');
+  let textarea = tr.find('textarea[name=comments]');
   if (textarea.length == 0) {
     return;
   }
@@ -777,7 +777,7 @@ function renderTrackComments(tr) {
 }
 
 function getTrTitleText(tr) {
-  var nodes = tr.find('td.title').contents().filter(
+  let nodes = tr.find('td.title').contents().filter(
                 function() { return this.nodeType == 3; }
               );
   if (nodes.length > 0) {
@@ -787,29 +787,29 @@ function getTrTitleText(tr) {
 }
 
 function getTrackData(table) {
-  var playlist = [];
+  let playlist = [];
   table.find('tr.track, tr.empty-track').each(
     function() {
-      var tr = $(this);
+      let tr = $(this);
       if (tr.hasClass('track')) {
-        var track_id = tr.find('input[name=track_id]').val().trim();
-        var artists = tr.find('input[name=artists]').val().trim();
+        let track_id = tr.find('input[name=track_id]').val().trim();
+        let artists = tr.find('input[name=artists]').val().trim();
         artists = artists.length > 0 ? artists.split(',') : [];
-        var name = tr.find('input[name=name]').val().trim();
-        var preview_url = tr.find('input[name=preview_url]').val().trim();
-        var bpm = parseInt(tr.find('input[name=bpm]').val().trim());
-        var genre_by_user =
+        let name = tr.find('input[name=name]').val().trim();
+        let preview_url = tr.find('input[name=preview_url]').val().trim();
+        let bpm = parseInt(tr.find('input[name=bpm]').val().trim());
+        let genre_by_user =
           parseInt(tr.find('select[name=genre] option:selected').val().trim());
-        var genres_by_others_text =
+        let genres_by_others_text =
           tr.find('input[name=genres_by_others]').val().trim();
-        var genres_by_others =
+        let genres_by_others =
           genres_by_others_text.length > 0
             ? genres_by_others_text.split(',').map(s => parseInt(s))
             : [];
-        var title = getTrTitleText(tr);
-        var len_ms = parseInt(tr.find('input[name=length_ms]').val().trim());
-        var comments = tr.find('textarea[name=comments]').val().trim();
-        var o = createPlaylistTrackObject( track_id
+        let title = getTrTitleText(tr);
+        let len_ms = parseInt(tr.find('input[name=length_ms]').val().trim());
+        let comments = tr.find('textarea[name=comments]').val().trim();
+        let o = createPlaylistTrackObject( track_id
                                          , artists
                                          , name
                                          , len_ms
@@ -822,10 +822,10 @@ function getTrackData(table) {
         playlist.push(o);
       }
       else{
-        var name = tr.find('td.title').text().trim();
-        var length = tr.find('td.length').text().trim();
-        var bpm = tr.find('td.bpm').text().trim();
-        var genre = tr.find('td.genre').text().trim();
+        let name = tr.find('td.title').text().trim();
+        let length = tr.find('td.length').text().trim();
+        let bpm = tr.find('td.bpm').text().trim();
+        let genre = tr.find('td.genre').text().trim();
         playlist.push(createPlaylistPlaceholderObject(name, length, bpm, genre));
       }
     }
@@ -839,12 +839,12 @@ function removePlaceholdersFromTracks(tracks) {
 }
 
 function getPlaylistTrackData() {
-  var table = getPlaylistTable();
+  let table = getPlaylistTable();
   return getTrackData(table);
 }
 
 function getScratchpadTrackData() {
-  var table = getScratchpadTable();
+  let table = getScratchpadTable();
   return getTrackData(table);
 }
 
@@ -893,10 +893,10 @@ function createPlaylistPlaceholderObject( name_text
 }
 
 function popTrackWithMatchingId(track_list, track_id) {
-  var i = 0;
+  let i = 0;
   for (; i < track_list.length && track_list[i].trackId != track_id; i++) {}
   if (i < track_list.length) {
-    var t = track_list[i];
+    let t = track_list[i];
     track_list.splice(i, 1);
     return [track_list, t];
   }
@@ -904,13 +904,13 @@ function popTrackWithMatchingId(track_list, track_id) {
 }
 
 function getTrackWithMatchingId(track_list, track_id) {
-  var i = 0;
+  let i = 0;
   for (; i < track_list.length && track_list[i].trackId != track_id; i++) {}
   return i < track_list.length ? track_list[i] : null;
 }
 
 function initTable(table) {
-  var head_tr =
+  let head_tr =
     $( '<tr>' +
        '  <th class="index">#</th>' +
        '  <th class="bpm"><?= LNG_HEAD_BPM ?></th>' +
@@ -971,7 +971,7 @@ function genreToString(g) {
 }
 
 function addOptionsToGenreSelect(s, ignore_empty = false) {
-  var genres = [ [  0, ''] ].concat(getGenreList());
+  let genres = [ [  0, ''] ].concat(getGenreList());
   if (ignore_empty) {
     genres.shift();
   }
@@ -983,14 +983,14 @@ function addOptionsToGenreSelect(s, ignore_empty = false) {
              );
   genres.map(
     function(g) {
-      var o = $('<option value="' + g[0] + '">' + g[1] + '</value>');
+      let o = $('<option value="' + g[0] + '">' + g[1] + '</value>');
       s.append(o);
     }
   )
 }
 
 function buildNewTableTrackTr() {
-  var tr =
+  let tr =
     $( '<tr class="track">' +
        '  <input type="hidden" name="track_id" value="" />' +
        '  <input type="hidden" name="artists" value="" />' +
@@ -1028,7 +1028,7 @@ function buildNewTableSummaryRow() {
 }
 
 function getTableSummaryTr(table) {
-  var tr = table.find('tr.summary')[0];
+  let tr = table.find('tr.summary')[0];
   return $(tr);
 }
 
@@ -1048,12 +1048,12 @@ function addTrackPreviewHandling(tr) {
   const static_text = '&#9835;';
   const playing_text = '&#9836;';
   const stop_text = static_text;
-  var preview_url = tr.find('input[name=preview_url]').val().trim();
+  let preview_url = tr.find('input[name=preview_url]').val().trim();
   if (preview_url.length == 0) {
     return;
   }
 
-  var link = $('<a class="preview" href="#">' + static_text + '</a>');
+  let link = $('<a class="preview" href="#">' + static_text + '</a>');
   link.click(
     function(e) {
       playPreview($(this), preview_url, playing_text, stop_text);
@@ -1064,7 +1064,7 @@ function addTrackPreviewHandling(tr) {
 }
 
 function buildNewTableTrackTrFromTrackObject(track) {
-  var tr = buildNewTableTrackTr();
+  let tr = buildNewTableTrackTr();
   if ('trackId' in track) {
     tr.find('td.title').append(formatTrackTitleAsHtml(track.artists, track.name));
     tr.find('input[name=track_id]').prop('value', track.trackId);
@@ -1079,8 +1079,8 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('td.length').text(formatTrackLength(track.length));
 
     // Genre
-    var genre_select = tr.find('select[name=genre]');
-    var genres_by_others = uniq(track.genre.by_others);
+    let genre_select = tr.find('select[name=genre]');
+    let genres_by_others = uniq(track.genre.by_others);
     if (track.genre.by_user != 0) {
       genre_select.find('option[value=' + track.genre.by_user + ']')
         .prop('selected', true);
@@ -1121,8 +1121,8 @@ function buildNewTableTrackTrFromTrackObject(track) {
 }
 
 function appendTracks(table, tracks) {
-  for (var i = 0; i < tracks.length; i++) {
-    var new_tr = buildNewTableTrackTrFromTrackObject(tracks[i]);
+  for (let i = 0; i < tracks.length; i++) {
+    let new_tr = buildNewTableTrackTrFromTrackObject(tracks[i]);
     table.append(new_tr);
     renderTrackBpm(new_tr);
     renderTrackComments(new_tr);
@@ -1139,16 +1139,16 @@ function renderTable(table) {
   const delimiter = (table.is(getPlaylistTable())) ? PLAYLIST_DANCE_DELIMITER : 0;
 
   // Assign indices
-  var trs = table.find('tr.track, tr.empty-track');
-  for (var i = 0; i < trs.length; i++) {
-    var tr = $(trs[i]);
+  let trs = table.find('tr.track, tr.empty-track');
+  for (let i = 0; i < trs.length; i++) {
+    let tr = $(trs[i]);
     tr.find('td.index').text(i+1);
   }
 
   // Insert delimiters
   table.find('tr.delimiter').remove();
   if (delimiter > 0) {
-    var num_cols = buildNewTableTrackTr(table).find('td').length;
+    let num_cols = buildNewTableTrackTr(table).find('td').length;
     table
       .find('tr.track, tr.empty-track')
       .filter(':nth-child(' + delimiter + 'n)')
@@ -1161,11 +1161,11 @@ function renderTable(table) {
          )
       );
   }
-  var i = 0;
-  var dance_length = 0;
+  let i = 0;
+  let dance_length = 0;
   table.find('tr.track, tr.delimiter').each(
     function() {
-      var tr = $(this);
+      let tr = $(this);
       if (tr.hasClass('track')) {
         dance_length += parseInt(tr.find('input[name=length_ms]').val());
       }
@@ -1214,16 +1214,16 @@ function formatTrackTitleAsHtml(artists, name) {
 }
 
 function formatTrackLength(ms) {
-  var t = Math.trunc(ms / 1000);
+  let t = Math.trunc(ms / 1000);
   t = [0, 0, t];
-  for (var i = t.length - 2; i >= 0; i--) {
+  for (let i = t.length - 2; i >= 0; i--) {
     if (t[i+1] < 60) break;
     t[i] = Math.floor(t[i+1] / 60);
     t[i+1] = t[i+1] % 60;
   }
 
   if (t[0] == 0) t.shift();
-  for (var i = 1; i < t.length; i++) {
+  for (let i = 1; i < t.length; i++) {
     if (t[i] < 10) t[i] = '0' + t[i].toString();
   }
 
@@ -1277,7 +1277,7 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
   // Remove active selection in other playlist areas
   $('.playlist').each(
     function() {
-      var p = $(this);
+      let p = $(this);
       if (p.is(tr.closest('.playlist'))) {
         return;
       }
@@ -1298,7 +1298,7 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
   }
 
   if (span_mode) {
-    var selected_sib_trs =
+    let selected_sib_trs =
       tr.siblings().filter(function() { return $(this).hasClass('selected') });
     if (selected_sib_trs.length == 0) {
       tr.addClass('selected');
@@ -1307,10 +1307,10 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
       }
       return;
     }
-    var first = $(selected_sib_trs[0]);
-    var last = $(selected_sib_trs[selected_sib_trs.length-1]);
-    var trs = tr.siblings().add(tr);
-    for ( var i = Math.min(tr.index(), first.index(), last.index())
+    let first = $(selected_sib_trs[0]);
+    let last = $(selected_sib_trs[selected_sib_trs.length-1]);
+    let trs = tr.siblings().add(tr);
+    for ( let i = Math.min(tr.index(), first.index(), last.index())
         ; i <= Math.max(tr.index(), first.index(), last.index())
         ; i++
         )
@@ -1326,7 +1326,7 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
     return;
   }
 
-  var selected_sib_trs =
+  let selected_sib_trs =
     tr.siblings().filter(function() { return $(this).hasClass('selected') });
   $.each( selected_sib_trs
         , function() {

@@ -1,5 +1,5 @@
 function triggerPaypalDonation() {
-  var form = $('<form action="https://www.paypal.com/donate" method="post" />');
+  let form = $('<form action="https://www.paypal.com/donate" method="post" />');
   form.append($('<input type="hidden" name="business" value="Y7R8L3H36YNUE" />'));
   form.append($('<input type="hidden" name="no_recurring" value="1" />'));
   form.append($('<input type="hidden" name="item_name" value="Dancify" />'));

@@ -6,7 +6,7 @@ const SEARCH_LIMIT = 50;
 var CANCEL_SEARCH_FOR_TRACK = false;
 
 function getSearchForTracksActionArea() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return form.find('div[name=search-for-tracks]');
 }
 
@@ -15,7 +15,7 @@ function getSearchForTracksResultsArea() {
 }
 
 function setupSearchForTracks() {
-  var action_area = getSearchForTracksActionArea();
+  let action_area = getSearchForTracksActionArea();
   addOptionsToGenreSelect(action_area.find('select[name=search-by-genre]'), true);
   setupSearchForTracksBpmController();
   setupSearchForTracksButtons();
@@ -23,8 +23,8 @@ function setupSearchForTracks() {
 }
 
 function setupSearchForTracksBpmController() {
-  var action_area = getSearchForTracksActionArea();
-  var bpm_slider = action_area.find('td.bpm-range-controller > div');
+  let action_area = getSearchForTracksActionArea();
+  let bpm_slider = action_area.find('td.bpm-range-controller > div');
   function printValues(v1, v2) {
     bpm_slider.closest('tr').find('td.label > span').text(v1 + ' - ' + v2);
   }
@@ -44,30 +44,30 @@ function setupSearchForTracksBpmController() {
 }
 
 function getSearchForTracksBpmValues() {
-  var action_area = getSearchForTracksActionArea();
-  var bpm_slider = action_area.find('td.bpm-range-controller > div');
-  var v1 = bpm_slider.slider('values', 0);
-  var v2 = bpm_slider.slider('values', 1);
+  let action_area = getSearchForTracksActionArea();
+  let bpm_slider = action_area.find('td.bpm-range-controller > div');
+  let v1 = bpm_slider.slider('values', 0);
+  let v2 = bpm_slider.slider('values', 1);
   return [v1, v2];
 }
 
 function setupSearchForTracksButtons() {
-  var action_area = getSearchForTracksActionArea();
-  var search_btn = action_area.find('button[id=searchTracksBtn]');
+  let action_area = getSearchForTracksActionArea();
+  let search_btn = action_area.find('button[id=searchTracksBtn]');
   function search() {
-    var genre = action_area.find('select[name=search-by-genre] :selected').val();
-    var bpm_range = getSearchForTracksBpmValues();
-    var in_my_playlists_only =
+    let genre = action_area.find('select[name=search-by-genre] :selected').val();
+    let bpm_range = getSearchForTracksBpmValues();
+    let in_my_playlists_only =
       action_area.find('input[name=search-my-playlists-only]').prop('checked');
 
-    var body = $(document.body);
+    let body = $(document.body);
     body.addClass('loading');
     action_area.find('.error').hide();
     action_area.find('.none-found').hide();
     action_area.find('.tracks-found').hide();
     CANCEL_SEARCH_FOR_TRACK = false;
 
-    var close_btn = $(this).closest('.buttons').find('button.cancel');
+    let close_btn = $(this).closest('.buttons').find('button.cancel');
     close_btn.text('<?= LNG_BTN_CLOSE ?>');
     close_btn.one('click', stop);
 
@@ -81,7 +81,7 @@ function setupSearchForTracksButtons() {
       search_btn.on('click', search);
       close_btn.off('click', stop);
       if (getSearchForTracksResultsArea().find('table tbody tr').length == 0) {
-        var none_found_area = action_area.find('.none-found');
+        let none_found_area = action_area.find('.none-found');
         none_found_area.show();
         none_found_area.text('<?= LNG_DESC_NO_TRACKS_FOUND ?>');
       }
@@ -91,7 +91,7 @@ function setupSearchForTracksButtons() {
       finalize();
     }
     function fail(msg) {
-      var error_space = action_area.find('.error');
+      let error_space = action_area.find('.error');
       error_space.text('<?= LNG_ERR_FAILED_TO_SEARCH ?>');
       error_space.show();
       finalize();
@@ -113,18 +113,18 @@ function searchForTracks( genre
                         )
 {
   clearResults();
-  var search_results_area = getSearchForTracksResultsArea();
+  let search_results_area = getSearchForTracksResultsArea();
   search_results_area.show();
   $('#addSearchToPlaylistBtn').prop('disabled', true);
   $('#addSearchToScratchpadBtn').prop('disabled', true);
 
   function setTableHeight() {
-    var search_area_bottom =
+    let search_area_bottom =
       search_results_area.offset().top + search_results_area.height();
-    var table = search_results_area.find('.table-wrapper');
-    var table_top = table.offset().top;
-    var buttons_height = search_results_area.find('.buttons').outerHeight();
-    var table_height = search_area_bottom - table_top - buttons_height;
+    let table = search_results_area.find('.table-wrapper');
+    let table_top = table.offset().top;
+    let buttons_height = search_results_area.find('.buttons').outerHeight();
+    let table_height = search_area_bottom - table_top - buttons_height;
     table.css('height', table_height + 'px');
   }
 
@@ -149,9 +149,9 @@ function searchForTracks( genre
                callApi( '/api/get-track-info/'
                       , { trackIds: d.trackIds }
                       , function(dd) {
-                          var tracks = [];
-                          for (var i = 0; i < dd.tracks.length; i++) {
-                            var t = dd.tracks[i];
+                          let tracks = [];
+                          for (let i = 0; i < dd.tracks.length; i++) {
+                            let t = dd.tracks[i];
                             if (t.bpm < bpm_range[0] || t.bpm > bpm_range[1]) {
                               continue;
                             }
@@ -176,15 +176,15 @@ function searchForTracks( genre
   load(0);
 
   function clearResults() {
-    var tbody = getSearchForTracksResultsArea().find('.playlist table tbody');
+    let tbody = getSearchForTracksResultsArea().find('.playlist table tbody');
     tbody.empty();
   }
 
   function appendResults(tracks) {
-    var table = getSearchForTracksResultsArea().find('.playlist table');
-    for (var i = 0; i < tracks.length; i++) {
-      var t = tracks[i];
-      var tr = $( '<tr class="track">' +
+    let table = getSearchForTracksResultsArea().find('.playlist table');
+    for (let i = 0; i < tracks.length; i++) {
+      let t = tracks[i];
+      let tr = $( '<tr class="track">' +
                     '<td>' + formatTrackTitleAsText(t.artists, t.name) + '</td>' +
                     '<td class="bpm">' + t.bpm + '</td>' +
                     '<td class="length">' +
@@ -214,9 +214,9 @@ function addSearchTrackSelectHandling(tr) {
 
 function updateSearchTrackSelection(tr, multi_select_mode, span_mode) {
   function renderButtons() {
-    var table = getSearchForTracksResultsArea().find('table');
-    var playlist_btn = $('#addSearchToPlaylistBtn');
-    var scratchpad_btn = $('#addSearchToScratchpadBtn');
+    let table = getSearchForTracksResultsArea().find('table');
+    let playlist_btn = $('#addSearchToPlaylistBtn');
+    let scratchpad_btn = $('#addSearchToScratchpadBtn');
     if (table.find('tbody tr.selected').length == 0) {
       playlist_btn.prop('disabled', true);
       scratchpad_btn.prop('disabled', true);
@@ -233,17 +233,17 @@ function updateSearchTrackSelection(tr, multi_select_mode, span_mode) {
   }
 
   if (span_mode) {
-    var selected_sib_trs =
+    let selected_sib_trs =
       tr.siblings().filter(function() { return $(this).hasClass('selected') });
     if (selected_sib_trs.length == 0) {
       tr.addClass('selected');
       renderButtons();
       return;
     }
-    var first = $(selected_sib_trs[0]);
-    var last = $(selected_sib_trs[selected_sib_trs.length-1]);
-    var trs = tr.siblings().add(tr);
-    for ( var i = Math.min(tr.index(), first.index(), last.index())
+    let first = $(selected_sib_trs[0]);
+    let last = $(selected_sib_trs[selected_sib_trs.length-1]);
+    let trs = tr.siblings().add(tr);
+    for ( let i = Math.min(tr.index(), first.index(), last.index())
         ; i <= Math.max(tr.index(), first.index(), last.index())
         ; i++
         )
@@ -256,7 +256,7 @@ function updateSearchTrackSelection(tr, multi_select_mode, span_mode) {
     return;
   }
 
-  var selected_sib_trs =
+  let selected_sib_trs =
     tr.siblings().filter(function() { return $(this).hasClass('selected') });
   selected_sib_trs.removeClass('selected');
   if (selected_sib_trs.length > 0) {
@@ -270,12 +270,12 @@ function updateSearchTrackSelection(tr, multi_select_mode, span_mode) {
 
 function setupSearchForTracksAddSearchResultsButtons() {
   function addToTable(table) {
-    var tracks = [];
+    let tracks = [];
     getSearchForTracksResultsArea().find('table tbody tr.selected').each(
       function() {
-        var tr = $(this);
-        var t = tr.data('trackData');
-        var o = createPlaylistTrackObject( t.trackId
+        let tr = $(this);
+        let t = tr.data('trackData');
+        let o = createPlaylistTrackObject( t.trackId
                                          , t.artists
                                          , t.name
                                          , t.length

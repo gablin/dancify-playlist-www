@@ -3,8 +3,8 @@ require '../autoload.php';
 ?>
 
 function setupRestorePlaylist(playlist_id) {
-  var form = getPlaylistForm();
-  var restore_btn = form.find('button[id=restorePlaylistBtn]');
+  let form = getPlaylistForm();
+  let restore_btn = form.find('button[id=restorePlaylistBtn]');
   restore_btn.click(
     function() {
       restorePlaylist(playlist_id);

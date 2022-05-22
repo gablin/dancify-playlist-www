@@ -8,18 +8,18 @@ function setupScratchpad() {
 }
 
 function getScratchpadShowButton() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return form.find('button[id=showScratchpadBtn]');
 }
 
 function getScratchpadHideButton() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return form.find('button[id=hideScratchpadBtn]');
 }
 
 function setupFormElementsForScratchpad() {
-  var show_btn = getScratchpadShowButton();
-  var hide_btn = getScratchpadHideButton();
+  let show_btn = getScratchpadShowButton();
+  let hide_btn = getScratchpadHideButton();
   show_btn.click(
     function() {
       showScratchpad();

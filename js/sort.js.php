@@ -3,12 +3,12 @@ require '../autoload.php';
 ?>
 
 function setupSort() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   function doSort(table) {
-    var direction =
+    let direction =
       form.find('select[name=order_direction] :selected').val().trim();
-    var direction = parseInt(direction);
-    var field = form.find('select[name=order_field] :selected').val().trim();
+    direction = parseInt(direction);
+    let field = form.find('select[name=order_field] :selected').val().trim();
     sortTracks(table, direction, field);
     clearActionInputs();
   }
@@ -24,7 +24,7 @@ function setupSort() {
 }
 
 function sortTracks(table, direction, field) {
-  var tracks = getTrackData(table);
+  let tracks = getTrackData(table);
   tracks = removePlaceholdersFromTracks(tracks);
   function getGenre(t) {
     if (t.genre.by_user == 0 && t.genre.by_others.length > 0) {
@@ -33,7 +33,7 @@ function sortTracks(table, direction, field) {
     return t.genre.by_user;
   }
   function cmp(a, b) {
-    var res = 0;
+    let res = 0;
     if (field == 'bpm') {
       res = intcmp(a.bpm, b.bpm);
     }

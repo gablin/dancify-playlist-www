@@ -15,16 +15,16 @@ function getHideDelimiterButton() {
 }
 
 function setupFormElementsForDanceDelimiter() {
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
-  var show_btn = getShowDelimiterButton();
-  var hide_btn = getHideDelimiterButton();
+  let form = getPlaylistForm();
+  let table = getPlaylistTable();
+  let show_btn = getShowDelimiterButton();
+  let hide_btn = getHideDelimiterButton();
   show_btn.click(
     function() {
       if (!checkDanceDelimiterInput()) {
         return;
       }
-      var data = getDanceDelimiterData();
+      let data = getDanceDelimiterData();
       setDanceDelimiter(data.delimiterFreq);
       renderPlaylist();
       savePlaylistSnapshot(); // Do not invoke indicateStateUpdate() here
@@ -51,13 +51,13 @@ function setupFormElementsForDanceDelimiter() {
 }
 
 function getDanceDelimiterData() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return { delimiterFreq: form.find('input[name=delimiter-freq]').val().trim() };
 }
 
 function checkDanceDelimiterInput() {
-  var form = getPlaylistForm();
-  var freq_str = form.find('input[name=delimiter-freq]').val().trim();
+  let form = getPlaylistForm();
+  let freq_str = form.find('input[name=delimiter-freq]').val().trim();
   freq = parseInt(freq_str);
   if (isNaN(freq)) {
     alert('<?= LNG_ERR_FREQ_NOT_INT ?>');

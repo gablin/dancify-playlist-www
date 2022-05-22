@@ -3,14 +3,14 @@ require '../autoload.php';
 ?>
 
 function setupSaveChangesToSpotify(playlist_id, make_public) {
-  var form = getPlaylistForm();
-  var table = getPlaylistTable();
-  var save_b = form.find('button[id=saveChangesToSpotifyBtn]');
-  var name_input = form.find('input[name=new-playlist-name]');
-  var overwrite_checkbox = form.find('input[name=overwrite-existing-playlist]');
+  let form = getPlaylistForm();
+  let table = getPlaylistTable();
+  let save_b = form.find('button[id=saveChangesToSpotifyBtn]');
+  let name_input = form.find('input[name=new-playlist-name]');
+  let overwrite_checkbox = form.find('input[name=overwrite-existing-playlist]');
   save_b.click(
     function() {
-      var b = $(this);
+      let b = $(this);
       b.prop('disabled', true);
       b.addClass('loading');
       function restoreButton() {
@@ -19,7 +19,7 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
       };
 
       // Check new playlist name
-      var name = name_input.val().trim();
+      let name = name_input.val().trim();
       if (name.length == 0 && !overwrite_checkbox.prop('checked')) {
         alert('<?= LNG_INSTR_PLEASE_ENTER_NAME ?>');
         restoreButton();
@@ -27,14 +27,14 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
       }
 
       // Save new playlist
-      var tracks = getPlaylistTrackData();
+      let tracks = getPlaylistTrackData();
       tracks = removePlaceholdersFromTracks(tracks);
-      var track_ids = [];
-      for (var i = 0; i < tracks.length; i++) {
+      let track_ids = [];
+      for (let i = 0; i < tracks.length; i++) {
           track_ids.push(tracks[i].trackId);
       }
-      var data = { trackIdList: track_ids };
-      var overwrite_playlist = overwrite_checkbox.prop('checked');
+      let data = { trackIdList: track_ids };
+      let overwrite_playlist = overwrite_checkbox.prop('checked');
       if (overwrite_playlist) {
         data.playlistId = playlist_id;
         data.overwritePlaylist = true;

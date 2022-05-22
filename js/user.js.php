@@ -3,7 +3,7 @@ require '../autoload.php';
 ?>
 
 function loadUserPlaylists(user_id) {
-  var body = $(document.body);
+  let body = $(document.body);
   body.addClass('loading');
   setStatus('<?= LNG_DESC_LOADING ?>...');
   function success() {
@@ -15,16 +15,16 @@ function loadUserPlaylists(user_id) {
     body.removeClass('loading');
   }
 
-  var table = $('#playlists');
+  let table = $('#playlists');
   function load(offset) {
-    var data = { userId: user_id
+    let data = { userId: user_id
                , offset: offset
                };
     callApi( '/api/get-user-playlists/'
            , data
            , function(d) {
-               for (var i = 0; i < d.playlists.length; i++) {
-                 var p = d.playlists[i];
+               for (let i = 0; i < d.playlists.length; i++) {
+                 let p = d.playlists[i];
                  table.append( '<tr>' +
                                  '<td>' +
                                    '<a href="./playlist/?id=' + p.id + '">' +

@@ -79,7 +79,7 @@ function setupFormElementsForRandomizeByBpm() {
 
   // BPM differences
   function buildBpmDiffSlider(tr) {
-    var printValues =
+    let printValues =
       function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
     tr.find('td.bpm-difference-controller > div').each(
       function() {
@@ -108,7 +108,7 @@ function setupFormElementsForRandomizeByBpm() {
 
   // BPM ranges and buttons
   function buildBpmRangeSlider(tr) {
-    var printValues =
+    let printValues =
       function(v1, v2) { tr.find('td.label > span').text(v1 + ' - ' + v2); };
     tr.find('td.bpm-range-controller > div').each(
       function() {
@@ -133,16 +133,16 @@ function setupFormElementsForRandomizeByBpm() {
   }
 
   function setupBpmRangeButtons(range_tr) {
-    var base_range_tr = range_tr.clone();
-    var diff_tr = range_tr.next().length > 0 ? range_tr.next() : range_tr.prev();
-    var base_diff_tr = diff_tr.clone();
+    let base_range_tr = range_tr.clone();
+    let diff_tr = range_tr.next().length > 0 ? range_tr.next() : range_tr.prev();
+    let base_diff_tr = diff_tr.clone();
 
     // Add button
-    var btn = range_tr.find('button.add');
+    let btn = range_tr.find('button.add');
     btn.click(
       function() {
-        var new_range_tr = base_range_tr.clone();
-        var new_diff_tr = base_diff_tr.clone();
+        let new_range_tr = base_range_tr.clone();
+        let new_diff_tr = base_diff_tr.clone();
         buildBpmRangeSlider(new_range_tr);
         buildBpmDiffSlider(new_diff_tr);
         range_tr.after(new_diff_tr);
@@ -158,8 +158,8 @@ function setupFormElementsForRandomizeByBpm() {
       function() {
         $(this).click(
           function() {
-            var range_tr = $(this).parent().parent();
-            var diff_tr = range_tr.next().length > 0
+            let range_tr = $(this).parent().parent();
+            let diff_tr = range_tr.next().length > 0
                             ? range_tr.next() : range_tr.prev();
             range_tr.remove();
             diff_tr.remove();
@@ -170,16 +170,16 @@ function setupFormElementsForRandomizeByBpm() {
       }
     );
   };
-  var enableRemoveButtons = function() {
+  let enableRemoveButtons = function() {
     action_area.find('table.bpm-range-area button.remove').each(
       function() {
         $(this).prop('disabled', false);
       }
     );
   };
-  var disableRemoveButtonsIfNeeded = function() {
-    var table = action_area.find('table.bpm-range-area');
-    var num_ranges = table.find('tr.range').length;
+  let disableRemoveButtonsIfNeeded = function() {
+    let table = action_area.find('table.bpm-range-area');
+    let num_ranges = table.find('tr.range').length;
     if (num_ranges <= 2) {
       table.find('button.remove').each(
         function() {
@@ -197,7 +197,7 @@ function setupFormElementsForRandomizeByBpm() {
   };
   action_area.find('table.bpm-range-area tr.range').each(
     function() {
-      var tr = $(this);
+      let tr = $(this);
       buildBpmRangeSlider(tr);
       setupBpmRangeButtons(tr);
       updateBpmRangeTrackCounters();

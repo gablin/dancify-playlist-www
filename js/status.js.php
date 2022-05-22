@@ -18,7 +18,7 @@ function setStatus(s, indicate_failure = false) {
     return;
   }
 
-  var status = $('.saving-status');
+  let status = $('.saving-status');
   status.text(s);
   status.removeClass('failed');
   if (indicate_failure) {
@@ -32,7 +32,7 @@ function clearStatus() {
     return;
   }
 
-  var status = $('.saving-status');
+  let status = $('.saving-status');
   status.empty();
   status.removeClass('failed');
 }

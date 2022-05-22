@@ -3,7 +3,7 @@ require '../autoload.php';
 ?>
 
 function getDuplicateCheckArea() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return form.find('div[name=duplicate-check]');
 }
 
@@ -23,7 +23,7 @@ function onShowDuplicateCheck() {
 }
 
 function doDuplicateCheck() {
-  var body = $(document.body);
+  let body = $(document.body);
   body.addClass('loading');
   let action_area = getDuplicateCheckResultsArea();
   action_area.find('table tbody tr').remove();

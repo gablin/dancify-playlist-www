@@ -3,11 +3,11 @@ require '../autoload.php';
 ?>
 
 function setupInsertSilence() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
 
   form.find('button[id=insertSilenceBtn]').click(
     function() {
-      var b = $(this);
+      let b = $(this);
       b.prop('disabled', true);
       b.addClass('loading');
       function restoreButton() {
@@ -20,12 +20,12 @@ function setupInsertSilence() {
         return;
       }
 
-      var data = getSilenceInsertData(form);
-      var track_data = { trackId: data.trackId };
+      let data = getSilenceInsertData(form);
+      let track_data = { trackId: data.trackId };
       callApi( '/api/get-track-info/'
              , track_data
              , function(d) {
-                 var to = createPlaylistTrackObject( d.trackId
+                 let to = createPlaylistTrackObject( d.trackId
                                                    , d.artists
                                                    , d.name
                                                    , d.length
@@ -35,9 +35,9 @@ function setupInsertSilence() {
                                                    , d.comments
                                                    , d.preview_url
                                                    );
-                 var tracks = getPlaylistTrackData();
-                 var new_tracks = [];
-                 for (var i = 0; i < tracks.length; i++) {
+                 let tracks = getPlaylistTrackData();
+                 let new_tracks = [];
+                 for (let i = 0; i < tracks.length; i++) {
                      if (i > 0 && i % data.insertFreq == 0) {
                        new_tracks.push(to);
                      }
@@ -60,7 +60,7 @@ function setupInsertSilence() {
 }
 
 function getSilenceInsertData() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return { trackId:
              form.find('select[name=silence-to-insert] :selected').val().trim()
          , insertFreq: form.find('input[name=silence-insertion-freq]').val().trim()
@@ -68,9 +68,9 @@ function getSilenceInsertData() {
 }
 
 function checkSilenceInsertInput() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
 
-  var freq_str = form.find('input[name=silence-insertion-freq]').val().trim();
+  let freq_str = form.find('input[name=silence-insertion-freq]').val().trim();
   freq = parseInt(freq_str);
   if (isNaN(freq)) {
     alert('<?= LNG_ERR_FREQ_NOT_INT ?>');

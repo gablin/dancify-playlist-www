@@ -7,18 +7,18 @@ function setupBpmOverview() {
 }
 
 function getBpmOverviewShowButton() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return form.find('button[id=showBpmOverviewBtn]');
 }
 
 function getBpmOverviewHideButton() {
-  var form = getPlaylistForm();
+  let form = getPlaylistForm();
   return form.find('button[id=hideBpmOverviewBtn]');
 }
 
 function setupFormElementsForBpmOverview() {
-  var show_btn = getBpmOverviewShowButton();
-  var hide_btn = getBpmOverviewHideButton();
+  let show_btn = getBpmOverviewShowButton();
+  let hide_btn = getBpmOverviewHideButton();
   show_btn.click(
     function() {
       showBpmOverview();
