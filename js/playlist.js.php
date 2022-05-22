@@ -989,6 +989,10 @@ function addOptionsToGenreSelect(s, ignore_empty = false) {
   )
 }
 
+function formatGenre(g) {
+  return [ [  0, ''] ].concat(getGenreList())[g][1];
+}
+
 function buildNewTableTrackTr() {
   let tr =
     $( '<tr class="track">' +

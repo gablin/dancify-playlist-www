@@ -115,6 +115,9 @@ DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
 DEFINE( 'LNG_BTN_RANDOMIZE_SCRATCHPAD'
       , 'Slumpa scratchpad'
       );
+DEFINE( 'LNG_BTN_EXPORT'
+      , 'Exportera'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -181,6 +184,9 @@ DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
 DEFINE( 'LNG_MENU_RANDOMIZE'
       , 'Slumpa ordning'
       );
+DEFINE( 'LNG_MENU_EXPORT_PLAYLIST'
+      , 'Exporta spellista'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );
@@ -201,6 +207,12 @@ define( 'LNG_HEAD_SCRATCHPAD'
       );
 define( 'LNG_HEAD_COMMENTS'
       , 'Kommentar'
+      );
+define( 'LNG_HEAD_ARTIST'
+      , 'Artist'
+      );
+define( 'LNG_HEAD_NAME'
+      , 'Namn'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -511,6 +523,11 @@ define( 'LNG_DESC_BPM_AVERAGE'
       );
 define( 'LNG_DESC_DANCE_LENGTH'
       , 'Danslängd'
+      );
+define( 'LNG_DESC_EXPORT_PLAYLIST'
+      , 'Exportera spellistan till en CSV-fil, som går att öppnas och enkelt ' .
+        'redigeras i Excel. Detta kommer endast att inkludera spellistan, inte ' .
+        'scratchpaden.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

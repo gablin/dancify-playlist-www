@@ -20,6 +20,8 @@ mkHtmlNavMenu(
   , [ LNG_MENU_RANDOMIZE, '#', 'randomize' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , []
+  , [ LNG_MENU_EXPORT_PLAYLIST, '#', 'export-playlist' ]
+  , []
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
   , [ LNG_MENU_SAVE_CHANGES_TO_SPOTIFY, '#', 'save-changes-to-spotify' ]
   , [ LNG_MENU_RESTORE_PLAYLIST, '#', 'restore-playlist' ]
@@ -32,6 +34,7 @@ beginContent();
 try {
 $playlist_id = fromGET('id');
 $playlist_info = loadPlaylistInfo($api, $playlist_id);
+$playlist_name = $playlist_info->name;
 ?>
 
 <form id="playlistForm">
@@ -159,6 +162,33 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
         <?= LNG_BTN_CANCEL ?>
       </button>
       <button id="randomizeBtn"><?= LNG_BTN_RANDOMIZE ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="save-changes-to-spotify">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_SAVE_CHANGES_TO_SPOTIFY ?></div>
+    <div>
+      <label>
+        <?= LNG_DESC_PLAYLIST_NAME ?>:
+        <input type="text" name="new-playlist-name" />
+      </label>
+    </div>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="overwrite-existing-playlist" value="true" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_OVERWRITE_EXISTING_PLAYLIST ?>
+      </label>
+    </p>
+    <p><?= LNG_DESC_INFO_ON_SAVING ?></p>
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="saveChangesToSpotifyBtn"><?= LNG_BTN_SAVE ?></button>
     </div>
   </div>
 </div>
@@ -599,10 +629,28 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
   </div>
 </div>
 
+<div class="action-input-area" name="export-playlist">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_EXPORT_PLAYLIST ?></div>
+
+    <p>
+      <?= LNG_DESC_EXPORT_PLAYLIST ?>
+    </p>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="exportPlaylistBtn"><?= LNG_BTN_EXPORT ?></button>
+    </div>
+  </div>
+</div>
+
 <div class="playlists-wrapper">
 
 <div class="playlist">
-<div class="playlist-title"><?= $playlist_info->name ?></div>
+<div class="playlist-title"><?= $playlist_name ?></div>
 <div class="table-wrapper">
 <table id="playlist">
   <thead></thead>
@@ -652,6 +700,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/duplicate-check.js.php"></script>
 <script src="/js/randomize.js.php"></script>
 <script src="/js/playback.js.php"></script>
+<script src="/js/export.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -686,6 +735,7 @@ $(document).ready(
     setupDuplicateCheck();
     setupRandomize();
     setupPlayback();
+    setupExport('<?= $playlist_name ?>');
   }
 );
 </script>

@@ -114,6 +114,9 @@ DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
 DEFINE( 'LNG_BTN_RANDOMIZE_SCRATCHPAD'
       , 'Randomize scratchpad'
       );
+DEFINE( 'LNG_BTN_EXPORT'
+      , 'Export'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -180,6 +183,9 @@ DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
 DEFINE( 'LNG_MENU_RANDOMIZE'
       , 'Randomize order'
       );
+DEFINE( 'LNG_MENU_EXPORT_PLAYLIST'
+      , 'Export playlist'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
@@ -200,6 +206,12 @@ define( 'LNG_HEAD_SCRATCHPAD'
       );
 define( 'LNG_HEAD_COMMENTS'
       , 'Comments'
+      );
+define( 'LNG_HEAD_ARTIST'
+      , 'Artist'
+      );
+define( 'LNG_HEAD_NAME'
+      , 'Name'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -511,6 +523,10 @@ define( 'LNG_DESC_BPM_AVERAGE'
       );
 define( 'LNG_DESC_DANCE_LENGTH'
       , 'Dance length'
+      );
+define( 'LNG_DESC_EXPORT_PLAYLIST'
+      , 'Export the playlist to a CSV file, which can be opened and easily ' .
+        'edited in Excel. This will only include the playlist, not the scratchpad.'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'
