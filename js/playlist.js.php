@@ -14,9 +14,13 @@ var UNDO_STACK_LIMIT = 100;
 var UNDO_STACK = Array(UNDO_STACK_LIMIT).fill(null);
 var UNDO_STACK_OFFSET = -1;
 var LAST_SPOTIFY_PLAYLIST_HASH = '';
+var LATEST_TRACK_CLICK_TR = null;
+var LATEST_TRACK_CLICK_TIMESTAMP = 0;
 
 const BPM_MIN = 0;
 const BPM_MAX = 255;
+
+const DOUBLECLICK_RANGE_MS = 300;
 
 function setupPlaylist(playlist_id) {
   PLAYLIST_ID = playlist_id;
@@ -1036,6 +1040,9 @@ function addTrackPreviewHandling(tr) {
   if (!tr.hasClass('track')) {
     return;
   }
+  if (hasPlayback()) {
+    return;
+  }
 
   const static_text = '&#9835;';
   const playing_text = '&#9836;';
@@ -1045,7 +1052,7 @@ function addTrackPreviewHandling(tr) {
     return;
   }
 
-  var link = $('<a href="#">' + static_text + '</a>');
+  var link = $('<a class="preview" href="#">' + static_text + '</a>');
   link.click(
     function(e) {
       playPreview($(this), preview_url, playing_text, stop_text);
@@ -1353,12 +1360,31 @@ function togglePlaylistTrackTrSelection(track_index) {
 function addTrackTrSelectHandling(tr) {
   tr.click(
     function(e) {
+      let tr = $(this);
       if (TRACK_DRAG_STATE == 0) {
-        updateTrackTrSelection($(this), e.ctrlKey || e.metaKey, e.shiftKey);
+        updateTrackTrSelection(tr, e.ctrlKey || e.metaKey, e.shiftKey);
       }
       else {
         TRACK_DRAG_STATE = 0;
       }
+
+      // Check whether to play this track was double-clicked; if so, play track
+      let timestamp_ms = Date.now();
+      if ( tr.is(LATEST_TRACK_CLICK_TR) &&
+           timestamp_ms - LATEST_TRACK_CLICK_TIMESTAMP <= DOUBLECLICK_RANGE_MS
+         )
+      {
+        if (tr.find('input[name=track_id]').length > 0 && hasPlayback()) {
+          let track_id = tr.find('input[name=track_id]').val();
+          playTrack( track_id
+                   , 0
+                   , function() {}
+                   , function() {} // TODO: handle
+                   );
+        }
+      }
+      LATEST_TRACK_CLICK_TR = tr;
+      LATEST_TRACK_CLICK_TIMESTAMP = timestamp_ms;
     }
   );
 }
@@ -2102,7 +2128,11 @@ function setPlaylistHeight() {
   let bpm_overview = $('div.bpm-overview');
   let bpm_overview_vh =
     bpm_overview.is(':visible') ? bpm_overview.outerHeight(true) : 0;
-  let playlist_vh = screen_vh - table_offset - footer_vh - bpm_overview_vh;
+  let playback = $('div.playback');
+  let playback_vh =
+    playback.is(':visible') ? playback.outerHeight(true) : 0;
+  let playlist_vh = screen_vh - table_offset - footer_vh - bpm_overview_vh -
+                    playback_vh;
   let playlist_px = playlist_vh + 'px';
   getPlaylistTable().closest('.table-wrapper').css('height', playlist_px);
   getScratchpadTable().closest('.table-wrapper').css('height', playlist_px);

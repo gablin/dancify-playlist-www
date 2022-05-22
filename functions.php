@@ -202,6 +202,13 @@ function ensureSession() {
 }
 
 /**
+ * Gets the current Spotify access token.
+ */
+function getAccessToken() {
+  return $_SESSION['access-token'];
+}
+
+/**
  * Gets the currently active API session. It is assumed that a PHP session has
  * already been started.
  *

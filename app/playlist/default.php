@@ -651,6 +651,7 @@ $playlist_info = loadPlaylistInfo($api, $playlist_id);
 <script src="/js/bpm-overview.js.php"></script>
 <script src="/js/duplicate-check.js.php"></script>
 <script src="/js/randomize.js.php"></script>
+<script src="/js/playback.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -684,6 +685,7 @@ $(document).ready(
     setupBpmOverview();
     setupDuplicateCheck();
     setupRandomize();
+    setupPlayback();
   }
 );
 </script>

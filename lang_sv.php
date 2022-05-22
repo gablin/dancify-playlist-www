@@ -349,6 +349,15 @@ define( 'LNG_ERR_BPM_TOO_LARGE'
 define( 'LNG_ERR_BPM_NAN'
       , 'BPM är inte en siffra'
       );
+define( 'LNG_ERR_PLAYBACK_NOT_POSSIBLE'
+      , 'Uppspelning ej möjlig'
+      );
+define( 'LNG_ERR_PLAYBACK_DEVICE_DISCONNECTED'
+      , 'Spelaren har kopplat ifrån'
+      );
+define( 'LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY'
+      , 'Låten kunde inte spelas upp just nu'
+      );
 define( 'LNG_DESC_TRACKS_NOT_PLACED'
       , 'Låtar som inte kunde placeras'
       );

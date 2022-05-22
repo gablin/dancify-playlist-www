@@ -349,6 +349,15 @@ define( 'LNG_ERR_BPM_TOO_LARGE'
 define( 'LNG_ERR_BPM_NAN'
       , 'BPM is not a number'
       );
+define( 'LNG_ERR_PLAYBACK_NOT_POSSIBLE'
+      , 'Playback not possible'
+      );
+define( 'LNG_ERR_PLAYBACK_DEVICE_DISCONNECTED'
+      , 'Device has disconnected'
+      );
+define( 'LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY'
+      , 'The track could not play at the moment'
+      );
 define( 'LNG_DESC_TRACKS_NOT_PLACED'
       , 'Tracks that could not be placed'
       );

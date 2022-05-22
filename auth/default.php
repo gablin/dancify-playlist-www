@@ -7,6 +7,9 @@ $options = [ 'scope' =>
              , 'playlist-read-collaborative'
              , 'playlist-modify-public'
              , 'playlist-modify-private'
+             , 'streaming'
+             , 'user-read-email'
+             , 'user-read-private'
              ]
            , 'show_dialog' => true
            ];
