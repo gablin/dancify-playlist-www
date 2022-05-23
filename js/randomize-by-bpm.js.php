@@ -56,7 +56,7 @@ function setupFormElementsForRandomizeByBpm() {
                  , danceLengthRange: settings.danceLengthRange
                  , danceSlotSameGenre:
                      form.find('input[name=dance-slot-has-same-genre]')
-                     .prop('checked')
+                     .is(':checked')
                  };
       callApi( '/api/randomize-by-bpm/'
              , data

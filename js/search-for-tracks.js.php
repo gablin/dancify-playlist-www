@@ -58,7 +58,7 @@ function setupSearchForTracksButtons() {
     let genre = action_area.find('select[name=search-by-genre] :selected').val();
     let bpm_range = getSearchForTracksBpmValues();
     let in_my_playlists_only =
-      action_area.find('input[name=search-my-playlists-only]').prop('checked');
+      action_area.find('input[name=search-my-playlists-only]').is(':checked');
 
     let body = $(document.body);
     body.addClass('loading');

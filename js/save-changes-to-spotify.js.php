@@ -20,7 +20,7 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
 
       // Check new playlist name
       let name = name_input.val().trim();
-      if (name.length == 0 && !overwrite_checkbox.prop('checked')) {
+      if (name.length == 0 && !overwrite_checkbox.is(':checked')) {
         alert('<?= LNG_INSTR_PLEASE_ENTER_NAME ?>');
         restoreButton();
         return false;
@@ -34,7 +34,7 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
           track_ids.push(tracks[i].trackId);
       }
       let data = { trackIdList: track_ids };
-      let overwrite_playlist = overwrite_checkbox.prop('checked');
+      let overwrite_playlist = overwrite_checkbox.is(':checked');
       if (overwrite_playlist) {
         data.playlistId = playlist_id;
         data.overwritePlaylist = true;
@@ -71,12 +71,12 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
     return name_input.val().trim().length > 0;
   }
   name_input.on( 'input'
-               , function() { save_b.prop('disabled', !checkNameInput()); }
+                 , function() { save_b.prop('disabled', !checkNameInput()); }
                );
   overwrite_checkbox.on(
     'change'
   , function() {
-      if (overwrite_checkbox.prop('checked')) {
+      if (overwrite_checkbox.is(':checked')) {
         name_input.prop('disabled', true);
         save_b.prop('disabled', false);
       }
