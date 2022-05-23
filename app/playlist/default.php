@@ -165,33 +165,6 @@ $playlist_name = $playlist_info->name;
   </div>
 </div>
 
-<div class="action-input-area" name="save-changes-to-spotify">
-  <div class="background"></div>
-  <div class="input">
-    <div class="title"><?= LNG_MENU_SAVE_CHANGES_TO_SPOTIFY ?></div>
-    <div>
-      <label>
-        <?= LNG_DESC_PLAYLIST_NAME ?>:
-        <input type="text" name="new-playlist-name" />
-      </label>
-    </div>
-    <p>
-      <label class="checkbox">
-        <input type="checkbox" name="overwrite-existing-playlist" value="true" />
-        <span class="checkmark"></span>
-        <?= LNG_DESC_OVERWRITE_EXISTING_PLAYLIST ?>
-      </label>
-    </p>
-    <p><?= LNG_DESC_INFO_ON_SAVING ?></p>
-    <div class="buttons">
-      <button class="cancel" onclick="clearActionInputs();">
-        <?= LNG_BTN_CANCEL ?>
-      </button>
-      <button id="saveChangesToSpotifyBtn"><?= LNG_BTN_SAVE ?></button>
-    </div>
-  </div>
-</div>
-
 <div class="action-input-area" name="sort">
   <div class="background"></div>
   <div class="input">
