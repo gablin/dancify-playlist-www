@@ -163,7 +163,8 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       let tracks_to_load = [];
       let o = offset;
       for ( let o = offset
-          ; o < new_track_ids.length && tracks_to_load.length < LOAD_TRACKS_LIMIT
+          ; o < new_track_ids.length &&
+            tracks_to_load.length < LOAD_TRACKS_LIMIT
           ; o++
           )
       {
@@ -286,7 +287,9 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       has_removed = false;
       let scratchpad_tracks = getScratchpadTrackData();
       for (let i = 0; i < tracks_to_remove.length; i++) {
-        let res = popTrackWithMatchingId(scratchpad_tracks, tracks_to_remove[i]);
+        let res = popTrackWithMatchingId( scratchpad_tracks
+                                        , tracks_to_remove[i]
+                                        );
         scratchpad_tracks = res[0];
         let removed_t = res[1];
         if (removed_t !== null) {
@@ -826,7 +829,9 @@ function getTrackData(table) {
         let length = tr.find('td.length').text().trim();
         let bpm = tr.find('td.bpm').text().trim();
         let genre = tr.find('td.genre').text().trim();
-        playlist.push(createPlaylistPlaceholderObject(name, length, bpm, genre));
+        playlist.push(
+          createPlaylistPlaceholderObject(name, length, bpm, genre)
+        );
       }
     }
   );
@@ -1070,7 +1075,10 @@ function addTrackPreviewHandling(tr) {
 function buildNewTableTrackTrFromTrackObject(track) {
   let tr = buildNewTableTrackTr();
   if ('trackId' in track) {
-    tr.find('td.title').append(formatTrackTitleAsHtml(track.artists, track.name));
+    tr.find('td.title').append( formatTrackTitleAsHtml( track.artists
+                                                      , track.name
+                                                      )
+                              );
     tr.find('input[name=track_id]').prop('value', track.trackId);
     tr.find('input[name=artists]').prop('value', track.artists.join(','));
     tr.find('input[name=name]').prop('value', track.name);
@@ -1140,7 +1148,7 @@ function replaceTracks(table, tracks) {
 }
 
 function renderTable(table) {
-  const delimiter = (table.is(getPlaylistTable())) ? PLAYLIST_DANCE_DELIMITER : 0;
+  const delimiter = table.is(getPlaylistTable()) ? PLAYLIST_DANCE_DELIMITER : 0;
 
   // Assign indices
   let trs = table.find('tr.track, tr.empty-track');
@@ -1189,7 +1197,9 @@ function renderTable(table) {
       tr.find('td.aggr-length').text(formatTrackLength(total_length));
     }
   );
-  getTableSummaryTr(table).find('td.length').text(formatTrackLength(total_length));
+  getTableSummaryTr(table).find('td.length').text(
+    formatTrackLength(total_length)
+  );
 
   if (table.is(getPlaylistTable())) {
     renderBpmOverview();
@@ -2253,7 +2263,8 @@ function renderBpmOverview() {
   );
 
   // Compute and show stats
-  tracks = tracks.filter(function(t) { return t.bpm !== undefined && t.bpm > 0 });
+  tracks =
+    tracks.filter(function(t) { return t.bpm !== undefined && t.bpm > 0 });
   tracks.sort(function(a, b) { return intcmp(a.bpm, b.bpm); });
   let bpm_min = 0;
   let bpm_max = 0;
@@ -2344,7 +2355,9 @@ function getTrackIndexOfBarWrapper(bar_wr) {
 function updateTrackBarSelection(bar_wr, multi_select_mode, span_mode) {
   if (multi_select_mode) {
     bar_wr.toggleClass('selected');
-    toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
+    toggleTrackTrSelection( getPlaylistTable()
+                          , getTrackIndexOfBarWrapper(bar_wr)
+                          );
     return;
   }
 
@@ -2355,7 +2368,9 @@ function updateTrackBarSelection(bar_wr, multi_select_mode, span_mode) {
       );
     if (selected_sib_bar_wrappers.length == 0) {
       bar_wr.addClass('selected');
-      addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
+      addTrackTrSelection( getPlaylistTable()
+                         , getTrackIndexOfBarWrapper(bar_wr)
+                         );
       return;
     }
     let first = $(selected_sib_bar_wrappers[0]);
@@ -2378,7 +2393,9 @@ function updateTrackBarSelection(bar_wr, multi_select_mode, span_mode) {
   }
 
   let selected_sib_bar_wrappers =
-    bar_wr.siblings().filter(function() { return $(this).hasClass('selected') });
+    bar_wr.siblings().filter(
+      function() { return $(this).hasClass('selected') }
+    );
   $.each( selected_sib_bar_wrappers
         , function() {
             let bar_wr = $(this);
@@ -2440,8 +2457,8 @@ function addTrackBarDragHandling(bar) {
           return;
         }
 
-        // Always clear previous insertion point; else we could in some cases end
-        // up with multiple insertion points
+        // Always clear previous insertion point; else we could in some cases
+        // end up with multiple insertion points
         area.find('.insert-before, .insert-after')
           .removeClass('insert-before insert-after');
 
