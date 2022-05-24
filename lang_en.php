@@ -526,7 +526,11 @@ define( 'LNG_DESC_DANCE_LENGTH'
       );
 define( 'LNG_DESC_EXPORT_PLAYLIST'
       , 'Export the playlist to a CSV file, which can be opened and easily ' .
-        'edited in Excel. This will only include the playlist, not the scratchpad.'
+        'edited in Excel. This will only include the playlist, not the ' .
+        'scratchpad.'
+      );
+define( 'LNG_DESC_DOUBLE_CLICK_TRACK_TO_PLAY'
+      , 'Double-click on a track to play'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

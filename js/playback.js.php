@@ -10,8 +10,11 @@ var PLAYBACK_PLAYER = null;
 var PLAYBACK_DEVICE_ID = null;
 var PLAYBACK_SEEK_TIMER = null;
 var PLAYBACK_HAS_TRACK = false;
+var PLAYBACK_LAST_PLAYED_TRACK_ID = null;
+var PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 0;
 
 const PLAYBACK_SEEK_UPDATE_FREQ_MS = 1000;
+const PLAYBACK_PLAY_TRACK_ATTEMPTS = 3;
 
 function setupPlayback() {
   mkPlaybackHtml();
@@ -37,7 +40,9 @@ function mkPlaybackHtml() {
        '  <div class="x-container">' +
        '    <button class="controller"></button>' +
        '    <div class="playing">' +
-       '      <div class="name"></div>' +
+       '      <div class="name">' +
+       '        <?= LNG_DESC_DOUBLE_CLICK_TRACK_TO_PLAY ?>' +
+       '      </div>' +
        '      <div class="artists"></div>' +
        '    </div>' +
        '    <div class="seek">' +
@@ -66,7 +71,24 @@ function mkPlaybackHtml() {
     function() {
       PLAYBACK_PLAYER.getCurrentState().then(
         state => {
-          if (!state) return;
+          if (!state) {
+            // Got nothing to play; pick first track in playlist
+            let track_data =
+              removePlaceholdersFromTracks(getPlaylistTrackData());
+            if (track_data.length > 0) {
+              playTrack( track_data[0].trackId
+                       , 0
+                       , function() {}
+                       , function() {
+                           showPlaybackError(
+                             '<?= LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY ?>'
+                           );
+                         }
+                       );
+            }
+            return;
+          }
+
           if (state.paused) {
             triggerResume();
           }
@@ -167,12 +189,12 @@ function initPlayer() {
         return;
       }
 
+      // Update playback info
       let name = state.track_window.current_track.name;
       let artists = state.track_window.current_track.artists.map((a) => a.name);
       let area = getPlaybackArea();
       area.find('.playing .name').text(name);
       area.find('.playing .artists').text(artists.join(', '));
-
       if (state.paused) {
         renderPaused();
         stopSeek();
@@ -183,6 +205,41 @@ function initPlayer() {
       }
       renderSeek(state.position, state.duration);
       PLAYBACK_HAS_TRACK = true;
+
+      if (PLAYBACK_IGNORE_NEXT_STATE_CHANGES > 0) {
+        PLAYBACK_IGNORE_NEXT_STATE_CHANGES--;
+        return;
+      }
+
+      // If reached end of current track, play next in playlist
+      if (state.paused && state.position == 0) {
+        let just_played_track_id = PLAYBACK_LAST_PLAYED_TRACK_ID;
+        let track_data =
+          [ removePlaceholdersFromTracks(getPlaylistTrackData())
+          , removePlaceholdersFromTracks(getScratchpadTrackData())
+          ];
+        for (let i = 0; i < track_data.length; i++) {
+          for (let j = 0; j < track_data[i].length; j++) {
+            let t = track_data[i][j];
+            if (t.trackId === just_played_track_id) {
+              let next_j = j + 1;
+              if (next_j < track_data[i].length) {
+                PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 1;
+                playTrack( track_data[i][next_j].trackId
+                         , 0
+                         , function() {}
+                         , function() {
+                             showPlaybackError(
+                               '<?= LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY ?>'
+                             );
+                           }
+                         );
+                return;
+              }
+            }
+          }
+        }
+      }
     }
   );
   player.addListener(
@@ -201,7 +258,8 @@ function initPlayer() {
 function triggerResume() {
   PLAYBACK_PLAYER.getCurrentState().then(
     state => {
-      if (!state) return; // Got nothing to play
+      if (!state) return;
+
       PLAYBACK_PLAYER.resume().then(
         () => {
           // Check if resume was successful
@@ -230,7 +288,12 @@ function hasPlayback() {
   return PLAYBACK_PLAYER != null;
 }
 
-function playTrack(track_id, pos_ms, success_f, fail_f) {
+function playTrack( track_id
+                  , pos_ms
+                  , success_f
+                  , fail_f
+                  , attempts = PLAYBACK_PLAY_TRACK_ATTEMPTS
+                  ) {
   if (!PLAYBACK_PLAYER) {
     fail_f('<?= LNG_ERR_PLAYBACK_NOT_POSSIBLE ?>');
   }
@@ -240,8 +303,20 @@ function playTrack(track_id, pos_ms, success_f, fail_f) {
            , 'track': track_id
            , 'positionMs': pos_ms
            }
-         , success_f
-         , fail_f
+         , function() {
+             PLAYBACK_LAST_PLAYED_TRACK_ID = track_id;
+             success_f()
+           }
+         , // Sometimes this fails due to "bad gateway". If that's the case,
+           // we retry
+           function(msg) {
+             if (msg === 'Bad gateway.' && attempts > 0) {
+               playTrack(track_id, pos_ms, success_f, fail_f, attempts-1);
+             }
+             else {
+               fail_f();
+             }
+           }
          );
   // Controller and seek will be updated when player reacts to state change
 }
@@ -320,7 +395,7 @@ function setupSeekController() {
             if (!state) return;
             let current_track = state.track_window.current_track;
             if (!current_track) return;
-            playTrack( current_track.id
+            playTrack( PLAYBACK_LAST_PLAYED_TRACK_ID
                      , position_ms
                      , function() {}
                      , function() {

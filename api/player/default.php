@@ -37,6 +37,9 @@ switch ($action) {
     if (!array_key_exists('track', $json)) {
       fail('track missing');
     }
+    if (!is_string($json['track'])) {
+      fail('track is not a string');
+    }
     if (!array_key_exists('positionMs', $json)) {
       fail('positionMs missing');
     }

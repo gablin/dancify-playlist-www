@@ -526,8 +526,11 @@ define( 'LNG_DESC_DANCE_LENGTH'
       );
 define( 'LNG_DESC_EXPORT_PLAYLIST'
       , 'Exportera spellistan till en CSV-fil, som går att öppnas och enkelt ' .
-        'redigeras i Excel. Detta kommer endast att inkludera spellistan, inte ' .
-        'scratchpaden.'
+        'redigeras i Excel. Detta kommer endast att inkludera spellistan, ' .
+        'inte scratchpaden.'
+      );
+define( 'LNG_DESC_DOUBLE_CLICK_TRACK_TO_PLAY'
+      , 'Dubbelklicka på en låt för att spela'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'
