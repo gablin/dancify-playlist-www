@@ -305,6 +305,7 @@ function playTrack( track_id
            }
          , function() {
              PLAYBACK_LAST_PLAYED_TRACK_ID = track_id;
+             markPlayingTrackInPlaylist(track_id);
              success_f()
            }
          , // Sometimes this fails due to "bad gateway". If that's the case,

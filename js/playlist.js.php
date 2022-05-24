@@ -16,6 +16,7 @@ var UNDO_STACK_OFFSET = -1;
 var LAST_SPOTIFY_PLAYLIST_HASH = '';
 var LATEST_TRACK_CLICK_TR = null;
 var LATEST_TRACK_CLICK_TIMESTAMP = 0;
+var TRACK_MARKED_AS_PLAYING = null;
 
 const BPM_MIN = 0;
 const BPM_MAX = 255;
@@ -1147,15 +1148,32 @@ function replaceTracks(table, tracks) {
   appendTracks(table, tracks);
 }
 
-function renderTable(table) {
-  const delimiter = table.is(getPlaylistTable()) ? PLAYLIST_DANCE_DELIMITER : 0;
-
-  // Assign indices
+function renderTableIndices(table) {
   let trs = table.find('tr.track, tr.empty-track');
   for (let i = 0; i < trs.length; i++) {
     let tr = $(trs[i]);
-    tr.find('td.index').text(i+1);
+    let index_td = tr.find('td.index');
+    index_td.text(i+1);
+
+    let tid_input = tr.find('input[name=track_id]');
+    if (tid_input.length > 0) {
+      let tid = tid_input.val().trim();
+      if (tid === TRACK_MARKED_AS_PLAYING) {
+        index_td.html(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"' +
+          '    viewBox="-2 -6 24 30">' +
+          '  <path fill="currentColor" d="M2 24v-24l20 12-20 12z"/>' +
+          '</svg>'
+        );
+      }
+    }
   }
+}
+
+function renderTable(table) {
+  const delimiter = table.is(getPlaylistTable()) ? PLAYLIST_DANCE_DELIMITER : 0;
+
+  renderTableIndices(table);
 
   // Insert delimiters
   table.find('tr.delimiter').remove();
@@ -2557,4 +2575,10 @@ function scrollPlaylistToTrackIndex(track_index) {
     scroll_pos = 0;
   }
   scroll_area.scrollTop(scroll_pos);
+}
+
+function markPlayingTrackInPlaylist(track_id) {
+  TRACK_MARKED_AS_PLAYING = track_id;
+  renderTableIndices(getPlaylistTable());
+  renderTableIndices(getScratchpadTable());
 }
