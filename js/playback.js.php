@@ -11,6 +11,8 @@ var PLAYBACK_DEVICE_ID = null;
 var PLAYBACK_SEEK_TIMER = null;
 var PLAYBACK_HAS_TRACK = false;
 var PLAYBACK_LAST_PLAYED_TRACK_ID = null;
+var PLAYBACK_LAST_PLAYED_INDEX = null;
+var PLAYBACK_LAST_PLAYED_TABLE = null;
 var PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 0;
 
 const PLAYBACK_SEEK_UPDATE_FREQ_MS = 1000;
@@ -73,18 +75,10 @@ function mkPlaybackHtml() {
         state => {
           if (!state) {
             // Got nothing to play; pick first track in playlist
-            let track_data =
-              removePlaceholdersFromTracks(getPlaylistTrackData());
+            let table = getPlaylistTable();
+            let track_data = removePlaceholdersFromTracks(getTrackData(table));
             if (track_data.length > 0) {
-              playTrack( track_data[0].trackId
-                       , 0
-                       , function() {}
-                       , function() {
-                           showPlaybackError(
-                             '<?= LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY ?>'
-                           );
-                         }
-                       );
+              playTrack(track_data[0].trackId, 0, table, 0);
             }
             return;
           }
@@ -213,29 +207,46 @@ function initPlayer() {
 
       // If reached end of current track, play next in playlist
       if (state.paused && state.position == 0) {
-        let just_played_track_id = PLAYBACK_LAST_PLAYED_TRACK_ID;
-        let track_data =
-          [ removePlaceholdersFromTracks(getPlaylistTrackData())
-          , removePlaceholdersFromTracks(getScratchpadTrackData())
+        const playlist_table = getPlaylistTable();
+        const scratchpad_table = getScratchpadTable();
+        const track_data =
+          [ [ playlist_table
+            , removePlaceholdersFromTracks(getTrackData(playlist_table))
+            ]
+          , [ scratchpad_table
+            , removePlaceholdersFromTracks(getTrackData(scratchpad_table))
+            ]
           ];
         for (let i = 0; i < track_data.length; i++) {
-          for (let j = 0; j < track_data[i].length; j++) {
-            let t = track_data[i][j];
-            if (t.trackId === just_played_track_id) {
-              let next_j = j + 1;
-              if (next_j < track_data[i].length) {
-                PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 1;
-                playTrack( track_data[i][next_j].trackId
-                         , 0
-                         , function() {}
-                         , function() {
-                             showPlaybackError(
-                               '<?= LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY ?>'
-                             );
-                           }
-                         );
-                return;
-              }
+          const table = track_data[i][0];
+          const tracks = track_data[i][1];
+
+          // Find best index to consider as last played track
+          let best_playing_index = -1;
+          let best_playing_index_diff = Number.MAX_SAFE_INTEGER;
+          for (let j = 0; j < tracks.length; j++) {
+            let t = tracks[j];
+            let diff = Math.abs(MARKED_AS_PLAYING_INDEX - j);
+            if ( table.is(MARKED_AS_PLAYING_TABLE) &&
+                 t.trackId === PLAYBACK_LAST_PLAYED_TRACK_ID &&
+                 diff < best_playing_index_diff
+               ) {
+              best_playing_index = j;
+              best_playing_index_diff = diff;
+            }
+          }
+
+          if (best_playing_index >= 0) {
+            let next_j = best_playing_index + 1;
+            if (next_j < tracks.length) {
+              PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 1;
+              PLAYBACK_LAST_PLAYED_INDEX = next_j;
+              playTrack( tracks[next_j].trackId
+                       , PLAYBACK_LAST_PLAYED_INDEX
+                       , PLAYBACK_LAST_PLAYED_TABLE
+                       , 0
+                       );
+              return;
             }
           }
         }
@@ -289,9 +300,11 @@ function hasPlayback() {
 }
 
 function playTrack( track_id
+                  , index
+                  , table
                   , pos_ms
-                  , success_f
-                  , fail_f
+                  , success_f = function() {}
+                  , fail_f = showPlaybackError
                   , attempts = PLAYBACK_PLAY_TRACK_ATTEMPTS
                   ) {
   if (!PLAYBACK_PLAYER) {
@@ -305,14 +318,22 @@ function playTrack( track_id
            }
          , function() {
              PLAYBACK_LAST_PLAYED_TRACK_ID = track_id;
-             markPlayingTrackInPlaylist(track_id);
+             PLAYBACK_LAST_PLAYED_TABLE = table;
+             markPlayingTrackInPlaylist(track_id, index, table);
              success_f()
            }
          , // Sometimes this fails due to "bad gateway". If that's the case,
            // we retry
            function(msg) {
              if (msg === 'Bad gateway.' && attempts > 0) {
-               playTrack(track_id, pos_ms, success_f, fail_f, attempts-1);
+               playTrack( track_id
+                        , index
+                        , table
+                        , pos_ms
+                        , success_f
+                        , fail_f
+                        , attempts-1
+                        );
              }
              else {
                fail_f();
@@ -397,6 +418,8 @@ function setupSeekController() {
             let current_track = state.track_window.current_track;
             if (!current_track) return;
             playTrack( PLAYBACK_LAST_PLAYED_TRACK_ID
+                     , PLAYBACK_LAST_PLAYED_INDEX
+                     , PLAYBACK_LAST_PLAYED_TABLE
                      , position_ms
                      , function() {}
                      , function() {

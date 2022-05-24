@@ -16,7 +16,9 @@ var UNDO_STACK_OFFSET = -1;
 var LAST_SPOTIFY_PLAYLIST_HASH = '';
 var LATEST_TRACK_CLICK_TR = null;
 var LATEST_TRACK_CLICK_TIMESTAMP = 0;
-var TRACK_MARKED_AS_PLAYING = null;
+var MARKED_AS_PLAYING_TRACK = null;
+var MARKED_AS_PLAYING_INDEX = null;
+var MARKED_AS_PLAYING_TABLE = null;
 
 const BPM_MIN = 0;
 const BPM_MAX = 255;
@@ -1150,23 +1152,34 @@ function replaceTracks(table, tracks) {
 
 function renderTableIndices(table) {
   let trs = table.find('tr.track, tr.empty-track');
+  let best_playing_index = -1;
+  let best_playing_index_diff = Number.MAX_SAFE_INTEGER;
   for (let i = 0; i < trs.length; i++) {
     let tr = $(trs[i]);
-    let index_td = tr.find('td.index');
-    index_td.text(i+1);
+    tr.find('td.index').text(i+1);
 
+    // Find best index to mark as playing
     let tid_input = tr.find('input[name=track_id]');
     if (tid_input.length > 0) {
       let tid = tid_input.val().trim();
-      if (tid === TRACK_MARKED_AS_PLAYING) {
-        index_td.html(
-          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"' +
-          '    viewBox="-2 -6 24 30">' +
-          '  <path fill="currentColor" d="M2 24v-24l20 12-20 12z"/>' +
-          '</svg>'
-        );
+      let diff = Math.abs(MARKED_AS_PLAYING_INDEX - i);
+      if ( table.is(MARKED_AS_PLAYING_TABLE) &&
+           tid === MARKED_AS_PLAYING_TRACK &&
+           diff < best_playing_index_diff
+         ) {
+        best_playing_index = i;
+        best_playing_index_diff = diff;
       }
     }
+  }
+
+  if (best_playing_index >= 0) {
+    $(trs[best_playing_index]).find('td.index').html(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"' +
+      '    viewBox="-2 -6 24 30">' +
+      '  <path fill="currentColor" d="M2 24v-24l20 12-20 12z"/>' +
+      '</svg>'
+    );
   }
 }
 
@@ -1409,11 +1422,7 @@ function addTrackTrSelectHandling(tr) {
       {
         if (tr.find('input[name=track_id]').length > 0 && hasPlayback()) {
           let track_id = tr.find('input[name=track_id]').val();
-          playTrack( track_id
-                   , 0
-                   , function() {}
-                   , function() {} // TODO: handle
-                   );
+          playTrack(track_id, getTrackIndexOfTr(tr), getTableOfTr(tr), 0);
         }
       }
       LATEST_TRACK_CLICK_TR = tr;
@@ -2577,8 +2586,10 @@ function scrollPlaylistToTrackIndex(track_index) {
   scroll_area.scrollTop(scroll_pos);
 }
 
-function markPlayingTrackInPlaylist(track_id) {
-  TRACK_MARKED_AS_PLAYING = track_id;
+function markPlayingTrackInPlaylist(track_id, index, table) {
+  MARKED_AS_PLAYING_TRACK = track_id;
+  MARKED_AS_PLAYING_INDEX = index;
+  MARKED_AS_PLAYING_TABLE = table;
   renderTableIndices(getPlaylistTable());
   renderTableIndices(getScratchpadTable());
 }
