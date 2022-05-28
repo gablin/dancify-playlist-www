@@ -22,6 +22,13 @@ function setupPlayback() {
   mkPlaybackHtml();
   $.getScript('https://sdk.scdn.co/spotify-player.js', function() {});
   window.onSpotifyWebPlaybackSDKReady = initPlayer;
+  $(document).on( 'keyup'
+                , function(e) {
+                    if (e.key == ' ') {
+                      togglePlay();
+                    }
+                  }
+                );
 }
 
 function showPlaybackError(msg) {
@@ -69,30 +76,7 @@ function mkPlaybackHtml() {
        '</div>'
      );
   $('.body-wrapper').append(playback_html);
-  getPlaybackButton().click(
-    function() {
-      PLAYBACK_PLAYER.getCurrentState().then(
-        state => {
-          if (!state) {
-            // Got nothing to play; pick first track in playlist
-            let table = getPlaylistTable();
-            let track_data = removePlaceholdersFromTracks(getTrackData(table));
-            if (track_data.length > 0) {
-              playTrack(track_data[0].trackId, 0, table, 0);
-            }
-            return;
-          }
-
-          if (state.paused) {
-            triggerResume();
-          }
-          else {
-            triggerPause();
-          }
-        }
-      );
-    }
-  );
+  getPlaybackButton().click(togglePlay);
   setupSeekController();
   setupVolumeController();
   renderPaused();
@@ -264,6 +248,32 @@ function initPlayer() {
   player.addListener('account_error', (e) => {});
 
   player.connect();
+}
+
+function togglePlay() {
+  if (!PLAYBACK_PLAYER) {
+    return;
+  }
+  PLAYBACK_PLAYER.getCurrentState().then(
+    state => {
+      if (!state) {
+        // Got nothing to play; pick first track in playlist
+        let table = getPlaylistTable();
+        let track_data = removePlaceholdersFromTracks(getTrackData(table));
+        if (track_data.length > 0) {
+          playTrack(track_data[0].trackId, 0, table, 0);
+        }
+        return;
+      }
+
+      if (state.paused) {
+        triggerResume();
+      }
+      else {
+        triggerPause();
+      }
+    }
+  );
 }
 
 function triggerResume() {
