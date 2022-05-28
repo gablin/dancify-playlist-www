@@ -20,6 +20,17 @@ mkHtmlNavMenu(
   , [ LNG_MENU_RANDOMIZE, '#', 'randomize' ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM, '#', 'randomize-by-bpm' ]
   , []
+  , [ LNG_MENU_SET_TRACK_PLAY_LENGTH
+    , '#'
+    , 'set-track-play-length'
+    , 'onShowSetTrackPlayLength()'
+    ]
+  , [ LNG_MENU_SET_TRACK_FADE_OUT
+    , '#'
+    , 'set-track-fade-out'
+    , 'onShowSetTrackFadeOut()'
+    ]
+  , []
   , [ LNG_MENU_CHANGE_PLAYLIST, '../' ]
   , [ LNG_MENU_SAVE_CHANGES_TO_SPOTIFY, '#', 'save-changes-to-spotify' ]
   , [ LNG_MENU_EXPORT_PLAYLIST, '#', 'export-playlist' ]
@@ -619,6 +630,70 @@ $playlist_name = $playlist_info->name;
   </div>
 </div>
 
+<div class="action-input-area" name="set-track-play-length">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_SET_TRACK_PLAY_LENGTH ?></div>
+    <p><?= LNG_INSTR_SET_TRACK_PLAY_LENGTH ?></p>
+    <table class="track-play-length-area centered">
+      <tbody>
+        <tr class="range">
+          <td class="label">
+            <span></span>
+          </td>
+          <td class="track-play-length-controller">
+            <div></div>
+          </td>
+        </tr>
+      <tbody>
+    </table>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="removeTrackPlayLength">
+        <?= LNG_BTN_REMOVE ?>
+      </button>
+      <button id="saveTrackPlayLength">
+        <?= LNG_BTN_SAVE ?>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="set-track-fade-out">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_SET_TRACK_FADE_OUT ?></div>
+    <p><?= LNG_INSTR_SET_TRACK_FADE_OUT ?></p>
+    <table class="track-fade-out-area centered">
+      <tbody>
+        <tr class="range">
+          <td class="label">
+            <span></span>
+          </td>
+          <td class="track-fade-out-controller">
+            <div></div>
+          </td>
+        </tr>
+      <tbody>
+    </table>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="removeTrackFadeOut">
+        <?= LNG_BTN_REMOVE ?>
+      </button>
+      <button id="saveTrackFadeOut">
+        <?= LNG_BTN_SAVE ?>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="playlists-wrapper">
 
 <div class="playlist">
@@ -673,6 +748,8 @@ $playlist_name = $playlist_info->name;
 <script src="/js/randomize.js.php"></script>
 <script src="/js/playback.js.php"></script>
 <script src="/js/export.js.php"></script>
+<script src="/js/set-track-play-length.js.php"></script>
+<script src="/js/set-track-fade-out.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -706,8 +783,10 @@ $(document).ready(
     setupBpmOverview();
     setupDuplicateCheck();
     setupRandomize();
-    setupPlayback();
+    setupPlayback('<?= $playlist_id ?>');
     setupExport('<?= $playlist_name ?>');
+    setupSetTrackPlayLength('<?= $playlist_id ?>');
+    setupSetTrackFadeOut('<?= $playlist_id ?>');
   }
 );
 </script>

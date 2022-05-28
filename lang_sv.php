@@ -187,6 +187,12 @@ DEFINE( 'LNG_MENU_RANDOMIZE'
 DEFINE( 'LNG_MENU_EXPORT_PLAYLIST'
       , 'Exporta spellista'
       );
+DEFINE( 'LNG_MENU_SET_TRACK_PLAY_LENGTH'
+      , 'Ställ in låtspelningslängd'
+      );
+DEFINE( 'LNG_MENU_SET_TRACK_FADE_OUT'
+      , 'Ställ in låtuttoning'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );
@@ -345,6 +351,14 @@ define( 'LNG_INSTR_SORT_TRACKS'
       );
 define( 'LNG_INSTR_RANDOMIZE_ORDER'
       , 'Ordna låtar i en slumpad ordning.'
+      );
+define( 'LNG_INSTR_SET_TRACK_PLAY_LENGTH'
+      , 'Ställ in maximala längd som låtar får spelas innan hopp till nästa ' .
+        'låt i listan.'
+      );
+define( 'LNG_INSTR_SET_TRACK_FADE_OUT'
+      , 'Ställ in spelning att tona ut när låten närmar sig slutet. Ange ' .
+        'längden på uttoningen nedanför.'
       );
 define( 'LNG_APP_INSERT_DING'
       , 'Lägg in ding i spellista'

@@ -186,6 +186,12 @@ DEFINE( 'LNG_MENU_RANDOMIZE'
 DEFINE( 'LNG_MENU_EXPORT_PLAYLIST'
       , 'Export playlist'
       );
+DEFINE( 'LNG_MENU_SET_TRACK_PLAY_LENGTH'
+      , 'Set track play length'
+      );
+DEFINE( 'LNG_MENU_SET_TRACK_FADE_OUT'
+      , 'Set track fade out'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
@@ -345,6 +351,14 @@ define( 'LNG_INSTR_SORT_TRACKS'
       );
 define( 'LNG_INSTR_RANDOMIZE_ORDER'
       , 'Arrange tracks in a random order.'
+      );
+define( 'LNG_INSTR_SET_TRACK_PLAY_LENGTH'
+      , 'Set maximum length that tracks are allowed to play before skipping to ' .
+        'next track in the list.'
+      );
+define( 'LNG_INSTR_SET_TRACK_FADE_OUT'
+      , 'Set playback to fade out when track is about to finish. Specify length ' .
+        'of fading below.'
       );
 define( 'LNG_APP_INSERT_DING'
       , 'Insert ding into playlist'

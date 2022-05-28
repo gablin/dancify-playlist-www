@@ -686,6 +686,13 @@ function checkDbTables() {
               ' , user TINYTEXT NOT NULL' .
               ' , snapshot TEXT NOT NULL' .
               ' )'
+            , 'playback' =>
+              'CREATE TABLE playback' .
+              ' ( playlist CHAR(22) NOT NULL' .
+              ' , user TINYTEXT NOT NULL' .
+              ' , track_play_length_s MEDIUMINT UNSIGNED NOT NULL' .
+              ' , fade_out_s TINYINT UNSIGNED NOT NULL' .
+              ' )'
             ];
 
   // Check if there exists a database; if not, create it

@@ -15,13 +15,23 @@ var PLAYBACK_LAST_PLAYED_INDEX = null;
 var PLAYBACK_LAST_PLAYED_TABLE = null;
 var PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 0;
 
+var PLAYBACK_MAX_PLAY_LENGTH_MS = 0;
+var PLAYBACK_CHECK_PLAY_POS_TIMER = null;
+
+var PLAYBACK_FADE_OUT_TIMER = null;
+var PLAYBACK_FADE_OUT_LENGTH_MS = 0;
+
 const PLAYBACK_SEEK_UPDATE_FREQ_MS = 1000;
 const PLAYBACK_PLAY_TRACK_ATTEMPTS = 3;
+const PLAYBACK_DEFAULT_VOLUME = 0.5;
+const PLAYBACK_CHECK_PLAY_POS_UPDATE_FREQ_MS = 500;
+const PLAYBACK_FADE_OUT_STEP_MS = 100;
 
-function setupPlayback() {
+function setupPlayback(playlist_id) {
   mkPlaybackHtml();
   $.getScript('https://sdk.scdn.co/spotify-player.js', function() {});
   window.onSpotifyWebPlaybackSDKReady = initPlayer;
+  loadPlaybackSettings(playlist_id);
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == ' ') {
@@ -29,6 +39,22 @@ function setupPlayback() {
                     }
                   }
                 );
+}
+
+function getMaxPlayLength() {
+  return PLAYBACK_MAX_PLAY_LENGTH_MS;
+}
+
+function setMaxPlayLength(len_ms) {
+  PLAYBACK_MAX_PLAY_LENGTH_MS = len_ms;
+}
+
+function getFadeOutLength() {
+  return PLAYBACK_FADE_OUT_LENGTH_MS;
+}
+
+function setFadeOutLength(len_ms) {
+  PLAYBACK_FADE_OUT_LENGTH_MS = len_ms;
 }
 
 function showPlaybackError(msg) {
@@ -130,21 +156,28 @@ function renderVolume(pos) {
   area.find('.volume .knob').css('left', percent + '%');
 }
 
+function adjustDuration(duration) {
+  if (PLAYBACK_MAX_PLAY_LENGTH_MS > 0 && duration > PLAYBACK_MAX_PLAY_LENGTH_MS) {
+    return PLAYBACK_MAX_PLAY_LENGTH_MS;
+  }
+  return duration;
+}
+
 function initPlayer() {
   const token = '<?= getAccessToken() ?>';
-  let volume = Cookies.get('playback-volume');
-  if (volume === undefined) {
-    volume = 0.5;
-    saveVolume(volume);
-  }
   const player = new Spotify.Player(
     { name: 'Dancify'
     , getOAuthToken: cb => { cb(token); }
-    , volume: volume
+    , volume: getSavedVolume()
     }
   );
 
-  function fail(msg) { showPlaybackError(msg); }
+  function fail(msg) {
+    stopSeek();
+    stopPlayPosCheck();
+    clearFadeOut();
+    showPlaybackError(msg);
+  }
   player.addListener(
     'ready'
   , function({ device_id }) {
@@ -171,15 +204,24 @@ function initPlayer() {
         return;
       }
 
+      if (PLAYBACK_IGNORE_NEXT_STATE_CHANGES > 0) {
+        PLAYBACK_IGNORE_NEXT_STATE_CHANGES--;
+        return;
+      }
+
+      clearFadeOut();
       if (state.paused) {
         renderPaused();
         stopSeek();
+        stopPlayPosCheck();
       }
       else {
         renderPlaying();
         startSeek();
+        setupFadeOut(state.position, adjustDuration(state.duration));
+        startPlayPosCheck();
       }
-      renderSeek(state.position, state.duration);
+      renderSeek(state.position, adjustDuration(state.duration));
 
       if (state.track_window.current_track === null) {
         PLAYBACK_HAS_TRACK = false;
@@ -190,23 +232,52 @@ function initPlayer() {
       }
       PLAYBACK_HAS_TRACK = true;
 
-      // Update playback info
       let name = state.track_window.current_track.name;
       let artists = state.track_window.current_track.artists.map((a) => a.name);
       renderTrackInfo(name, artists);
 
-      let area = getPlaybackArea();
-      area.find('.playing .name').text(name);
-      area.find('.playing .artists').text(artists.join(', '));
-      PLAYBACK_HAS_TRACK = true;
-
-      if (PLAYBACK_IGNORE_NEXT_STATE_CHANGES > 0) {
-        PLAYBACK_IGNORE_NEXT_STATE_CHANGES--;
-        return;
-      }
-
-      // If reached end of current track, play next in playlist
       if (state.paused && state.position == 0) {
+        checkPlayPos();
+      }
+    }
+  );
+  player.addListener(
+    'playback_error'
+  , function(e) {
+      fail('<?= LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY ?>');
+    }
+  );
+  player.addListener('initialization_error', (e) => { fail(e.message); });
+  player.addListener('authentication_error', (e) => { fail(e.message); });
+  player.addListener('account_error', (e) => {});
+
+  player.connect();
+}
+
+function startPlayPosCheck() {
+  if (!PLAYBACK_CHECK_PLAY_POS_TIMER) {
+    PLAYBACK_CHECK_PLAY_POS_TIMER =
+      setInterval( checkPlayPos
+                 , PLAYBACK_CHECK_PLAY_POS_UPDATE_FREQ_MS
+                 );
+  }
+}
+
+function stopPlayPosCheck() {
+  clearInterval(PLAYBACK_CHECK_PLAY_POS_TIMER);
+  PLAYBACK_CHECK_PLAY_POS_TIMER = null;
+}
+
+function checkPlayPos() {
+  PLAYBACK_PLAYER.getCurrentState().then(
+    state => {
+      if (!PLAYBACK_HAS_TRACK) return;
+      // Check if we are at the end of the track
+      if ( ( state.paused && state.position == 0 ) ||
+           state.position > adjustDuration(state.duration)
+         ) {
+        stopSeek();
+
         const playlist_table = getPlaylistTable();
         const scratchpad_table = getScratchpadTable();
         const track_data =
@@ -253,17 +324,6 @@ function initPlayer() {
       }
     }
   );
-  player.addListener(
-    'playback_error'
-  , function(e) {
-      fail('<?= LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY ?>');
-    }
-  );
-  player.addListener('initialization_error', (e) => { fail(e.message); });
-  player.addListener('authentication_error', (e) => { fail(e.message); });
-  player.addListener('account_error', (e) => {});
-
-  player.connect();
 }
 
 function togglePlay() {
@@ -336,6 +396,7 @@ function playTrack( track_id
   if (!PLAYBACK_PLAYER) {
     fail_f('<?= LNG_ERR_PLAYBACK_NOT_POSSIBLE ?>');
   }
+  stopPlayPosCheck();
   callApi( '/api/player/'
          , { 'action': 'play'
            , 'device': PLAYBACK_DEVICE_ID
@@ -388,7 +449,7 @@ function updateSeek() {
       PLAYBACK_PLAYER.getCurrentState().then(
         state => {
           if (!state) return;
-          renderSeek(state.position, state.duration);
+          renderSeek(state.position, adjustDuration(state.duration));
         }
       );
     }
@@ -527,4 +588,69 @@ function setupVolumeController() {
 
 function saveVolume(volume) {
   Cookies.set('playback-volume', volume, { expires: 365*5 });
+}
+
+function getSavedVolume() {
+  let volume = Cookies.get('playback-volume');
+  if (volume === undefined) {
+    return PLAYBACK_DEFAULT_VOLUME;
+  }
+  return volume;
+}
+
+function setupFadeOut(position, duration) {
+  if (PLAYBACK_FADE_OUT_LENGTH_MS <= 0) return;
+
+  function fadeOut() {
+    PLAYBACK_PLAYER.getCurrentState().then(
+      state => {
+        let position = state.position;
+        let duration = adjustDuration(state.duration);
+        if (position >= duration) return;
+
+        const orig_volume = getSavedVolume();
+        let vol_ratio = (duration - position) / PLAYBACK_FADE_OUT_LENGTH_MS;
+        if (vol_ratio < 0) vol_ratio = 0;
+        if (vol_ratio > 1) vol_ratio = 1;
+        //let new_volume = orig_volume * vol_ratio;
+        let new_volume = orig_volume * Math.log10(vol_ratio*10 + 1);
+        console.log(new_volume);
+        PLAYBACK_PLAYER.setVolume(new_volume).then();
+        PLAYBACK_FADE_OUT_TIMER = setTimeout(fadeOut, PLAYBACK_FADE_OUT_STEP_MS);
+      }
+    );
+  }
+
+  clearFadeOut();
+  let trigger_time =  duration - position - PLAYBACK_FADE_OUT_LENGTH_MS;
+  let expected_pos = duration - PLAYBACK_FADE_OUT_LENGTH_MS;
+  if (trigger_time > 0) {
+    PLAYBACK_FADE_OUT_TIMER = setTimeout(fadeOut, trigger_time);
+  }
+  else {
+    fadeOut(position);
+  }
+}
+
+function clearFadeOut() {
+  if (PLAYBACK_FADE_OUT_TIMER) {
+    clearInterval(PLAYBACK_FADE_OUT_TIMER);
+  }
+  PLAYBACK_FADE_OUT_TIMER = null;
+  PLAYBACK_PLAYER.setVolume(getSavedVolume()).then();
+}
+
+function loadPlaybackSettings(playlist_id) {
+  callApi( '/api/get-playback/'
+         , { playlistId: playlist_id }
+         , function(d) {
+             if (d.status == 'OK') {
+               PLAYBACK_MAX_PLAY_LENGTH_MS = d.trackPlayLength*1000;
+               FADE_OUT_LENGTH_MS = d.fadeOutLength*1000;
+             }
+           }
+         , function(msg) {
+             // TODO: handle error
+           }
+         );
 }

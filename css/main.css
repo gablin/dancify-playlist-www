@@ -950,6 +950,20 @@ button.loading:hover {
   margin-left: 2em;
 }
 
+.track-play-length-area .label {
+  width: 4em;
+}
+.track-play-length-area .track-play-length-controller {
+  width: 24em;
+}
+
+.track-fade-out-area .label {
+  width: 4em;
+}
+.track-fade-out-area .track-fade-out-controller {
+  width: 24em;
+}
+
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active,
