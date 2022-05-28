@@ -1152,13 +1152,21 @@ function replaceTracks(table, tracks) {
 
 function renderTableIndices(table) {
   let trs = table.find('tr.track, tr.empty-track');
+  for (let i = 0; i < trs.length; i++) {
+    let tr = $(trs[i]);
+    tr.find('td.index').text(i+1);
+  }
+}
+
+function renderTablePlayingTrack(table) {
+  let trs = table.find('tr.track, tr.empty-track');
+
+  // Find best index to mark as playing (and clear all other rows)
   let best_playing_index = -1;
   let best_playing_index_diff = Number.MAX_SAFE_INTEGER;
   for (let i = 0; i < trs.length; i++) {
     let tr = $(trs[i]);
-    tr.find('td.index').text(i+1);
-
-    // Find best index to mark as playing
+    tr.removeClass('playing');
     let tid_input = tr.find('input[name=track_id]');
     if (tid_input.length > 0) {
       let tid = tid_input.val().trim();
@@ -1174,7 +1182,9 @@ function renderTableIndices(table) {
   }
 
   if (best_playing_index >= 0) {
-    $(trs[best_playing_index]).find('td.index').html(
+    let tr = $(trs[best_playing_index]);
+    tr.addClass('playing');
+    tr.find('td.index').html(
       '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"' +
       '    viewBox="-2 -6 24 30">' +
       '  <path fill="currentColor" d="M2 24v-24l20 12-20 12z"/>' +
@@ -1187,6 +1197,7 @@ function renderTable(table) {
   const delimiter = table.is(getPlaylistTable()) ? PLAYLIST_DANCE_DELIMITER : 0;
 
   renderTableIndices(table);
+  renderTablePlayingTrack(table);
 
   // Insert delimiters
   table.find('tr.delimiter').remove();
@@ -2590,6 +2601,10 @@ function markPlayingTrackInPlaylist(track_id, index, table) {
   MARKED_AS_PLAYING_TRACK = track_id;
   MARKED_AS_PLAYING_INDEX = index;
   MARKED_AS_PLAYING_TABLE = table;
-  renderTableIndices(getPlaylistTable());
-  renderTableIndices(getScratchpadTable());
+  [ getPlaylistTable(), getScratchpadTable() ].forEach(
+    table => {
+      renderTableIndices(table);
+      renderTablePlayingTrack(table);
+    }
+  );
 }

@@ -111,10 +111,14 @@ function renderPaused() {
 function renderSeek(position, duration) {
   let area = getPlaybackArea().find('.seek');
   area.data('duration', duration);
-  area.find('.length-pos').text(formatTrackLength(position));
-  area.find('.length-end').text(formatTrackLength(duration));
+  area.find('.length-pos').text(
+    position !== null ? formatTrackLength(position) : ''
+  );
+  area.find('.length-end').text(
+    duration !== null ? formatTrackLength(duration) : ''
+  );
 
-  let percent = (position / duration) * 100;
+  let percent = position !== null ? (position / duration) * 100 : 0;
   area.find('.active-bar').css('width', percent + '%');
   area.find('.knob').css('left', percent + '%');
 }
@@ -167,12 +171,6 @@ function initPlayer() {
         return;
       }
 
-      // Update playback info
-      let name = state.track_window.current_track.name;
-      let artists = state.track_window.current_track.artists.map((a) => a.name);
-      let area = getPlaybackArea();
-      area.find('.playing .name').text(name);
-      area.find('.playing .artists').text(artists.join(', '));
       if (state.paused) {
         renderPaused();
         stopSeek();
@@ -182,6 +180,24 @@ function initPlayer() {
         startSeek();
       }
       renderSeek(state.position, state.duration);
+
+      if (state.track_window.current_track === null) {
+        PLAYBACK_HAS_TRACK = false;
+        renderTrackInfo(null, null);
+        renderSeek(null, null);
+        markPlayingTrackInPlaylist(null, null, null);
+        return;
+      }
+      PLAYBACK_HAS_TRACK = true;
+
+      // Update playback info
+      let name = state.track_window.current_track.name;
+      let artists = state.track_window.current_track.artists.map((a) => a.name);
+      renderTrackInfo(name, artists);
+
+      let area = getPlaybackArea();
+      area.find('.playing .name').text(name);
+      area.find('.playing .artists').text(artists.join(', '));
       PLAYBACK_HAS_TRACK = true;
 
       if (PLAYBACK_IGNORE_NEXT_STATE_CHANGES > 0) {
@@ -377,6 +393,12 @@ function updateSeek() {
       );
     }
   );
+}
+
+function renderTrackInfo(name, artists) {
+  let area = getPlaybackArea();
+  area.find('.playing .name').text(name !== null ? name : '');
+  area.find('.playing .artists').text(artists !== null ? artists.join(', ') : '');
 }
 
 function setupSeekController() {

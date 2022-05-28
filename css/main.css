@@ -354,6 +354,13 @@ table th {
 .playlist table td.title a.playing {
   color: #0CA761;
 }
+.playlist table tr.playing {
+  background-color: rgba(229, 198, 135, 0.4)
+}
+.playlist table tr.playing td.title {
+  font-weight: bold;
+}
+
 .playlist table tr.selected,
 .playlist.drag-mode table tr.track.selected:hover,
 .playlist.drag-mode table tr.empty-track.selected:hover {
