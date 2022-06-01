@@ -50,15 +50,22 @@ function getTableOfTr(tr) {
 function loadPlaylist(playlist_id) {
   let body = $(document.body);
   body.addClass('loading');
+  let menu = $('.menu');
+  menu.addClass('loading');
   setStatus('<?= LNG_DESC_LOADING ?>...');
+  function activateMenu() {
+    menu.removeClass('loading');
+  }
   function success() {
     body.removeClass('loading');
     clearStatus();
+    activateMenu();
     saveUndoState();
   }
   function fail(msg) {
     setStatus('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>', true);
     body.removeClass('loading');
+    activateMenu();
   }
   function snapshot_success() {
     success();

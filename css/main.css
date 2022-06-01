@@ -176,6 +176,13 @@ a:hover {
 .menu .dropdown:hover .dropdown-content {
   display: block;
 }
+.menu.loading:hover a {
+  background-color: #121619;
+  cursor: not-allowed !important;
+}
+.menu.loading .dropdown:hover .dropdown-content {
+  display: none;
+}
 .menu .dropdown-content .sep {
   padding: 0.25em 0;
 }
