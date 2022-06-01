@@ -784,7 +784,7 @@ $(document).ready(
     setupDuplicateCheck();
     setupRandomize();
     setupPlayback('<?= $playlist_id ?>');
-    setupExport('<?= $playlist_name ?>');
+    setupExport('<?= str_replace('\'', '\\\'', $playlist_name) ?>');
     setupSetTrackPlayLength('<?= $playlist_id ?>');
     setupSetTrackFadeOut('<?= $playlist_id ?>');
   }
