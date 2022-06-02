@@ -383,6 +383,9 @@ $playlist_name = $playlist_info->name;
             <button id="addSearchToLocalScratchpadBtn">
               <?= LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD ?>
             </button>
+            <button id="addSearchToGlobalScratchpadBtn">
+              <?= LNG_BTN_ADD_SEARCH_TO_GLOBAL_SCRATCHPAD ?>
+            </button>
           </div>
         </div>
       </div>

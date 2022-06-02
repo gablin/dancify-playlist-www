@@ -118,6 +118,9 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD'
       , 'Lägg till i lokal scratchpad'
       );
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_GLOBAL_SCRATCHPAD'
+      , 'Lägg till i global scratchpad'
+      );
 DEFINE( 'LNG_BTN_CHECK_LOCALLY'
       , 'Kolla lokalt'
       );

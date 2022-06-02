@@ -117,6 +117,7 @@ function searchForTracks( genre
   search_results_area.show();
   $('#addSearchToPlaylistBtn').prop('disabled', true);
   $('#addSearchToLocalScratchpadBtn').prop('disabled', true);
+  $('#addSearchToGlobalScratchpadBtn').prop('disabled', true);
 
   function setTableHeight() {
     let search_area_bottom =
@@ -216,14 +217,17 @@ function updateSearchTrackSelection(tr, multi_select_mode, span_mode) {
   function renderButtons() {
     let table = getSearchForTracksResultsArea().find('table');
     let playlist_btn = $('#addSearchToPlaylistBtn');
-    let scratchpad_btn = $('#addSearchToLocalScratchpadBtn');
+    let local_scratchpad_btn = $('#addSearchToLocalScratchpadBtn');
+    let global_scratchpad_btn = $('#addSearchToGlobalScratchpadBtn');
     if (table.find('tbody tr.selected').length == 0) {
       playlist_btn.prop('disabled', true);
-      scratchpad_btn.prop('disabled', true);
+      local_scratchpad_btn.prop('disabled', true);
+      global_scratchpad_btn.prop('disabled', true);
       return;
     }
     playlist_btn.prop('disabled', false);
-    scratchpad_btn.prop('disabled', false);
+    local_scratchpad_btn.prop('disabled', false);
+    global_scratchpad_btn.prop('disabled', false);
   }
 
   if (multi_select_mode) {
@@ -301,6 +305,13 @@ function setupSearchForTracksAddSearchResultsButtons() {
   $('#addSearchToLocalScratchpadBtn').click(
     function() {
       let table = getLocalScratchpadTable();
+      addToTable(table);
+      showScratchpad(table);
+    }
+  );
+  $('#addSearchToGlobalScratchpadBtn').click(
+    function() {
+      let table = getGlobalScratchpadTable();
       addToTable(table);
       showScratchpad(table);
     }

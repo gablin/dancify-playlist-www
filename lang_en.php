@@ -117,6 +117,9 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD'
       , 'Add to local scratchpad'
       );
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_GLOBAL_SCRATCHPAD'
+      , 'Add to global scratchpad'
+      );
 DEFINE( 'LNG_BTN_CHECK_LOCALLY'
       , 'Check locally'
       );
