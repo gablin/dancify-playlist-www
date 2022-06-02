@@ -117,8 +117,11 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD'
       , 'Add to local scratchpad'
       );
-DEFINE( 'LNG_BTN_CHECK'
-      , 'Check'
+DEFINE( 'LNG_BTN_CHECK_LOCALLY'
+      , 'Check locally'
+      );
+DEFINE( 'LNG_BTN_CHECK_GLOBALLY'
+      , 'Check globally'
       );
 DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
       , 'Randomize playlist'
@@ -552,7 +555,9 @@ define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
       , 'Changes saved to Spotify'
       );
 define( 'LNG_DESC_DUPLICATE_CHECK'
-      , 'Check for and list tracks that are duplicates.'
+      , 'Check for and list tracks that are duplicates. Local check covers ' .
+        'the playlist in combination with the local scratchpad. Global check ' .
+        'covers only the global scratchpad.'
       );
 define( 'LNG_DESC_BPM_MIN'
       , 'Min'

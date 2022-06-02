@@ -118,8 +118,11 @@ DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD'
       , 'Lägg till i lokal scratchpad'
       );
-DEFINE( 'LNG_BTN_CHECK'
-      , 'Kolla'
+DEFINE( 'LNG_BTN_CHECK_LOCALLY'
+      , 'Kolla lokalt'
+      );
+DEFINE( 'LNG_BTN_CHECK_GLOBALLY'
+      , 'Kolla globalt'
       );
 DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
       , 'Slumpa spellista'
@@ -553,7 +556,9 @@ define( 'LNG_DESC_CHANGES_SAVED_TO_SPOTIFY'
       , 'Ändringarna har sparats till Spotify'
       );
 define( 'LNG_DESC_DUPLICATE_CHECK'
-      , 'Kolla efter och lista låtar som är dubletter.'
+      , 'Kolla efter och lista låtar som är dubletter. Lokal koll går igenom ' .
+        'spellistan i kombination med den lokala scratchpaden. Global koll går ' .
+        'endast igenom den globala scratchpaden.'
       );
 define( 'LNG_DESC_BPM_MIN'
       , 'Min'

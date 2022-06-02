@@ -12,7 +12,16 @@ function getDuplicateCheckResultsArea() {
 }
 
 function setupDuplicateCheck() {
-  $('#checkDuplicatesBtn').click(doDuplicateCheck);
+  $('#checkDuplicatesLocallyBtn').click(
+    function() {
+      doDuplicateCheck([getPlaylistTable(), getLocalScratchpadTable()]);
+    }
+  );
+  $('#checkDuplicatesGloballyBtn').click(
+    function() {
+      doDuplicateCheck([getGlobalScratchpadTable()]);
+    }
+  );
 }
 
 function onShowDuplicateCheck() {
@@ -22,21 +31,23 @@ function onShowDuplicateCheck() {
   action_area.hide();
 }
 
-function doDuplicateCheck() {
+function doDuplicateCheck(tables) {
   let body = $(document.body);
   body.addClass('loading');
   let action_area = getDuplicateCheckResultsArea();
   action_area.find('table tbody tr').remove();
   action_area.show();
 
-  listTrackDuplicates(getTrackDuplicates());
+  listTrackDuplicates(getTrackDuplicates(tables));
   body.removeClass('loading');
 }
 
-function getTrackDuplicates() {
+function getTrackDuplicates(tables) {
   let playlist_tracks = getTrackData(getPlaylistTable());
-  let local_scratchpad_tracks = getTrackData(getLocalScratchpadTable());
-  let tracks = playlist_tracks.concat(local_scratchpad_tracks);
+  let tracks = [];
+  tables.forEach(
+    table => tracks = tracks.concat(getTrackData(table))
+  );
   let duplicates = [];
   function getIdx(i) {
     if (i < playlist_tracks.length) {
@@ -65,14 +76,15 @@ function getTrackDuplicates() {
 
 function listTrackDuplicates(idx_track_pairs) {
   let action_area = getDuplicateCheckResultsArea();
+  let none_found_area = action_area.find('.none-found');
+  let duplicates_area = action_area.find('.duplicates-found');
   if (idx_track_pairs.length == 0) {
-    let none_found_area = action_area.find('.none-found');
     none_found_area.show();
     none_found_area.text('<?= LNG_DESC_NO_DUPLICATES_FOUND ?>');
+    duplicates_area.hide();
     return;
   }
-
-  let duplicates_area = action_area.find('.duplicates-found');
+  none_found_area.hide();
   duplicates_area.show();
   let table = duplicates_area.find('table tbody');
   for (let i = 0; i < idx_track_pairs.length; i++) {

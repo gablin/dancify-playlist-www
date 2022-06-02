@@ -475,7 +475,12 @@ $playlist_name = $playlist_info->name;
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
       </button>
-      <button id="checkDuplicatesBtn"><?= LNG_BTN_CHECK ?></button>
+      <button id="checkDuplicatesGloballyBtn">
+        <?= LNG_BTN_CHECK_GLOBALLY ?>
+      </button>
+      <button id="checkDuplicatesLocallyBtn">
+        <?= LNG_BTN_CHECK_LOCALLY ?>
+      </button>
     </div>
 
     <div class="search-results">
