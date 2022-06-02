@@ -1,3 +1,4 @@
+- options to show/hide track columns
 - show playlist list as in Spotify, for easier changing
 - add drag-n-drop to playlists
 - add play interval per track
