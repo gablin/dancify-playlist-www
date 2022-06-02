@@ -693,6 +693,11 @@ function checkDbTables() {
               ' , track_play_length_s MEDIUMINT UNSIGNED NOT NULL' .
               ' , fade_out_s TINYINT UNSIGNED NOT NULL' .
               ' )'
+            , 'global_scratchpads' =>
+              'CREATE TABLE global_scratchpads' .
+              ' ( user TINYTEXT NOT NULL' .
+              ' , scratchpad TEXT NOT NULL' .
+              ' )'
             ];
 
   // Check if there exists a database; if not, create it

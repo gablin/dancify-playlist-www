@@ -10,10 +10,11 @@ function setupRandomize() {
       clearActionInputs();
     }
   );
-  $('#randomizeScratchpadBtn').click(
+  $('#randomizeLocalScratchpadBtn').click(
     function() {
-      randomizeTrackOrder(getScratchpadTable());
-      showScratchpad();
+      let table = getLocalScratchpadTable()
+      randomizeTrackOrder(table);
+      showScratchpad(table);
       clearActionInputs();
     }
   );

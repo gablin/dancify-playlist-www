@@ -28,7 +28,8 @@ const DOUBLECLICK_RANGE_MS = 300;
 function setupPlaylist(playlist_id) {
   PLAYLIST_ID = playlist_id;
   initTable(getPlaylistTable());
-  initTable(getScratchpadTable());
+  initTable(getLocalScratchpadTable());
+  initTable(getGlobalScratchpadTable());
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == 'Escape') {
@@ -41,13 +42,15 @@ function setupPlaylist(playlist_id) {
                 );
   $(window).resize(setPlaylistHeight);
   $(window).resize(renderBpmOverview);
+
+  loadPlaylistAndScratchpads(playlist_id);
 }
 
 function getTableOfTr(tr) {
   return tr.closest('table');
 }
 
-function loadPlaylist(playlist_id) {
+function loadPlaylistAndScratchpads(playlist_id) {
   let body = $(document.body);
   body.addClass('loading');
   let menu = $('.menu');
@@ -63,23 +66,35 @@ function loadPlaylist(playlist_id) {
     saveUndoState();
   }
   function fail(msg) {
-    setStatus('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>', true);
+    setStatus(msg, true);
     body.removeClass('loading');
     activateMenu();
   }
+  loadPlaylist( playlist_id
+              , function() {
+                  loadGlobalScratchpad(success, fail);
+                }
+              , fail
+              );
+}
+
+function loadPlaylist(playlist_id, success_f, fail_f) {
+  function fail(msg) {
+    fail_f('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
+  }
   function snapshot_success() {
-    success();
+    success_f();
     checkForChangesInSpotifyPlaylist(playlist_id);
   }
   function noSnapshot() {
-    loadPlaylistFromSpotify(playlist_id, success, fail);
+    loadPlaylistFromSpotify(playlist_id, success_f, fail);
   }
   loadPlaylistFromSnapshot(playlist_id, snapshot_success, noSnapshot, fail);
 }
 
 function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
   function updatePlaylistHash() {
-    let track_ids = getPlaylistTrackData().map(t => t.trackId);
+    let track_ids = getTrackData(getPlaylistTable()).map(t => t.trackId);
     LAST_SPOTIFY_PLAYLIST_HASH = computePlaylistHash(track_ids);
   }
   function load(offset) {
@@ -114,7 +129,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                             load(next_offset);
                           }
                           else {
-                            renderPlaylist();
+                            renderTable(getPlaylistTable());
                             updatePlaylistHash();
                             success_f();
                           }
@@ -219,7 +234,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     let btn2 = a.find('#inconPlaylistBtn2');
     let cancel_btn = btn1.closest('div').find('button.cancel');
     btn1.text('<?= LNG_BTN_APPEND_TO_PLAYLIST ?>');
-    btn2.text('<?= LNG_BTN_APPEND_TO_SCRATCHPAD ?>');
+    btn2.text('<?= LNG_BTN_APPEND_TO_LOCAL_SCRATCHPAD ?>');
     btn1.click(
       function() {
         loadTracks(0, getPlaylistTable());
@@ -227,8 +242,9 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     );
     btn2.click(
       function() {
-        loadTracks(0, getScratchpadTable());
-        showScratchpad();
+        let table = getLocalScratchpadTable();
+        loadTracks(0, table);
+        showScratchpad(table);
       }
     );
     cancel_btn.click(finalize);
@@ -279,7 +295,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
 
       // Pop from playlist
       let has_removed = false;
-      let playlist_tracks = getPlaylistTrackData();
+      let playlist_tracks = getTrackData(getPlaylistTable());
       for (let i = 0; i < tracks_to_remove.length; i++) {
         let res = popTrackWithMatchingId(playlist_tracks, tracks_to_remove[i]);
         playlist_tracks = res[0];
@@ -293,9 +309,10 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
         replaceTracks(getPlaylistTable(), playlist_tracks);
       }
 
-      // Pop from scratchpad
+      // Pop from local scratchpad
+      let s_table = getLocalScratchpadTable();
       has_removed = false;
-      let scratchpad_tracks = getScratchpadTrackData();
+      let scratchpad_tracks = getTrackData(s_table);
       for (let i = 0; i < tracks_to_remove.length; i++) {
         let res = popTrackWithMatchingId( scratchpad_tracks
                                         , tracks_to_remove[i]
@@ -308,7 +325,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
         }
       }
       if (has_removed) {
-        replaceTracks(getScratchpadTable(), scratchpad_tracks);
+        replaceTracks(s_table, scratchpad_tracks);
       }
 
       return removed_tracks;
@@ -318,25 +335,26 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     let btn1 = a.find('#inconPlaylistBtn1');
     let btn2 = a.find('#inconPlaylistBtn2');
     btn1.text('<?= LNG_BTN_REMOVE ?>');
-    btn2.text('<?= LNG_BTN_MOVE_TO_SCRATCHPAD ?>');
+    btn2.text('<?= LNG_BTN_MOVE_TO_LOCAL_SCRATCHPAD ?>');
     let cancel_btn = btn1.closest('div').find('button.cancel');
     btn1.click(
       function() {
         popTracks(removed_track_ids);
-        renderTable(getScratchpadTable());
+        renderTable(getLocalScratchpadTable());
         indicateStateUpdate();
         finalize();
       }
     );
     btn2.click(
       function() {
+        let table = getLocalScratchpadTable();
         let removed_tracks = popTracks(removed_track_ids);
-        let scratchpad_data = getScratchpadTrackData();
+        let scratchpad_data = getTrackData(table);
         let new_scratchpad_data = scratchpad_data.concat(removed_tracks);
-        replaceTracks(getScratchpadTable(), new_scratchpad_data);
-        renderTable(getScratchpadTable());
+        replaceTracks(table, new_scratchpad_data);
+        renderTable(table);
         indicateStateUpdate();
-        showScratchpad();
+        showScratchpad(table);
         finalize();
       }
     );
@@ -370,8 +388,9 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                    return;
                  }
                  LAST_SPOTIFY_PLAYLIST_HASH = playlist_hash;
+                 let s_table = getLocalScratchpadTable();
                  let snapshot_tracks =
-                   getPlaylistTrackData().concat(getScratchpadTrackData());
+                   getTrackData(getPlaylistTable()).concat(getTrackData(s_table));
                  checkForAdditions( snapshot_tracks
                                   , spotify_track_ids
                                   , function () {
@@ -412,7 +431,8 @@ function playPreview(jlink, preview_url, playing_text, stop_text) {
   PREVIEW_AUDIO.attr('src', ''); // Stop playing
   let clicked_playing_preview = jlink.hasClass('playing');
   let preview_links = $.merge( getPlaylistTable().find('tr.track .title a')
-                             , getScratchpadTable().find('tr.track .title a')
+                             , getLocalScratchpadTable().find('tr.track .title a')
+                             , getGlobalScratchpadTable().find('tr.track .title a')
                              );
   preview_links.each(
     function() {
@@ -503,7 +523,8 @@ function addTrackBpmHandling(tr) {
         );
       }
       update(getPlaylistTable(), tid);
-      update(getScratchpadTable(), tid);
+      update(getLocalScratchpadTable(), tid);
+      update(getGlobalScratchpadTable(), tid);
 
       let old_value = parseInt(input.data('old-value'));
       // .data() must be read here or else it will disappear upon undo/redo
@@ -651,7 +672,8 @@ function addTrackGenreHandling(tr) {
       );
     }
     update(getPlaylistTable(), tid);
-    update(getScratchpadTable(), tid);
+    update(getLocalScratchpadTable(), tid);
+    update(getGlobalScratchpadTable(), tid);
 
     setCurrentUndoStateCallback(
       function() {
@@ -745,7 +767,8 @@ function addTrackCommentsHandling(tr) {
         );
       }
       update(getPlaylistTable(), tid);
-      update(getScratchpadTable(), tid);
+      update(getLocalScratchpadTable(), tid);
+      update(getGlobalScratchpadTable(), tid);
 
       let old_value = parseInt(textarea.data('old-value'));
       // .data() must be read here or else it will disappear upon undo/redo
@@ -799,68 +822,58 @@ function getTrTitleText(tr) {
   return '';
 }
 
+function getTrackObjectFromTr(tr) {
+  if (tr.hasClass('track')) {
+    let track_id = tr.find('input[name=track_id]').val().trim();
+    let artists = tr.find('input[name=artists]').val().trim();
+    artists = artists.length > 0 ? artists.split(',') : [];
+    let name = tr.find('input[name=name]').val().trim();
+    let preview_url = tr.find('input[name=preview_url]').val().trim();
+    let bpm = parseInt(tr.find('input[name=bpm]').val().trim());
+    let genre_by_user =
+      parseInt(tr.find('select[name=genre] option:selected').val().trim());
+    let genres_by_others_text =
+      tr.find('input[name=genres_by_others]').val().trim();
+    let genres_by_others =
+      genres_by_others_text.length > 0
+        ? genres_by_others_text.split(',').map(s => parseInt(s))
+        : [];
+    let title = getTrTitleText(tr);
+    let len_ms = parseInt(tr.find('input[name=length_ms]').val().trim());
+    let comments = tr.find('textarea[name=comments]').val().trim();
+    return createPlaylistTrackObject( track_id
+                                    , artists
+                                    , name
+                                    , len_ms
+                                    , bpm
+                                    , genre_by_user
+                                    , genres_by_others
+                                    , comments
+                                    , preview_url
+                                    );
+  }
+  else {
+    let name = tr.find('td.title').text().trim();
+    let length = tr.find('td.length').text().trim();
+    let bpm = tr.find('td.bpm').text().trim();
+    let genre = tr.find('td.genre').text().trim();
+    return createPlaylistPlaceholderObject(name, length, bpm, genre);
+  }
+}
+
 function getTrackData(table) {
   let playlist = [];
   table.find('tr.track, tr.empty-track').each(
     function() {
       let tr = $(this);
-      if (tr.hasClass('track')) {
-        let track_id = tr.find('input[name=track_id]').val().trim();
-        let artists = tr.find('input[name=artists]').val().trim();
-        artists = artists.length > 0 ? artists.split(',') : [];
-        let name = tr.find('input[name=name]').val().trim();
-        let preview_url = tr.find('input[name=preview_url]').val().trim();
-        let bpm = parseInt(tr.find('input[name=bpm]').val().trim());
-        let genre_by_user =
-          parseInt(tr.find('select[name=genre] option:selected').val().trim());
-        let genres_by_others_text =
-          tr.find('input[name=genres_by_others]').val().trim();
-        let genres_by_others =
-          genres_by_others_text.length > 0
-            ? genres_by_others_text.split(',').map(s => parseInt(s))
-            : [];
-        let title = getTrTitleText(tr);
-        let len_ms = parseInt(tr.find('input[name=length_ms]').val().trim());
-        let comments = tr.find('textarea[name=comments]').val().trim();
-        let o = createPlaylistTrackObject( track_id
-                                         , artists
-                                         , name
-                                         , len_ms
-                                         , bpm
-                                         , genre_by_user
-                                         , genres_by_others
-                                         , comments
-                                         , preview_url
-                                         );
-        playlist.push(o);
-      }
-      else{
-        let name = tr.find('td.title').text().trim();
-        let length = tr.find('td.length').text().trim();
-        let bpm = tr.find('td.bpm').text().trim();
-        let genre = tr.find('td.genre').text().trim();
-        playlist.push(
-          createPlaylistPlaceholderObject(name, length, bpm, genre)
-        );
-      }
+      playlist.push(getTrackObjectFromTr(tr));
     }
   );
-
   return playlist;
 }
 
 function removePlaceholdersFromTracks(tracks) {
   return tracks.filter( function(t) { return t.trackId !== undefined } );
-}
-
-function getPlaylistTrackData() {
-  let table = getPlaylistTable();
-  return getTrackData(table);
-}
-
-function getScratchpadTrackData() {
-  let table = getScratchpadTable();
-  return getTrackData(table);
 }
 
 function createPlaylistTrackObject( track_id
@@ -1146,10 +1159,14 @@ function appendTracks(table, tracks) {
   for (let i = 0; i < tracks.length; i++) {
     let new_tr = buildNewTableTrackTrFromTrackObject(tracks[i]);
     table.append(new_tr);
-    renderTrackBpm(new_tr);
-    renderTrackComments(new_tr);
+    renderTrack(new_tr);
   }
   table.append(getTableSummaryTr(table)); // Move summary to last
+}
+
+function renderTrack(tr) {
+  renderTrackBpm(tr);
+  renderTrackComments(tr);
 }
 
 function replaceTracks(table, tracks) {
@@ -1256,12 +1273,10 @@ function renderTable(table) {
   }
 }
 
-function renderPlaylist() {
+function renderAllTables() {
   renderTable(getPlaylistTable());
-}
-
-function renderScratchpad() {
-  renderTable(getScratchpadTable());
+  renderTable(getLocalScratchpadTable());
+  renderTable(getGlobalScratchpadTable());
 }
 
 function formatTrackTitleAsText(artists, name) {
@@ -1459,12 +1474,20 @@ function addTrackTrDragHandling(tr) {
       let body = $(document.body);
       body.addClass('grabbed');
 
-      let selected_trs =
-        mousedown_tr.siblings().add(mousedown_tr).filter(
-          function() { return $(this).hasClass('selected') }
-        );
+      let selected_trs = getSelectedTrackTrs();
+      let src_table = getTableOfTr($(selected_trs[0]));
       let mb = $('.grabbed-info-block');
-      mb.find('span').text(selected_trs.length);
+      function checkAndUpdateMbText(dst_table) {
+        let pre = '';
+        if ( getGlobalScratchpadTable().is(dst_table) &&
+             !src_table.is(dst_table)
+           )
+        {
+          pre = '+';
+        }
+        mb.find('span').text(pre + selected_trs.length);
+      }
+      checkAndUpdateMbText(null);
 
       $('.playlist').toggleClass('drag-mode');
 
@@ -1494,8 +1517,12 @@ function addTrackTrDragHandling(tr) {
         if ($(e.target).closest('.playlist').length == 0) {
           ins_point.hide();
           clearInsertionPoint();
+          checkAndUpdateMbText(null);
           return;
         }
+
+        let dst_table = $(e.target).closest('.playlist').find('table');
+        checkAndUpdateMbText(dst_table);
 
         let tr = $(e.target).closest('tr');
         let insert_before = false;
@@ -1585,7 +1612,7 @@ function addTrackTrDragHandling(tr) {
             if (tr_insert_point.hasClass('insert-after')) {
               ins_track_index++;
             }
-            moveSelectedTracksTo(table, ins_track_index);
+            dragSelectedTracksTo(table, ins_track_index);
           }
           tr_insert_point.removeClass('insert-before insert-after');
         }
@@ -1609,11 +1636,32 @@ function addTrackTrDragHandling(tr) {
   );
 }
 
-function moveSelectedTracksTo(table, track_index) {
+function dragSelectedTracksTo(dst_table, track_index) {
   let selected_trs = getSelectedTrackTrs();
-  let trs = table.find('.track, .empty-track');
+  if (selected_trs.length == 0) {
+    return;
+  }
+
+  // If dragging tracks to global scratchpad, make copies instead of moving
+  let source_table = getTableOfTr($(selected_trs[0]));
+  if ( dst_table.is(getGlobalScratchpadTable()) &&
+       !source_table.is(dst_table)
+     )
+  {
+    selected_trs =
+      selected_trs.map( function() {
+                          let o = getTrackObjectFromTr($(this));
+                          let tr = buildNewTableTrackTrFromTrackObject(o);
+                          renderTrack(tr);
+                          return tr;
+                        }
+                      )
+                  .get();
+  }
+
+  let trs = dst_table.find('.track, .empty-track');
   if (trs.length == 0) {
-    table.prepend(selected_trs);
+    dst_table.prepend(selected_trs);
   }
   else if (track_index < trs.length) {
     let tr_insert_point = $(trs[track_index]);
@@ -1629,8 +1677,7 @@ function moveSelectedTracksTo(table, track_index) {
     tr_insert_point.after(selected_trs);
   }
 
-  renderPlaylist();
-  renderScratchpad();
+  renderAllTables();
   indicateStateUpdate();
 }
 
@@ -1686,16 +1733,8 @@ function deleteSelectedTrackTrs() {
     return;
   }
 
-  let t = getTableOfTr($(trs[0]));
-  let is_playlist = t.is(getPlaylistTable());
   insertPlaceholdersBeforeMovingTrackTrs(trs);
-  trs.remove();
-  if (is_playlist) {
-    renderPlaylist();
-  }
-  else {
-    renderScratchpad();
-  }
+  renderTable(getTableOfTr($(trs[0])));
   indicateStateUpdate();
 }
 
@@ -1824,8 +1863,10 @@ function addTrackTrRightClickMenu(tr) {
   );
 }
 
-function savePlaylistSnapshot() {
-  setStatus('<?= LNG_DESC_SAVING ?>...');
+function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
+  if (show_status) {
+    setStatus('<?= LNG_DESC_SAVING ?>...');
+  }
 
   function getTrackId(t) {
     if (t.trackId === undefined) {
@@ -1833,8 +1874,8 @@ function savePlaylistSnapshot() {
     }
     return t.trackId;
   }
-  playlist_tracks = getPlaylistTrackData().map(getTrackId);
-  scratchpad_tracks = getScratchpadTrackData().map(getTrackId);
+  playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackId);
+  scratchpad_tracks = getTrackData(getLocalScratchpadTable()).map(getTrackId);
   data = { playlistId: PLAYLIST_ID
          , snapshot: { playlistData: playlist_tracks
                      , scratchpadData: scratchpad_tracks
@@ -1845,10 +1886,123 @@ function savePlaylistSnapshot() {
   callApi( '/api/save-playlist-snapshot/'
          , data
          , function(d) {
-             clearStatus();
+             if (show_status) {
+               clearStatus();
+             }
+             success_f();
            }
          , function(msg) {
-             setStatus('<?= LNG_ERR_FAILED_TO_SAVE ?>', true);
+             if (show_status) {
+               setStatus('<?= LNG_ERR_FAILED_TO_SAVE ?>', true);
+             }
+             fail_f();
+           }
+         );
+}
+
+function loadGlobalScratchpad(success_f, fail_f) {
+  function fail(msg) {
+    fail_f('<?= LNG_ERR_FAILED_LOAD_GLOBAL_SCRATCHPAD ?>');
+  }
+  function load(track_ids, track_offset) {
+    function hasTrackAt(o) {
+      return track_ids[o].length > 0;
+    }
+
+    let table = getGlobalScratchpadTable();
+
+    if (track_offset >= track_ids.length) {
+      renderTable(table);
+      success_f();
+      return;
+    }
+    if (hasTrackAt(track_offset)) {
+      // Currently at a track entry; add tracks until next placeholder entry
+      let tracks_to_load = [];
+      let o = track_offset;
+      for ( ; o < track_ids.length &&
+              hasTrackAt(o) &&
+              tracks_to_load.length < LOAD_TRACKS_LIMIT
+            ; o++
+          )
+      {
+        tracks_to_load.push(track_ids[o]);
+      }
+      callApi( '/api/get-track-info/'
+             , { trackIds: tracks_to_load }
+             , function(d) {
+                 let tracks = [];
+                 for (let i = 0; i < d.tracks.length; i++) {
+                   let t = d.tracks[i];
+                   let obj = createPlaylistTrackObject( t.trackId
+                                                      , t.artists
+                                                      , t.name
+                                                      , t.length
+                                                      , t.bpm
+                                                      , t.genre.by_user
+                                                      , t.genre.by_others
+                                                      , t.comments
+                                                      , t.preview_url
+                                                      );
+                   tracks.push(obj);
+                 }
+                 appendTracks(table, tracks);
+                 load(track_ids, o);
+               }
+             , fail
+             );
+    }
+    else {
+      // Currently at a placeholder entry; add such until next track entry
+      let placeholders = [];
+      let o = track_offset;
+      for (; o < track_ids.length && !hasTrackAt(o); o++) {
+        placeholders.push(createPlaylistPlaceholderObject());
+      }
+      appendTracks(table, placeholders);
+      load(track_ids, o);
+    }
+  }
+  callApi( '/api/get-global-scratchpad/'
+         , {}
+         , function(res) {
+             if (res.status == 'OK') {
+               load(res.scratchpad.data, 0);
+             }
+             else if (res.status == 'NOT-FOUND') {
+               success_f();
+             }
+           }
+         , fail
+         );
+}
+
+function saveGlobalScratchpad(success_f, fail_f, show_status = true) {
+  if (show_status) {
+    setStatus('<?= LNG_DESC_SAVING ?>...');
+  }
+
+  function getTrackId(t) {
+    if (t.trackId === undefined) {
+      return '';
+    }
+    return t.trackId;
+  }
+  tracks = getTrackData(getGlobalScratchpadTable()).map(getTrackId);
+  data = { scratchpad: { data: tracks } };
+  callApi( '/api/save-global-scratchpad/'
+         , data
+         , function(d) {
+             if (show_status) {
+               clearStatus();
+             }
+             success_f();
+           }
+         , function(msg) {
+             if (show_status) {
+               setStatus('<?= LNG_ERR_FAILED_TO_SAVE ?>', true);
+             }
+             fail_f();
            }
          );
 }
@@ -1928,9 +2082,10 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                  setDelimiterAsShowing();
                }
                load(getPlaylistTable(), 0, res.snapshot.playlistData, 0);
-               load(getScratchpadTable(), 1, res.snapshot.scratchpadData, 0);
+               let s_table = getLocalScratchpadTable();
+               load(s_table, 1, res.snapshot.scratchpadData, 0);
                if (res.snapshot.scratchpadData.length > 0) {
-                 showScratchpad();
+                 showScratchpad(s_table);
                }
              }
              else if (res.status == 'NOT-FOUND') {
@@ -1943,7 +2098,25 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
 
 function indicateStateUpdate() {
   saveUndoState();
-  savePlaylistSnapshot();
+  savePlaylistSnapshotAndGlobalScratchpad();
+}
+
+function savePlaylistSnapshotAndGlobalScratchpad() {
+  setStatus('<?= LNG_DESC_SAVING ?>...');
+  function success() {
+    clearStatus();
+  }
+  function fail(msg) {
+    setStatus('<?= LNG_ERR_FAILED_TO_SAVE ?>', true);
+  }
+
+  savePlaylistSnapshot(
+    function() {
+      saveGlobalScratchpad(success, fail, false);
+    }
+  , fail
+  , false
+  );
 }
 
 function saveUndoState() {
@@ -1968,14 +2141,9 @@ function saveUndoState() {
     }
   }
 
-  let playlist = getPlaylistTable().clone(true, true);
-  playlist.find('tr.selected').removeClass('selected');
-  playlist.find('tr.delimiter').remove();
-  let scratchpad = getScratchpadTable().clone(true, true);
-  scratchpad.find('tr.selected').removeClass('selected');
-  scratchpad.find('tr.delimiter').remove();
-  let state = { playlistTracks: getPlaylistTrackData()
-              , scratchpadTracks: getScratchpadTrackData()
+  let state = { playlistTracks: getTrackData(getPlaylistTable())
+              , localScratchpadTracks: getTrackData(getLocalScratchpadTable())
+              , globalScratchpadTracks: getTrackData(getGlobalScratchpadTable())
               , callback: function() {}
               };
   UNDO_STACK[offset] = state;
@@ -2021,10 +2189,10 @@ function performRedo() {
 
 function restoreState(state) {
   replaceTracks(getPlaylistTable(), state.playlistTracks);
-  replaceTracks(getScratchpadTable(), state.scratchpadTracks);
-  renderPlaylist();
-  renderScratchpad();
-  savePlaylistSnapshot();
+  replaceTracks(getLocalScratchpadTable(), state.localScratchpadTracks);
+  replaceTracks(getGlobalScratchpadTable(), state.globalScratchpadTracks);
+  renderAllTables();
+  savePlaylistSnapshotAndGlobalScratchpad();
 }
 
 function renderUndoRedoButtons() {
@@ -2194,8 +2362,10 @@ function setPlaylistHeight() {
   let playlist_vh = screen_vh - table_offset - footer_vh - bpm_overview_vh -
                     playback_vh;
   let playlist_px = playlist_vh + 'px';
-  getPlaylistTable().closest('.table-wrapper').css('height', playlist_px);
-  getScratchpadTable().closest('.table-wrapper').css('height', playlist_px);
+  [ getPlaylistTable(), getLocalScratchpadTable(), getGlobalScratchpadTable() ]
+    .forEach(
+      table => table.closest('.table-wrapper').css('height', playlist_px)
+    );
 }
 
 function getTrackBarArea() {
@@ -2226,7 +2396,7 @@ function renderBpmOverview() {
   );
 
   // Draw bars
-  let tracks = getPlaylistTrackData();
+  let tracks = getTrackData(getPlaylistTable());
   let area_vw = area.innerWidth();
   let area_vh = area.innerHeight();
   const border_size = 1;
@@ -2566,7 +2736,7 @@ function addTrackBarDragHandling(bar) {
             if (insert_point.hasClass('insert-after')) {
               ins_track_index++;
             }
-            moveSelectedTracksTo(getPlaylistTable(), ins_track_index);
+            dragSelectedTracksTo(getPlaylistTable(), ins_track_index);
           }
           insert_point.removeClass('insert-before insert-after');
         }
@@ -2608,10 +2778,11 @@ function markPlayingTrackInPlaylist(track_id, index, table) {
   MARKED_AS_PLAYING_TRACK = track_id;
   MARKED_AS_PLAYING_INDEX = index;
   MARKED_AS_PLAYING_TABLE = table;
-  [ getPlaylistTable(), getScratchpadTable() ].forEach(
-    table => {
-      renderTableIndices(table);
-      renderTablePlayingTrack(table);
-    }
-  );
+  [ getPlaylistTable(), getLocalScratchpadTable(), getGlobalScratchpadTable() ]
+    .forEach(
+      table => {
+        renderTableIndices(table);
+        renderTablePlayingTrack(table);
+      }
+    );
 }

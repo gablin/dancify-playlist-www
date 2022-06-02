@@ -4,45 +4,71 @@ require '../autoload.php';
 
 function setupScratchpad() {
   setupFormElementsForScratchpad();
-  renderScratchpad();
+  renderTable(getLocalScratchpadTable());
+  renderTable(getGlobalScratchpadTable());
+
+  if (Cookies.get('show-global-scratchpad') === 'true') {
+    showScratchpad(getGlobalScratchpadTable());
+  }
 }
 
-function getScratchpadShowButton() {
-  let form = getPlaylistForm();
-  return form.find('button[id=showScratchpadBtn]');
+function getLocalScratchpadButton() {
+  return getPlaylistForm().find('button[id=localScratchpadBtn]');
 }
 
-function getScratchpadHideButton() {
-  let form = getPlaylistForm();
-  return form.find('button[id=hideScratchpadBtn]');
+function getGlobalScratchpadButton() {
+  return getPlaylistForm().find('button[id=globalScratchpadBtn]');
 }
 
 function setupFormElementsForScratchpad() {
-  let show_btn = getScratchpadShowButton();
-  let hide_btn = getScratchpadHideButton();
-  show_btn.click(
+  let local_btn = getLocalScratchpadButton();
+  let global_btn = getGlobalScratchpadButton();
+  local_btn.click(
     function() {
-      showScratchpad();
-      clearActionInputs();
+      let table = getLocalScratchpadTable();
+      if (isScratchpadTableShowing(table)) {
+        hideScratchpad(table);
+      }
+      else {
+        showScratchpad(table);
+      }
     }
   );
-  hide_btn.click(
+  global_btn.click(
     function() {
-      hideScratchpad();
-      clearActionInputs();
+      let table = getGlobalScratchpadTable();
+      if (isScratchpadTableShowing(table)) {
+        hideScratchpad(table);
+        Cookies.set('show-global-scratchpad', 'false', { expires: 365*5 });
+      }
+      else {
+        showScratchpad(table);
+        Cookies.set('show-global-scratchpad', 'true', { expires: 365*5 });
+      }
     }
   );
-  hide_btn.prop('disabled', true);
 }
 
-function showScratchpad() {
-  $('div.scratchpad').show();
-  getScratchpadShowButton().prop('disabled', true);
-  getScratchpadHideButton().prop('disabled', false);
+function isScratchpadTableShowing(table) {
+  return table.closest('.playlist').is(':visible');
 }
 
-function hideScratchpad() {
-  $('div.scratchpad').hide();
-  getScratchpadShowButton().prop('disabled', false);
-  getScratchpadHideButton().prop('disabled', true);
+function showScratchpad(table) {
+  table.closest('.playlist').show();
+  if (table.is(getLocalScratchpadTable())) {
+    getLocalScratchpadButton().text('<?= LNG_BTN_HIDE_LOCAL_SCRATCHPAD ?>');
+  }
+  else {
+    getGlobalScratchpadButton().text('<?= LNG_BTN_HIDE_GLOBAL_SCRATCHPAD ?>');
+  }
+}
+
+function hideScratchpad(table) {
+  table.closest('.playlist').hide();
+  if (table.is(getLocalScratchpadTable())) {
+    getLocalScratchpadButton().text('<?= LNG_BTN_SHOW_LOCAL_SCRATCHPAD ?>');
+  }
+  else {
+    getGlobalScratchpadButton().text('<?= LNG_BTN_SHOW_GLOBAL_SCRATCHPAD ?>');
+  }
 }

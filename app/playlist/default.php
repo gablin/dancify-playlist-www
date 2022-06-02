@@ -200,7 +200,9 @@ $playlist_name = $playlist_info->name;
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
       </button>
-      <button id="sortScratchpadBtn"><?= LNG_BTN_SORT_SCRATCHPAD ?></button>
+      <button id="sortLocalScratchpadBtn">
+        <?= LNG_BTN_SORT_LOCAL_SCRATCHPAD ?>
+      </button>
       <button id="sortPlaylistBtn"><?= LNG_BTN_SORT_PLAYLIST ?></button>
     </div>
   </div>
@@ -219,8 +221,8 @@ $playlist_name = $playlist_info->name;
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
       </button>
-      <button id="randomizeScratchpadBtn">
-        <?= LNG_BTN_RANDOMIZE_SCRATCHPAD ?>
+      <button id="randomizeLocalScratchpadBtn">
+        <?= LNG_BTN_RANDOMIZE_LOCAL_SCRATCHPAD ?>
       </button>
       <button id="randomizePlaylistBtn">
         <?= LNG_BTN_RANDOMIZE_PLAYLIST ?>
@@ -378,8 +380,8 @@ $playlist_name = $playlist_info->name;
             <button id="addSearchToPlaylistBtn">
               <?= LNG_BTN_ADD_SEARCH_TO_PLAYLIST ?>
             </button>
-            <button id="addSearchToScratchpadBtn">
-              <?= LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD ?>
+            <button id="addSearchToLocalScratchpadBtn">
+              <?= LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD ?>
             </button>
           </div>
         </div>
@@ -426,10 +428,14 @@ $playlist_name = $playlist_info->name;
 
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
-        <?= LNG_BTN_CANCEL ?>
+        <?= LNG_BTN_CLOSE ?>
       </button>
-      <button id="hideScratchpadBtn"><?= LNG_BTN_HIDE ?></button>
-      <button id="showScratchpadBtn"><?= LNG_BTN_SHOW ?></button>
+      <button id="globalScratchpadBtn">
+        <?= LNG_BTN_SHOW_GLOBAL_SCRATCHPAD ?>
+      </button>
+      <button id="localScratchpadBtn">
+        <?= LNG_BTN_SHOW_LOCAL_SCRATCHPAD ?>
+      </button>
     </div>
   </div>
 </div>
@@ -709,9 +715,19 @@ $playlist_name = $playlist_info->name;
 </div>
 
 <div class="playlist scratchpad">
-<div class="playlist-title"><?= LNG_HEAD_SCRATCHPAD ?></div>
+<div class="playlist-title"><?= LNG_HEAD_LOCAL_SCRATCHPAD ?></div>
 <div class="table-wrapper">
-<table id="scratchpad">
+<table id="local-scratchpad">
+  <thead></thead>
+  <tbody></tbody>
+</table>
+</div>
+</div>
+
+<div class="playlist scratchpad">
+<div class="playlist-title"><?= LNG_HEAD_GLOBAL_SCRATCHPAD ?></div>
+<div class="table-wrapper">
+<table id="global-scratchpad">
   <thead></thead>
   <tbody></tbody>
 </table>
@@ -758,16 +774,16 @@ function markFirstTimeShown() {
 
 $(document).ready(
   function() {
-    var form_s = 'form[id=playlistForm]';
-    var p_table_s = 'table[id=playlist]';
-    var s_table_s = 'table[id=scratchpad]';
-    initPlaylistGlobals(form_s, p_table_s, s_table_s);
+    var form = 'form[id=playlistForm]';
+    var p_table = 'table[id=playlist]';
+    var local_s_table = 'table[id=local-scratchpad]';
+    var global_s_table = 'table[id=global-scratchpad]';
+    initPlaylistGlobals(form, p_table, local_s_table, global_s_table);
 
     // Disable default form submission when pressing Enter
-    $(form_s).submit(function() { return false; });
+    $(form).submit(function() { return false; });
 
     setupPlaylist('<?= $playlist_id ?>');
-    loadPlaylist('<?= $playlist_id ?>');
     setupSaveChangesToSpotify( '<?= $playlist_id ?>'
                              , <?= $playlist_info->public ? 'true' : 'false' ?>
                              );

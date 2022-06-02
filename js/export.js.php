@@ -26,7 +26,7 @@ function generateCsvContent() {
                 , '<?= LNG_HEAD_LENGTH ?>'
                 , '<?= LNG_HEAD_TOTAL ?>'
                 ];
-  let track_data = getPlaylistTrackData();
+  let track_data = getTrackData(getPlaylistTable());
   let csv_data = headers.map(toCsv).join(',') + '\n';
   let i = 0;
   let total_length = 0;

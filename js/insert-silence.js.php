@@ -35,7 +35,7 @@ function setupInsertSilence() {
                                                    , d.comments
                                                    , d.preview_url
                                                    );
-                 let tracks = getPlaylistTrackData();
+                 let tracks = getTrackData(getPlaylistTable());
                  let new_tracks = [];
                  for (let i = 0; i < tracks.length; i++) {
                      if (i > 0 && i % data.insertFreq == 0) {
@@ -43,8 +43,9 @@ function setupInsertSilence() {
                      }
                      new_tracks.push(tracks[i]);
                  }
-                 replaceTracks(getPlaylistTable(), new_tracks);
-                 renderPlaylist();
+                 let table = getPlaylistTable();
+                 replaceTracks(table, new_tracks);
+                 renderTable(table);
                  indicateStateUpdate();
                  restoreButton();
                  clearActionInputs();

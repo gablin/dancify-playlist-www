@@ -279,13 +279,17 @@ function checkPlayPos() {
         stopSeek();
 
         const playlist_table = getPlaylistTable();
-        const scratchpad_table = getScratchpadTable();
+        const local_scratchpad_table = getLocalScratchpadTable();
+        const global_scratchpad_table = getGlobalScratchpadTable();
         const track_data =
           [ [ playlist_table
             , removePlaceholdersFromTracks(getTrackData(playlist_table))
             ]
-          , [ scratchpad_table
-            , removePlaceholdersFromTracks(getTrackData(scratchpad_table))
+          , [ local_scratchpad_table
+            , removePlaceholdersFromTracks(getTrackData(local_scratchpad_table))
+            ]
+          , [ global_scratchpad_table
+            , removePlaceholdersFromTracks(getTrackData(global_scratchpad_table))
             ]
           ];
         for (let i = 0; i < track_data.length; i++) {

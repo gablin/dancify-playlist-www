@@ -70,20 +70,32 @@ define( 'LNG_BTN_SHOW'
 define( 'LNG_BTN_HIDE'
       , 'Göm'
       );
+define( 'LNG_BTN_SHOW_GLOBAL_SCRATCHPAD'
+      , 'Visa global'
+      );
+define( 'LNG_BTN_HIDE_GLOBAL_SCRATCHPAD'
+      , 'Göm global'
+      );
+define( 'LNG_BTN_SHOW_LOCAL_SCRATCHPAD'
+      , 'Visa lokal'
+      );
+define( 'LNG_BTN_HIDE_LOCAL_SCRATCHPAD'
+      , 'Göm lokal'
+      );
 define( 'LNG_BTN_RESTORE'
       , 'Återställ'
       );
 define( 'LNG_BTN_APPEND_TO_PLAYLIST'
       , 'Lägg till i spellistan'
       );
-define( 'LNG_BTN_APPEND_TO_SCRATCHPAD'
-      , 'Lägg till i scratchpad'
+define( 'LNG_BTN_APPEND_TO_LOCAL_SCRATCHPAD'
+      , 'Lägg till i lokal scratchpad'
       );
 define( 'LNG_BTN_REMOVE'
       , 'Ta bort'
       );
-define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
-      , 'Flytta till scratchpad'
+define( 'LNG_BTN_MOVE_TO_LOCAL_SCRATCHPAD'
+      , 'Flytta till lokal scratchpad'
       );
 DEFINE( 'LNG_BTN_SORT'
       , 'Sortera'
@@ -91,8 +103,8 @@ DEFINE( 'LNG_BTN_SORT'
 DEFINE( 'LNG_BTN_SORT_PLAYLIST'
       , 'Sortera spellista'
       );
-DEFINE( 'LNG_BTN_SORT_SCRATCHPAD'
-      , 'Sortera scratchpad'
+DEFINE( 'LNG_BTN_SORT_LOCAL_SCRATCHPAD'
+      , 'Sortera lokal scratchpad'
       );
 DEFINE( 'LNG_BTN_SEARCH'
       , 'Sök'
@@ -103,8 +115,8 @@ DEFINE( 'LNG_BTN_STOP'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
       , 'Lägg till i spellista'
       );
-DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
-      , 'Lägg till i scratchpad'
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD'
+      , 'Lägg till i lokal scratchpad'
       );
 DEFINE( 'LNG_BTN_CHECK'
       , 'Kolla'
@@ -112,8 +124,8 @@ DEFINE( 'LNG_BTN_CHECK'
 DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
       , 'Slumpa spellista'
       );
-DEFINE( 'LNG_BTN_RANDOMIZE_SCRATCHPAD'
-      , 'Slumpa scratchpad'
+DEFINE( 'LNG_BTN_RANDOMIZE_LOCAL_SCRATCHPAD'
+      , 'Slumpa local scratchpad'
       );
 DEFINE( 'LNG_BTN_EXPORT'
       , 'Exportera'
@@ -211,6 +223,12 @@ define( 'LNG_HEAD_GENRE'
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
       );
+define( 'LNG_HEAD_LOCAL_SCRATCHPAD'
+      , 'Lokal scratchpad'
+      );
+define( 'LNG_HEAD_GLOBAL_SCRATCHPAD'
+      , 'Global scratchpad'
+      );
 define( 'LNG_HEAD_COMMENTS'
       , 'Kommentar'
       );
@@ -250,7 +268,11 @@ define( 'LNG_DESC_SAVED'
 define( 'LNG_DESC_SCRATCHPAD'
       , <<<EOT
 Scratchpaden är ett område till vilken låtar kan dras och släppas för att förenkla
-redigering av spellistan.
+redigering av spellistan. Den lokala scratchpaden är begränsad till den nuvarande
+spellistan, vilket betyder att varje spellista har en egen lokal scratchpad, medan
+den globala scratchpaden delas mellan alla spellistor. Den lokala scratchpaden
+används bäst till att flytta runt låtar inom samma spellista, medan den globala
+scratchpaden används bäst till att flytta låtar mellan olika spellistor.
 EOT
       );
 define( 'LNG_DESC_BPM_OVERVIEW'
@@ -280,6 +302,9 @@ define( 'LNG_ERR_SPECIFY_TRACK_TO_INSERT'
       );
 define( 'LNG_ERR_FAILED_LOAD_PLAYLIST'
       , 'Misslyckades att ladda spellista'
+      );
+define( 'LNG_ERR_FAILED_LOAD_GLOBAL_SCRATCHPAD'
+      , 'Misslyckades att ladda global scratchpad'
       );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'Misslyckades att ladda låt'

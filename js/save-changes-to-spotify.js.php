@@ -27,7 +27,7 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
       }
 
       // Save new playlist
-      let tracks = getPlaylistTrackData();
+      let tracks = getTrackData(table);
       tracks = removePlaceholdersFromTracks(tracks);
       let track_ids = [];
       for (let i = 0; i < tracks.length; i++) {

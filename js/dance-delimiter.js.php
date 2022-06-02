@@ -26,8 +26,10 @@ function setupFormElementsForDanceDelimiter() {
       }
       let data = getDanceDelimiterData();
       setDanceDelimiter(data.delimiterFreq);
-      renderPlaylist();
-      savePlaylistSnapshot(); // Do not invoke indicateStateUpdate() here
+      renderTable(getPlaylistTable());
+      savePlaylistSnapshot(function() {}, function() {}); // Do not invoke
+                                                          // indicateStateUpdate()
+                                                          // here
       setDelimiterAsShowing();
       clearActionInputs();
     }
@@ -35,8 +37,10 @@ function setupFormElementsForDanceDelimiter() {
   form.find('button[id=hideDanceDelimiterBtn]').click(
     function() {
       setDanceDelimiter(0);
-      renderPlaylist();
-      savePlaylistSnapshot(); // Do not invoke indicateStateUpdate() here
+      renderTable(getPlaylistTable());
+      savePlaylistSnapshot(function() {}, function() {}); // Do not invoke
+                                                          // indicateStateUpdate()
+                                                          // here
       setDelimiterAsHidden();
       clearActionInputs();
     }

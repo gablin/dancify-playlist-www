@@ -15,10 +15,11 @@ function setupSort() {
   $('#sortPlaylistBtn').click(
     function() { doSort(getPlaylistTable()); }
   );
-  $('#sortScratchpadBtn').click(
+  $('#sortLocalScratchpadBtn').click(
     function() {
-      doSort(getScratchpadTable());
-      showScratchpad();
+      let table = getLocalScratchpadTable();
+      doSort(table);
+      showScratchpad(table);
     }
   );
 }

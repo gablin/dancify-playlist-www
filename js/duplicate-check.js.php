@@ -34,9 +34,9 @@ function doDuplicateCheck() {
 }
 
 function getTrackDuplicates() {
-  let playlist_tracks = getPlaylistTrackData();
-  let scratchpad_tracks = getScratchpadTrackData();
-  let tracks = playlist_tracks.concat(scratchpad_tracks);
+  let playlist_tracks = getTrackData(getPlaylistTable());
+  let local_scratchpad_tracks = getTrackData(getLocalScratchpadTable());
+  let tracks = playlist_tracks.concat(local_scratchpad_tracks);
   let duplicates = [];
   function getIdx(i) {
     if (i < playlist_tracks.length) {

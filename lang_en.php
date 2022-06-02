@@ -69,20 +69,32 @@ define( 'LNG_BTN_SHOW'
 define( 'LNG_BTN_HIDE'
       , 'Hide'
       );
+define( 'LNG_BTN_SHOW_GLOBAL_SCRATCHPAD'
+      , 'Show global'
+      );
+define( 'LNG_BTN_HIDE_GLOBAL_SCRATCHPAD'
+      , 'Hide global'
+      );
+define( 'LNG_BTN_SHOW_LOCAL_SCRATCHPAD'
+      , 'Show local'
+      );
+define( 'LNG_BTN_HIDE_LOCAL_SCRATCHPAD'
+      , 'Hide local'
+      );
 define( 'LNG_BTN_RESTORE'
       , 'Restore'
       );
 define( 'LNG_BTN_APPEND_TO_PLAYLIST'
       , 'Append to playlist'
       );
-define( 'LNG_BTN_APPEND_TO_SCRATCHPAD'
-      , 'Append to scratchpad'
+define( 'LNG_BTN_APPEND_TO_LOCAL_SCRATCHPAD'
+      , 'Append to local scratchpad'
       );
 define( 'LNG_BTN_REMOVE'
       , 'Remove'
       );
-define( 'LNG_BTN_MOVE_TO_SCRATCHPAD'
-      , 'Move to scratchpad'
+define( 'LNG_BTN_MOVE_TO_LOCAL_SCRATCHPAD'
+      , 'Move to local scratchpad'
       );
 DEFINE( 'LNG_BTN_SORT'
       , 'Sort'
@@ -90,8 +102,8 @@ DEFINE( 'LNG_BTN_SORT'
 DEFINE( 'LNG_BTN_SORT_PLAYLIST'
       , 'Sort playlist'
       );
-DEFINE( 'LNG_BTN_SORT_SCRATCHPAD'
-      , 'Sort scratchpad'
+DEFINE( 'LNG_BTN_SORT_LOCAL_SCRATCHPAD'
+      , 'Sort local scratchpad'
       );
 DEFINE( 'LNG_BTN_SEARCH'
       , 'Search'
@@ -102,8 +114,8 @@ DEFINE( 'LNG_BTN_STOP'
 DEFINE( 'LNG_BTN_ADD_SEARCH_TO_PLAYLIST'
       , 'Add to playlist'
       );
-DEFINE( 'LNG_BTN_ADD_SEARCH_TO_SCRATCHPAD'
-      , 'Add to scratchpad'
+DEFINE( 'LNG_BTN_ADD_SEARCH_TO_LOCAL_SCRATCHPAD'
+      , 'Add to local scratchpad'
       );
 DEFINE( 'LNG_BTN_CHECK'
       , 'Check'
@@ -111,8 +123,8 @@ DEFINE( 'LNG_BTN_CHECK'
 DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
       , 'Randomize playlist'
       );
-DEFINE( 'LNG_BTN_RANDOMIZE_SCRATCHPAD'
-      , 'Randomize scratchpad'
+DEFINE( 'LNG_BTN_RANDOMIZE_LOCAL_SCRATCHPAD'
+      , 'Randomize local scratchpad'
       );
 DEFINE( 'LNG_BTN_EXPORT'
       , 'Export'
@@ -210,6 +222,12 @@ define( 'LNG_HEAD_GENRE'
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
       );
+define( 'LNG_HEAD_LOCAL_SCRATCHPAD'
+      , 'Local scratchpad'
+      );
+define( 'LNG_HEAD_GLOBAL_SCRATCHPAD'
+      , 'Global scratchpad'
+      );
 define( 'LNG_HEAD_COMMENTS'
       , 'Comments'
       );
@@ -249,7 +267,11 @@ define( 'LNG_DESC_SAVED'
 define( 'LNG_DESC_SCRATCHPAD'
       , <<<EOT
 The scratchpad is an area to which tracks can be dragged-and-dropped in to simplify
-playlist edits.
+playlist edits. The local scratchpad is limited to the current playlist, meaning
+each playlist has its own local scratchpad, while the global scratchpad is shared
+across all playlists. The local scratchpad is best used for moving around tracks
+within the same playlist, while the global scratchpad is best used for moving
+tracks across different playlists.
 EOT
       );
 define( 'LNG_DESC_BPM_OVERVIEW'
@@ -280,6 +302,9 @@ define( 'LNG_ERR_FAILED_TO_RESTORE'
       );
 define( 'LNG_ERR_FAILED_LOAD_PLAYLIST'
       , 'failed to load playlist'
+      );
+define( 'LNG_ERR_FAILED_LOAD_GLOBAL_SCRATCHPAD'
+      , 'failed to load global scratchpad'
       );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'failed to load track'

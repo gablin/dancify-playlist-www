@@ -116,7 +116,7 @@ function searchForTracks( genre
   let search_results_area = getSearchForTracksResultsArea();
   search_results_area.show();
   $('#addSearchToPlaylistBtn').prop('disabled', true);
-  $('#addSearchToScratchpadBtn').prop('disabled', true);
+  $('#addSearchToLocalScratchpadBtn').prop('disabled', true);
 
   function setTableHeight() {
     let search_area_bottom =
@@ -216,7 +216,7 @@ function updateSearchTrackSelection(tr, multi_select_mode, span_mode) {
   function renderButtons() {
     let table = getSearchForTracksResultsArea().find('table');
     let playlist_btn = $('#addSearchToPlaylistBtn');
-    let scratchpad_btn = $('#addSearchToScratchpadBtn');
+    let scratchpad_btn = $('#addSearchToLocalScratchpadBtn');
     if (table.find('tbody tr.selected').length == 0) {
       playlist_btn.prop('disabled', true);
       scratchpad_btn.prop('disabled', true);
@@ -298,10 +298,11 @@ function setupSearchForTracksAddSearchResultsButtons() {
       addToTable(getPlaylistTable());
     }
   );
-  $('#addSearchToScratchpadBtn').click(
+  $('#addSearchToLocalScratchpadBtn').click(
     function() {
-      addToTable(getScratchpadTable());
-      showScratchpad();
+      let table = getLocalScratchpadTable();
+      addToTable(table);
+      showScratchpad(table);
     }
   );
 }

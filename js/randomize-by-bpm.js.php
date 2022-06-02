@@ -26,7 +26,8 @@ function setupFormElementsForRandomizeByBpm() {
         body.removeClass('loading');
       };
 
-      let playlist_data = getPlaylistTrackData().concat(getScratchpadTrackData());
+      let playlist_data = getTrackData(getPlaylistTable())
+                            .concat(getTrackData(getLocalScratchpadTable()));
       playlist_data = removePlaceholdersFromTracks(playlist_data);
       let track_ids = [];
       let track_lengths = [];
@@ -287,7 +288,10 @@ function getRandomizeByBpmSettings() {
 }
 
 function updatePlaylistAfterRandomize(track_order, bpm_ranges, unused_tracks) {
-  let playlist = getPlaylistTrackData().concat(getScratchpadTrackData());
+  let p_table = getPlaylistTable();
+  let s_table = getLocalScratchpadTable();
+
+  let playlist = getTrackData(p_table).concat(getTrackData(s_table));
   playlist = removePlaceholdersFromTracks(playlist);
   let new_playlist = [];
   for (let i = 0; i < track_order.length; i++) {
@@ -302,25 +306,25 @@ function updatePlaylistAfterRandomize(track_order, bpm_ranges, unused_tracks) {
     }
   }
 
-  let new_scratchpad = [];
+  let new_local_scratchpad = [];
   for (let i = 0; i < playlist.length; i++) {
     let track = playlist[i]
     let tid = track.trackId;
     if (getTrackWithMatchingId(new_playlist, tid) === null) {
-      new_scratchpad.push(track);
+      new_local_scratchpad.push(track);
     }
   }
 
-  replaceTracks(getPlaylistTable(), new_playlist);
-  renderPlaylist();
-  if (new_scratchpad.length > 0) {
-    replaceTracks(getScratchpadTable(), new_scratchpad);
-    renderScratchpad();
-    showScratchpad();
+  replaceTracks(p_table, new_playlist);
+  renderTable(p_table);
+  if (new_local_scratchpad.length > 0) {
+    replaceTracks(s_table, new_local_scratchpad);
+    renderTable(s_table);
+    showScratchpad(s_table);
   }
   else {
-    clearTable(getScratchpadTable());
-    renderScratchpad();
+    clearTable(s_table);
+    renderTable(s_table);
   }
   indicateStateUpdate();
 }
