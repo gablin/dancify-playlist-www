@@ -45,9 +45,13 @@ $options = [ 'limit' => $limit
            ];
 $res = $api->getPlaylistTracks($pid, $options);
 $tracks = array_map(function($i) { return $i->track->id; }, $res->items);
+// Spotify can sometimes return tracks with no ID
+$tracks = array_values( // Reset keys if filtering happens
+            array_filter($tracks, function($t) { return !is_null($t); })
+          );
 echo( toJson( [ 'status' => 'OK'
               , 'tracks' => $tracks
-              , 'total' => $res->total
+              , 'total' => count($tracks)
               ]
             )
     );
