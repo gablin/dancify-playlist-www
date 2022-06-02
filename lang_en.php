@@ -264,14 +264,20 @@ define( 'LNG_DESC_DIFFERENCE'
 define( 'LNG_DESC_SAVED'
       , 'Saved'
       );
-define( 'LNG_DESC_SCRATCHPAD'
+define( 'LNG_DESC_SCRATCHPAD_1'
       , <<<EOT
 The scratchpad is an area to which tracks can be dragged-and-dropped in to simplify
-playlist edits. The local scratchpad is limited to the current playlist, meaning
-each playlist has its own local scratchpad, while the global scratchpad is shared
-across all playlists. The local scratchpad is best used for moving around tracks
-within the same playlist, while the global scratchpad is best used for moving
-tracks across different playlists.
+playlist edits.
+EOT
+      );
+define( 'LNG_DESC_SCRATCHPAD_2'
+      , <<<EOT
+The local scratchpad is limited to the current playlist, meaning each playlist
+has its own local scratchpad, while the global scratchpad is shared across all
+playlists. The local scratchpad is best used for moving around tracks within the
+same playlist, while the global scratchpad is best used for moving tracks across
+different playlists. For that reason, dragging tracks into global scratchpad
+creates copies instead of moving them out of the original list.
 EOT
       );
 define( 'LNG_DESC_BPM_OVERVIEW'

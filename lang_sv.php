@@ -265,14 +265,21 @@ define( 'LNG_DESC_DIFFERENCE'
 define( 'LNG_DESC_SAVED'
       , 'Sparad'
       );
-define( 'LNG_DESC_SCRATCHPAD'
+define( 'LNG_DESC_SCRATCHPAD_1'
       , <<<EOT
 Scratchpaden är ett område till vilken låtar kan dras och släppas för att förenkla
-redigering av spellistan. Den lokala scratchpaden är begränsad till den nuvarande
-spellistan, vilket betyder att varje spellista har en egen lokal scratchpad, medan
-den globala scratchpaden delas mellan alla spellistor. Den lokala scratchpaden
-används bäst till att flytta runt låtar inom samma spellista, medan den globala
-scratchpaden används bäst till att flytta låtar mellan olika spellistor.
+redigering av spellistan.
+EOT
+      );
+define( 'LNG_DESC_SCRATCHPAD_2'
+      , <<<EOT
+Den lokala scratchpaden är begränsad till den nuvarande spellistan, vilket
+betyder att varje spellista har en egen lokal scratchpad, medan den globala
+scratchpaden delas mellan alla spellistor. Den lokala scratchpaden används bäst
+till att flytta runt låtar inom samma spellista, medan den globala scratchpaden
+används bäst till att flytta låtar mellan olika spellistor. Av den anledningen
+görs kopior av låtar som flyttas till den globala scratchpaden istället för att
+flytta dem bort från den ordinarie listan.
 EOT
       );
 define( 'LNG_DESC_BPM_OVERVIEW'

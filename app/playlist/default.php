@@ -423,7 +423,10 @@ $playlist_name = $playlist_info->name;
     <div class="title"><?= LNG_MENU_SCRATCHPAD ?></div>
 
     <p>
-      <?= LNG_DESC_SCRATCHPAD ?>
+      <?= LNG_DESC_SCRATCHPAD_1 ?>
+    </p>
+    <p>
+      <?= LNG_DESC_SCRATCHPAD_2 ?>
     </p>
 
     <div class="buttons">
