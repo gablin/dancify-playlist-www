@@ -51,7 +51,7 @@ $tracks = array_values( // Reset keys if filtering happens
           );
 echo( toJson( [ 'status' => 'OK'
               , 'tracks' => $tracks
-              , 'total' => count($tracks)
+              , 'total' => $res->total
               ]
             )
     );
