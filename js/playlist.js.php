@@ -1734,7 +1734,9 @@ function deleteSelectedTrackTrs() {
   }
 
   insertPlaceholdersBeforeMovingTrackTrs(trs);
-  renderTable(getTableOfTr($(trs[0])));
+  let table = getTableOfTr($(trs[0]));
+  trs.remove();
+  renderTable(table);
   indicateStateUpdate();
 }
 
