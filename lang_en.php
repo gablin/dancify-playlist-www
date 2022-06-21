@@ -243,6 +243,9 @@ define( 'LNG_HEAD_ARTIST'
 define( 'LNG_HEAD_NAME'
       , 'Name'
       );
+define( 'LNG_HEAD_PLAYLISTS'
+      , 'Playlists'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );
@@ -320,6 +323,9 @@ define( 'LNG_ERR_FAILED_LOAD_GLOBAL_SCRATCHPAD'
       );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'failed to load track'
+      );
+define( 'LNG_ERR_FAILED_LOAD_PLAYBACK_SETTINGS'
+      , 'failed to load playback settings'
       );
 define( 'LNG_ERR_FAILED_UPDATE_BPM'
       , 'failed to update BPM'

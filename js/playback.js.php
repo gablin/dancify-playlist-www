@@ -27,11 +27,10 @@ const PLAYBACK_DEFAULT_VOLUME = 0.5;
 const PLAYBACK_CHECK_PLAY_POS_UPDATE_FREQ_MS = 500;
 const PLAYBACK_FADE_OUT_STEP_MS = 100;
 
-function setupPlayback(playlist_id) {
+function setupPlayback() {
   mkPlaybackHtml();
   $.getScript('https://sdk.scdn.co/spotify-player.js', function() {});
   window.onSpotifyWebPlaybackSDKReady = initPlayer;
-  loadPlaybackSettings(playlist_id);
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == ' ') {
@@ -101,7 +100,7 @@ function mkPlaybackHtml() {
        '  </div>' +
        '</div>'
      );
-  $('.body-wrapper').append(playback_html);
+  $('.footer').before(playback_html);
   getPlaybackButton().click(togglePlay);
   setupSeekController();
   setupVolumeController();
@@ -618,7 +617,6 @@ function setupFadeOut(position, duration) {
         if (vol_ratio > 1) vol_ratio = 1;
         //let new_volume = orig_volume * vol_ratio;
         let new_volume = orig_volume * Math.log10(vol_ratio*10 + 1);
-        console.log(new_volume);
         PLAYBACK_PLAYER.setVolume(new_volume).then();
         PLAYBACK_FADE_OUT_TIMER = setTimeout(fadeOut, PLAYBACK_FADE_OUT_STEP_MS);
       }
@@ -644,17 +642,18 @@ function clearFadeOut() {
   PLAYBACK_PLAYER.setVolume(getSavedVolume()).then();
 }
 
-function loadPlaybackSettings(playlist_id) {
+function loadPlaybackSettings(playlist_id, success_f, fail_f) {
   callApi( '/api/get-playback/'
          , { playlistId: playlist_id }
          , function(d) {
              if (d.status == 'OK') {
                PLAYBACK_MAX_PLAY_LENGTH_MS = d.trackPlayLength*1000;
                FADE_OUT_LENGTH_MS = d.fadeOutLength*1000;
+               success_f();
              }
            }
          , function(msg) {
-             // TODO: handle error
+             fail_f('<?= LNG_ERR_FAILED_LOAD_PLAYBACK_SETTINGS ?>');
            }
          );
 }

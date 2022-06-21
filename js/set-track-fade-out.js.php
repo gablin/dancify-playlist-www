@@ -4,7 +4,7 @@ require '../autoload.php';
 
 const DEFAULT_FADE_OUT_LENGTH = 5;
 
-function setupSetTrackFadeOut(playlist_id) {
+function setupSetTrackFadeOut() {
   let form = getPlaylistForm();
   $('#saveTrackFadeOut').click(
     function() {
@@ -26,7 +26,8 @@ function setupSetTrackFadeOut(playlist_id) {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      saveTrackFadeOut(playlist_id, success, fail);
+      let info = getCurrentPlaylistInfo();
+      saveTrackFadeOut(info.id, success, fail);
     }
   );
   $('#removeTrackFadeOut').click(
@@ -49,7 +50,8 @@ function setupSetTrackFadeOut(playlist_id) {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      removeTrackFadeOut(playlist_id, success, fail);
+      let info = getCurrentPlaylistInfo();
+      removeTrackFadeOut(info.id, success, fail);
     }
   );
 

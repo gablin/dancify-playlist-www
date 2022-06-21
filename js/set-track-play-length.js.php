@@ -4,7 +4,7 @@ require '../autoload.php';
 
 const DEFAULT_PLAY_TRACK_LENGTH = 60;
 
-function setupSetTrackPlayLength(playlist_id) {
+function setupSetTrackPlayLength() {
   let form = getPlaylistForm();
   $('#saveTrackPlayLength').click(
     function() {
@@ -26,7 +26,8 @@ function setupSetTrackPlayLength(playlist_id) {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      saveTrackPlayLength(playlist_id, success, fail);
+      let info = getCurrentPlaylistInfo();
+      saveTrackPlayLength(info.id, success, fail);
     }
   );
   $('#removeTrackPlayLength').click(
@@ -49,7 +50,8 @@ function setupSetTrackPlayLength(playlist_id) {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      removeTrackPlayLength(playlist_id, success, fail);
+      let info = getCurrentPlaylistInfo();
+      removeTrackPlayLength(info.id, success, fail);
     }
   );
 

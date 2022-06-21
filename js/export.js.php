@@ -2,12 +2,13 @@
 require '../autoload.php';
 ?>
 
-function setupExport(playlist_name) {
+function setupExport() {
   let form = getPlaylistForm();
   $('#exportPlaylistBtn').click(
     function() {
       let content = generateCsvContent();
-      triggerCsvDownload(playlist_name, content);
+      let info = getCurrentPlaylistInfo();
+      triggerCsvDownload(info.name, content);
     }
   );
 }

@@ -244,6 +244,9 @@ define( 'LNG_HEAD_ARTIST'
 define( 'LNG_HEAD_NAME'
       , 'Namn'
       );
+define( 'LNG_HEAD_PLAYLISTS'
+      , 'Spellistor'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );
@@ -321,6 +324,9 @@ define( 'LNG_ERR_FAILED_LOAD_GLOBAL_SCRATCHPAD'
       );
 define( 'LNG_ERR_FAILED_LOAD_TRACK'
       , 'Misslyckades att ladda låt'
+      );
+define( 'LNG_ERR_FAILED_LOAD_PLAYBACK_SETTINGS'
+      , 'Misslyckades att ladda inställningar för playback'
       );
 define( 'LNG_ERR_FAILED_UPDATE_BPM'
       , 'Misslyckades att uppdatera BPM'

@@ -7,7 +7,8 @@ function setupRestorePlaylist(playlist_id) {
   let restore_btn = form.find('button[id=restorePlaylistBtn]');
   restore_btn.click(
     function() {
-      restorePlaylist(playlist_id);
+      let info = getCurrentPlaylistInfo();
+      restorePlaylist(info.id);
       clearActionInputs();
     }
   );

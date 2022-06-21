@@ -4,30 +4,25 @@
  *
  * @param mixed[] $entries Entries to show, each consisting of a 3-tuple:
  *                           1. Name
- *                           2. HTTP link path
- *                           3. action area name (optional)
+ *                           2. Action area name
+ *                           3. Function to execute upon click (optional)
  * @returns string HTML code.
  */
 function mkHtmlNavMenu($entries, $add_undo_redo_buttons = false) {
   ?>
   <div class="menu">
     <div class="dropdown">
-      <a href="#"><?= LNG_MENU ?></a>
+      <a id="menu-top-button" href="#"><?= LNG_MENU ?></a>
       <div class="dropdown-content">
         <?php
         foreach ($entries as $e) {
-          if (count($e) == 2) {
-            ?>
-            <a href="<?= $e[1] ?>"><?= $e[0] ?></a>
-            <?php
-          }
-          else if (count($e) >= 3) {
-            $click_actions = "showActionInput('$e[2]');";
-            if (count($e) == 4) {
-              $click_actions = "$e[3]; $click_actions";
+          if (count($e) >= 2) {
+            $click_actions = "showActionInput('$e[1]');";
+            if (count($e) == 3) {
+              $click_actions = "$e[2]; $click_actions";
             }
             ?>
-            <a href="<?= $e[1] ?>" onclick="<?= $click_actions ?>">
+            <a href="#" onclick="<?= $click_actions ?>">
               <?= $e[0] ?>
             </a>
             <?php

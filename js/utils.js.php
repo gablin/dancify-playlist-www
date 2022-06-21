@@ -3,6 +3,14 @@ require '../autoload.php';
 ?>
 
 /**
+ * A function that does nothing. Useful for when needing to provide empty
+ * callbacks.
+ */
+function noop() {
+  return null;
+}
+
+/**
  * Runs an API call and invokes a callback function depending on the outcome.
  * Note that the call is executed asynchronously, meaning this function will return
  * immediately even if the API call has not finished executing.

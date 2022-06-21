@@ -29,7 +29,11 @@ p {}
 
 p.intro {
   max-width: 600px;
+  margin-top: 1em;
   margin-bottom: 1em;
+}
+p.intro:first-child {
+  margin-top: 2em;
 }
 
 h1 {
@@ -58,23 +62,26 @@ a:hover {
 }
 
 .content {
-  margin: 2em 4vw 0 4vw;
   overflow: auto;
   flex: 2;
 }
 
 .footer {
-  padding-top: 1em;
+  background-color: #121619;
+  padding-top: .5em;
   height: 2em;
   width: 100%;
 }
 .footer p {
   margin: 0;
   font-size: 55%;
-  color: #2D4739;
+  color: #fff;
   line-height: 1.5em;
   text-transform: uppercase;
   text-align: center;
+}
+.footer p a {
+  color: #E5C687;
 }
 
 .logo {
@@ -125,6 +132,7 @@ a:hover {
 }
 .menu a.undo-redo.disabled:hover {
   background-color: inherit;
+  cursor: not-allowed !important;
 }
 .menu #undoBtn {
   transform: scalex(-1);
@@ -176,11 +184,11 @@ a:hover {
 .menu .dropdown:hover .dropdown-content {
   display: block;
 }
-.menu.loading:hover a {
+body.loading .menu:hover a {
   background-color: #121619;
   cursor: not-allowed !important;
 }
-.menu.loading .dropdown:hover .dropdown-content {
+body.loading .menu .dropdown:hover .dropdown-content {
   display: none;
 }
 .menu .dropdown-content .sep {
@@ -241,6 +249,40 @@ table th {
   text-transform: uppercase;
   font-size: 90%;
   letter-spacing: .1em;
+}
+
+form {
+  height: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+.app-playlists-wrapper {
+  padding: .5em;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.app-playlist-content-wrapper {
+  padding: .5em 1em;
+}
+
+.app-separator {
+  height: 100%;
+  width: .25em;
+  background-color: #121619;
+}
+.app-separator:hover {
+  cursor: ew-resize;
+}
+
+.app-playlists-wrapper table td {
+  white-space: nowrap;
+}
+.app-playlists-wrapper table td a.selected {
+  font-weight: bold;
 }
 
 .playlists-wrapper {
@@ -580,6 +622,9 @@ select.chosen-by-others {
 
 .grabbed {
   cursor: move !important;
+}
+.ew-resizing {
+  cursor: ew-resize !important;
 }
 
 .scratchpad {

@@ -25,14 +25,21 @@ function loadUserPlaylists(user_id) {
            , function(d) {
                for (let i = 0; i < d.playlists.length; i++) {
                  let p = d.playlists[i];
-                 table.append( '<tr>' +
-                                 '<td>' +
-                                   '<a href="./playlist/?id=' + p.id + '">' +
-                                     p.name +
-                                   '</a>' +
-                                 '</td>' +
-                               '</tr>'
-                             );
+                 let tr = $( '<tr>' +
+                               '<td>' +
+                                 '<a href="#">' + p.name + '</a>' +
+                               '</td>' +
+                             '</tr>'
+                           );
+                 table.append(tr);
+                 tr.find('a').click(
+                   function() {
+                     let a = $(this);
+                     a.closest('table').find('a').removeClass('selected');
+                     a.addClass('selected');
+                     loadPlaylist(p.id);
+                   }
+                 );
                }
                offset += d.playlists.length;
                if (offset == d.total) {

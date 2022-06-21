@@ -2,7 +2,7 @@
 require '../autoload.php';
 ?>
 
-function setupSaveChangesToSpotify(playlist_id, make_public) {
+function setupSaveChangesToSpotify() {
   let form = getPlaylistForm();
   let table = getPlaylistTable();
   let save_b = form.find('button[id=saveChangesToSpotifyBtn]');
@@ -18,51 +18,24 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
         b.removeClass('loading');
       };
 
-      // Check new playlist name
       let name = name_input.val().trim();
       if (name.length == 0 && !overwrite_checkbox.is(':checked')) {
         alert('<?= LNG_INSTR_PLEASE_ENTER_NAME ?>');
         restoreButton();
         return false;
       }
-
-      // Save new playlist
-      let tracks = getTrackData(table);
-      tracks = removePlaceholdersFromTracks(tracks);
-      let track_ids = [];
-      for (let i = 0; i < tracks.length; i++) {
-          track_ids.push(tracks[i].trackId);
-      }
-      let data = { trackIdList: track_ids };
       let overwrite_playlist = overwrite_checkbox.is(':checked');
-      if (overwrite_playlist) {
-        data.playlistId = playlist_id;
-        data.overwritePlaylist = true;
+      function success() {
+        // TODO: load new playlist
+        restoreButton();
+        clearActionInputs();
       }
-      else {
-        data.playlistName = name;
-        data.publicPlaylist = make_public;
+      function fail(msg) {
+        alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE_CHANGES_TO_SPOTIFY ?>');
+        restoreButton();
+        clearActionInputs();
       }
-      callApi( '/api/save-changes-to-spotify/'
-             , data
-             , function(d) {
-                 if (overwrite_playlist) {
-                   alert('<?= LNG_DESC_CHANGES_SAVED_TO_SPOTIFY ?>');
-                   restoreButton();
-                   clearActionInputs();
-                 }
-                 else {
-                   alert('<?= LNG_DESC_NEW_PLAYLIST_ADDED ?>');
-                   window.location.href = './?id=' + d.newPlaylistId;
-                 }
-               }
-             , function(msg) {
-                 alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE_CHANGES_TO_SPOTIFY ?>');
-                 restoreButton();
-                 clearActionInputs();
-               }
-             );
-      return false;
+      savePlaylistToSpotify(name, overwrite_playlist, success, fail);
     }
   );
   save_b.prop('disabled', true);
@@ -86,4 +59,29 @@ function setupSaveChangesToSpotify(playlist_id, make_public) {
       }
     }
   );
+}
+
+function savePlaylistToSpotify(new_name, overwrite_playlist, success_f, fail_f) {
+  let tracks = getTrackData(table);
+  tracks = removePlaceholdersFromTracks(tracks);
+  let track_ids = [];
+  for (let i = 0; i < tracks.length; i++) {
+      track_ids.push(tracks[i].trackId);
+  }
+
+  let data = { trackIdList: track_ids };
+  let playlist_info = getCurrentPlaylistInfo();
+  if (overwrite_playlist) {
+    data.playlistId = playlist_info.id;
+    data.overwritePlaylist = true;
+  }
+  else {
+    data.playlistName = new_name;
+    data.publicPlaylist = playlist_info.isPublic;
+  }
+  callApi( '/api/save-changes-to-spotify/'
+         , data
+         , success_f
+         , fail_f
+         );
 }

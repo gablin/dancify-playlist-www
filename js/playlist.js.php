@@ -6,11 +6,11 @@ $session = getSession();
 $api = createWebApi($session);
 ?>
 
-var PLAYLIST_ID = '';
+var PLAYLIST_INFO = '';
 var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_DANCE_DELIMITER = 0;
 var TRACK_DRAG_STATE = 0;
-var UNDO_STACK_LIMIT = 100;
+const UNDO_STACK_LIMIT = 100;
 var UNDO_STACK = Array(UNDO_STACK_LIMIT).fill(null);
 var UNDO_STACK_OFFSET = -1;
 var LAST_SPOTIFY_PLAYLIST_HASH = '';
@@ -19,17 +19,17 @@ var LATEST_TRACK_CLICK_TIMESTAMP = 0;
 var MARKED_AS_PLAYING_TRACK = null;
 var MARKED_AS_PLAYING_INDEX = null;
 var MARKED_AS_PLAYING_TABLE = null;
+var LOADED_GLOBAL_SCRATCHPAD = false;
+var IS_LOADING_PLAYLIST_CONTENT = false;
+var ABORT_LOAD_PLAYLIST_CONTENT = false;
+var ABORT_LOAD_PLAYLIST_CALLBACK = null;
 
 const BPM_MIN = 0;
 const BPM_MAX = 255;
 
 const DOUBLECLICK_RANGE_MS = 300;
 
-function setupPlaylist(playlist_id) {
-  PLAYLIST_ID = playlist_id;
-  initTable(getPlaylistTable());
-  initTable(getLocalScratchpadTable());
-  initTable(getGlobalScratchpadTable());
+function setupPlaylist() {
   $(document).on( 'keyup'
                 , function(e) {
                     if (e.key == 'Escape') {
@@ -42,54 +42,92 @@ function setupPlaylist(playlist_id) {
                 );
   $(window).resize(setPlaylistHeight);
   $(window).resize(renderBpmOverview);
-
-  loadPlaylistAndScratchpads(playlist_id);
+  $('.app-separator').each(
+    function() {
+      addAppResizeHandling($(this));
+    }
+  );
 }
 
 function getTableOfTr(tr) {
   return tr.closest('table');
 }
 
-function loadPlaylistAndScratchpads(playlist_id) {
-  let body = $(document.body);
-  body.addClass('loading');
-  let menu = $('.menu');
-  menu.addClass('loading');
-  setStatus('<?= LNG_DESC_LOADING ?>...');
-  function activateMenu() {
-    menu.removeClass('loading');
+function abortLoadPlaylistContent(callback) {
+  if (IS_LOADING_PLAYLIST_CONTENT) {
+    ABORT_LOAD_PLAYLIST_CONTENT = true;
+    ABORT_LOAD_PLAYLIST_CALLBACK = function() {
+      ABORT_LOAD_PLAYLIST_CONTENT = false;
+      ABORT_LOAD_PLAYLIST_CALLBACK = null;
+      callback();
+    };
   }
-  function success() {
-    body.removeClass('loading');
-    clearStatus();
-    activateMenu();
-    saveUndoState();
+  else {
+    callback();
   }
-  function fail(msg) {
-    setStatus(msg, true);
-    body.removeClass('loading');
-    activateMenu();
-  }
-  loadPlaylist( playlist_id
-              , function() {
-                  loadGlobalScratchpad(success, fail);
-                }
-              , fail
-              );
 }
 
-function loadPlaylist(playlist_id, success_f, fail_f) {
-  function fail(msg) {
-    fail_f('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>');
+function loadPlaylistContent(playlist_info, success_f, fail_f) {
+  PLAYLIST_INFO = playlist_info;
+  let playlist_id = playlist_info.id;
+  IS_LOADING_PLAYLIST_CONTENT = true;
+
+  $('.playlist-title').text(playlist_info.name);
+
+  let body = $(document.body);
+  body.addClass('loading');
+  setStatus('<?= LNG_DESC_LOADING ?>...');
+  function success() {
+    IS_LOADING_PLAYLIST_CONTENT = false;
+    body.removeClass('loading');
+    clearStatus();
+    saveUndoState();
+    success_f();
+  }
+  function fail() {
+    IS_LOADING_PLAYLIST_CONTENT = false;
+    let msg = '<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>';
+    setStatus(msg, true);
+    body.removeClass('loading');
+    fail_f(msg);
   }
   function snapshot_success() {
-    success_f();
+    success();
     checkForChangesInSpotifyPlaylist(playlist_id);
   }
   function noSnapshot() {
-    loadPlaylistFromSpotify(playlist_id, success_f, fail);
+    loadPlaylistFromSpotify(playlist_id, success, fail);
   }
+  initTable(getPlaylistTable());
+  initTable(getLocalScratchpadTable());
   loadPlaylistFromSnapshot(playlist_id, snapshot_success, noSnapshot, fail);
+}
+
+
+function clearPlaylistContent() {
+  LAST_SPOTIFY_PLAYLIST_HASH = '';
+  for (let i = 0; i < UNDO_STACK.length; i++) {
+    UNDO_STACK[i] = null;
+  }
+  UNDO_STACK_OFFSET = -1;
+  LAST_SPOTIFY_PLAYLIST_HASH = '';
+  LATEST_TRACK_CLICK_TR = null;
+  LATEST_TRACK_CLICK_TIMESTAMP = 0;
+  MARKED_AS_PLAYING_TRACK = null;
+  MARKED_AS_PLAYING_INDEX = null;
+  MARKED_AS_PLAYING_TABLE = null;
+
+  [ getPlaylistTable(), getLocalScratchpadTable() ].forEach(
+    table => {
+      clearTable(table);
+      renderTable(table);
+    }
+  );
+  renderUndoRedoButtons();
+}
+
+function getCurrentPlaylistInfo() {
+  return PLAYLIST_INFO;
 }
 
 function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
@@ -97,19 +135,29 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
     let track_ids = getTrackData(getPlaylistTable()).map(t => t.trackId);
     LAST_SPOTIFY_PLAYLIST_HASH = computePlaylistHash(track_ids);
   }
+  function abort() {
+    if (ABORT_LOAD_PLAYLIST_CONTENT) {
+      ABORT_LOAD_PLAYLIST_CALLBACK();
+      return true;
+    }
+    return false;
+  }
   function load(offset) {
+    if (abort()) return;
     let data = { playlistId: playlist_id
                , offset: offset
                };
     callApi( '/api/get-playlist-tracks/'
            , data
            , function(d) {
+             if (abort()) return;
                let data = { trackIds: d.tracks };
                callApi( '/api/get-track-info/'
                       , data
                       , function(dd) {
                           let tracks = [];
                           for (let i = 0; i < dd.tracks.length; i++) {
+                            if (abort()) return;
                             let t = dd.tracks[i];
                             let o = createPlaylistTrackObject( t.trackId
                                                              , t.artists
@@ -133,9 +181,10 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                             updatePlaylistHash();
                             success_f();
                           }
+                          if (abort()) return;
                         }
                       , fail_f
-                      )
+                      );
              }
            , fail_f
            );
@@ -144,6 +193,14 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
 }
 
 function checkForChangesInSpotifyPlaylist(playlist_id) {
+  function abort() {
+    if (ABORT_LOAD_PLAYLIST_CONTENT) {
+      ABORT_LOAD_PLAYLIST_CALLBACK();
+      return true;
+    }
+    return false;
+  }
+
   let body = $(document.body);
   function fail(msg) {
     setStatus('<?= LNG_ERR_FAILED_LOAD_PLAYLIST ?>', true);
@@ -195,11 +252,14 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       {
         tracks_to_load.push(new_track_ids[o]);
       }
+      if (abort()) return;
       callApi( '/api/get-track-info/'
              , { trackIds: tracks_to_load }
              , function(d) {
+                 if (abort()) return;
                  let tracks = [];
                  for (let i = 0; i < d.tracks.length; i++) {
+                   if (abort()) return;
                    let t = d.tracks[i];
                    let o = createPlaylistTrackObject( t.trackId
                                                     , t.artists
@@ -223,6 +283,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                    indicateStateUpdate();
                    finalize();
                  }
+                 if (abort()) return;
                }
              , fail
              );
@@ -259,6 +320,8 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     $(document).on('keyup', esc_f);
   }
   function checkForDeletions(snapshot_tracks, spotify_track_ids, callback_f) {
+    if (abort()) return;
+
     // Find tracks not appearing Spotify but in snapshot
     let removed_track_ids = [];
     for (let i = 0; i < snapshot_tracks.length; i++) {
@@ -368,15 +431,19 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       }
     }
     $(document).on('keyup', esc_f);
+
+    if (abort()) return;
   }
   let spotify_track_ids = [];
   function load(offset) {
+    if (abort()) return;
     let data = { playlistId: playlist_id
                , offset: offset
                };
     callApi( '/api/get-playlist-tracks/'
            , data
            , function(d) {
+               if (abort()) return;
                spotify_track_ids = spotify_track_ids.concat(d.tracks);
                let next_offset = offset + d.tracks.length;
                if (next_offset < d.total) {
@@ -401,6 +468,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                                     }
                                   );
                }
+               if (abort()) return;
              }
            , fail
            );
@@ -938,6 +1006,8 @@ function getTrackWithMatchingId(track_list, track_id) {
 }
 
 function initTable(table) {
+  table.find('thead').empty();
+  table.find('tbody').empty();
   let head_tr =
     $( '<tr>' +
        '  <th class="index">#</th>' +
@@ -1878,7 +1948,7 @@ function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
   }
   playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackId);
   scratchpad_tracks = getTrackData(getLocalScratchpadTable()).map(getTrackId);
-  data = { playlistId: PLAYLIST_ID
+  data = { playlistId: PLAYLIST_INFO.id
          , snapshot: { playlistData: playlist_tracks
                      , scratchpadData: scratchpad_tracks
                      , delimiter: PLAYLIST_DANCE_DELIMITER
@@ -1893,18 +1963,30 @@ function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
              }
              success_f();
            }
-         , function(msg) {
+         , function() {
+             let msg = '<?= LNG_ERR_FAILED_TO_SAVE ?>';
              if (show_status) {
-               setStatus('<?= LNG_ERR_FAILED_TO_SAVE ?>', true);
+               setStatus(msg, true);
              }
-             fail_f();
+             fail_f(msg);
            }
          );
 }
 
 function loadGlobalScratchpad(success_f, fail_f) {
-  function fail(msg) {
-    fail_f('<?= LNG_ERR_FAILED_LOAD_GLOBAL_SCRATCHPAD ?>');
+  let body = $(document.body);
+  body.addClass('loading');
+  setStatus('<?= LNG_DESC_LOADING ?>...');
+  function success() {
+    body.removeClass('loading');
+    clearStatus();
+    success_f();
+  }
+  function fail() {
+    let msg = '<?= LNG_ERR_FAILED_LOAD_GLOBAL_SCRATCHPAD ?>';
+    setStatus(msg, true);
+    body.removeClass('loading');
+    fail_f(msg);
   }
   function load(track_ids, track_offset) {
     function hasTrackAt(o) {
@@ -1914,8 +1996,9 @@ function loadGlobalScratchpad(success_f, fail_f) {
     let table = getGlobalScratchpadTable();
 
     if (track_offset >= track_ids.length) {
+      LOADED_GLOBAL_SCRATCHPAD = true;
       renderTable(table);
-      success_f();
+      success();
       return;
     }
     if (hasTrackAt(track_offset)) {
@@ -1965,6 +2048,7 @@ function loadGlobalScratchpad(success_f, fail_f) {
       load(track_ids, o);
     }
   }
+  initTable(getGlobalScratchpadTable());
   callApi( '/api/get-global-scratchpad/'
          , {}
          , function(res) {
@@ -1972,7 +2056,7 @@ function loadGlobalScratchpad(success_f, fail_f) {
                load(res.scratchpad.data, 0);
              }
              else if (res.status == 'NOT-FOUND') {
-               success_f();
+               success();
              }
            }
          , fail
@@ -1980,6 +2064,8 @@ function loadGlobalScratchpad(success_f, fail_f) {
 }
 
 function saveGlobalScratchpad(success_f, fail_f, show_status = true) {
+  if (!LOADED_GLOBAL_SCRATCHPAD) return;
+
   if (show_status) {
     setStatus('<?= LNG_DESC_SAVING ?>...');
   }
@@ -2296,7 +2382,7 @@ function showPlaylistsWithTrack(tid, title) {
                  }
                  let pid = d.playlists[i].id;
                  let pname = d.playlists[i].name;
-                 if (pid != PLAYLIST_ID) {
+                 if (pid != PLAYLIST_INFO.id) {
                    loadPlaylistTracks(pid, pname, 0);
                  }
                  else {
@@ -2642,7 +2728,7 @@ function addTrackBarDragHandling(bar) {
       let mousedown_bar = $(e.target).closest('.bar');
       let mousedown_bar_wr = mousedown_bar.closest('.bar-wrapper');
       if (!mousedown_bar_wr.hasClass('selected')) {
-        return;
+        return false;
       }
       let body = $(document.body);
       body.addClass('grabbed');
@@ -2671,7 +2757,7 @@ function addTrackBarDragHandling(bar) {
 
         // Check if moving over insertion-point bar (to prevent flickering)
         if ($(e.target).hasClass('bar-drag-insertion-point')) {
-          return;
+          return false;
         }
 
         // Always clear previous insertion point; else we could in some cases
@@ -2682,7 +2768,7 @@ function addTrackBarDragHandling(bar) {
         // Hide insertion-point bar if we are not over area
         if ($(e.target).closest('.bar-area').length == 0) {
           ins_point.hide();
-          return;
+          return false;
         }
 
         let bar_wrapper = $(e.target).closest('.bar-wrapper');
@@ -2697,7 +2783,7 @@ function addTrackBarDragHandling(bar) {
           // We have moved over the bar area but not over a bar.
           // Don't do anything, as we assume that an insertion point has already
           // been established from previous move
-          return;
+          return false;
         }
 
         // Mark insertion point and draw insertion-point bar
@@ -2759,7 +2845,7 @@ function addTrackBarDragHandling(bar) {
 
       $(document).mousemove(move).mouseup(up);
 
-      return false;
+      return false; // Prevent text selection
     }
   );
 }
@@ -2787,4 +2873,36 @@ function markPlayingTrackInPlaylist(track_id, index, table) {
         renderTablePlayingTrack(table);
       }
     );
+}
+
+function addAppResizeHandling(sep) {
+  sep.mousedown(
+    function(e) {
+      let body = $(document.body);
+      body.addClass('ew-resizing');
+
+      let prev = sep.prev();
+      let next = sep.next();
+      let prev_w = prev.outerWidth();
+      let next_w = next.outerWidth();
+      let last_pagex = e.pageX;
+      function move(e) {
+        let xdiff = e.pageX - last_pagex;
+        prev_w += xdiff;
+        next_w -= xdiff;
+        prev.css('width', prev_w);
+        next.css('width', next_w);
+        last_pagex = e.pageX;
+        renderBpmOverview();
+        return false; // Prevent text selection
+      }
+
+      function up(e) {
+        body.removeClass('ew-resizing');
+        $(document).unbind('mousemove', move).unbind('mouseup', up);
+      }
+
+      $(document).mousemove(move).mouseup(up);
+    }
+  );
 }
