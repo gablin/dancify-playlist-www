@@ -5,7 +5,8 @@
  * @param mixed[] $entries Entries to show, each consisting of a 3-tuple:
  *                           1. Name
  *                           2. Action area name
- *                           3. Function to execute upon click (optional)
+ *                           3. Whether playlist must have been loaded
+ *                           4. Function to execute upon click (optional)
  * @returns string HTML code.
  */
 function mkHtmlNavMenu($entries, $add_undo_redo_buttons = false) {
@@ -16,13 +17,16 @@ function mkHtmlNavMenu($entries, $add_undo_redo_buttons = false) {
       <div class="dropdown-content">
         <?php
         foreach ($entries as $e) {
-          if (count($e) >= 2) {
-            $click_actions = "showActionInput('$e[1]');";
-            if (count($e) == 3) {
-              $click_actions = "$e[2]; $click_actions";
+          if (count($e) >= 3) {
+            if (count($e) == 4) {
+              $click_actions = "showActionInput(this, '$e[1]', $e[3]);";
+            }
+            else {
+              $click_actions = "showActionInput(this, '$e[1]');";
             }
             ?>
-            <a href="#" onclick="<?= $click_actions ?>">
+            <a href="#" class="<?= $e[2] ? 'disabled' : '' ?>"
+               onclick="<?= $click_actions ?>">
               <?= $e[0] ?>
             </a>
             <?php

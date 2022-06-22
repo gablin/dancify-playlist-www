@@ -649,8 +649,8 @@ function loadPlaybackSettings(playlist_id, success_f, fail_f) {
              if (d.status == 'OK') {
                PLAYBACK_MAX_PLAY_LENGTH_MS = d.trackPlayLength*1000;
                FADE_OUT_LENGTH_MS = d.fadeOutLength*1000;
-               success_f();
              }
+             success_f();
            }
          , function(msg) {
              fail_f('<?= LNG_ERR_FAILED_LOAD_PLAYBACK_SETTINGS ?>');

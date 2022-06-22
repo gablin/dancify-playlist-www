@@ -8,32 +8,34 @@ $api = createWebApi($session);
 
 beginPage();
 mkHtmlNavMenu(
-  [ [ LNG_MENU_DANCE_DELIMITER, 'dance-delimiter' ]
-  , [ LNG_MENU_SCRATCHPAD, 'scratchpad' ]
-  , [ LNG_MENU_BPM_OVERVIEW, 'bpm-overview' ]
-  , [ LNG_MENU_DUPLICATE_CHECK, 'duplicate-check', 'onShowDuplicateCheck()' ]
+  [ [ LNG_MENU_DANCE_DELIMITER, 'dance-delimiter', true ]
+  , [ LNG_MENU_SCRATCHPAD, 'scratchpad', true ]
+  , [ LNG_MENU_BPM_OVERVIEW, 'bpm-overview', true ]
+  , [ LNG_MENU_DUPLICATE_CHECK, 'duplicate-check', true, 'onShowDuplicateCheck' ]
   , []
-  , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, 'insert-track-at-interval' ]
-  , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, 'insert-silence-at-interval' ]
-  , [ LNG_MENU_SEARCH_FOR_TRACKS, 'search-for-tracks' ]
-  , [ LNG_MENU_SORT, 'sort' ]
-  , [ LNG_MENU_RANDOMIZE, 'randomize' ]
-  , [ LNG_MENU_RANDOMIZE_BY_BPM, 'randomize-by-bpm' ]
+  , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, true, 'insert-track-at-interval' ]
+  , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, true, 'insert-silence-at-interval' ]
+  , [ LNG_MENU_SEARCH_FOR_TRACKS, 'search-for-tracks', true ]
+  , [ LNG_MENU_SORT, 'sort', true ]
+  , [ LNG_MENU_RANDOMIZE, 'randomize', true ]
+  , [ LNG_MENU_RANDOMIZE_BY_BPM, 'randomize-by-bpm', true ]
   , []
   , [ LNG_MENU_SET_TRACK_PLAY_LENGTH
     , 'set-track-play-length'
-    , 'onShowSetTrackPlayLength()'
+    , true
+    , 'onShowSetTrackPlayLength'
     ]
   , [ LNG_MENU_SET_TRACK_FADE_OUT
     , 'set-track-fade-out'
-    , 'onShowSetTrackFadeOut()'
+    , true
+    , 'onShowSetTrackFadeOut'
     ]
   , []
-  , [ LNG_MENU_SAVE_CHANGES_TO_SPOTIFY, 'save-changes-to-spotify' ]
-  , [ LNG_MENU_EXPORT_PLAYLIST, 'export-playlist' ]
-  , [ LNG_MENU_RESTORE_PLAYLIST, 'restore-playlist' ]
+  , [ LNG_MENU_SAVE_CHANGES_TO_SPOTIFY, 'save-changes-to-spotify', true ]
+  , [ LNG_MENU_EXPORT_PLAYLIST, 'export-playlist', true ]
+  , [ LNG_MENU_RESTORE_PLAYLIST, 'restore-playlist', true ]
   , []
-  , [ LNG_MENU_DONATE, 'donate' ]
+  , [ LNG_MENU_DONATE, 'donate', false ]
   ]
 , true
 );

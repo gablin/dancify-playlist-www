@@ -15,6 +15,7 @@ function loadPlaylist(playlist_id) {
                  loadPlaylistContent(
                    d.info
                  , function() {
+                     enableMenuPlaylistButtons();
                      loadPlaybackSettings(
                        playlist_id
                      , noop

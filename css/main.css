@@ -172,8 +172,12 @@ a:hover {
   letter-spacing: normal;
   text-transform: none;
 }
+.menu .dropdown-content a.disabled,
 .mouse-menu a.disabled {
   color: #777;
+}
+.menu .dropdown-content a.disabled:hover {
+  background-color: #121619;
 }
 .mouse-menu a.disabled:hover {
   background-color: inherit;
