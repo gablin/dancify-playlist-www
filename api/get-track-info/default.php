@@ -51,6 +51,11 @@ else if (array_key_exists('trackId', $json)) {
 }
 else {
   $track_ids = $json['trackIds'];
+  if (empty($track_ids)) {
+    $res = ['status' => 'OK', 'tracks' => []];
+    echo(toJson($res));
+    die();
+  }
 }
 
 $tracks = $api->getTracks($track_ids)->tracks;
