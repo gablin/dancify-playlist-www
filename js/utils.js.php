@@ -26,7 +26,9 @@ function callApi(url, data, success_f, fail_f) {
       function(res) {
         json = JSON.parse(res);
         if (json.status == 'FAILED') {
-          console.log(json.msg);
+          console.log('API call: ' + url);
+          console.log('Data: ' + JSON.stringify(data));
+          console.log('Response: ' + res);
           fail_f(json.msg);
           return;
         }
