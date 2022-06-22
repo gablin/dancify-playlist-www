@@ -10,7 +10,7 @@ function beginPage() {
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-    <title><?php echo(LNG_SLOGAN); ?>!</title>
+    <title><?php echo(LNG_SLOGAN); ?></title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto|Roboto+Condensed:300&display=swap" rel="stylesheet"></link>
     <link rel="stylesheet" href="/css/jquery-ui-1.13.0.css"></link>
     <link rel="stylesheet" href="/css/main.css"></link>
@@ -22,7 +22,7 @@ function beginPage() {
     <div class="body-wrapper">
       <div class="logo">
         <div class="text">
-          <?php echo(LNG_SLOGAN); ?>!
+          <?php echo(LNG_SLOGAN); ?>
         </div>
         <div class="lang">
           <a href="<?php echo(augmentThisLink(array('lang' => 'en'))); ?>">EN</a>
