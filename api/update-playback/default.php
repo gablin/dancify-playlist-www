@@ -23,9 +23,6 @@ if (is_null($json)) {
 }
 
 // Check data
-if (!array_key_exists('playlistId', $json)) {
-  fail('playlistId missing');
-}
 if ( !array_key_exists('trackPlayLength', $json) &&
      !array_key_exists('fadeOutLength', $json)
    ) {
@@ -35,10 +32,9 @@ if ( !array_key_exists('trackPlayLength', $json) &&
 connectDb();
 
 // Check if entry exists
-$pid_sql = escapeSqlValue($json['playlistId']);
 $user_sql = escapeSqlValue(getThisUserId($api));
 $res = queryDb( "SELECT track_play_length_s, fade_out_s FROM playback " .
-                "WHERE playlist = '$pid_sql' AND user = '$user_sql'"
+                "WHERE user = '$user_sql'"
               );
 $play_len_sql = array_key_exists('trackPlayLength', $json)
                   ? escapeSqlValue($json['trackPlayLength'])
@@ -54,20 +50,18 @@ if ($res->num_rows == 1) {
   if ($play_len_sql > 0 || $fade_out_len_sql > 0) {
     queryDb( "UPDATE playback SET track_play_length_s = $play_len_sql " .
              "                  , fade_out_s = $fade_out_len_sql " .
-             "WHERE playlist = '$pid_sql' AND user = '$user_sql'"
+             "WHERE user = '$user_sql'"
            );
   }
   else {
-    queryDb( "DELETE FROM playback " .
-             "WHERE playlist = '$pid_sql' AND user = '$user_sql'"
-           );
+    queryDb("DELETE FROM playback WHERE user = '$user_sql'");
   }
 }
 else {
   if ($play_len_sql > 0 || $fade_out_len_sql > 0) {
     queryDb( "INSERT INTO playback " .
-             "  (playlist, user, track_play_length_s, fade_out_s) " .
-             "VALUES ('$pid_sql', '$user_sql', $play_len_sql, $fade_out_len_sql)"
+             "  (user, track_play_length_s, fade_out_s) " .
+             "VALUES ('$user_sql', $play_len_sql, $fade_out_len_sql)"
            );
   }
 }

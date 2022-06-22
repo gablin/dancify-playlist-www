@@ -64,7 +64,7 @@ function showPlaybackError(msg) {
   let area = $('<div class="playback-error"></div>');
   $(document.body).append(area);
   area.text('<?= LNG_DESC_ERROR ?>: ' + msg);
-  let offset = $('.playback').outerHeight(false);
+  let offset = $('.playback').outerHeight(false) + $('.footer').outerHeight(false);
   area.css('bottom', offset + 'px');
 }
 
@@ -251,6 +251,7 @@ function initPlayer() {
   player.addListener('account_error', (e) => {});
 
   player.connect();
+  loadPlaybackSettings(noop, showPlaybackError);
 }
 
 function startPlayPosCheck() {
@@ -642,9 +643,9 @@ function clearFadeOut() {
   PLAYBACK_PLAYER.setVolume(getSavedVolume()).then();
 }
 
-function loadPlaybackSettings(playlist_id, success_f, fail_f) {
+function loadPlaybackSettings(success_f, fail_f) {
   callApi( '/api/get-playback/'
-         , { playlistId: playlist_id }
+         , {}
          , function(d) {
              if (d.status == 'OK') {
                PLAYBACK_MAX_PLAY_LENGTH_MS = d.trackPlayLength*1000;

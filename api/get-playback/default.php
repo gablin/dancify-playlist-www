@@ -22,16 +22,10 @@ if (is_null($json)) {
   fail("POST field 'data' not in JSON format");
 }
 
-// Check data
-if (!array_key_exists('playlistId', $json)) {
-  fail('playlistId missing');
-}
-
 connectDb();
-$pid_sql = escapeSqlValue($json['playlistId']);
 $user_sql = escapeSqlValue(getThisUserId($api));
 $res = queryDb( "SELECT track_play_length_s, fade_out_s FROM playback " .
-                "WHERE playlist = '$pid_sql' AND user = '$user_sql'"
+                "WHERE user = '$user_sql'"
               );
 if ($res->num_rows == 0) {
   echo(toJson(['status' => 'NOT-FOUND']));

@@ -26,8 +26,7 @@ function setupSetTrackFadeOut() {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      let info = getCurrentPlaylistInfo();
-      saveTrackFadeOut(info.id, success, fail);
+      saveTrackFadeOut(success, fail);
     }
   );
   $('#removeTrackFadeOut').click(
@@ -50,8 +49,7 @@ function setupSetTrackFadeOut() {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      let info = getCurrentPlaylistInfo();
-      removeTrackFadeOut(info.id, success, fail);
+      removeTrackFadeOut(success, fail);
     }
   );
 
@@ -91,10 +89,10 @@ function onShowSetTrackFadeOut() {
   printFadeOutValue(len_s);
 }
 
-function saveTrackFadeOut(playlist_id, success_f, fail_f) {
+function saveTrackFadeOut(success_f, fail_f) {
   let len_s = getFadeOutSliderDiv().slider('value');
   callApi( '/api/update-playback/'
-         , { playlistId: playlist_id, fadeOutLength: len_s }
+         , { fadeOutLength: len_s }
          , function() {
              setFadeOutLength(len_s * 1000);
              success_f();
@@ -103,9 +101,9 @@ function saveTrackFadeOut(playlist_id, success_f, fail_f) {
          );
 }
 
-function removeTrackFadeOut(playlist_id, success_f, fail_f) {
+function removeTrackFadeOut(success_f, fail_f) {
   callApi( '/api/update-playback/'
-         , { playlistId: playlist_id, fadeOutLength: 0 }
+         , { fadeOutLength: 0 }
          , function() {
              setFadeOutLength(0);
              success_f();

@@ -26,8 +26,7 @@ function setupSetTrackPlayLength() {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      let info = getCurrentPlaylistInfo();
-      saveTrackPlayLength(info.id, success, fail);
+      saveTrackPlayLength(success, fail);
     }
   );
   $('#removeTrackPlayLength').click(
@@ -50,8 +49,7 @@ function setupSetTrackPlayLength() {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
         restoreButton();
       }
-      let info = getCurrentPlaylistInfo();
-      removeTrackPlayLength(info.id, success, fail);
+      removeTrackPlayLength(success, fail);
     }
   );
 
@@ -91,10 +89,10 @@ function onShowSetTrackPlayLength() {
   printPlayLengthValue(len_s);
 }
 
-function saveTrackPlayLength(playlist_id, success_f, fail_f) {
+function saveTrackPlayLength(success_f, fail_f) {
   let len_s = getPlayLengthSliderDiv().slider('value');
   callApi( '/api/update-playback/'
-         , { playlistId: playlist_id, trackPlayLength: len_s }
+         , { trackPlayLength: len_s }
          , function() {
              setMaxPlayLength(len_s * 1000);
              success_f();
@@ -103,9 +101,9 @@ function saveTrackPlayLength(playlist_id, success_f, fail_f) {
          );
 }
 
-function removeTrackPlayLength(playlist_id, success_f, fail_f) {
+function removeTrackPlayLength(success_f, fail_f) {
   callApi( '/api/update-playback/'
-         , { playlistId: playlist_id, trackPlayLength: 0 }
+         , { trackPlayLength: 0 }
          , function() {
              setMaxPlayLength(0);
              success_f();

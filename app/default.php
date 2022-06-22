@@ -22,12 +22,12 @@ mkHtmlNavMenu(
   , []
   , [ LNG_MENU_SET_TRACK_PLAY_LENGTH
     , 'set-track-play-length'
-    , true
+    , false
     , 'onShowSetTrackPlayLength'
     ]
   , [ LNG_MENU_SET_TRACK_FADE_OUT
     , 'set-track-fade-out'
-    , true
+    , false
     , 'onShowSetTrackFadeOut'
     ]
   , []
