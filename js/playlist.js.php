@@ -33,7 +33,6 @@ function setupPlaylist() {
   let is_ctrl_pressed = false;
   $(document).on( 'keydown'
                 , function(e) {
-                    //console.log(e);
                     if (e.key == 'Escape') {
                       clearTrackTrSelection();
                     }
