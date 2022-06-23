@@ -27,9 +27,6 @@ if (!array_key_exists('trackIdList', $json)) {
   fail('trackIdList missing');
 }
 $track_ids = $json['trackIdList'];
-if (count($track_ids) == 0) {
-  fail('no track IDs');
-}
 $overwrite_playlist =
   array_key_exists('overwritePlaylist', $json) ? $json['overwritePlaylist']
                                                : false;
