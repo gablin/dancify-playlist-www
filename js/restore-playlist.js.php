@@ -19,8 +19,9 @@ function restorePlaylist(playlist_id) {
   callApi( '/api/remove-playlist-snapshot/'
          , { playlistId: playlist_id }
          , function(d) {
+             clearActionInputs();
              clearStatus();
-             window.location.href = './?id=' + playlist_id;
+             loadPlaylist(playlist_id);
            }
          , function(msg) {
              setStatus('<?= LNG_ERR_FAILED_TO_RESTORE ?>', true);
