@@ -30,13 +30,29 @@ const BPM_MAX = 255;
 const DOUBLECLICK_RANGE_MS = 300;
 
 function setupPlaylist() {
-  $(document).on( 'keyup'
+  let is_ctrl_pressed = false;
+  $(document).on( 'keydown'
                 , function(e) {
+                    //console.log(e);
                     if (e.key == 'Escape') {
                       clearTrackTrSelection();
                     }
                     else if (e.key == 'Delete') {
                       deleteSelectedTrackTrs();
+                    }
+                    else if (e.key == 'Control') {
+                      is_ctrl_pressed = true;
+                    }
+                    else if (e.key == 'a' && is_ctrl_pressed) {
+                      selectAllTrackTrs();
+                      return false;
+                    }
+                  }
+                );
+  $(document).on( 'keyup'
+                , function(e) {
+                    if (e.key == 'Control') {
+                      is_ctrl_pressed = false;
                     }
                   }
                 );
@@ -1388,6 +1404,18 @@ function isUsingDanceDelimiter() {
 
 function clearTrackTrSelection() {
   $('.playlist tr.selected').removeClass('selected');
+}
+
+function selectAllTrackTrs() {
+  let trs = getSelectedTrackTrs();
+  let table = null;
+  if (trs.length > 0) {
+    table = getTableOfTr($(trs[0]));
+  }
+  else {
+    table = getPlaylistTable();
+  }
+  table.find('.track, .empty-track').addClass('selected');
 }
 
 function addTrackTrSelection(table, track_index) {
