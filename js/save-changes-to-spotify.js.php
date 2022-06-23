@@ -25,10 +25,17 @@ function setupSaveChangesToSpotify() {
         return false;
       }
       let overwrite_playlist = overwrite_checkbox.is(':checked');
-      function success() {
-        // TODO: load new playlist
+      function success(res) {
         restoreButton();
         clearActionInputs();
+        if (overwrite_playlist) {
+          alert('<?= LNG_DESC_SAVED ?>');
+        }
+        else {
+          let tr = addToUserPlaylists(res.newPlaylistId, name);
+          // Give some time to allow saves to propagate before loading the new list
+          setTimeout(function() { tr.find('a').trigger('click'); }, 500);
+        }
       }
       function fail(msg) {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE_CHANGES_TO_SPOTIFY ?>');
@@ -62,7 +69,7 @@ function setupSaveChangesToSpotify() {
 }
 
 function savePlaylistToSpotify(new_name, overwrite_playlist, success_f, fail_f) {
-  let tracks = getTrackData(table);
+  let tracks = getTrackData(getPlaylistTable());
   tracks = removePlaceholdersFromTracks(tracks);
   let track_ids = [];
   for (let i = 0; i < tracks.length; i++) {
