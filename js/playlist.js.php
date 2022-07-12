@@ -6,7 +6,7 @@ $session = getSession();
 $api = createWebApi($session);
 ?>
 
-var PLAYLIST_INFO = '';
+var PLAYLIST_INFO = null;
 var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_DANCE_DELIMITER = 0;
 var TRACK_DRAG_STATE = 0;
@@ -1963,6 +1963,11 @@ function addTrackTrRightClickMenu(tr) {
 }
 
 function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
+  if (PLAYLIST_INFO === null) {
+    success_f();
+    return;
+  }
+
   if (show_status) {
     setStatus('<?= LNG_DESC_SAVING ?>...');
   }
@@ -2083,6 +2088,7 @@ function loadGlobalScratchpad(success_f, fail_f) {
                load(res.scratchpad.data, 0);
              }
              else if (res.status == 'NOT-FOUND') {
+               LOADED_GLOBAL_SCRATCHPAD = true;
                success();
              }
            }
@@ -2091,7 +2097,10 @@ function loadGlobalScratchpad(success_f, fail_f) {
 }
 
 function saveGlobalScratchpad(success_f, fail_f, show_status = true) {
-  if (!LOADED_GLOBAL_SCRATCHPAD) return;
+  if (!LOADED_GLOBAL_SCRATCHPAD) {
+    success_f();
+    return;
+  }
 
   if (show_status) {
     setStatus('<?= LNG_DESC_SAVING ?>...');
