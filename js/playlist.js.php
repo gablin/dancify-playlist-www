@@ -87,7 +87,7 @@ function loadPlaylistContent(playlist_info, success_f, fail_f) {
   let playlist_id = playlist_info.id;
   IS_LOADING_PLAYLIST_CONTENT = true;
 
-  $('.playlist-title').text(playlist_info.name);
+  $('.playlist:not(.scratchpad) .playlist-title').text(playlist_info.name);
 
   let body = $(document.body);
   body.addClass('loading');
