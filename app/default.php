@@ -11,7 +11,11 @@ mkHtmlNavMenu(
   [ [ LNG_MENU_DANCE_DELIMITER, 'dance-delimiter', true ]
   , [ LNG_MENU_SCRATCHPAD, 'scratchpad', true ]
   , [ LNG_MENU_BPM_OVERVIEW, 'bpm-overview', true ]
-  , [ LNG_MENU_DUPLICATE_CHECK, 'duplicate-check', true, 'onShowDuplicateCheck' ]
+  , [ LNG_MENU_DUPLICATE_CHECK
+    , 'duplicate-check'
+    , true
+    , 'onShowDuplicateCheck'
+    ]
   , []
   , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, 'insert-track-at-interval', true ]
   , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, 'insert-silence-at-interval', true ]
