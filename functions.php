@@ -697,6 +697,11 @@ function checkDbTables() {
               ' ( user TINYTEXT NOT NULL' .
               ' , scratchpad TEXT NOT NULL' .
               ' )'
+            , 'logins' =>
+              'CREATE TABLE logins' .
+              ' ( user TINYTEXT NOT NULL' .
+              ' , timestamp DATETIME NOT NULL' .
+              ' )'
             ];
 
   // Check if there exists a database; if not, create it
