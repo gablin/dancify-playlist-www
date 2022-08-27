@@ -127,7 +127,9 @@ for ($i = 0; $i < count($tracks); $i++) {
            , function($b) use ($t) { return $b[0] === $t->id; }
            )
          );
-  $bpm = count($bpm) > 0 ? $bpm[0][1] : (int) $audio_feats[$i]->tempo;
+  $bpm = count($bpm) > 0
+         ? $bpm[0][1]
+         : (is_object($audio_feats[$i]) ? (int) $audio_feats[$i]->tempo : 0);
   $genres_by_user = array_values( // To reset indices
                       array_filter(
                         $genres
