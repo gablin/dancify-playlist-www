@@ -1069,6 +1069,8 @@ function getGenreList() {
          , [ 28, '<?= strtolower(LNG_GENRE_FOLK_MUSIC) ?>']
          , [ 29, '<?= strtolower(LNG_GENRE_BIG_BAND) ?>']
          , [ 30, '<?= strtolower(LNG_GENRE_SOUND_EFFECT) ?>']
+         , [ 31, '<?= strtolower(LNG_GENRE_GOSPEL) ?>']
+         , [ 32, '<?= strtolower(LNG_GENRE_ACAPELLA) ?>']
          ];
 }
 

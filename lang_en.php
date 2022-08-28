@@ -684,4 +684,10 @@ define( 'LNG_GENRE_BIG_BAND'
 define( 'LNG_GENRE_SOUND_EFFECT'
       , 'sound effect'
       );
+define( 'LNG_GENRE_GOSPEL'
+      , 'gospel'
+      );
+define( 'LNG_GENRE_ACAPELLA'
+      , 'acapella'
+      );
 ?>
