@@ -24,8 +24,14 @@ function callApi(url, data, success_f, fail_f) {
   $.post(url, { data: JSON.stringify(data) })
     .done(
       function(res) {
-        json = JSON.parse(res);
-        if (json.status == 'FAILED') {
+        let json = null;
+        try {
+          json = JSON.parse(res);
+        }
+        catch (e) {
+          // Do nothing here
+        }
+        if (json === null || json.status == 'FAILED') {
           console.log('API call: ' + url);
           console.log('Data: ' + JSON.stringify(data));
           console.log('Response: ' + res);
