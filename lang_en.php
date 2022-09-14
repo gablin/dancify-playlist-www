@@ -545,7 +545,7 @@ define( 'LNG_DESC_SEARCH_MY_PLAYLISTS_ONLY'
       , 'Search only in my playlists'
       );
 define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'
-      , 'Select desired tracks to add. Press SHIFT/CTRL for ' +
+      , 'Select desired tracks to add. Press SHIFT/CTRL for ' .
         'consecutive/individual selection.'
       );
 define( 'LNG_DESC_SEARCH_RESULTS'
