@@ -27,7 +27,7 @@ var ABORT_LOAD_PLAYLIST_CALLBACK = null;
 const BPM_MIN = 0;
 const BPM_MAX = 255;
 
-const DOUBLECLICK_RANGE_MS = 200;
+const DOUBLECLICK_RANGE_MS = 400;
 
 function setupPlaylist() {
   let is_ctrl_pressed = false;
