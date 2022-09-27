@@ -1064,3 +1064,15 @@ img.swish-qr {
   max-height: 50px;
   max-width: 120px;
 }
+
+.select-playlist {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: .5em;
+}
+.select-playlist .desc {
+  width: 10em;
+  margin-left: 1em;
+}
+.select-playlist select {
+}

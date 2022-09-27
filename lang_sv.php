@@ -136,6 +136,9 @@ DEFINE( 'LNG_BTN_RANDOMIZE_LOCAL_SCRATCHPAD'
 DEFINE( 'LNG_BTN_EXPORT'
       , 'Exportera'
       );
+DEFINE( 'LNG_BTN_GENERATE'
+      , 'Generera'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -211,6 +214,9 @@ DEFINE( 'LNG_MENU_SET_TRACK_PLAY_LENGTH'
 DEFINE( 'LNG_MENU_SET_TRACK_FADE_OUT'
       , 'Ställ in låtuttoning'
       );
+DEFINE( 'LNG_MENU_STATS_INPUT_PLAYLIST'
+      , 'Statistik på inputspellista'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Titel'
       );
@@ -252,6 +258,9 @@ define( 'LNG_HEAD_ID'
       );
 define( 'LNG_HEAD_ADDED_BY'
       , 'Tillagd av'
+      );
+define( 'LNG_HEAD_SELECTED'
+      , 'Vald'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -595,8 +604,26 @@ define( 'LNG_DESC_EXPORT_PLAYLIST'
         'redigeras i Excel. Detta kommer endast att inkludera spellistan, ' .
         'inte scratchpaden.'
       );
+define( 'LNG_DESC_STATS_INPUT_PLAYLIST'
+      , 'Välj en spellista som representerar låtar som föreslagits av andra, ' .
+        'och jämför den mot en eller flera andra spellistor för att få fram ' .
+        'vilka låtar som har antagits. Håll in CTRL för att välja flera ' .
+        'spellistor.'
+      );
 define( 'LNG_DESC_DOUBLE_CLICK_TRACK_TO_PLAY'
       , 'Dubbelklicka på en låt för att spela'
+      );
+define( 'LNG_DESC_INPUT_PLAYLIST'
+      , 'Inputspellista'
+      );
+define( 'LNG_DESC_COMPARE_AGAINST'
+      , 'Jämför mot'
+      );
+define( 'LNG_ERROR_MUST_SELECT_INPUT_PLAYLIST'
+      , 'Måste välja en inputspellista'
+      );
+define( 'LNG_ERROR_MUST_SELECT_COMPARE_AGAINST_PLAYLISTS'
+      , 'Måste välja någon spellista att jämföra mot'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Källkod'

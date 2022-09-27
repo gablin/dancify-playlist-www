@@ -35,6 +35,8 @@ mkHtmlNavMenu(
     , 'onShowSetTrackFadeOut'
     ]
   , []
+  , [ LNG_MENU_STATS_INPUT_PLAYLIST, 'stats-input-playlist', false ]
+  , []
   , [ LNG_MENU_SAVE_CHANGES_TO_SPOTIFY, 'save-changes-to-spotify', true ]
   , [ LNG_MENU_EXPORT_PLAYLIST, 'export-playlist', true ]
   , [ LNG_MENU_RESTORE_PLAYLIST, 'restore-playlist', true ]
@@ -711,6 +713,34 @@ try {
   </div>
 </div>
 
+<div class="action-input-area" name="stats-input-playlist">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_STATS_INPUT_PLAYLIST ?></div>
+
+    <p>
+      <?= LNG_DESC_STATS_INPUT_PLAYLIST ?>
+    </p>
+
+    <div class="select-playlist">
+      <div class="desc"><?= LNG_DESC_INPUT_PLAYLIST ?>:</div>
+      <select name="input-playlist"></select>
+    </div>
+
+    <div class="select-playlist">
+      <div class="desc"><?= LNG_DESC_COMPARE_AGAINST ?>:</div>
+      <select name="against-playlists" multiple="true"></select>
+    </div>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="statsInputPlaylistBtn"><?= LNG_BTN_GENERATE ?></button>
+    </div>
+  </div>
+</div>
+
 <div class="app-container">
 
 <div class="app-playlists-wrapper">
@@ -798,6 +828,7 @@ try {
 <script src="/js/set-track-play-length.js.php"></script>
 <script src="/js/set-track-fade-out.js.php"></script>
 <script src="/js/load-playlist.js.php"></script>
+<script src="/js/stats-input-playlist.js.php"></script>
 <script type="text/javascript">
 function markFirstTimeShown() {
   clearActionInputs();
@@ -832,6 +863,7 @@ $(document).ready(
     setupExport();
     setupSetTrackPlayLength();
     setupSetTrackFadeOut();
+    setupStatsInputPlaylist();
     setupHeartbeat();
 
     loadUserPlaylists('<?= getThisUserId($api) ?>');

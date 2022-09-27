@@ -135,6 +135,9 @@ DEFINE( 'LNG_BTN_RANDOMIZE_LOCAL_SCRATCHPAD'
 DEFINE( 'LNG_BTN_EXPORT'
       , 'Export'
       );
+DEFINE( 'LNG_BTN_GENERATE'
+      , 'Generate'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -210,6 +213,9 @@ DEFINE( 'LNG_MENU_SET_TRACK_PLAY_LENGTH'
 DEFINE( 'LNG_MENU_SET_TRACK_FADE_OUT'
       , 'Set track fade out'
       );
+DEFINE( 'LNG_MENU_STATS_INPUT_PLAYLIST'
+      , 'Statistics on input playlist'
+      );
 define( 'LNG_HEAD_TITLE'
       , 'Title'
       );
@@ -251,6 +257,9 @@ define( 'LNG_HEAD_ID'
       );
 define( 'LNG_HEAD_ADDED_BY'
       , 'Added by'
+      );
+define( 'LNG_HEAD_SELECTED'
+      , 'Selected'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -594,8 +603,26 @@ define( 'LNG_DESC_EXPORT_PLAYLIST'
         'edited in Excel. This will only include the playlist, not the ' .
         'scratchpad.'
       );
+define( 'LNG_DESC_STATS_INPUT_PLAYLIST'
+      , 'Pick a playlist that represents tracks that have been suggested by ' .
+        'others, and compare it against one or more other playlists to find ' .
+        'out which tracks have been accepted. Press down CTRL to select ' .
+        'multiple playlists.'
+      );
 define( 'LNG_DESC_DOUBLE_CLICK_TRACK_TO_PLAY'
       , 'Double-click on a track to play'
+      );
+define( 'LNG_DESC_INPUT_PLAYLIST'
+      , 'Input playlist'
+      );
+define( 'LNG_DESC_COMPARE_AGAINST'
+      , 'Compare against'
+      );
+define( 'LNG_ERROR_MUST_SELECT_INPUT_PLAYLIST'
+      , 'Must select an input playlist'
+      );
+define( 'LNG_ERROR_MUST_SELECT_COMPARE_AGAINST_PLAYLISTS'
+      , 'Must select some playlist to compare against'
       );
 define( 'LNG_SOURCE_CODE'
       , 'Source code'

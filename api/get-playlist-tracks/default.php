@@ -52,6 +52,7 @@ $tracks = array_map( function($i) {
                      }
                    , $res->items
                    );
+
 // Spotify can sometimes return tracks with no ID
 $tracks = array_values( // Reset keys if filtering happens
             array_filter($tracks, function($t) { return !is_null($t['track']); })
