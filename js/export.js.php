@@ -22,7 +22,6 @@ function generateCsvContent() {
   }
 
   let headers = [ '#'
-                , '<?= LNG_HEAD_ID ?>'
                 , '<?= LNG_HEAD_ADDED_BY ?>'
                 , '<?= LNG_HEAD_NAME ?>'
                 , '<?= LNG_HEAD_ARTIST ?>'
@@ -39,7 +38,6 @@ function generateCsvContent() {
   csv_data += track_data.map( t => { i++;
                                      total_length += t.length;
                                      return [ i
-                                            , t.trackId
                                             , t.addedBy
                                             , t.name
                                             , t.artists !== undefined
