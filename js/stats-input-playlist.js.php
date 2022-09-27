@@ -87,27 +87,26 @@ function generateStatsContent(input_playlist, against_playlists, done_f, fail_f)
 
   function loadPlaylists(ps, loaded_ps) {
     if (ps.length == 0) {
-      let input_tracks = loaded_ps[0];
+      input_playlist = loaded_ps[0];
       getTrackInfo(
-        input_tracks.map((t) => t.track)
+        input_playlist.tracks.map((t) => t.track)
       , function(tracks) {
-          tracks = tracks.map( (t, i) => {
-                                 t.addedBy = input_tracks[i].addedBy;
-                                 return t;
-                               }
-                             );
-          let stats = computeStats(tracks, loaded_ps.slice(1));
-          let csv = stats.map((r) => r.map(toCsv).join(',')).join('\n');
-          done_f(csv);
+          input_playlist.tracks = tracks.map(
+                                    (t, i) => {
+                                      t.addedBy = input_playlist.tracks[i].addedBy;
+                                      return t;
+                                    }
+                                  );
+          computeStats(input_playlist, loaded_ps.slice(1));
         }
       , fail_f
       );
     }
     else {
-      getTracksFromPlaylist(
+      getTracksAndInfoFromPlaylist(
         ps[0]
-      , function(tracks) {
-          loaded_ps.push(tracks);
+      , function(d) {
+          loaded_ps.push(d);
           loadPlaylists(ps.slice(1), loaded_ps);
         }
       , fail_f
@@ -118,14 +117,21 @@ function generateStatsContent(input_playlist, against_playlists, done_f, fail_f)
   loadPlaylists(playlists, []);
 
   function computeStats(input_playlist, against_playlists) {
-    let selected_track_ids =
-      against_playlists.reduce(
-        (a, tracks) => a.concat(tracks.map((t) => t.track))
-      , []
-      );
+    let users = uniq(input_playlist.tracks.map((t) => t.addedBy));
+    getUserInfo(
+      users
+    , (users) => {
+        let stats = computeStatsSub(users, input_playlist, against_playlists);
+        let csv = stats.map((r) => r.map(toCsv).join(',')).join('\n');
+        done_f(csv);
+      }
+      , fail_f
+    );
+  }
 
+  function computeStatsSub(users, input_playlist, against_playlists) {
     let headers = [ '#'
-                  , '<?= LNG_HEAD_SELECTED ?>'
+                  , '<?= LNG_HEAD_SELECTED_IN ?>'
                   , '<?= LNG_HEAD_ADDED_BY ?>'
                   , '<?= LNG_HEAD_NAME ?>'
                   , '<?= LNG_HEAD_ARTIST ?>'
@@ -133,13 +139,17 @@ function generateStatsContent(input_playlist, against_playlists, done_f, fail_f)
                   , '<?= LNG_HEAD_GENRE ?>'
                   ];
 
-    let users = uniq(input_playlist.map((t) => t.addedBy));
+    let against_all_track_ids =
+      against_playlists.reduce(
+        (a, p) => a.concat(p.tracks.map((t) => t.track))
+      , []
+      );
     let user_stats = users.map(
       (u) => {
-        function entry(t, selected) {
+        function entry(t) {
           return [ null
-                 , selected ? 'X' : ''
-                 , t.addedBy
+                 , t.inPlaylist ? t.inPlaylist : ''
+                 , u.name
                  , t.name
                  , t.artists.join(', ')
                  , t.bpm
@@ -147,14 +157,25 @@ function generateStatsContent(input_playlist, against_playlists, done_f, fail_f)
                  ];
         }
 
-        let tracks = input_playlist.filter((t) => t.addedBy === u);
-        let granted =
-          tracks.filter((t) => selected_track_ids.includes(t.trackId));
+        let tracks = input_playlist.tracks.filter((t) => t.addedBy === u.id);
+        let granted = [];
+        tracks.forEach(
+          (t) => {
+            for (let i = 0; i < against_playlists.length; i++) {
+              let p = against_playlists[i];
+              if (p.tracks.map((w) => w.track).includes(t.trackId)) {
+                t.inPlaylist = p.name;
+                granted.push(t);
+                break;
+              }
+            }
+          }
+        );
         let left =
-          tracks.filter((t) => !selected_track_ids.includes(t.trackId));
+          tracks.filter((t) => !against_all_track_ids.includes(t.trackId));
 
-        let granted_entries = granted.map((t) => entry(t, true));
-        let left_entries = left.map((t) => entry(t, false));
+        let granted_entries = granted.map((t) => entry(t));
+        let left_entries = left.map((t) => entry(t));
 
         return { user: u, entries: granted_entries.concat(left_entries) };
       }
@@ -172,7 +193,7 @@ function generateStatsContent(input_playlist, against_playlists, done_f, fail_f)
   }
 }
 
-function getTracksFromPlaylist(playlist_id, done_f, fail_f) {
+function getTracksAndInfoFromPlaylist(playlist_id, done_f, fail_f) {
   let tracks = [];
   function load(offset) {
     let data = { playlistId: playlist_id
@@ -187,7 +208,13 @@ function getTracksFromPlaylist(playlist_id, done_f, fail_f) {
                  load(next_offset);
                }
                else {
-                 done_f(tracks);
+                 callApi( '/api/get-playlist-info/'
+                        , { playlistId: playlist_id }
+                        , function(d) {
+                            done_f({ name: d.info.name, tracks: tracks });
+                          }
+                        , fail_f
+                        );
                }
              }
            , fail_f
@@ -213,6 +240,27 @@ function getTrackInfo(track_ids, done_f, fail_f) {
                }
                else {
                  done_f(tracks);
+               }
+             }
+           , fail_f
+           );
+  }
+  load(0);
+}
+
+function getUserInfo(users, done_f, fail_f) {
+  let user_info = [];
+  function load(i) {
+    callApi( '/api/get-user-info/'
+           , { userId: users[i] }
+           , function(d) {
+               user_info.push(d)
+               i++;
+               if (i < users.length) {
+                 load(i);
+               }
+               else {
+                 done_f(user_info);
                }
              }
            , fail_f

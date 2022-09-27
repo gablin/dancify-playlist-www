@@ -258,8 +258,8 @@ define( 'LNG_HEAD_ID'
 define( 'LNG_HEAD_ADDED_BY'
       , 'Added by'
       );
-define( 'LNG_HEAD_SELECTED'
-      , 'Selected'
+define( 'LNG_HEAD_SELECTED_IN'
+      , 'Selected in'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'

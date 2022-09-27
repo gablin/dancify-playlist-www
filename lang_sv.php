@@ -259,8 +259,8 @@ define( 'LNG_HEAD_ID'
 define( 'LNG_HEAD_ADDED_BY'
       , 'Tillagd av'
       );
-define( 'LNG_HEAD_SELECTED'
-      , 'Vald'
+define( 'LNG_HEAD_SELECTED_IN'
+      , 'Vald i'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
