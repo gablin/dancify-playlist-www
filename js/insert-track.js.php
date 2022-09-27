@@ -1,5 +1,9 @@
 <?php
 require '../autoload.php';
+
+ensureSession();
+$session = getSession();
+$api = createWebApi($session);
 ?>
 
 function setupInsertTrack() {
@@ -38,6 +42,7 @@ function setupFormElementsForInsertTrack() {
                                                    , d.genre.by_others
                                                    , d.comments
                                                    , d.preview_url
+                                                   , '<?= getThisUserId($api) ?>'
                                                    );
                  let tracks = getTrackData(getPlaylistTable());
                  let new_tracks = [];

@@ -247,6 +247,12 @@ define( 'LNG_HEAD_NAME'
 define( 'LNG_HEAD_PLAYLISTS'
       , 'Spellistor'
       );
+define( 'LNG_HEAD_ID'
+      , 'ID'
+      );
+define( 'LNG_HEAD_ADDED_BY'
+      , 'Tillagd av'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );

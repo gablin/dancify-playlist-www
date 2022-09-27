@@ -166,9 +166,10 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
            , data
            , function(d) {
              if (abort()) return;
-               let data = { trackIds: d.tracks };
+               let track_ids = d.tracks.map((t) => t.track);
+               let added_by = d.tracks.map((t) => t.addedBy);
                callApi( '/api/get-track-info/'
-                      , data
+                      , { trackIds: track_ids }
                       , function(dd) {
                           let tracks = [];
                           for (let i = 0; i < dd.tracks.length; i++) {
@@ -183,6 +184,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                                                              , t.genre.by_others
                                                              , t.comments
                                                              , t.preview_url
+                                                             , added_by[i]
                                                              );
                             tracks.push(o);
                           }
@@ -224,7 +226,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
   function getActionArea() {
     return $('.action-input-area[name=playlist-inconsistencies]');
   }
-  function checkForAdditions(snapshot_tracks, spotify_track_ids, callback_f) {
+  function checkForAdditions(snapshot_tracks, spotify_tracks, callback_f) {
     body.addClass('loading');
     setStatus('<?= LNG_DESC_LOADING ?>...');
     function cleanup() {
@@ -233,15 +235,16 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
     }
 
     // Find tracks appearing Spotify but not in snapshot
-    let new_track_ids = [];
-    for (let i = 0; i < spotify_track_ids.length; i++) {
-      let tid = spotify_track_ids[i];
+    let new_tracks = [];
+    for (let i = 0; i < spotify_tracks.length; i++) {
+      let track = spotify_tracks[i].track;
+      let tid = track.track;
       let t = getTrackWithMatchingId(snapshot_tracks, tid);
       if (t === null) {
-        new_track_ids.push(tid);
+        new_tracks.push(track);
       }
     }
-    if (new_track_ids.length == 0) {
+    if (new_tracks.length == 0) {
       cleanup();
       callback_f();
       return;
@@ -260,16 +263,16 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
       let tracks_to_load = [];
       let o = offset;
       for ( let o = offset
-          ; o < new_track_ids.length &&
+          ; o < new_tracks.length &&
             tracks_to_load.length < LOAD_TRACKS_LIMIT
           ; o++
           )
       {
-        tracks_to_load.push(new_track_ids[o]);
+        tracks_to_load.push(new_tracks[o]);
       }
       if (abort()) return;
       callApi( '/api/get-track-info/'
-             , { trackIds: tracks_to_load }
+             , { trackIds: tracks_to_load.map((t) => t.track) }
              , function(d) {
                  if (abort()) return;
                  let tracks = [];
@@ -285,6 +288,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                                                     , t.genre.by_others
                                                     , t.comments
                                                     , t.preview_url
+                                                    , tracks_to_load[i].addedBy
                                                     );
                    tracks.push(o);
                  }
@@ -449,7 +453,7 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
 
     if (abort()) return;
   }
-  let spotify_track_ids = [];
+  let spotify_tracks = [];
   function load(offset) {
     if (abort()) return;
     let data = { playlistId: playlist_id
@@ -459,13 +463,14 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
            , data
            , function(d) {
                if (abort()) return;
-               spotify_track_ids = spotify_track_ids.concat(d.tracks);
+               spotify_tracks = spotify_tracks.concat(d.tracks);
                let next_offset = offset + d.tracks.length;
                if (next_offset < d.total) {
                  load(next_offset);
                }
                else {
-                 let playlist_hash = computePlaylistHash(spotify_track_ids);
+                 let playlist_hash =
+                   computePlaylistHash(spotify_tracks.map((t) => t.track));
                  if (playlist_hash == LAST_SPOTIFY_PLAYLIST_HASH) {
                    return;
                  }
@@ -474,10 +479,10 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                  let snapshot_tracks =
                    getTrackData(getPlaylistTable()).concat(getTrackData(s_table));
                  checkForAdditions( snapshot_tracks
-                                  , spotify_track_ids
+                                  , spotify_tracks
                                   , function () {
                                       checkForDeletions( snapshot_tracks
-                                                       , spotify_track_ids
+                                                       , spotify_tracks
                                                        , function() {}
                                                        );
                                     }
@@ -908,6 +913,7 @@ function getTrTitleText(tr) {
 function getTrackObjectFromTr(tr) {
   if (tr.hasClass('track')) {
     let track_id = tr.find('input[name=track_id]').val().trim();
+    let added_by = tr.find('input[name=added_by]').val().trim();
     let artists = tr.find('input[name=artists]').val().trim();
     artists = artists.length > 0 ? artists.split(',') : [];
     let name = tr.find('input[name=name]').val().trim();
@@ -933,6 +939,7 @@ function getTrackObjectFromTr(tr) {
                                     , genres_by_others
                                     , comments
                                     , preview_url
+                                    , added_by
                                     );
   }
   else {
@@ -968,6 +975,7 @@ function createPlaylistTrackObject( track_id
                                   , genres_by_others
                                   , comments
                                   , preview_url
+                                  , added_by
                                   )
 {
   return { trackId: track_id
@@ -980,6 +988,7 @@ function createPlaylistTrackObject( track_id
                   }
          , comments: comments
          , previewUrl: preview_url
+         , addedBy: added_by
          }
 }
 
@@ -1112,6 +1121,7 @@ function buildNewTableTrackTr() {
   let tr =
     $( '<tr class="track">' +
        '  <input type="hidden" name="track_id" value="" />' +
+       '  <input type="hidden" name="added_by" value="" />' +
        '  <input type="hidden" name="artists" value="" />' +
        '  <input type="hidden" name="name" value="" />' +
        '  <input type="hidden" name="preview_url" value="" />' +
@@ -1190,6 +1200,7 @@ function buildNewTableTrackTrFromTrackObject(track) {
                                                       )
                               );
     tr.find('input[name=track_id]').prop('value', track.trackId);
+    tr.find('input[name=added_by]').prop('value', track.addedBy);
     tr.find('input[name=artists]').prop('value', track.artists.join(','));
     tr.find('input[name=name]').prop('value', track.name);
     tr.find('input[name=preview_url]').prop('value', track.previewUrl);
@@ -1974,14 +1985,14 @@ function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
     setStatus('<?= LNG_DESC_SAVING ?>...');
   }
 
-  function getTrackId(t) {
+  function getTrackInfo(t) {
     if (t.trackId === undefined) {
       return '';
     }
-    return t.trackId;
+    return { track: t.trackId, addedBy: t.addedBy };
   }
-  playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackId);
-  scratchpad_tracks = getTrackData(getLocalScratchpadTable()).map(getTrackId);
+  playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackInfo);
+  scratchpad_tracks = getTrackData(getLocalScratchpadTable()).map(getTrackInfo);
   data = { playlistId: PLAYLIST_INFO.id
          , snapshot: { playlistData: playlist_tracks
                      , scratchpadData: scratchpad_tracks
@@ -2022,14 +2033,14 @@ function loadGlobalScratchpad(success_f, fail_f) {
     body.removeClass('loading');
     fail_f(msg);
   }
-  function load(track_ids, track_offset) {
+  function load(tracks, track_offset) {
     function hasTrackAt(o) {
-      return track_ids[o].length > 0;
+      return !(typeof tracks[o] === 'string' && tracks[o].length == 0);
     }
 
     let table = getGlobalScratchpadTable();
 
-    if (track_offset >= track_ids.length) {
+    if (track_offset >= tracks.length) {
       LOADED_GLOBAL_SCRATCHPAD = true;
       renderTable(table);
       success();
@@ -2039,20 +2050,30 @@ function loadGlobalScratchpad(success_f, fail_f) {
       // Currently at a track entry; add tracks until next placeholder entry
       let tracks_to_load = [];
       let o = track_offset;
-      for ( ; o < track_ids.length &&
+      for ( ; o < tracks.length &&
               hasTrackAt(o) &&
               tracks_to_load.length < LOAD_TRACKS_LIMIT
             ; o++
           )
       {
-        tracks_to_load.push(track_ids[o]);
+        tracks_to_load.push(tracks[o]);
       }
       callApi( '/api/get-track-info/'
-             , { trackIds: tracks_to_load }
+             , { trackIds: tracks_to_load.map(
+                             (t) => {
+                               if (typeof t === 'string') {
+                                 return t;
+                               }
+                               return t.track;
+                             }
+                           )
+               }
              , function(d) {
                  let tracks = [];
                  for (let i = 0; i < d.tracks.length; i++) {
                    let t = d.tracks[i];
+                   let added_by = typeof tracks_to_load[i] === 'string'
+                                  ? '' : tracks_to_load[i].addedBy;
                    let obj = createPlaylistTrackObject( t.trackId
                                                       , t.artists
                                                       , t.name
@@ -2062,11 +2083,12 @@ function loadGlobalScratchpad(success_f, fail_f) {
                                                       , t.genre.by_others
                                                       , t.comments
                                                       , t.preview_url
+                                                      , added_by
                                                       );
                    tracks.push(obj);
                  }
                  appendTracks(table, tracks);
-                 load(track_ids, o);
+                 load(tracks, o);
                }
              , fail
              );
@@ -2075,11 +2097,11 @@ function loadGlobalScratchpad(success_f, fail_f) {
       // Currently at a placeholder entry; add such until next track entry
       let placeholders = [];
       let o = track_offset;
-      for (; o < track_ids.length && !hasTrackAt(o); o++) {
+      for (; o < tracks.length && !hasTrackAt(o); o++) {
         placeholders.push(createPlaylistPlaceholderObject());
       }
       appendTracks(table, placeholders);
-      load(track_ids, o);
+      load(tracks, o);
     }
   }
   initTable(getGlobalScratchpadTable());
@@ -2108,13 +2130,13 @@ function saveGlobalScratchpad(success_f, fail_f, show_status = true) {
     setStatus('<?= LNG_DESC_SAVING ?>...');
   }
 
-  function getTrackId(t) {
+  function getTrackInfo(t) {
     if (t.trackId === undefined) {
       return '';
     }
-    return t.trackId;
+    return { track: t.trackId, addedBy: t.addedBy };
   }
-  tracks = getTrackData(getGlobalScratchpadTable()).map(getTrackId);
+  tracks = getTrackData(getGlobalScratchpadTable()).map(getTrackInfo);
   data = { scratchpad: { data: tracks } };
   callApi( '/api/save-global-scratchpad/'
          , data
@@ -2142,12 +2164,12 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
       success_f();
     }
   }
-  function load(table, status_offset, track_ids, track_offset) {
+  function load(table, status_offset, tracks, track_offset) {
     function hasTrackAt(o) {
-      return track_ids[o].length > 0;
+      return !(typeof tracks[o] === 'string' && tracks[o].length == 0);
     }
 
-    if (track_offset >= track_ids.length) {
+    if (track_offset >= tracks.length) {
       done(table, status_offset);
       return;
     }
@@ -2155,20 +2177,30 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
       // Currently at a track entry; add tracks until next placeholder entry
       let tracks_to_load = [];
       let o = track_offset;
-      for ( ; o < track_ids.length &&
+      for ( ; o < tracks.length &&
               hasTrackAt(o) &&
               tracks_to_load.length < LOAD_TRACKS_LIMIT
             ; o++
           )
       {
-        tracks_to_load.push(track_ids[o]);
+        tracks_to_load.push(tracks[o]);
       }
       callApi( '/api/get-track-info/'
-             , { trackIds: tracks_to_load }
+             , { trackIds: tracks_to_load.map(
+                             (t) => {
+                               if (typeof t === 'string') {
+                                 return t;
+                               }
+                               return t.track;
+                             }
+                           )
+               }
              , function(d) {
-                 let tracks = [];
+                 let playlist_tracks = [];
                  for (let i = 0; i < d.tracks.length; i++) {
                    let t = d.tracks[i];
+                   let added_by = typeof tracks_to_load[i] === 'string'
+                                  ? '' : tracks_to_load[i].addedBy;
                    let obj = createPlaylistTrackObject( t.trackId
                                                       , t.artists
                                                       , t.name
@@ -2178,11 +2210,12 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                                                       , t.genre.by_others
                                                       , t.comments
                                                       , t.preview_url
+                                                      , added_by
                                                       );
-                   tracks.push(obj);
+                   playlist_tracks.push(obj);
                  }
-                 appendTracks(table, tracks);
-                 load(table, status_offset, track_ids, o);
+                 appendTracks(table, playlist_tracks);
+                 load(table, status_offset, tracks, o);
                }
              , fail_f
              );
@@ -2191,11 +2224,11 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
       // Currently at a placeholder entry; add such until next track entry
       let placeholders = [];
       let o = track_offset;
-      for (; o < track_ids.length && !hasTrackAt(o); o++) {
+      for (; o < tracks.length && !hasTrackAt(o); o++) {
         placeholders.push(createPlaylistPlaceholderObject());
       }
       appendTracks(table, placeholders);
-      load(table, status_offset, track_ids, o);
+      load(table, status_offset, tracks, o);
     }
   }
   callApi( '/api/get-playlist-snapshot/'

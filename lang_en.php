@@ -246,6 +246,12 @@ define( 'LNG_HEAD_NAME'
 define( 'LNG_HEAD_PLAYLISTS'
       , 'Playlists'
       );
+define( 'LNG_HEAD_ID'
+      , 'ID'
+      );
+define( 'LNG_HEAD_ADDED_BY'
+      , 'Added by'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );

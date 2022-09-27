@@ -1,5 +1,9 @@
 <?php
 require '../autoload.php';
+
+ensureSession();
+$session = getSession();
+$api = createWebApi($session);
 ?>
 
 const SEARCH_LIMIT = 50;
@@ -288,6 +292,7 @@ function setupSearchForTracksAddSearchResultsButtons() {
                                          , t.genre.by_others
                                          , t.comments
                                          , t.preview_url
+                                         , '<?= getThisUserId($api) ?>'
                                          );
         tracks.push(o);
       }

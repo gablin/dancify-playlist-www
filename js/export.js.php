@@ -15,10 +15,15 @@ function setupExport() {
 
 function generateCsvContent() {
   function toCsv(d) {
+    if (d === undefined) {
+      return '';
+    }
     return '"' + d.toString().replaceAll('"', '""') + '"';
   }
 
   let headers = [ '#'
+                , '<?= LNG_HEAD_ID ?>'
+                , '<?= LNG_HEAD_ADDED_BY ?>'
                 , '<?= LNG_HEAD_NAME ?>'
                 , '<?= LNG_HEAD_ARTIST ?>'
                 , '<?= LNG_HEAD_BPM ?>'
@@ -34,12 +39,18 @@ function generateCsvContent() {
   csv_data += track_data.map( t => { i++;
                                      total_length += t.length;
                                      return [ i
+                                            , t.trackId
+                                            , t.addedBy
                                             , t.name
-                                            , t.artists.join(', ')
+                                            , t.artists !== undefined
+                                              ? t.artists.join(', ') : ''
                                             , t.bpm
-                                            , formatGenre(t.genre.by_user)
+                                            , t.genre !== undefined &&
+                                              t.genre.by_user !== undefined
+                                              ? formatGenre(t.genre.by_user) : ''
                                             , t.comments
-                                            , formatTrackLength(t.length)
+                                            , t.length !== undefined
+                                              ? formatTrackLength(t.length) : ''
                                             , formatTrackLength(total_length)
                                             ].map(toCsv);
                                    }
