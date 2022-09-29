@@ -724,4 +724,7 @@ define( 'LNG_GENRE_GOSPEL'
 define( 'LNG_GENRE_ACAPELLA'
       , 'acapella'
       );
+define( 'LNG_GENRE_OUMPF'
+      , 'oumpf'
+      );
 ?>

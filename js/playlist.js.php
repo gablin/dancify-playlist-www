@@ -1080,6 +1080,7 @@ function getGenreList() {
          , [ 30, '<?= strtolower(LNG_GENRE_SOUND_EFFECT) ?>']
          , [ 31, '<?= strtolower(LNG_GENRE_GOSPEL) ?>']
          , [ 32, '<?= strtolower(LNG_GENRE_ACAPELLA) ?>']
+         , [ 33, '<?= strtolower(LNG_GENRE_OUMPF) ?>']
          ];
 }
 
