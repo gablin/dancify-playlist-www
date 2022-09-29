@@ -131,7 +131,7 @@ DEFINE( 'LNG_BTN_RANDOMIZE_PLAYLIST'
       , 'Slumpa spellista'
       );
 DEFINE( 'LNG_BTN_RANDOMIZE_LOCAL_SCRATCHPAD'
-      , 'Slumpa local scratchpad'
+      , 'Slumpa lokal scratchpad'
       );
 DEFINE( 'LNG_BTN_EXPORT'
       , 'Exportera'
