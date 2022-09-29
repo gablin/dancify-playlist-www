@@ -44,8 +44,10 @@ $options = [ 'limit' => $limit
            , 'fields' => 'items(track(id), added_by.id), total'
            ];
 $res = $api->getPlaylistTracks($pid, $options);
-
 $tracks = array_map( function($i) {
+                       if (is_null($i)) {
+                         throw new \Exception('Loaded track is null');
+                       }
                        return [ 'track' => $i->track->id
                               , 'addedBy' => $i->added_by->id
                               ];
