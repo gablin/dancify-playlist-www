@@ -108,7 +108,8 @@ function loadPlaylistContent(playlist_info, success_f, fail_f) {
   }
   function snapshot_success() {
     success();
-    checkForChangesInSpotifyPlaylist(playlist_id);
+    // TODO: fix bug that causes entire playlist to be erased
+    //checkForChangesInSpotifyPlaylist(playlist_id);
   }
   function noSnapshot() {
     loadPlaylistFromSpotify(playlist_id, success, fail);
