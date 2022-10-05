@@ -726,4 +726,13 @@ define( 'LNG_GENRE_ACAPELLA'
 define( 'LNG_GENRE_OUMPF'
       , 'oumpf'
       );
+define( 'LNG_GENRE_FOX'
+      , 'fox'
+      );
+define( 'LNG_GENRE_BUGG'
+      , 'bugg'
+      );
+define( 'LNG_GENRE_WCS'
+      , 'wcs'
+      );
 ?>

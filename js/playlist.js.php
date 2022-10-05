@@ -1081,6 +1081,9 @@ function getGenreList() {
          , [ 31, '<?= strtolower(LNG_GENRE_GOSPEL) ?>']
          , [ 32, '<?= strtolower(LNG_GENRE_ACAPELLA) ?>']
          , [ 33, '<?= strtolower(LNG_GENRE_OUMPF) ?>']
+         , [ 34, '<?= strtolower(LNG_GENRE_FOX) ?>']
+         , [ 35, '<?= strtolower(LNG_GENRE_BUGG) ?>']
+         , [ 36, '<?= strtolower(LNG_GENRE_WCS) ?>']
          ];
 }
 
