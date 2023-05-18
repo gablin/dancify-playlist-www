@@ -344,6 +344,9 @@ form {
 .playlist table td.bpm {
   font-size: 90%;
 }
+.playlist table td.bpm input.fromSpotify {
+  font-style: italic;
+}
 .playlist table th.genre,
 .playlist table td.genre {
   width: 6.25em;

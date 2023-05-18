@@ -550,6 +550,7 @@ function updateBpmInDb(track_id, bpm, success_f, fail_f) {
 
 function addTrackBpmHandling(tr) {
   let input = tr.find('input[name=bpm]');
+
   input.click(
     function(e) {
       e.stopPropagation(); // Prevent row selection
@@ -567,26 +568,87 @@ function addTrackBpmHandling(tr) {
       renderTrackBpm($(this).closest('tr'));
     }
   );
+
   function fail(msg) {
     setStatus('<?= LNG_ERR_FAILED_UPDATE_BPM ?>', true);
   }
-  input.change(
+
+  function getBpmValue() {
+    return input.val().trim();
+  }
+
+  function triggerBpmUpdate(bpm) {
+    // Find corresponding track ID
+    let tid_input = input.closest('tr').find('input[name=track_id]');
+    if (tid_input.length == 0) {
+      console.log('could not find track ID');
+      return;
+    }
+    let tid = tid_input.val().trim();
+    if (tid.length == 0) {
+      return;
+    }
+
+    setStatus('<?= LNG_DESC_SAVING ?>...');
+    updateBpmInDb( tid
+                 , bpm
+                 , clearStatus
+                 , fail
+                 );
+
+    input.removeClass('fromSpotify');
+
+    // Update BPM on all duplicate tracks (if any)
+    function update(table, tid) {
+      table.find('input[name=track_id][value=' + tid + ']').each(
+        function() {
+          let tr = $(this).closest('tr');
+          let input = tr.find('input[name=bpm]');
+          input.val(bpm);
+          input.removeClass('fromSpotify');
+          renderTrackBpm(tr);
+        }
+      );
+    }
+    update(getPlaylistTable(), tid);
+    update(getLocalScratchpadTable(), tid);
+    update(getGlobalScratchpadTable(), tid);
+
+    let old_value = parseInt(input.data('old-value'));
+    // .data() must be read here or else it will disappear upon undo/redo
+    setCurrentUndoStateCallback(
+      function() {
+        updateBpmInDb( tid
+                     , old_value
+                     , function() {}
+                     , fail
+                     );
+      }
+    );
+    indicateStateUpdate();
+    setCurrentUndoStateCallback(
+      function() {
+        updateBpmInDb( tid
+                     , bpm
+                     , function() {}
+                     , fail
+                     );
+      }
+    );
+
+    renderBpmOverview();
+  }
+
+  let old_value = null;
+  input.focus(
     function() {
-      let input = $(this);
-
-      // Find corresponding track ID
-      let tid_input = input.closest('tr').find('input[name=track_id]');
-      if (tid_input.length == 0) {
-        console.log('could not find track ID');
-        return;
-      }
-      let tid = tid_input.val().trim();
-      if (tid.length == 0) {
-        return;
-      }
-
+      old_value = parseInt(getBpmValue());
+    }
+  );
+  input.blur(
+    function() {
       // Check BPM value
-      let bpm = input.val().trim();
+      let bpm = getBpmValue();
       if (!checkBpmInput(bpm)) {
         input.addClass('invalid');
         return;
@@ -594,50 +656,13 @@ function addTrackBpmHandling(tr) {
       bpm = parseInt(bpm);
       input.removeClass('invalid');
 
-      setStatus('<?= LNG_DESC_SAVING ?>...');
-      updateBpmInDb( tid
-                   , bpm
-                   , clearStatus
-                   , fail
-                   );
-
-      // Update BPM on all duplicate tracks (if any)
-      function update(table, tid) {
-        table.find('input[name=track_id][value=' + tid + ']').each(
-          function() {
-            let tr = $(this).closest('tr');
-            tr.find('input[name=bpm]').val(bpm);
-            renderTrackBpm(tr);
-          }
-        );
+      if (old_value === bpm && input.hasClass('fromSpotify')) {
+        if (!window.confirm('<?= LNG_DESC_ASK_CONFIRM_BPM ?>')) {
+          return;
+        }
       }
-      update(getPlaylistTable(), tid);
-      update(getLocalScratchpadTable(), tid);
-      update(getGlobalScratchpadTable(), tid);
 
-      let old_value = parseInt(input.data('old-value'));
-      // .data() must be read here or else it will disappear upon undo/redo
-      setCurrentUndoStateCallback(
-        function() {
-          updateBpmInDb( tid
-                       , old_value
-                       , function() {}
-                       , fail
-                       );
-        }
-      );
-      indicateStateUpdate();
-      setCurrentUndoStateCallback(
-        function() {
-          updateBpmInDb( tid
-                       , bpm
-                       , function() {}
-                       , fail
-                       );
-        }
-      );
-
-      renderBpmOverview();
+      triggerBpmUpdate(bpm);
     }
   );
 }
@@ -919,7 +944,9 @@ function getTrackObjectFromTr(tr) {
     artists = artists.length > 0 ? artists.split(',') : [];
     let name = tr.find('input[name=name]').val().trim();
     let preview_url = tr.find('input[name=preview_url]').val().trim();
-    let bpm = parseInt(tr.find('input[name=bpm]').val().trim());
+    let bpm_input = tr.find('input[name=bpm]');
+    let bpm = parseInt(bpm_input.val().trim());
+    let is_bpm_custom = !bpm_input.hasClass('fromSpotify');
     let genre_by_user =
       parseInt(tr.find('select[name=genre] option:selected').val().trim());
     let genres_by_others_text =
@@ -935,7 +962,9 @@ function getTrackObjectFromTr(tr) {
                                     , artists
                                     , name
                                     , len_ms
-                                    , bpm
+                                    , { 'custom': is_bpm_custom ? bpm : -1
+                                      , 'spotify': bpm
+                                      }
                                     , genre_by_user
                                     , genres_by_others
                                     , comments
@@ -946,7 +975,7 @@ function getTrackObjectFromTr(tr) {
   else {
     let name = tr.find('td.title').text().trim();
     let length = tr.find('td.length').text().trim();
-    let bpm = tr.find('td.bpm').text().trim();
+    let bpm = { 'spotify': tr.find('td.bpm').text().trim() };
     let genre = tr.find('td.genre').text().trim();
     return createPlaylistPlaceholderObject(name, length, bpm, genre);
   }
@@ -1210,7 +1239,14 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('input[name=name]').prop('value', track.name);
     tr.find('input[name=preview_url]').prop('value', track.previewUrl);
     tr.find('input[name=length_ms]').prop('value', track.length);
-    tr.find('input[name=bpm]').prop('value', track.bpm);
+    let bpm_input = tr.find('input[name=bpm]');
+    if (track.bpm.custom >= 0) {
+      bpm_input.prop('value', track.bpm.custom);
+    }
+    else {
+      bpm_input.prop('value', track.bpm.spotify);
+      bpm_input.addClass('fromSpotify');
+    }
     tr.find('input[name=genres_by_others]')
       .prop('value', track.genre.by_others.join(','));
     tr.find('textarea[name=comments]').text(track.comments);

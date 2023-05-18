@@ -516,7 +516,10 @@ DEFINE( 'LNG_DESC_BPM_INFO'
       , 'BPM-värdena beräknas automatiskt av Spotify, vilket betyder att de ' .
         'stämmer inte alltid till 100%. Verifiera alltid värdet genom att ' .
         'använda en BPM-mätare (finns tillgänglig som app till din telefon) ' .
-        'och justera värdet om det inte stämmer.'
+        'och justera värdet om det inte stämmer. BPM som visas i kursivt är ' .
+        'värde som kommer från Spotify, och BPM i normal font är värde som ' .
+        'någon antingen har justerat eller intygat att värdet från Spotify ' .
+        'stämmer.'
       );
 DEFINE( 'LNG_DESC_GENRE_INFO'
       , 'Låtar med genre i kursiv stil betyder att du har ännu inte valt en ' .
@@ -618,6 +621,9 @@ define( 'LNG_DESC_INPUT_PLAYLIST'
       );
 define( 'LNG_DESC_COMPARE_AGAINST'
       , 'Jämför mot'
+      );
+define( 'LNG_DESC_ASK_CONFIRM_BPM'
+      , 'Vill du intyga att denna BPM på låten stämmer?'
       );
 define( 'LNG_ERROR_MUST_SELECT_INPUT_PLAYLIST'
       , 'Måste välja en inputspellista'

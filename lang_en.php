@@ -515,7 +515,9 @@ DEFINE( 'LNG_DESC_BPM_INFO'
       , 'The BPM values are automatically computed by Spotify, meaning they ' .
         'are not always 100% accurate. Always verify the value by using a BPM ' .
         'tapper (available as app on your phone) and adjust the value if not ' .
-        'accurate.'
+        'accurate. BPM shown in cursive is value that comes from Spotify, and ' .
+        'BPM shown in normal font is value that someone has either adjusted or ' .
+        'confirmed that the value from Spotify is accurate.'
       );
 DEFINE( 'LNG_DESC_GENRE_INFO'
       , 'Tracks with italic genres means you have not yet selected a genre for ' .
@@ -617,6 +619,9 @@ define( 'LNG_DESC_INPUT_PLAYLIST'
       );
 define( 'LNG_DESC_COMPARE_AGAINST'
       , 'Compare against'
+      );
+define( 'LNG_DESC_ASK_CONFIRM_BPM'
+      , 'Do you want to confirm that this BPM on that track is accurate?'
       );
 define( 'LNG_ERROR_MUST_SELECT_INPUT_PLAYLIST'
       , 'Must select an input playlist'

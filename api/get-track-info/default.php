@@ -127,9 +127,8 @@ for ($i = 0; $i < count($tracks); $i++) {
            , function($b) use ($t) { return $b[0] === $t->id; }
            )
          );
-  $bpm = count($bpm) > 0
-         ? $bpm[0][1]
-         : (is_object($audio_feats[$i]) ? (int) $audio_feats[$i]->tempo : 0);
+  $bpm_custom = count($bpm) > 0 ? $bpm[0][1] : -1;
+  $bpm_spotify = is_object($audio_feats[$i]) ? (int) $audio_feats[$i]->tempo : 0;
   $genres_by_user = array_values( // To reset indices
                       array_filter(
                         $genres
@@ -160,7 +159,9 @@ for ($i = 0; $i < count($tracks); $i++) {
                                           , $t->artists
                                           )
                   , 'length' => $t->duration_ms
-                  , 'bpm' => $bpm
+                  , 'bpm' => [ 'custom' => $bpm_custom
+                             , 'spotify' => $bpm_spotify
+                             ]
                   , 'genre' => [ 'by_user' => $genre_by_user
                                , 'by_others' => $genres_by_others
                                ]
