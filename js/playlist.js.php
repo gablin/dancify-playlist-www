@@ -680,7 +680,8 @@ function renderTrackBpm(tr) {
   bpm = parseInt(bpm);
   let cs = getBpmRgbColor(bpm);
   input.css('background-color', 'rgb(' + cs.join(',') + ')');
-  $text_color = (bpm <= 50 || bpm  > 190) ? '#fff' : '#000';
+  $text_color = !input.hasClass('fromSpotify') ?
+                ((bpm <= 50 || bpm  > 190) ? '#fff' : '#000') : '#888';
   input.css('color', $text_color);
 }
 
