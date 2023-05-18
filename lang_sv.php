@@ -517,8 +517,9 @@ DEFINE( 'LNG_DESC_BPM_INFO'
         'stämmer inte alltid till 100%. Verifiera alltid värdet genom att ' .
         'använda en BPM-mätare (finns tillgänglig som app till din telefon) ' .
         'och justera värdet om det inte stämmer. BPM som visas i grått är ' .
-        'ointygade värden som kommer från Spotify, och BPM som visas i svart är ' .
-        'värden som någon antingen har justerat eller intygat att de stämmer.'
+        'ointygade värden som kommer från Spotify, och BPM som visas i svart ' .
+        'eller vitt är värden som någon antingen har justerat eller intygat att ' .
+        'de stämmer.'
       );
 DEFINE( 'LNG_DESC_GENRE_INFO'
       , 'Låtar med genre i kursiv stil betyder att du har ännu inte valt en ' .

@@ -516,9 +516,8 @@ DEFINE( 'LNG_DESC_BPM_INFO'
         'are not always 100% accurate. Always verify the value by using a BPM ' .
         'tapper (available as app on your phone) and adjust the value if not ' .
         'accurate. BPM shown in grey are unconfirmed values that originate from ' .
-        'Spotify, and ' .
-        'BPM shown in black are values that someone have either adjusted or ' .
-        'confirmed to be accurate.'
+        'Spotify, and BPM shown in black or white are values that someone have ' .
+        'either adjusted or confirmed to be accurate.'
       );
 DEFINE( 'LNG_DESC_GENRE_INFO'
       , 'Tracks with italic genres means you have not yet selected a genre for ' .
