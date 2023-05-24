@@ -250,7 +250,6 @@ function initPlayer() {
   player.addListener('authentication_error', (e) => { fail(e.message); });
   player.addListener('account_error', (e) => {});
 
-  player.activateElement();
   player.connect();
   loadPlaybackSettings(noop, showPlaybackError);
 }
@@ -335,6 +334,7 @@ function togglePlay() {
   if (!PLAYBACK_PLAYER) {
     return;
   }
+
   PLAYBACK_PLAYER.getCurrentState().then(
     state => {
       if (!state) {
@@ -358,6 +358,8 @@ function togglePlay() {
 }
 
 function triggerResume() {
+  PLAYBACK_PLAYER.activateElement();
+
   PLAYBACK_PLAYER.getCurrentState().then(
     state => {
       if (!state) return;
@@ -401,6 +403,9 @@ function playTrack( track_id
   if (!PLAYBACK_PLAYER) {
     fail_f('<?= LNG_ERR_PLAYBACK_NOT_POSSIBLE ?>');
   }
+
+  PLAYBACK_PLAYER.activateElement();
+
   stopPlayPosCheck();
   callApi( '/api/player/'
          , { 'action': 'play'
