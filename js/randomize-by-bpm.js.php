@@ -37,7 +37,7 @@ function setupFormElementsForRandomizeByBpm() {
         let track = playlist_data[i];
         track_ids.push(track.trackId);
         track_lengths.push(Math.round(track.length / 1000));
-        bpms.push(track.bpm);
+        bpms.push(track.bpm.custom >= 0 ? track.bpm.custom : track.bpm.spotify);
         let genre = 0;
         if (track.genre.by_user != 0) {
           genre = track.genre.by_user;
