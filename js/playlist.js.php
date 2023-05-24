@@ -2619,6 +2619,9 @@ function renderBpmOverview() {
     tracks
   , function(track_index) {
       let t = this;
+
+      t.bpm = t.bpm.custom >= 0 ? t.bpm.custom : t.bpm.spotify;
+
       let bar_wrapper = $('<div class="bar-wrapper" />');
       bar_wrapper.css('left', bar_voffset + 'px');
       bar_wrapper.css('width', (bar_vw + 2*border_size) + 'px');
