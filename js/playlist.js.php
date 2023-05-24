@@ -639,14 +639,25 @@ function addTrackBpmHandling(tr) {
     renderBpmOverview();
   }
 
+  let skip_confirm = false;
+  function onKeyDown(e) {
+    if (e.key === 'Enter') {
+      skip_confirm = true;
+      input.blur();
+    }
+  }
+
   let old_value = null;
   input.focus(
     function() {
       old_value = parseInt(getBpmValue());
+      input.on('keydown', onKeyDown);
     }
   );
   input.blur(
     function() {
+      input.off('keydown', onKeyDown);
+
       // Check BPM value
       let bpm = getBpmValue();
       if (!checkBpmInput(bpm)) {
@@ -656,7 +667,8 @@ function addTrackBpmHandling(tr) {
       bpm = parseInt(bpm);
       input.removeClass('invalid');
 
-      if (old_value === bpm && input.hasClass('fromSpotify')) {
+      if (old_value === bpm && input.hasClass('fromSpotify') && !skip_confirm) {
+        skip_confirm = false;
         if (!window.confirm('<?= LNG_DESC_ASK_CONFIRM_BPM ?>')) {
           return;
         }
