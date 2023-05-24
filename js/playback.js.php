@@ -250,6 +250,7 @@ function initPlayer() {
   player.addListener('authentication_error', (e) => { fail(e.message); });
   player.addListener('account_error', (e) => {});
 
+  player.activateElement();
   player.connect();
   loadPlaybackSettings(noop, showPlaybackError);
 }
