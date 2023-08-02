@@ -1,6 +1,6 @@
 <?php
 define( 'LNG_SLOGAN'
-      , 'Dancify'
+      , 'Dancify your playlist'
       );
 define( 'LNG_TXT_INTRO_PART1'
       , <<<EOT
