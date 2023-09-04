@@ -42,7 +42,8 @@ function generateCsvContent() {
                                             , t.name
                                             , t.artists !== undefined
                                               ? t.artists.join(', ') : ''
-                                            , t.bpm
+                                            , t.bpm.custom >= 0 ? t.bpm.custom
+                                                                : t.bpm.spotify
                                             , t.genre !== undefined &&
                                               t.genre.by_user !== undefined
                                               ? formatGenre(t.genre.by_user) : ''

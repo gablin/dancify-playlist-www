@@ -36,7 +36,10 @@ function sortTracks(table, direction, field) {
   function cmp(a, b) {
     let res = 0;
     if (field == 'bpm') {
-      res = intcmp(a.bpm, b.bpm);
+      function bpm(t) {
+        return t.bpm.custom >= 0 ? t.bpm.custom : t.bpm.spotify;
+      }
+      res = intcmp(bpm(a), bpm(b));
     }
     else if (field == 'genre') {
       s1 = genreToString(getGenre(a));
