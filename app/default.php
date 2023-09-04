@@ -371,6 +371,7 @@ try {
                 <tr>
                   <th><?= LNG_HEAD_TITLE ?></th>
                   <th class="bpm"><?= LNG_HEAD_BPM ?></th>
+                  <th class="genre"><?= LNG_HEAD_GENRE ?></th>
                   <th class="length"><?= LNG_HEAD_LENGTH ?></th>
                 </tr>
               </thead>

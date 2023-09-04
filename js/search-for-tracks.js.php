@@ -20,7 +20,7 @@ function getSearchForTracksResultsArea() {
 
 function setupSearchForTracks() {
   let action_area = getSearchForTracksActionArea();
-  addOptionsToGenreSelect(action_area.find('select[name=search-by-genre]'), true);
+  addOptionsToGenreSelect(action_area.find('select[name=search-by-genre]'));
   setupSearchForTracksBpmController();
   setupSearchForTracksButtons();
   setupSearchForTracksAddSearchResultsButtons();
@@ -139,12 +139,16 @@ function searchForTracks( genre
       return;
     }
 
+    let data = { onlyInMyPlaylists: in_my_playlists_only
+               , limit: SEARCH_LIMIT
+               , offset: offset
+               , bpmRange: [bpm_range[0], bpm_range[1]]
+               };
+    if (genre > 0) {
+      data.genre = genre;
+    }
     callApi( '/api/search-tracks/'
-           , { genre: genre
-             , onlyInMyPlaylists: in_my_playlists_only
-             , limit: SEARCH_LIMIT
-             , offset: offset
-             }
+           , data
            , function(d) {
                if (d.trackIds.length == 0) {
                  done_f();
@@ -157,11 +161,6 @@ function searchForTracks( genre
                           let tracks = [];
                           for (let i = 0; i < dd.tracks.length; i++) {
                             let t = dd.tracks[i];
-                            let t_bpm = t.bpm.custom >= 0
-                                        ? t.bpm.custom : t.bpm.spotify;
-                            if (t_bpm < bpm_range[0] || t_bpm > bpm_range[1]) {
-                              continue;
-                            }
                             tracks.push(t);
                           }
                           appendResults(tracks);
@@ -192,9 +191,14 @@ function searchForTracks( genre
     for (let i = 0; i < tracks.length; i++) {
       let t = tracks[i];
       let t_bpm = t.bpm.custom >= 0 ? t.bpm.custom : t.bpm.spotify;
+      let t_genre = t.genre.by_user != 0
+                    ? t.genre.by_user
+                    : (t.genre.by_others.length > 0 ? t.genre.by_others[0] : 0);
+      console.log(t.genre);
       let tr = $( '<tr class="track">' +
                     '<td>' + formatTrackTitleAsText(t.artists, t.name) + '</td>' +
                     '<td class="bpm">' + t_bpm + '</td>' +
+                    '<td class="genre">' + genreToString(t_genre) + '</td>' +
                     '<td class="length">' +
                       formatTrackLength(t.length) +
                     '</td>' +
