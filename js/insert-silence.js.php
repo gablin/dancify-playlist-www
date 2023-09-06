@@ -34,6 +34,11 @@ function setupInsertSilence() {
                                                    , d.name
                                                    , d.length
                                                    , d.bpm
+                                                   , t.acousticness
+                                                   , t.danceability
+                                                   , t.energy
+                                                   , t.instrumentalness
+                                                   , t.valence
                                                    , d.genre.by_user
                                                    , d.genre.by_others
                                                    , d.comments

@@ -38,6 +38,11 @@ function setupFormElementsForInsertTrack() {
                                                    , d.name
                                                    , d.length
                                                    , d.bpm
+                                                   , 0
+                                                   , 0
+                                                   , 0
+                                                   , 0
+                                                   , 0
                                                    , d.genre.by_user
                                                    , d.genre.by_others
                                                    , d.comments

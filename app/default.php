@@ -10,7 +10,7 @@ beginPage();
 mkHtmlNavMenu(
   [ [ LNG_MENU_DANCE_DELIMITER, 'dance-delimiter', true ]
   , [ LNG_MENU_SCRATCHPAD, 'scratchpad', true ]
-  , [ LNG_MENU_BPM_OVERVIEW, 'bpm-overview', true ]
+  , [ LNG_MENU_TRACK_OVERVIEW, 'track-overview', true ]
   , [ LNG_MENU_DUPLICATE_CHECK
     , 'duplicate-check'
     , true
@@ -449,21 +449,62 @@ try {
   </div>
 </div>
 
-<div class="action-input-area" name="bpm-overview">
+<div class="action-input-area" name="track-overview">
   <div class="background"></div>
   <div class="input">
-    <div class="title"><?= LNG_MENU_BPM_OVERVIEW ?></div>
+    <div class="title"><?= LNG_MENU_TRACK_OVERVIEW ?></div>
 
     <p>
-      <?= LNG_DESC_BPM_OVERVIEW ?>
+      <?= LNG_DESC_TRACK_OVERVIEW ?>
+    </p>
+
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="show-bpm-overview" value="false" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SHOW_BPM_OVERVIEW ?>
+      </label>
+    </p>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="show-energy-overview" value="false" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SHOW_ENERGY_OVERVIEW ?>
+      </label>
+    </p>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="show-danceability-overview" value="false" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SHOW_DANCEABILITY_OVERVIEW ?>
+      </label>
+    </p>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="show-acousticness-overview" value="false" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SHOW_ACOUSTICNESS_OVERVIEW ?>
+      </label>
+    </p>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="show-instrumentalness-overview" value="false" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SHOW_INSTRUMENTALNESS_OVERVIEW ?>
+      </label>
+    </p>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="show-valence-overview" value="false" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SHOW_VALENCE_OVERVIEW ?>
+      </label>
     </p>
 
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
-        <?= LNG_BTN_CANCEL ?>
+        <?= LNG_BTN_CLOSE ?>
       </button>
-      <button id="hideBpmOverviewBtn"><?= LNG_BTN_HIDE ?></button>
-      <button id="showBpmOverviewBtn"><?= LNG_BTN_SHOW ?></button>
     </div>
   </div>
 </div>
@@ -795,7 +836,32 @@ try {
 
 </div>
 
-<div class="bpm-overview">
+<div class="track-overview bpm-overview">
+  <div class="bar-area"></div>
+  <div class="stats">THIS MUST NOT BE EMPTY</div>
+</div>
+
+<div class="track-overview energy-overview">
+  <div class="bar-area"></div>
+  <div class="stats">THIS MUST NOT BE EMPTY</div>
+</div>
+
+<div class="track-overview danceability-overview">
+  <div class="bar-area"></div>
+  <div class="stats">THIS MUST NOT BE EMPTY</div>
+</div>
+
+<div class="track-overview acousticness-overview">
+  <div class="bar-area"></div>
+  <div class="stats">THIS MUST NOT BE EMPTY</div>
+</div>
+
+<div class="track-overview instrumentalness-overview">
+  <div class="bar-area"></div>
+  <div class="stats">THIS MUST NOT BE EMPTY</div>
+</div>
+
+<div class="track-overview valence-overview">
   <div class="bar-area"></div>
   <div class="stats">THIS MUST NOT BE EMPTY</div>
 </div>
@@ -821,7 +887,7 @@ try {
 <script src="/js/sort.js.php"></script>
 <script src="/js/search-for-tracks.js.php"></script>
 <script src="/js/heartbeat.js.php"></script>
-<script src="/js/bpm-overview.js.php"></script>
+<script src="/js/track-overview.js.php"></script>
 <script src="/js/duplicate-check.js.php"></script>
 <script src="/js/randomize.js.php"></script>
 <script src="/js/playback.js.php"></script>
@@ -857,7 +923,7 @@ $(document).ready(
     setupRestorePlaylist();
     setupSort();
     setupSearchForTracks();
-    setupBpmOverview();
+    setupTrackOverview();
     setupDuplicateCheck();
     setupRandomize();
     setupPlayback();

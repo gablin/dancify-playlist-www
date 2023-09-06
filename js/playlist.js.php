@@ -27,6 +27,9 @@ var ABORT_LOAD_PLAYLIST_CALLBACK = null;
 const BPM_MIN = 0;
 const BPM_MAX = 255;
 
+const TRACK_AREA_HEIGHT = 10; // In rem
+const TRACK_AREA_HEIGHT_REDUCTION = 1; // In rem
+
 const DOUBLECLICK_RANGE_MS = 400;
 
 function setupPlaylist() {
@@ -56,7 +59,7 @@ function setupPlaylist() {
                   }
                 );
   $(window).resize(setPlaylistHeight);
-  $(window).resize(renderBpmOverview);
+  $(window).resize(renderTrackOverviews);
   $('.app-separator').each(
     function() {
       addAppResizeHandling($(this));
@@ -176,17 +179,23 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                           for (let i = 0; i < dd.tracks.length; i++) {
                             if (abort()) return;
                             let t = dd.tracks[i];
-                            let o = createPlaylistTrackObject( t.trackId
-                                                             , t.artists
-                                                             , t.name
-                                                             , t.length
-                                                             , t.bpm
-                                                             , t.genre.by_user
-                                                             , t.genre.by_others
-                                                             , t.comments
-                                                             , t.preview_url
-                                                             , added_by[i]
-                                                             );
+                            let o = createPlaylistTrackObject(
+                                      t.trackId
+                                    , t.artists
+                                    , t.name
+                                    , t.length
+                                    , t.bpm
+                                    , t.acousticness
+                                    , t.danceability
+                                    , t.energy
+                                    , t.instrumentalness
+                                    , t.valence
+                                    , t.genre.by_user
+                                    , t.genre.by_others
+                                    , t.comments
+                                    , t.preview_url
+                                    , added_by[i]
+                                    );
                             tracks.push(o);
                           }
                           appendTracks(getPlaylistTable(), tracks);
@@ -285,6 +294,11 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
                                                     , t.name
                                                     , t.length
                                                     , t.bpm
+                                                    , t.acousticness
+                                                    , t.danceability
+                                                    , t.energy
+                                                    , t.instrumentalness
+                                                    , t.valence
                                                     , t.genre.by_user
                                                     , t.genre.by_others
                                                     , t.comments
@@ -636,7 +650,7 @@ function addTrackBpmHandling(tr) {
       }
     );
 
-    renderBpmOverview();
+    renderTrackOverviews();
   }
 
   let skip_confirm = false;
@@ -744,6 +758,26 @@ function checkBpmInput(str, report_on_fail = true) {
     return false;
   }
   return true;
+}
+
+function getEnergyRgbColor(e) {
+  //               energy color (RGB)
+  const colors = [ [ 0.0, [  0,   0, 255] ] // Blue
+                 , [ 0.5, [255, 255,   0] ] // Yellow
+                 , [ 1.0, [  0, 255,   0] ] // Green
+                 ];
+  for (let i = 0; i < colors.length; i++) {
+    if (i == colors.length-2 || e < colors[i+1][0]) {
+      let p = (e - colors[i][0]) / (colors[i+1][0] - colors[i][0]);
+      let c = [...colors[i][1]];
+      for (let j = 0; j < c.length; j++) {
+        c[j] += Math.round((colors[i+1][1][j] - c[j]) * p);
+      }
+      return c;
+    }
+  }
+  console.log('ERROR: getEnergyRgbColor() with arg ' + e);
+  return null;
 }
 
 function updateGenreInDb(track_id, genre, success_f, fail_f) {
@@ -960,6 +994,14 @@ function getTrackObjectFromTr(tr) {
     let bpm_input = tr.find('input[name=bpm]');
     let bpm = parseInt(bpm_input.val().trim());
     let is_bpm_custom = !bpm_input.hasClass('fromSpotify');
+    let acousticness =
+      parseFloat(tr.find('input[name=acousticness]').val().trim());
+    let danceability =
+      parseFloat(tr.find('input[name=danceability]').val().trim());
+    let energy = parseFloat(tr.find('input[name=energy]').val().trim());
+    let instrumentalness =
+      parseFloat(tr.find('input[name=instrumentalness]').val().trim());
+    let valence = parseFloat(tr.find('input[name=valence]').val().trim());
     let genre_by_user =
       parseInt(tr.find('select[name=genre] option:selected').val().trim());
     let genres_by_others_text =
@@ -978,6 +1020,11 @@ function getTrackObjectFromTr(tr) {
                                     , { 'custom': is_bpm_custom ? bpm : -1
                                       , 'spotify': bpm
                                       }
+                                    , acousticness
+                                    , danceability
+                                    , energy
+                                    , instrumentalness
+                                    , valence
                                     , genre_by_user
                                     , genres_by_others
                                     , comments
@@ -1014,6 +1061,11 @@ function createPlaylistTrackObject( track_id
                                   , name
                                   , length_ms
                                   , bpm
+                                  , acousticness
+                                  , danceability
+                                  , energy
+                                  , instrumentalness
+                                  , valence
                                   , genre_by_user
                                   , genres_by_others
                                   , comments
@@ -1026,6 +1078,11 @@ function createPlaylistTrackObject( track_id
          , name: name
          , length: length_ms
          , bpm: bpm
+         , acousticness: acousticness
+         , danceability: danceability
+         , energy: energy
+         , instrumentalness: instrumentalness
+         , valence: valence
          , genre: { by_user: genre_by_user
                   , by_others: genres_by_others
                   }
@@ -1173,6 +1230,11 @@ function buildNewTableTrackTr() {
        '  <input type="hidden" name="name" value="" />' +
        '  <input type="hidden" name="preview_url" value="" />' +
        '  <input type="hidden" name="length_ms" value="" />' +
+       '  <input type="hidden" name="acousticness" value="" />' +
+       '  <input type="hidden" name="danceability" value="" />' +
+       '  <input type="hidden" name="energy" value="" />' +
+       '  <input type="hidden" name="instrumentalness" value="" />' +
+       '  <input type="hidden" name="valence" value="" />' +
        '  <input type="hidden" name="genres_by_others" value="" />' +
        '  <td class="index" />' +
        '  <td class="bpm">' +
@@ -1251,6 +1313,12 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('input[name=artists]').prop('value', track.artists.join(','));
     tr.find('input[name=name]').prop('value', track.name);
     tr.find('input[name=preview_url]').prop('value', track.previewUrl);
+    tr.find('input[name=acousticness]').prop('value', track.acousticness);
+    tr.find('input[name=danceability]').prop('value', track.danceability);
+    tr.find('input[name=energy]').prop('value', track.energy);
+    tr.find('input[name=instrumentalness]')
+      .prop('value', track.instrumentalness);
+    tr.find('input[name=valence]').prop('value', track.valence);
     tr.find('input[name=length_ms]').prop('value', track.length);
     let bpm_input = tr.find('input[name=bpm]');
     if (track.bpm.custom >= 0) {
@@ -1420,7 +1488,7 @@ function renderTable(table) {
   );
 
   if (table.is(getPlaylistTable())) {
-    renderBpmOverview();
+    renderTrackOverviews();
     setPlaylistHeight();
   }
 }
@@ -1526,7 +1594,7 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
       p.find('tr.selected').removeClass('selected');
 
       if (p.find('table').is(getPlaylistTable())) {
-        clearTrackBarSelection();
+        clearTrackBarSelectionInAllOverviews();
       }
     }
   );
@@ -1534,7 +1602,7 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
   if (multi_select_mode) {
     tr.toggleClass('selected');
     if (isTrInPlaylistTable(tr)) {
-      toggleTrackBarSelection(getTrackIndexOfTr(tr));
+      toggleTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
     }
     return;
   }
@@ -1545,7 +1613,7 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
     if (selected_sib_trs.length == 0) {
       tr.addClass('selected');
       if (isTrInPlaylistTable(tr)) {
-        addTrackBarSelection(getTrackIndexOfTr(tr));
+        addTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
       }
       return;
     }
@@ -1561,7 +1629,7 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
       if (sib_tr.hasClass('track') || sib_tr.hasClass('empty-track')) {
         sib_tr.addClass('selected');
         if (isTrInPlaylistTable(sib_tr)) {
-          addTrackBarSelection(getTrackIndexOfTr(sib_tr));
+          addTrackBarSelectionInAllOverviews(getTrackIndexOfTr(sib_tr));
         }
       }
     }
@@ -1575,21 +1643,21 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
             let tr = $(this);
             tr.removeClass('selected');
             if (isTrInPlaylistTable(tr)) {
-              removeTrackBarSelection(getTrackIndexOfTr(tr));
+              removeTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
             }
           }
         );
   if (selected_sib_trs.length > 0) {
     tr.addClass('selected');
     if (isTrInPlaylistTable(tr)) {
-      addTrackBarSelection(getTrackIndexOfTr(tr));
+      addTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
     }
     return;
   }
 
   tr.toggleClass('selected');
   if (isTrInPlaylistTable(tr)) {
-    toggleTrackBarSelection(getTrackIndexOfTr(tr));
+    toggleTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
   }
 }
 
@@ -2566,13 +2634,20 @@ function setPlaylistHeight() {
   let screen_vh = window.innerHeight;
   let table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
   let footer_vh = $('div.footer').outerHeight(true);
-  let bpm_overview = $('div.bpm-overview');
-  let bpm_overview_vh =
-    bpm_overview.is(':visible') ? bpm_overview.outerHeight(true) : 0;
+
   let playback = $('div.playback');
-  let playback_vh =
-    playback.is(':visible') ? playback.outerHeight(true) : 0;
-  let playlist_vh = screen_vh - table_offset - footer_vh - bpm_overview_vh -
+  let playback_vh = playback.is(':visible') ? playback.outerHeight(true) : 0;
+
+  let overviews_vh = 0;
+  getTrackOverviews().forEach(
+    function(overview) {
+      let overview_vh =
+        overview.is(':visible') ? overview.outerHeight(true) : 0;
+      overviews_vh += overview_vh;
+    }
+  );
+
+  let playlist_vh = screen_vh - table_offset - footer_vh - overviews_vh -
                     playback_vh;
   let playlist_px = playlist_vh + 'px';
   [ getPlaylistTable(), getLocalScratchpadTable(), getGlobalScratchpadTable() ]
@@ -2581,21 +2656,207 @@ function setPlaylistHeight() {
     );
 }
 
-function getTrackBarArea() {
-  return $('div.bpm-overview .bar-area');
+function renderTrackOverviews() {
+  renderBpmOverview();
+  renderEnergyOverview();
+  renderDanceabilityOverview();
+  renderAcousticnessOverview();
+  renderInstrumentalnessOverview();
+  renderValenceOverview();
 }
 
-function isBpmOverviewShowing() {
-  return $('div.bpm-overview').is(':visible');
+function getTrackOverviews() {
+  return [ $('div.bpm-overview')
+         , $('div.energy-overview')
+         , $('div.danceability-overview')
+         , $('div.acousticness-overview')
+         , $('div.instrumentalness-overview')
+         , $('div.valence-overview')
+         ];
+}
+
+function makeTrackOverviewStatsFunction(
+  overview_div, heading_str, get_f, post_average_f
+) {
+  return function(stats_div, tracks) {
+    tracks = tracks.filter(function(t) { return get_f(t) > 0 });
+    tracks.sort(function(a, b) { return intcmp(get_f(a), get_f(b)); });
+    let min = 0;
+    let max = 0;
+    let median = 0;
+    let average = 0;
+    if (tracks.length > 0) {
+      min = get_f(tracks[0]);
+      max = get_f(tracks[tracks.length-1]);
+      let i = Math.floor(tracks.length / 2);
+      median = tracks.length % 2 == 1 ? get_f(tracks[i+1]) : get_f(tracks[i]);
+      average =
+        Math.round( tracks.reduce(function(a, t) { return a + get_f(t); }, 0) /
+                    tracks.length
+                  );
+      if (post_average_f) {
+        average = post_average_f(average);
+      }
+    }
+    let stats = overview_div.find('.stats');
+    stats.text( heading_str + ' ' +
+                '<?= LNG_DESC_MIN ?>: ' + min + ' ' +
+                '<?= LNG_DESC_MAX ?>: ' + max + ' ' +
+                '<?= LNG_DESC_MEDIAN ?>: ' + median + ' ' +
+                '<?= LNG_DESC_AVERAGE ?>: ' + average
+              );
+  };
 }
 
 function renderBpmOverview() {
-  if (!isBpmOverviewShowing()) {
+  function get_f(t) {
+    return t.bpm.custom >= 0 ? t.bpm.custom : t.bpm.spotify;
+  }
+
+  let overview_div = $('div.bpm-overview');
+  renderTrackOverview(
+    overview_div
+  , '<?= LNG_HEAD_BPM ?>'
+  , get_f
+  , BPM_MIN
+  , BPM_MAX
+  , getBpmRgbColor
+  , makeTrackOverviewStatsFunction( overview_div
+                                  , '<?= LNG_HEAD_BPM ?>'
+                                  , get_f
+                                  , Math.round
+                                  )
+  );
+}
+
+function renderEnergyOverview() {
+  function get_f(t) {
+    return t.energy;
+  }
+
+  let overview_div = $('div.energy-overview');
+  renderTrackOverview(
+    overview_div
+  , '<?= LNG_HEAD_ENERGY ?>'
+  , get_f
+  , 0
+  , 1
+  , getEnergyRgbColor
+  , makeTrackOverviewStatsFunction( overview_div
+                                  , '<?= LNG_HEAD_ENERGY ?>'
+                                  , get_f
+                                  )
+  );
+}
+
+function renderDanceabilityOverview() {
+  function get_f(t) {
+    return t.danceability;
+  }
+
+  let overview_div = $('div.danceability-overview');
+  renderTrackOverview(
+    overview_div
+  , '<?= LNG_HEAD_DANCEABILITY ?>'
+  , get_f
+  , 0
+  , 1
+  , getEnergyRgbColor
+  , makeTrackOverviewStatsFunction( overview_div
+                                  , '<?= LNG_HEAD_DANCEABILITY ?>'
+                                  , get_f
+                                  )
+  );
+}
+
+function renderAcousticnessOverview() {
+  function get_f(t) {
+    return t.acousticness;
+  }
+
+  let overview_div = $('div.acousticness-overview');
+  renderTrackOverview(
+    overview_div
+  , '<?= LNG_HEAD_ACOUSTICNESS ?>'
+  , get_f
+  , 0
+  , 1
+  , getEnergyRgbColor
+  , makeTrackOverviewStatsFunction( overview_div
+                                  , '<?= LNG_HEAD_ACOUSTICNESS ?>'
+                                  , get_f
+                                  )
+  );
+}
+
+function renderInstrumentalnessOverview() {
+  function get_f(t) {
+    return t.instrumentalness;
+  }
+
+  let overview_div = $('div.instrumentalness-overview');
+  renderTrackOverview(
+    overview_div
+  , '<?= LNG_HEAD_INSTRUMENTALNESS ?>'
+  , get_f
+  , 0
+  , 1
+  , getEnergyRgbColor
+  , makeTrackOverviewStatsFunction( overview_div
+                                  , '<?= LNG_HEAD_INSTRUMENTALNESS ?>'
+                                  , get_f
+                                  )
+  );
+}
+
+function renderValenceOverview() {
+  function get_f(t) {
+    return t.valence;
+  }
+
+  let overview_div = $('div.valence-overview');
+  renderTrackOverview(
+    overview_div
+  , '<?= LNG_HEAD_VALENCE ?>'
+  , get_f
+  , 0
+  , 1
+  , getEnergyRgbColor
+  , makeTrackOverviewStatsFunction( overview_div
+                                  , '<?= LNG_HEAD_VALENCE ?>'
+                                  , get_f
+                                  )
+  );
+}
+
+function getTrackBarArea(overview_div) {
+  return overview_div.find('.bar-area');
+}
+
+function isTrackOverviewShowing(overview_div) {
+  return overview_div.is(':visible');
+}
+
+function renderTrackOverview(
+  overview_div, desc, track_value_f, min_value, max_value, color_f, stats_f
+) {
+  if (!isTrackOverviewShowing(overview_div)) {
     return;
   }
 
-  let area = getTrackBarArea();
+  let num_areas_showing =
+    getTrackOverviews().reduce(
+      function(a, div) { return a + isTrackOverviewShowing(div); }
+    , 0
+    );
+
+  let area = getTrackBarArea(overview_div);
   area.empty();
+  area.css( 'height'
+          , ( TRACK_AREA_HEIGHT -
+              TRACK_AREA_HEIGHT_REDUCTION * (num_areas_showing - 1)
+            ) + 'rem'
+          );
 
   let selected_track_indices = [];
   getSelectedTrackTrs().each(
@@ -2619,17 +2880,16 @@ function renderBpmOverview() {
     tracks
   , function(track_index) {
       let t = this;
-
-      t.bpm = t.bpm.custom >= 0 ? t.bpm.custom : t.bpm.spotify;
+      track_value = track_value_f(t);
 
       let bar_wrapper = $('<div class="bar-wrapper" />');
       bar_wrapper.css('left', bar_voffset + 'px');
       bar_wrapper.css('width', (bar_vw + 2*border_size) + 'px');
       let bar = $('<div class="bar" />');
-      let bar_vh = (t.bpm - BPM_MIN) / BPM_MAX * area_vh;
+      let bar_vh = (track_value - min_value) / max_value * area_vh;
       bar.css('height', bar_vh + 'px');
       bar.css('width', bar_vw + 'px');
-      let cs = getBpmRgbColor(t.bpm);
+      let cs = color_f(track_value);
       bar.css('background-color', 'rgb(' + cs.join(',') + ')');
       bar_voffset += bar_vw + border_size;
       bar_wrapper.append(bar);
@@ -2650,10 +2910,10 @@ function renderBpmOverview() {
                                                                   , t.name
                                                                   )
                                           : t.name;
-      let track_info = $( '<div class="bpm-overview-track-info">' +
+      let track_info = $( '<div class="track-overview-track-info">' +
                             '#' + (track_index+1) + ' ' + title +
                             '<br />' +
-                            'BPM: ' + t.bpm +
+                            desc + ': ' + track_value +
                           '</div>'
                         );
       if (selected_track_indices.includes(track_index)) {
@@ -2688,44 +2948,24 @@ function renderBpmOverview() {
           track_info.hide();
         }
       );
-      addTrackBarSelectHandling(bar);
-      addTrackBarDragHandling(bar);
+      addTrackBarSelectHandling(overview_div, bar);
+      addTrackBarDragHandling(overview_div, bar);
     }
   );
 
-  // Compute and show stats
-  tracks =
-    tracks.filter(function(t) { return t.bpm !== undefined && t.bpm > 0 });
-  tracks.sort(function(a, b) { return intcmp(a.bpm, b.bpm); });
-  let bpm_min = 0;
-  let bpm_max = 0;
-  let bpm_median = 0;
-  let bpm_average = 0;
-  if (tracks.length > 0) {
-    bpm_min = tracks[0].bpm;
-    bpm_max = tracks[tracks.length-1].bpm;
-    let i = Math.floor(tracks.length / 2);
-    bpm_median = tracks.length % 2 == 1 ? tracks[i+1].bpm : tracks[i].bpm;
-    bpm_average =
-      Math.round( tracks.reduce(function(a, t) { return a + t.bpm; }, 0) /
-                  tracks.length
-                );
-  }
-  let stats = $('div.bpm-overview .stats');
-  stats.text( '<?= LNG_DESC_BPM_MIN ?>: ' + bpm_min + ' ' +
-              '<?= LNG_DESC_BPM_MAX ?>: ' + bpm_max + ' ' +
-              '<?= LNG_DESC_BPM_MEDIAN ?>: ' + bpm_median + ' ' +
-              '<?= LNG_DESC_BPM_AVERAGE ?>: ' + bpm_average
-            );
-  stats.show();
+  stats_f(overview_div.find('.stats'), tracks);
 }
 
-function addTrackBarSelectHandling(bar) {
+function addTrackBarSelectHandling(overview_div, bar) {
   bar.click(
     function(e) {
       if (TRACK_DRAG_STATE == 0) {
         let bar_wr = $(this).closest('.bar-wrapper');
-        updateTrackBarSelection(bar_wr, e.ctrlKey || e.metaKey, e.shiftKey);
+        updateTrackBarSelection( overview_div
+                               , bar_wr
+                               , e.ctrlKey || e.metaKey
+                               , e.shiftKey
+                               );
       }
       else {
         TRACK_DRAG_STATE = 0;
@@ -2737,45 +2977,77 @@ function addTrackBarSelectHandling(bar) {
   );
 }
 
-function addTrackBarSelection(track_index) {
-  if (!isBpmOverviewShowing()) {
+function addTrackBarSelectionInAllOverviews(track_index) {
+  getTrackOverviews().forEach(
+    function(div) {
+      addTrackBarSelection(div, track_index);
+    }
+  );
+}
+
+function addTrackBarSelection(overview_div, track_index) {
+  if (!isTrackOverviewShowing(overview_div)) {
     return;
   }
 
-  let area = getTrackBarArea();
+  let area = getTrackBarArea(overview_div);
   let bar_wrappers = area.find('.bar-wrapper');
   let bar_wr = $(bar_wrappers[track_index]);
   bar_wr.addClass('selected');
 }
 
-function removeTrackBarSelection(track_index) {
-  if (!isBpmOverviewShowing()) {
+function removeTrackBarSelectionInAllOverviews(track_index) {
+  getTrackOverviews().forEach(
+    function(div) {
+      removeTrackBarSelection(div, track_index);
+    }
+  );
+}
+
+function removeTrackBarSelection(overview_div, track_index) {
+  if (!isTrackOverviewShowing(overview_div)) {
     return;
   }
 
-  let area = getTrackBarArea();
+  let area = getTrackBarArea(overview_div);
   let bar_wrappers = area.find('.bar-wrapper');
   let bar_wr = $(bar_wrappers[track_index]);
   bar_wr.removeClass('selected');
 }
 
-function toggleTrackBarSelection(track_index) {
-  if (!isBpmOverviewShowing()) {
+function toggleTrackBarSelectionInAllOverviews(track_index) {
+  getTrackOverviews().forEach(
+    function(div) {
+      toggleTrackBarSelection(div, track_index);
+    }
+  );
+}
+
+function toggleTrackBarSelection(overview_div, track_index) {
+  if (!isTrackOverviewShowing(overview_div)) {
     return;
   }
 
-  let area = getTrackBarArea();
+  let area = getTrackBarArea(overview_div);
   let bar_wrappers = area.find('.bar-wrapper');
   let bar_wr = $(bar_wrappers[track_index]);
   bar_wr.toggleClass('selected');
 }
 
-function clearTrackBarSelection() {
-  if (!isBpmOverviewShowing()) {
+function clearTrackBarSelectionInAllOverviews() {
+  getTrackOverviews().forEach(
+    function(div) {
+      clearTrackBarSelection(div);
+    }
+  );
+}
+
+function clearTrackBarSelection(overview_div) {
+  if (!isTrackOverviewShowing(overview_div)) {
     return;
   }
 
-  let area = getTrackBarArea();
+  let area = getTrackBarArea(overview_div);
   area.find('.bar-wrapper').removeClass('selected');
 }
 
@@ -2783,7 +3055,9 @@ function getTrackIndexOfBarWrapper(bar_wr) {
   return bar_wr.closest('.bar-area').find('.bar-wrapper').index(bar_wr);
 }
 
-function updateTrackBarSelection(bar_wr, multi_select_mode, span_mode) {
+function updateTrackBarSelection(
+  overview_div, bar_wr, multi_select_mode, span_mode
+) {
   if (multi_select_mode) {
     bar_wr.toggleClass('selected');
     toggleTrackTrSelection( getPlaylistTable()
@@ -2846,7 +3120,7 @@ function updateTrackBarSelection(bar_wr, multi_select_mode, span_mode) {
   toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
 }
 
-function addTrackBarDragHandling(bar) {
+function addTrackBarDragHandling(overview_div, bar) {
   function disableTextSelection(e) {
     e.preventDefault();
   }
@@ -2928,7 +3202,7 @@ function addTrackBarDragHandling(bar) {
       }
 
       function up() {
-        let area = getTrackBarArea();
+        let area = getTrackBarArea(overview_div);
         let insert_point = area.find('.insert-before, .insert-after');
         if (insert_point.length == 1) {
           // Forbid dropping adjacent to a selected track as that causes wierd

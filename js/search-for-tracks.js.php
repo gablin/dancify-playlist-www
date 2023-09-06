@@ -295,6 +295,11 @@ function setupSearchForTracksAddSearchResultsButtons() {
                                          , t.name
                                          , t.length
                                          , t.bpm
+                                         , t.acousticness
+                                         , t.danceability
+                                         , t.energy
+                                         , t.instrumentalness
+                                         , t.valence
                                          , t.genre.by_user
                                          , t.genre.by_others
                                          , t.comments

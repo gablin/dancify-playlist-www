@@ -165,8 +165,8 @@ DEFINE( 'LNG_MENU_DANCE_DELIMITER'
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
       );
-DEFINE( 'LNG_MENU_BPM_OVERVIEW'
-      , 'BPM overview'
+DEFINE( 'LNG_MENU_TRACK_OVERVIEW'
+      , 'Track overview'
       );
 DEFINE( 'LNG_MENU_RESTORE_PLAYLIST'
       , 'Restore playlist'
@@ -227,6 +227,21 @@ define( 'LNG_HEAD_TOTAL'
       );
 define( 'LNG_HEAD_BPM'
       , 'BPM'
+      );
+define( 'LNG_HEAD_ENERGY'
+      , 'Energy'
+      );
+define( 'LNG_HEAD_DANCEABILITY'
+      , 'Danceability'
+      );
+define( 'LNG_HEAD_ACOUSTICNESS'
+      , 'Acousticness'
+      );
+define( 'LNG_HEAD_INSTRUMENTALNESS'
+      , 'Instrumentalness'
+      );
+define( 'LNG_HEAD_VALENCE'
+      , 'Valence'
       );
 define( 'LNG_HEAD_GENRE'
       , 'Genre'
@@ -304,9 +319,28 @@ different playlists. For that reason, dragging tracks into global scratchpad
 creates copies instead of moving them out of the original list.
 EOT
       );
-define( 'LNG_DESC_BPM_OVERVIEW'
-      , 'Display a graph that illustrates the BPM ratio of the tracks in the ' .
-        'playlist.'
+define( 'LNG_DESC_TRACK_OVERVIEW'
+      , 'Display graphs that illustrate various information about tracks in ' .
+        'the playlist.'
+      );
+define( 'LNG_DESC_SHOW_BPM_OVERVIEW'
+      , 'BPM'
+      );
+define( 'LNG_DESC_SHOW_ENERGY_OVERVIEW'
+      , 'Energy - how energetic the song is (value between 0 and 1)'
+      );
+define( 'LNG_DESC_SHOW_ACOUSTICNESS_OVERVIEW'
+      , 'Acousticness - how acoustic the song is (value between 0 and 1)'
+      );
+define( 'LNG_DESC_SHOW_DANCEABILITY_OVERVIEW'
+      , 'Danceability - how danceable the song is (value between 0 and 1)'
+      );
+define( 'LNG_DESC_SHOW_INSTRUMENTALNESS_OVERVIEW'
+      , 'Instrumentalness - how instrumental the song is (value between 0 and 1)'
+      );
+define( 'LNG_DESC_SHOW_VALENCE_OVERVIEW'
+      , 'Valence - the mood of the song (value between 0 and 1, where 0 is ' .
+        'sad, depressing, angry, and 1 is happy, cheerful, euphoric)'
       );
 define( 'LNG_DESC_DELIMITER'
       , <<<EOT
@@ -585,16 +619,16 @@ define( 'LNG_DESC_DUPLICATE_CHECK'
         'the playlist in combination with the local scratchpad. Global check ' .
         'covers only the global scratchpad.'
       );
-define( 'LNG_DESC_BPM_MIN'
+define( 'LNG_DESC_MIN'
       , 'Min'
       );
-define( 'LNG_DESC_BPM_MAX'
+define( 'LNG_DESC_MAX'
       , 'Max'
       );
-define( 'LNG_DESC_BPM_MEDIAN'
+define( 'LNG_DESC_MEDIAN'
       , 'Median'
       );
-define( 'LNG_DESC_BPM_AVERAGE'
+define( 'LNG_DESC_AVERAGE'
       , 'Average'
       );
 define( 'LNG_DESC_DANCE_LENGTH'

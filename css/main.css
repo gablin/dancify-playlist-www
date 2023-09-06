@@ -427,55 +427,57 @@ form {
   cursor: pointer;
 }
 
-.bpm-overview {
+.track-overview {
   margin-top: .5em;
   display: none;
 }
-.bpm-overview .stats {
+.track-overview + .track-overview {
+  margin-top: 0;
+}
+.track-overview .stats {
   width: 100%;
   font-size: 80%;
 }
-.bpm-overview .bar-area {
-  height: 10em;
+.track-overview .bar-area {
   width: 100%;
   position: relative;
   overview-x: hidden;
 }
-.bpm-overview .bar-wrapper {
+.track-overview .bar-wrapper {
   display: inline-block;
   height: 100%;
   position: absolute;
   bottom: 0;
 }
-.bpm-overview .bar,
-.bpm-overview .delimiter {
+.track-overview .bar,
+.track-overview .delimiter {
   display: inline-block;
   position: absolute;
   bottom: 0;
   border: 1px solid #000;
 }
-.bpm-overview .bar-wrapper.selected .bar,
-.bpm-overview .bar-area.drag-mode .bar-wrapper.selected .bar:hover {
+.track-overview .bar-wrapper.selected .bar,
+.track-overview .bar-area.drag-mode .bar-wrapper.selected .bar:hover {
   background-color: #000 !important;
 }
-.bpm-overview .bar-wrapper.selected .bar:hover {
+.track-overview .bar-wrapper.selected .bar:hover {
   background-color: #333 !important;
   cursor: pointer;
 }
-.bpm-overview .bar:hover {
+.track-overview .bar:hover {
   box-shadow: 0 0 .1em;
   z-index: 3;
 }
-.bpm-overview .bar-area.drag-mode .bar:hover {
+.track-overview .bar-area.drag-mode .bar:hover {
   box-shadow: none;
 }
-.bpm-overview .delimiter {
+.track-overview .delimiter {
   width: 1px;
   background-color: #09814A;
   border: 0;
   z-index: 2;
 }
-.bpm-overview-track-info {
+.track-overview-track-info {
   position: absolute;
   top: 0;
   left: 0;

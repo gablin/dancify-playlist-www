@@ -129,6 +129,14 @@ for ($i = 0; $i < count($tracks); $i++) {
          );
   $bpm_custom = count($bpm) > 0 ? $bpm[0][1] : -1;
   $bpm_spotify = is_object($audio_feats[$i]) ? (int) $audio_feats[$i]->tempo : 0;
+  $acousticness =
+    is_object($audio_feats[$i]) ? $audio_feats[$i]->acousticness : 0;
+  $danceability =
+    is_object($audio_feats[$i]) ? $audio_feats[$i]->danceability : 0;
+  $energy = is_object($audio_feats[$i]) ? $audio_feats[$i]->energy : 0;
+  $instrumentalness =
+    is_object($audio_feats[$i]) ? $audio_feats[$i]->instrumentalness : 0;
+  $valence = is_object($audio_feats[$i]) ? $audio_feats[$i]->valence : 0;
   $genres_by_user = array_values( // To reset indices
                       array_filter(
                         $genres
@@ -159,6 +167,11 @@ for ($i = 0; $i < count($tracks); $i++) {
                                           , $t->artists
                                           )
                   , 'length' => $t->duration_ms
+                  , 'acousticness' => $acousticness
+                  , 'danceability' => $danceability
+                  , 'energy' => $energy
+                  , 'instrumentalness' => $instrumentalness
+                  , 'valence' => $valence
                   , 'bpm' => [ 'custom' => $bpm_custom
                              , 'spotify' => $bpm_spotify
                              ]

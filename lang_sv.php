@@ -166,8 +166,8 @@ DEFINE( 'LNG_MENU_DANCE_DELIMITER'
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
       );
-DEFINE( 'LNG_MENU_BPM_OVERVIEW'
-      , 'BPM-överblick'
+DEFINE( 'LNG_MENU_TRACK_OVERVIEW'
+      , 'Låtöverblick'
       );
 DEFINE( 'LNG_MENU_RESTORE_PLAYLIST'
       , 'Återställ spellista'
@@ -228,6 +228,21 @@ define( 'LNG_HEAD_TOTAL'
       );
 define( 'LNG_HEAD_BPM'
       , 'BPM'
+      );
+define( 'LNG_HEAD_ENERGY'
+      , 'Energi'
+      );
+define( 'LNG_HEAD_DANCEABILITY'
+      , 'Dansbarhet'
+      );
+define( 'LNG_HEAD_ACOUSTICNESS'
+      , 'Akustik'
+      );
+define( 'LNG_HEAD_INSTRUMENTALNESS'
+      , 'Instrumentalhet'
+      );
+define( 'LNG_HEAD_VALENCE'
+      , 'Valens'
       );
 define( 'LNG_HEAD_GENRE'
       , 'Genre'
@@ -306,8 +321,27 @@ görs kopior av låtar som flyttas till den globala scratchpaden istället för 
 flytta dem bort från den ordinarie listan.
 EOT
       );
-define( 'LNG_DESC_BPM_OVERVIEW'
-      , 'Visa en graf som illustrerar BPM-fördelningen av låtarna i spellistan.'
+define( 'LNG_DESC_TRACK_OVERVIEW'
+      , 'Visa grafer som illustrerar olika information om låtarna i spellistan.'
+      );
+define( 'LNG_DESC_SHOW_BPM_OVERVIEW'
+      , 'BPM'
+      );
+define( 'LNG_DESC_SHOW_ENERGY_OVERVIEW'
+      , 'Energi - hur energisk låten är (värde mellan 0 och 1)'
+      );
+define( 'LNG_DESC_SHOW_ACOUSTICNESS_OVERVIEW'
+      , 'Akustik - hur akustisk låten är (värde mellan 0 och 1)'
+      );
+define( 'LNG_DESC_SHOW_DANCEABILITY_OVERVIEW'
+      , 'Dansbarhet - hur dansbar låten är (värde mellan 0 och 1)'
+      );
+define( 'LNG_DESC_SHOW_INSTRUMENTALNESS_OVERVIEW'
+      , 'Instrumentalhet - hur instrumental låten är (värde mellan 0 och 1)'
+      );
+define( 'LNG_DESC_SHOW_VALENCE_OVERVIEW'
+      , 'Valens - låtens humör (värde mellan 0 och 1, där 0 är ledsen, ' .
+        'deprimerad, arg, och 1 är glad, lycklig, euforisk)'
       );
 define( 'LNG_DESC_DELIMITER'
       , <<<EOT
@@ -587,16 +621,16 @@ define( 'LNG_DESC_DUPLICATE_CHECK'
         'spellistan i kombination med den lokala scratchpaden. Global koll går ' .
         'endast igenom den globala scratchpaden.'
       );
-define( 'LNG_DESC_BPM_MIN'
+define( 'LNG_DESC_MIN'
       , 'Min'
       );
-define( 'LNG_DESC_BPM_MAX'
+define( 'LNG_DESC_MAX'
       , 'Max'
       );
-define( 'LNG_DESC_BPM_MEDIAN'
+define( 'LNG_DESC_MEDIAN'
       , 'Median'
       );
-define( 'LNG_DESC_BPM_AVERAGE'
+define( 'LNG_DESC_AVERAGE'
       , 'Genomsnitt'
       );
 define( 'LNG_DESC_DANCE_LENGTH'
