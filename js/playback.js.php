@@ -10,6 +10,7 @@ var PLAYBACK_PLAYER = null;
 var PLAYBACK_DEVICE_ID = null;
 var PLAYBACK_SEEK_TIMER = null;
 var PLAYBACK_HAS_TRACK = false;
+var PLAYBACK_IS_STOPPED = false;
 var PLAYBACK_LAST_PLAYED_TRACK_ID = null;
 var PLAYBACK_LAST_PLAYED_INDEX = null;
 var PLAYBACK_LAST_PLAYED_TABLE = null;
@@ -314,7 +315,6 @@ function checkPlayPos() {
           if (best_playing_index >= 0) {
             let next_j = best_playing_index + 1;
             if (next_j < tracks.length) {
-              PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 1;
               PLAYBACK_LAST_PLAYED_INDEX = next_j;
               playTrack( tracks[next_j].trackId
                        , PLAYBACK_LAST_PLAYED_INDEX
@@ -386,6 +386,7 @@ function triggerPause() {
   PLAYBACK_PLAYER.pause().then();
   renderPaused();
   stopSeek();
+  PLAYBACK_IS_STOPPED = true;
 }
 
 function hasPlayback() {
@@ -405,6 +406,12 @@ function playTrack( track_id
   }
 
   PLAYBACK_PLAYER.activateElement();
+
+  // Invoking the player API to play will cause two state changes, the first of
+  // which may cause unintended skipping to the next song if this was invoked
+  // when the player was put in pause. By ignoring the next state change, we
+  // circumvent that problem.
+  PLAYBACK_IGNORE_NEXT_STATE_CHANGES = 1;
 
   stopPlayPosCheck();
   callApi( '/api/player/'
