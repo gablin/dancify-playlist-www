@@ -2691,9 +2691,8 @@ function makeTrackOverviewStatsFunction(
       let i = Math.floor(tracks.length / 2);
       median = tracks.length % 2 == 1 ? get_f(tracks[i+1]) : get_f(tracks[i]);
       average =
-        Math.round( tracks.reduce(function(a, t) { return a + get_f(t); }, 0) /
-                    tracks.length
-                  );
+        tracks.reduce(function(a, t) { return a + get_f(t); }, 0) /
+        tracks.length
       if (post_average_f) {
         average = post_average_f(average);
       }
@@ -2745,6 +2744,9 @@ function renderEnergyOverview() {
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_ENERGY ?>'
                                   , get_f
+                                  , function(v) {
+                                      return Math.round(v*1000) / 1000;
+                                    }
                                   )
   );
 }
@@ -2765,6 +2767,9 @@ function renderDanceabilityOverview() {
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_DANCEABILITY ?>'
                                   , get_f
+                                  , function(v) {
+                                      return Math.round(v*1000) / 1000;
+                                    }
                                   )
   );
 }
@@ -2785,6 +2790,9 @@ function renderAcousticnessOverview() {
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_ACOUSTICNESS ?>'
                                   , get_f
+                                  , function(v) {
+                                      return Math.round(v*1000) / 1000;
+                                    }
                                   )
   );
 }
@@ -2805,6 +2813,9 @@ function renderInstrumentalnessOverview() {
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_INSTRUMENTALNESS ?>'
                                   , get_f
+                                  , function(v) {
+                                      return Math.round(v*1000) / 1000;
+                                    }
                                   )
   );
 }
@@ -2825,6 +2836,9 @@ function renderValenceOverview() {
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_VALENCE ?>'
                                   , get_f
+                                  , function(v) {
+                                      return Math.round(v*1000) / 1000;
+                                    }
                                   )
   );
 }
