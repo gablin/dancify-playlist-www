@@ -1562,11 +1562,6 @@ function removeTrackTrSelection(table, track_index) {
   tr.removeClass('selected');
 }
 
-function toggleTrackTrSelection(table, track_index) {
-  let tr = $(table.find('.track, .empty-track')[track_index]);
-  tr.toggleClass('selected');
-}
-
 function getSelectedTrackTrs() {
   return $('.playlist tr.selected');
 }
@@ -1600,9 +1595,17 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
   );
 
   if (multi_select_mode) {
-    tr.toggleClass('selected');
-    if (isTrInPlaylistTable(tr)) {
-      toggleTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
+    if (!tr.hasClass('selected')) {
+      tr.addClass('selected');
+      if (isTrInPlaylistTable(tr)) {
+        addTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
+      }
+    }
+    else {
+      tr.removeClass('selected');
+      if (isTrInPlaylistTable(tr)) {
+        removeTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
+      }
     }
     return;
   }
@@ -1655,17 +1658,18 @@ function updateTrackTrSelection(tr, multi_select_mode, span_mode) {
     return;
   }
 
-  tr.toggleClass('selected');
-  if (isTrInPlaylistTable(tr)) {
-    toggleTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
+  if (!tr.hasClass('selected')) {
+    tr.addClass('selected');
+    if (isTrInPlaylistTable(tr)) {
+      addTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
+    }
   }
-}
-
-function togglePlaylistTrackTrSelection(track_index) {
-  let table = getPlaylistTable();
-  let track_trs = table.find('.track, .empty-track');
-  let tr = $(track_trs[track_index]);
-  tr.toggleClass('selected');
+  else {
+    tr.removeClass('selected');
+    if (isTrInPlaylistTable(tr)) {
+      removeTrackBarSelectionInAllOverviews(getTrackIndexOfTr(tr));
+    }
+  }
 }
 
 function addTrackTrSelectHandling(tr) {
@@ -3039,25 +3043,6 @@ function removeTrackBarSelection(overview_div, track_index) {
   bar_wr.removeClass('selected');
 }
 
-function toggleTrackBarSelectionInAllOverviews(track_index) {
-  getTrackOverviews().forEach(
-    function(div) {
-      toggleTrackBarSelection(div, track_index);
-    }
-  );
-}
-
-function toggleTrackBarSelection(overview_div, track_index) {
-  if (!isTrackOverviewShowing(overview_div)) {
-    return;
-  }
-
-  let area = getTrackBarArea(overview_div);
-  let bar_wrappers = area.find('.bar-wrapper');
-  let bar_wr = $(bar_wrappers[track_index]);
-  bar_wr.toggleClass('selected');
-}
-
 function clearTrackBarSelectionInAllOverviews() {
   getTrackOverviews().forEach(
     function(div) {
@@ -3082,11 +3067,46 @@ function getTrackIndexOfBarWrapper(bar_wr) {
 function updateTrackBarSelection(
   overview_div, bar_wr, multi_select_mode, span_mode
 ) {
+  function propagateBarSelectionToOtherOverviews() {
+    // Clear selection in all other overviews
+    getTrackOverviews().forEach(
+      function(div) {
+        if (div.is(overview_div)) return;
+        if (!isTrackOverviewShowing(overview_div)) return;
+        clearTrackBarSelection(div);
+      }
+    );
+
+    // Find selected bars in this overview and set those in other views
+    overview_div.find('.bar-wrapper').each(
+      function(index) {
+        let bar_wr = $(this);
+        if (!bar_wr.hasClass('selected')) return;
+        getTrackOverviews().forEach(
+          function(div) {
+            if (div.is(overview_div)) return;
+            if (!isTrackOverviewShowing(overview_div)) return;
+            addTrackBarSelection(div, index);
+          }
+        );
+      }
+    );
+  }
+
   if (multi_select_mode) {
-    bar_wr.toggleClass('selected');
-    toggleTrackTrSelection( getPlaylistTable()
-                          , getTrackIndexOfBarWrapper(bar_wr)
-                          );
+    if (!bar_wr.hasClass('selected')) {
+        bar_wr.addClass('selected');
+        addTrackTrSelection( getPlaylistTable()
+                           , getTrackIndexOfBarWrapper(bar_wr)
+                           );
+    }
+    else {
+        bar_wr.removeClass('selected');
+        removeTrackTrSelection( getPlaylistTable()
+                              , getTrackIndexOfBarWrapper(bar_wr)
+                              );
+    }
+    propagateBarSelectionToOtherOverviews();
     return;
   }
 
@@ -3100,6 +3120,7 @@ function updateTrackBarSelection(
       addTrackTrSelection( getPlaylistTable()
                          , getTrackIndexOfBarWrapper(bar_wr)
                          );
+      propagateBarSelectionToOtherOverviews();
       return;
     }
     let first = $(selected_sib_bar_wrappers[0]);
@@ -3118,6 +3139,7 @@ function updateTrackBarSelection(
                            );
       }
     }
+    propagateBarSelectionToOtherOverviews();
     return;
   }
 
@@ -3137,11 +3159,23 @@ function updateTrackBarSelection(
   if (selected_sib_bar_wrappers.length > 0) {
     bar_wr.addClass('selected');
     addTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
+    propagateBarSelectionToOtherOverviews();
     return;
   }
 
-  bar_wr.toggleClass('selected');
-  toggleTrackTrSelection(getPlaylistTable(), getTrackIndexOfBarWrapper(bar_wr));
+  if (!bar_wr.hasClass('selected')) {
+      bar_wr.addClass('selected');
+      addTrackTrSelection( getPlaylistTable()
+                         , getTrackIndexOfBarWrapper(bar_wr)
+                         );
+  }
+  else {
+      bar_wr.removeClass('selected');
+      removeTrackTrSelection( getPlaylistTable()
+                            , getTrackIndexOfBarWrapper(bar_wr)
+                            );
+  }
+  propagateBarSelectionToOtherOverviews();
 }
 
 function addTrackBarDragHandling(overview_div, bar) {
