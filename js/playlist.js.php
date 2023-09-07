@@ -2201,6 +2201,11 @@ function loadGlobalScratchpad(success_f, fail_f) {
                                                       , t.name
                                                       , t.length
                                                       , t.bpm
+                                                      , t.acousticness
+                                                      , t.danceability
+                                                      , t.energy
+                                                      , t.instrumentalness
+                                                      , t.valence
                                                       , t.genre.by_user
                                                       , t.genre.by_others
                                                       , t.comments
@@ -2328,6 +2333,11 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                                                       , t.name
                                                       , t.length
                                                       , t.bpm
+                                                      , t.acousticness
+                                                      , t.danceability
+                                                      , t.energy
+                                                      , t.instrumentalness
+                                                      , t.valence
                                                       , t.genre.by_user
                                                       , t.genre.by_others
                                                       , t.comments
