@@ -44,32 +44,36 @@ function doDuplicateCheck(tables) {
 
 function getTrackDuplicates(tables) {
   let playlist_tracks = getTrackData(getPlaylistTable());
-  let tracks = [];
-  tables.forEach(
-    table => tracks = tracks.concat(getTrackData(table))
-  );
-  let duplicates = [];
   function getIdx(i) {
     if (i < playlist_tracks.length) {
       return i+1;
     }
     return i+1 - playlist_tracks.length;
   }
+
+  let tracks = [];
+  tables.forEach(
+    table => tracks = tracks.concat(getTrackData(table))
+  );
+
+  let marked_duplicates = new Array(tracks.length).fill(false);
   for (let i = 0; i < tracks.length; i++) {
-    let found_duplicate = false;
     for (let j = i+1; j < tracks.length; j++) {
       if ( tracks[i].trackId == tracks[j].trackId ||
            formatTrackTitleAsText(tracks[i].artists, tracks[i].name) ==
            formatTrackTitleAsText(tracks[j].artists, tracks[j].name)
          )
       {
-        if (!found_duplicate) {
-          duplicates.push([getIdx(i), tracks[i]]);
-          found_duplicate = true;
-        }
-        duplicates.push([getIdx(j), tracks[j]]);
+        marked_duplicates[i] = true;
+        marked_duplicates[j] = true;
       }
     }
+  }
+
+  let duplicates = [];
+  for (let i = 0; i < tracks.length; i++) {
+    if (!marked_duplicates[i]) continue;
+    duplicates.push([getIdx(i), tracks[i]]);
   }
   return duplicates;
 }
