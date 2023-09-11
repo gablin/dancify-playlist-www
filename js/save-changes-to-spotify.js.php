@@ -34,7 +34,7 @@ function setupSaveChangesToSpotify() {
         else {
           let tr = addToUserPlaylists(res.newPlaylistId, name);
           // Give some time to allow saves to propagate before loading the new list
-          setTimeout(function() { tr.find('a').trigger('click'); }, 500);
+          setTimeout(function() { tr.find('a').trigger('click'); }, 10);
         }
       }
       function fail(msg) {
