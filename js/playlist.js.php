@@ -1040,7 +1040,7 @@ function getTrackObjectFromTr(tr) {
   else {
     let name = tr.find('td.title').text().trim();
     let length = tr.find('td.length').text().trim();
-    let bpm = { 'spotify': tr.find('td.bpm').text().trim() };
+    let bpm = '';
     let genre = tr.find('td.genre').text().trim();
     return createPlaylistPlaceholderObject(name, length, bpm, genre);
   }
