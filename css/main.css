@@ -604,6 +604,7 @@ form {
   background-color: #fff;
 }
 .playback-error {
+  z-index: 10;
   position: absolute;
   background-color: #E60000;
   color: #fff;
