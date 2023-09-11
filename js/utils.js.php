@@ -78,6 +78,17 @@ function intcmp(i1, i2) {
 }
 
 /**
+ * Same as strcmp but for floats.
+ *
+ * @param f1 First float.
+ * @param f2 Second float.
+ * @return int
+ */
+function floatcmp(f1, f2) {
+  return (f1 == f2) ? 0 : (f1 > f2) ? 1 : -1;
+}
+
+/**
  * Returns a new array containing only unique values.
  *
  * @param a Array.

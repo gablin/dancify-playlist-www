@@ -46,6 +46,9 @@ function sortTracks(table, direction, field) {
       s2 = genreToString(getGenre(b));
       res = strcmp(s1, s2);
     }
+    else if (field == 'energy') {
+      res = floatcmp(a.energy, b.energy);
+    }
     return res * direction;
   }
   sorted_tracks = tracks.sort(cmp);

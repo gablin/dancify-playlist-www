@@ -194,14 +194,15 @@ try {
     <div class="title"><?= LNG_MENU_SORT ?></div>
     <p>
       <?= sprintf( LNG_INSTR_SORT_TRACKS
-                 , "<select name=\"order_direction\" />" .
-                     "<option value=\"+1\">" . LNG_DESC_RISING . "</option>" .
-                     "<option value=\"-1\">" . LNG_DESC_FALLING . "</option>" .
-                   "</select>"
-                 , "<select name=\"order_field\" />" .
-                     "<option value=\"bpm\">" . LNG_DESC_BPM . "</option>" .
-                     "<option value=\"genre\">" . LNG_DESC_GENRE . "</option>" .
-                   "</select>"
+                 , '<select name="order_direction" />' .
+                     '<option value="+1">' . LNG_DESC_RISING . '</option>' .
+                     '<option value="-1">' . LNG_DESC_FALLING . '</option>' .
+                   '</select>'
+                 , '<select name="order_field" />' .
+                     '<option value="bpm">' . LNG_DESC_BPM . '</option>' .
+                     '<option value="genre">' . LNG_DESC_GENRE . '</option>' .
+                     '<option value="energy">' . LNG_DESC_ENERGY . '</option>' .
+                   '</select>'
                  ) ?>
     </p>
     <p class="warning">

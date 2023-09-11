@@ -512,6 +512,9 @@ define( 'LNG_DESC_PLAYLIST_NAME'
 define( 'LNG_DESC_GENRE'
       , 'genre'
       );
+define( 'LNG_DESC_ENERGY'
+      , 'energy'
+      );
 define( 'LNG_DESC_PLACEHOLDER'
       , 'Placeholder'
       );
