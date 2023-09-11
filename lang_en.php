@@ -63,6 +63,12 @@ define( 'LNG_BTN_I_AGREE'
 define( 'LNG_BTN_INSERT'
       , 'Insert'
       );
+define( 'LNG_BTN_INSERT_IN_PLAYLIST'
+      , 'Insert in playlist'
+      );
+define( 'LNG_BTN_INSERT_IN_LOCAL_SCRATCHPAD'
+      , 'Insert in local scratchpad'
+      );
 define( 'LNG_BTN_SHOW'
       , 'Show'
       );
@@ -153,11 +159,14 @@ define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
 define( 'LNG_MENU_RANDOMIZE_BY_BPM'
       , 'Randomize order by BPM'
       );
-define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
-      , 'Insert track at interval'
+define( 'LNG_MENU_INSERT_TRACK'
+      , 'Insert track'
       );
-define( 'LNG_MENU_INSERT_SILENCE_AT_INTERVAL'
-      , 'Insert silence at interval'
+define( 'LNG_MENU_INSERT_REPEATING_TRACK'
+      , 'Insert repeating track'
+      );
+define( 'LNG_MENU_INSERT_REPEATING_SILENCE'
+      , 'Insert repeating silence'
       );
 DEFINE( 'LNG_MENU_DANCE_DELIMITER'
       , 'Dance delimiter'
@@ -485,6 +494,9 @@ define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
 define( 'LNG_DESC_DANCE_SLOT_SAME_GENRE'
       , 'Put only songs of same genre in same dance slot'
       );
+define( 'LNG_DESC_SPREAD_OUT_SAME_GENRE'
+      , 'Spread out songs of same genre'
+      );
 define( 'LNG_DESC_BPM'
       , 'BPM'
       );
@@ -540,10 +552,10 @@ DEFINE( 'LNG_DESC_TRACK_DELETIONS_DETECTED'
         'How do you want to handle this?'
       );
 DEFINE( 'LNG_DESC_FASTER'
-      , 'faster'
+      , 'faster than'
       );
 DEFINE( 'LNG_DESC_SLOWER'
-      , 'slower'
+      , 'slower than'
       );
 DEFINE( 'LNG_DESC_BPM_INFO'
       , 'The BPM values are automatically computed by Spotify, meaning they ' .

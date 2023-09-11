@@ -30,3 +30,8 @@ function getLocalScratchpadTable() {
 function getGlobalScratchpadTable() {
   return $(GLOBAL_SCRATCHPAD_TABLE);
 }
+
+function isScratchpadTable(table) {
+  return table.is(getLocalScratchpadTable()) ||
+         table.is(getGlobalScratchpadTable());
+}

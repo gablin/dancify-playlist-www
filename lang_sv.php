@@ -64,6 +64,12 @@ define( 'LNG_BTN_I_AGREE'
 define( 'LNG_BTN_INSERT'
       , 'Lägg in'
       );
+define( 'LNG_BTN_INSERT_IN_PLAYLIST'
+      , 'Lägg in i spellista'
+      );
+define( 'LNG_BTN_INSERT_IN_LOCAL_SCRATCHPAD'
+      , 'Lägg in i lokal scratchpad'
+      );
 define( 'LNG_BTN_SHOW'
       , 'Visa'
       );
@@ -154,11 +160,14 @@ define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
 define( 'LNG_MENU_RANDOMIZE_BY_BPM'
       , 'Slumpa ordning enligt BPM'
       );
-define( 'LNG_MENU_INSERT_TRACK_AT_INTERVAL'
-      , 'Lägg in låt vid intervall'
+define( 'LNG_MENU_INSERT_TRACK'
+      , 'Lägg in låt'
       );
-define( 'LNG_MENU_INSERT_SILENCE_AT_INTERVAL'
-      , 'Lägg in tystnad vid intervall'
+define( 'LNG_MENU_INSERT_REPEATING_TRACK'
+      , 'Lägg in upprepande låt'
+      );
+define( 'LNG_MENU_INSERT_REPEATING_SILENCE'
+      , 'Lägg in upprepande tystnad'
       );
 DEFINE( 'LNG_MENU_DANCE_DELIMITER'
       , 'Dansavgränsning'
@@ -486,6 +495,9 @@ define( 'LNG_DESC_NO_SUITABLE_TRACK_FOR_SLOT'
 define( 'LNG_DESC_DANCE_SLOT_SAME_GENRE'
       , 'Placera endast låtar av samma genre i samma dansslot'
       );
+define( 'LNG_DESC_SPREAD_OUT_SAME_GENRE'
+      , 'Sprid ut låtar av samma genre'
+      );
 define( 'LNG_DESC_BPM'
       , 'BPM'
       );
@@ -541,10 +553,10 @@ DEFINE( 'LNG_DESC_TRACK_DELETIONS_DETECTED'
         'Hur vill du hantera detta?'
       );
 DEFINE( 'LNG_DESC_FASTER'
-      , 'snabbare'
+      , 'snabbare än'
       );
 DEFINE( 'LNG_DESC_SLOWER'
-      , 'långsammare'
+      , 'långsammare än'
       );
 DEFINE( 'LNG_DESC_BPM_INFO'
       , 'BPM-värdena beräknas automatiskt av Spotify, vilket betyder att de ' .

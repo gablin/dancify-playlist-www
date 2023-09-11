@@ -17,8 +17,9 @@ mkHtmlNavMenu(
     , 'onShowDuplicateCheck'
     ]
   , []
-  , [ LNG_MENU_INSERT_TRACK_AT_INTERVAL, 'insert-track-at-interval', true ]
-  , [ LNG_MENU_INSERT_SILENCE_AT_INTERVAL, 'insert-silence-at-interval', true ]
+  , [ LNG_MENU_INSERT_TRACK, 'insert-track', true ]
+  , [ LNG_MENU_INSERT_REPEATING_TRACK, 'insert-track-at-interval', true ]
+  , [ LNG_MENU_INSERT_REPEATING_SILENCE, 'insert-silence-at-interval', true ]
   , [ LNG_MENU_SEARCH_FOR_TRACKS, 'search-for-tracks', true ]
   , [ LNG_MENU_SORT, 'sort', true ]
   , [ LNG_MENU_RANDOMIZE, 'randomize', true ]
@@ -159,11 +160,20 @@ try {
         </tr>
       <tbody>
     </table>
-    <label class="checkbox">
-      <input type="checkbox" name="dance-slot-has-same-genre" value="true" />
-      <span class="checkmark"></span>
-      <?= LNG_DESC_DANCE_SLOT_SAME_GENRE ?>
-    </label>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="dance-slot-has-same-genre" value="true" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_DANCE_SLOT_SAME_GENRE ?>
+      </label>
+    </p>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="spread-out-same-genre" value="true" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SPREAD_OUT_SAME_GENRE ?>
+      </label>
+    </p>
     <p class="warning">
       <span><?= LNG_DESC_WARNING ?>:</span>
       <?= LNG_DESC_THIS_WILL_REMOVE_ALL_WORK ?>
@@ -233,10 +243,46 @@ try {
   </div>
 </div>
 
+<div class="action-input-area" name="insert-track">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_INSERT_TRACK ?></div>
+
+    <div class="song_link_help" onclick="$(this).hide();">
+      <div class="background"></div>
+      <div class="info">
+        <h1><?= LNG_DESC_INSTRUCTIONS ?></h1>
+        <p><?= LNG_TXT_SONG_LINK_HELP ?></p>
+        <img src="/images/song-link.png"></img>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <?= sprintf(LNG_INSTR_ENTER_SONG, 'Song Link', 'Spotify URI') ?>:
+        <input type="text" name="track-to-insert" />
+        <button class="small" onclick="$('div.song_link_help').show();">?</button>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="insertTrackInLocalScratchpadBtn">
+        <?= LNG_BTN_INSERT_IN_LOCAL_SCRATCHPAD ?>
+      </button>
+      <button id="insertTrackInPlaylistBtn">
+        <?= LNG_BTN_INSERT_IN_PLAYLIST ?>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="action-input-area" name="insert-track-at-interval">
   <div class="background"></div>
   <div class="input">
-    <div class="title"><?= LNG_MENU_INSERT_TRACK_AT_INTERVAL ?></div>
+    <div class="title"><?= LNG_MENU_INSERT_REPEATING_TRACK ?></div>
 
     <div class="song_link_help" onclick="$(this).hide();">
       <div class="background"></div>
@@ -264,7 +310,7 @@ try {
       <button class="cancel" onclick="clearActionInputs();">
         <?= LNG_BTN_CANCEL ?>
       </button>
-      <button id="insertTrackBtn"><?= LNG_BTN_INSERT ?></button>
+      <button id="insertTrackAtIntervalBtn"><?= LNG_BTN_INSERT ?></button>
     </div>
   </div>
 </div>
@@ -272,7 +318,7 @@ try {
 <div class="action-input-area" name="insert-silence-at-interval">
   <div class="background"></div>
   <div class="input">
-    <div class="title"><?= LNG_MENU_INSERT_SILENCE_AT_INTERVAL ?></div>
+    <div class="title"><?= LNG_MENU_INSERT_REPEATING_SILENCE ?></div>
 
     <div>
       <div>
