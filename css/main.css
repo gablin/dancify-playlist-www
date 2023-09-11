@@ -68,8 +68,7 @@ a:hover {
 
 .footer {
   background-color: #121619;
-  padding-top: .5em;
-  height: 2em;
+  padding: .25em 0;
   width: 100%;
 }
 .footer p {
