@@ -1676,14 +1676,9 @@ function addTrackTrSelectHandling(tr) {
   tr.click(
     function(e) {
       let tr = $(this);
-      if (TRACK_DRAG_STATE == 0) {
-        updateTrackTrSelection(tr, e.ctrlKey || e.metaKey, e.shiftKey);
-      }
-      else {
-        TRACK_DRAG_STATE = 0;
-      }
 
       // Check whether to play this track was double-clicked; if so, play track
+      let is_doubleclick = false;
       let timestamp_ms = Date.now();
       if ( tr.is(LATEST_TRACK_CLICK_TR) &&
            timestamp_ms - LATEST_TRACK_CLICK_TIMESTAMP <= DOUBLECLICK_RANGE_MS
@@ -1692,10 +1687,19 @@ function addTrackTrSelectHandling(tr) {
         if (tr.find('input[name=track_id]').length > 0 && hasPlayback()) {
           let track_id = tr.find('input[name=track_id]').val();
           playTrack(track_id, getTrackIndexOfTr(tr), getTableOfTr(tr), 0);
+          is_doubleclick = true;
         }
       }
       LATEST_TRACK_CLICK_TR = tr;
       LATEST_TRACK_CLICK_TIMESTAMP = timestamp_ms;
+      if (is_doubleclick) return;
+
+      if (TRACK_DRAG_STATE == 0) {
+        updateTrackTrSelection(tr, e.ctrlKey || e.metaKey, e.shiftKey);
+      }
+      else {
+        TRACK_DRAG_STATE = 0;
+      }
     }
   );
 }
