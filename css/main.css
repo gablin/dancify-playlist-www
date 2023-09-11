@@ -894,6 +894,8 @@ label.checkbox .checkmark:after {
   margin-top: 2em;
   max-width: 60vw;
   height: 50vh;
+  display: flex;
+  flex-direction: column;
 }
 .action-input-area .search-results .info {
   font-size: 80%;
@@ -902,6 +904,9 @@ label.checkbox .checkmark:after {
   display: none;
   color: #E60000;
   font-weight: bold;
+}
+.action-input-area .search-results .duplicates-found {
+  overflow-y: scroll;
 }
 .action-input-area .search-results .none-found,
 .action-input-area .search-results .tracks-found {
