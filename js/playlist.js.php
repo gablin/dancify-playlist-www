@@ -36,18 +36,23 @@ function setupPlaylist() {
   let is_ctrl_pressed = false;
   $(document).on( 'keydown'
                 , function(e) {
-                    if (e.key == 'Escape') {
-                      clearTrackTrSelection();
-                    }
-                    else if (e.key == 'Delete') {
-                      deleteSelectedTrackTrs();
-                    }
-                    else if (e.key == 'Control') {
-                      is_ctrl_pressed = true;
-                    }
-                    else if (e.key == 'a' && is_ctrl_pressed) {
-                      selectAllTrackTrs();
-                      return false;
+                    if ($('.action-input-area:visible').length == 0) {
+                      if (e.key == 'Escape') {
+                        clearTrackTrSelection();
+                        return false;
+                      }
+                      if (e.key == 'Delete') {
+                        deleteSelectedTrackTrs();
+                        return false;
+                      }
+                      if (e.key == 'Control') {
+                        is_ctrl_pressed = true;
+                        return false;
+                      }
+                      if (e.key == 'a' && is_ctrl_pressed) {
+                        selectAllTrackTrs();
+                        return false;
+                      }
                     }
                   }
                 );
