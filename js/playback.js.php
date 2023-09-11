@@ -32,10 +32,11 @@ function setupPlayback() {
   mkPlaybackHtml();
   $.getScript('https://sdk.scdn.co/spotify-player.js', function() {});
   window.onSpotifyWebPlaybackSDKReady = initPlayer;
-  $(document).on( 'keyup'
+  $(document).on( 'keydown'
                 , function(e) {
                     if (e.key == ' ') {
                       togglePlay();
+                      return false;
                     }
                   }
                 );
