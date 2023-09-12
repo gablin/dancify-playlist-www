@@ -364,7 +364,7 @@ The delimiters have no impact on the playlist in Spotify once saved; it is only
 for visualization.
 EOT
       );
-define( 'LNG_PLAYLIST_DELIMITER'
+define( 'LNG_DESC_PLAYLIST_DELIMITER'
       , <<<EOT
 This adds a visual mark to indicate end of a playlist. This is useful when
 creating multiple playlist from the same bucket of tracks. The delimiters have
