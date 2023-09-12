@@ -9,6 +9,7 @@ $api = createWebApi($session);
 beginPage();
 mkHtmlNavMenu(
   [ [ LNG_MENU_DANCE_DELIMITER, 'dance-delimiter', true ]
+  , [ LNG_MENU_PLAYLIST_DELIMITER, 'playlist-delimiter', true ]
   , [ LNG_MENU_SCRATCHPAD, 'scratchpad', true ]
   , [ LNG_MENU_TRACK_OVERVIEW, 'track-overview', true ]
   , [ LNG_MENU_DUPLICATE_CHECK
@@ -472,7 +473,7 @@ try {
     <div class="title"><?= LNG_MENU_DANCE_DELIMITER ?></div>
 
     <p>
-      <?= LNG_DESC_DELIMITER ?>
+      <?= LNG_DESC_DANCE_DELIMITER ?>
     </p>
 
     <div>
@@ -489,6 +490,36 @@ try {
       </button>
       <button id="hideDanceDelimiterBtn"><?= LNG_BTN_HIDE ?></button>
       <button id="showDanceDelimiterBtn"><?= LNG_BTN_SHOW ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="playlist-delimiter">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_PLAYLIST_DELIMITER ?></div>
+
+    <p>
+      <?= LNG_DESC_PLAYLIST_DELIMITER ?>
+    </p>
+
+    <div class="playlist-delimiter-heading">
+      <?= LNG_DESC_DELIMITERS ?>:
+      <button class="small add">+</button>
+    </div>
+    <div class="playlist-delimiters">
+      <div>
+        <input type="text" name="playlist-delimiter" placeholder="HH:MM:SS">
+        </input>
+        <button class="small remove">-</button>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CLOSE ?>
+      </button>
+      <button id="applyPlaylistDelimitersBtn"><?= LNG_BTN_APPLY ?></button>
     </div>
   </div>
 </div>
@@ -951,6 +982,7 @@ try {
 <script src="/js/insert-silence.js.php"></script>
 <script src="/js/randomize-by-bpm.js.php"></script>
 <script src="/js/dance-delimiter.js.php"></script>
+<script src="/js/playlist-delimiter.js.php"></script>
 <script src="/js/scratchpad.js.php"></script>
 <script src="/js/restore-playlist.js.php"></script>
 <script src="/js/donations.js.php"></script>
@@ -989,6 +1021,7 @@ $(document).ready(
     setupInsertTrack();
     setupInsertSilence();
     setupDanceDelimiter();
+    setupPlaylistDelimiter();
     setupScratchpad();
     setupRestorePlaylist();
     setupSort();

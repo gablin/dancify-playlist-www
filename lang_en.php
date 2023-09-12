@@ -144,6 +144,9 @@ DEFINE( 'LNG_BTN_EXPORT'
 DEFINE( 'LNG_BTN_GENERATE'
       , 'Generate'
       );
+DEFINE( 'LNG_BTN_APPLY'
+      , 'Apply'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -170,6 +173,9 @@ define( 'LNG_MENU_INSERT_REPEATING_SILENCE'
       );
 DEFINE( 'LNG_MENU_DANCE_DELIMITER'
       , 'Dance delimiter'
+      );
+DEFINE( 'LNG_MENU_PLAYLIST_DELIMITER'
+      , 'Playlist delimiter'
       );
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
@@ -351,12 +357,24 @@ define( 'LNG_DESC_SHOW_VALENCE_OVERVIEW'
       , 'Valence - the mood of the song (value between 0 and 1, where 0 is ' .
         'sad, depressing, angry, and 1 is happy, cheerful, euphoric)'
       );
-define( 'LNG_DESC_DELIMITER'
+define( 'LNG_DESC_DANCE_DELIMITER'
       , <<<EOT
 This adds a visual mark to indicate which songs belong to the same dance slot.
-The delimiters have no impact on the playlist in Spotify once saved; it is only for
-visualization.
+The delimiters have no impact on the playlist in Spotify once saved; it is only
+for visualization.
 EOT
+      );
+define( 'LNG_PLAYLIST_DELIMITER'
+      , <<<EOT
+This adds a visual mark to indicate end of a playlist. This is useful when
+creating multiple playlist from the same bucket of tracks. The delimiters have
+no impact on the playlist in Spotify once saved; it is only for visualization.
+Provide the delimiter in HH:MM:SS format (for example, a delimiter after 8 hours
+and 30 minutes is given as 08:30:00).
+EOT
+      );
+define( 'LNG_DESC_DELIMITERS'
+      , 'Delimiters'
       );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'New playlist added to your Spotify'
@@ -419,6 +437,9 @@ define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
       );
 define( 'LNG_ERR_FAILED_TO_SEARCH'
       , 'Search failed'
+      );
+define( 'LNG_ERR_INVALID_DELIMITER_FORMAT'
+      , 'invalid delimiter format'
       );
 define( 'LNG_INSTR_SELECT_PLAYLIST'
       , 'Select playlist'

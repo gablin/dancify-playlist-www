@@ -145,6 +145,9 @@ DEFINE( 'LNG_BTN_EXPORT'
 DEFINE( 'LNG_BTN_GENERATE'
       , 'Generera'
       );
+DEFINE( 'LNG_BTN_APPLY'
+      , 'Applicera'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -171,6 +174,9 @@ define( 'LNG_MENU_INSERT_REPEATING_SILENCE'
       );
 DEFINE( 'LNG_MENU_DANCE_DELIMITER'
       , 'Dansavgränsning'
+      );
+DEFINE( 'LNG_MENU_PLAYLIST_DELIMITER'
+      , 'Spellisteavgränsning'
       );
 DEFINE( 'LNG_MENU_SCRATCHPAD'
       , 'Scratchpad'
@@ -352,12 +358,24 @@ define( 'LNG_DESC_SHOW_VALENCE_OVERVIEW'
       , 'Valens - låtens humör (värde mellan 0 och 1, där 0 är ledsen, ' .
         'deprimerad, arg, och 1 är glad, lycklig, euforisk)'
       );
-define( 'LNG_DESC_DELIMITER'
+define( 'LNG_DESC_DANCE_DELIMITER'
       , <<<EOT
-Detta lägger till en visuell markering för att visa vilka låtar som tillhör samma
-dansslot. Avgränsningarna har ingen påverkan på spellistan i Spotify efter att ha
-sparats; det är endast för visualisering.
+Detta lägger till en visuell markering för att visa vilka låtar som tillhör
+samma dansslot. Avgränsningarna har ingen påverkan på spellistan i Spotify efter
+att ha sparats; det är endast för visualisering.
 EOT
+      );
+define( 'LNG_DESC_PLAYLIST_DELIMITER'
+      , <<<EOT
+Detta lägger till en visuell markering för att indikera slutet på en
+spellista. Detta är användbart när man skapar flera spellistor från samma hink
+av låtar. Avgränsningarna har ingen påverkan på spellistan i Spotify efter att
+ha sparats; det är endast för visualisering. Ange gränsen i HH:MM:SS-format
+(till exempel, en avgränsning efter 8 timmar och 30 minuter anges som 08:30:00).
+EOT
+      );
+define( 'LNG_DESC_DELIMITERS'
+      , 'Avgränsningar'
       );
 define( 'LNG_DESC_NEW_PLAYLIST_ADDED'
       , 'Ny spellista har lagts till i din Spotify'
@@ -485,6 +503,9 @@ define( 'LNG_ERR_PLAYBACK_DEVICE_DISCONNECTED'
       );
 define( 'LNG_ERR_PLAYBACK_TRACK_COULD_NOT_PLAY'
       , 'Låten kunde inte spelas upp just nu'
+      );
+define( 'LNG_ERR_INVALID_DELIMITER_FORMAT'
+      , 'ogiltigt avgränsningsformat'
       );
 define( 'LNG_DESC_TRACKS_NOT_PLACED'
       , 'Låtar som inte kunde placeras'

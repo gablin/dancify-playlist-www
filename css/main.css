@@ -371,6 +371,9 @@ form {
   border-top: 1px solid #09814A;
   opacity: 0.5;
 }
+.playlist table tr.delimiter.playlist div {
+  border-top-width: 5px;
+}
 .playlist table td.leftover {
   padding-top: 1em;
   font-weight: bold;
@@ -475,6 +478,10 @@ form {
   background-color: #09814A;
   border: 0;
   z-index: 2;
+}
+.track-overview .delimiter.playlist {
+  width: 5px;
+  transform: translateX(-2.5px);
 }
 .track-overview-track-info {
   position: absolute;
@@ -872,6 +879,7 @@ label.checkbox .checkmark:after {
   background: #fff;
   border: 1px solid #000;
   padding: 2em;
+  max-width: 40em;
 }
 .action-input-area .input .title {
   font-size: 125%;

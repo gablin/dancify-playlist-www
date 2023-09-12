@@ -9,6 +9,7 @@ $api = createWebApi($session);
 var PLAYLIST_INFO = null;
 var PREVIEW_AUDIO = $('<audio />');
 var PLAYLIST_DANCE_DELIMITER = 0;
+var PLAYLIST_DELIMITERS = [];
 var TRACK_DRAG_STATE = 0;
 const UNDO_STACK_LIMIT = 100;
 var UNDO_STACK = Array(UNDO_STACK_LIMIT).fill(null);
@@ -1442,19 +1443,92 @@ function renderTablePlayingTrack(table) {
   }
 }
 
+function computePlaylistDelimiterPositions(tracks) {
+  const dance_delimiter = PLAYLIST_DANCE_DELIMITER;
+  let desired_delimiters = PLAYLIST_DELIMITERS;
+  desired_delimiters = desired_delimiters.map((v) => v*1000); // Convert to ms
+  if (desired_delimiters.length == 0) {
+    return [];
+  }
+
+  let placed_delimiters = [];
+
+  let delimiter_index = 0;
+  let delimiter_length = 0;
+  tracks.forEach(
+    function(track, i) {
+      delimiter_length += track.length;
+
+      if (delimiter_index < desired_delimiters.length) {
+        let desired_length = desired_delimiters[delimiter_index];
+        if (desired_length < delimiter_length) {
+          // Find most suitable position to insert the playlist delimiter
+          let num_slots = dance_delimiter > 0 ? dance_delimiter : 1;
+          let current_slot = (i+1) % num_slots;
+
+          // Find length at start of this dance
+          let length_dance_start = delimiter_length;
+          let index_dance_start = i+1;
+          for (let j = num_slots - current_slot; j > 0; j--) {
+            length_dance_start -= track.length;
+            index_dance_start--;
+          }
+
+          // Find length at end of this dance
+          let length_dance_end = delimiter_length;
+          let index_dance_end = i+1;
+          for (let j = num_slots - current_slot; j < num_slots; j++) {
+            index_dance_end++;
+            if (index_dance_end < tracks.length) {
+              length_dance_end += track.length;
+            }
+          }
+
+          let delimiter_data =
+             ( desired_length - length_dance_start <
+               length_dance_end - desired_length
+             )
+             ? [index_dance_start, length_dance_start]
+             : [index_dance_end, length_dance_end];
+          placed_delimiters.push(delimiter_data);
+
+          delimiter_index++;
+          delimiter_length = 0;
+        }
+      }
+    }
+  );
+
+  // Insert remaining delimiters at the end
+  for (let i = delimiter_index; i < desired_delimiters.length; i++) {
+    placed_delimiters.push([tracks.length, delimiter_length]);
+  }
+
+  return placed_delimiters;
+}
+
 function renderTable(table) {
-  const delimiter = table.is(getPlaylistTable()) ? PLAYLIST_DANCE_DELIMITER : 0;
+  let dance_delimiter =
+    table.is(getPlaylistTable()) ? PLAYLIST_DANCE_DELIMITER : 0;
+  let playlist_delimiters =
+    table.is(getPlaylistTable()) ? PLAYLIST_DELIMITERS : [];
+  playlist_delimiters = playlist_delimiters.map((v) => v*1000); // Convert to ms
+
+  const num_cols = buildNewTableTrackTr(table).find('td').length;
 
   renderTableIndices(table);
   renderTablePlayingTrack(table);
 
-  // Insert delimiters
+  function getTrackLength(tr) {
+    return parseInt(tr.find('input[name=length_ms]').val());
+  }
+
+  // Insert dance delimiters
   table.find('tr.delimiter').remove();
-  if (delimiter > 0) {
-    let num_cols = buildNewTableTrackTr(table).find('td').length;
+  if (dance_delimiter > 0) {
     table
       .find('tr.track, tr.empty-track')
-      .filter(':nth-child(' + delimiter + 'n)')
+      .filter(':nth-child(' + dance_delimiter + 'n)')
       .after(
         $( '<tr class="delimiter">' +
              '<td colspan="' + (num_cols-2) + '"><div /></td>' +
@@ -1470,7 +1544,7 @@ function renderTable(table) {
     function() {
       let tr = $(this);
       if (tr.hasClass('track')) {
-        dance_length += parseInt(tr.find('input[name=length_ms]').val());
+        dance_length += getTrackLength(tr);
       }
       else if (tr.hasClass('delimiter')) {
         tr.find('td.length').text(formatTrackLength(dance_length));
@@ -1481,16 +1555,45 @@ function renderTable(table) {
 
   // Compute total length
   let total_length = 0;
+  let delimiter_index = 0;
+  let delimiter_length = 0;
   table.find('tr.track').each(
-    function() {
+    function(i) {
       let tr = $(this);
-      total_length += parseInt(tr.find('input[name=length_ms]').val());
+
+      let track_length = getTrackLength(tr);
+      total_length += track_length;
+      delimiter_length += track_length;
       tr.find('td.aggr-length').text(formatTrackLength(total_length));
     }
   );
   getTableSummaryTr(table).find('td.length').text(
     formatTrackLength(total_length)
   );
+
+  // Insert playlist delimiters
+  if (table.is(getPlaylistTable())) {
+    let tracks = getTrackData(table);
+    let playlist_delimiters = computePlaylistDelimiterPositions(tracks);
+    let track_trs = table.find('tr.track');
+    playlist_delimiters.forEach(
+      function([i, length]) {
+        let tr =
+          $( '<tr class="delimiter playlist">' +
+               '<td colspan="' + (num_cols-2) + '"><div /></td>' +
+               '<td class="length">' + formatTrackLength(length) + '</td>' +
+               '<td><div /></td>' +
+             '</tr>'
+           );
+        if (i < track_trs.length) {
+          track_trs.eq(i).before(tr);
+        }
+        else {
+          track_trs.last().after(tr);
+        }
+      }
+    );
+  }
 
   if (table.is(getPlaylistTable())) {
     renderTrackOverviews();
@@ -2987,6 +3090,18 @@ function renderTrackOverview(
       );
       addTrackBarSelectHandling(overview_div, bar);
       addTrackBarDragHandling(overview_div, bar);
+    }
+  );
+
+  let playlist_delimiters = computePlaylistDelimiterPositions(tracks);
+  playlist_delimiters.forEach(
+    function([i, length]) {
+      console.log(i);
+
+      let delimiter = $('<div class="delimiter playlist" />');
+      delimiter.css('height', area_vh + 'px');
+      delimiter.css('left', (i*(bar_vw + border_size)) + 'px');
+      area.append(delimiter);
     }
   );
 
