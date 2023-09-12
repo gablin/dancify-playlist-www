@@ -3362,7 +3362,7 @@ function addAppResizeHandling(sep) {
         prev.css('width', prev_w);
         next.css('width', next_w);
         last_pagex = e.pageX;
-        renderBpmOverview();
+        renderTrackOverviews();
         return false; // Prevent text selection
       }
 
