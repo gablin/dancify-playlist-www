@@ -270,6 +270,7 @@ form {
 }
 .app-playlist-content-wrapper {
   padding: .5em 1em;
+  overflow: hidden;
 }
 
 .app-separator {
