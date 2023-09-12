@@ -156,8 +156,8 @@ define( 'LNG_MENU_CHANGE_PLAYLIST'
 define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
       , 'Save changes to Spotify'
       );
-define( 'LNG_MENU_RANDOMIZE_BY_BPM'
-      , 'Randomize order by BPM'
+define( 'LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY'
+      , 'Randomize order by BPM and energy'
       );
 define( 'LNG_MENU_INSERT_TRACK'
       , 'Insert track'
@@ -503,8 +503,8 @@ define( 'LNG_DESC_BPM'
 define( 'LNG_DESC_BPM_RANGE_TRACK'
       , 'Track'
       );
-define( 'LNG_DESC_BPM_DIFFERENCE'
-      , 'Diff'
+define( 'LNG_DESC_AT_LEAST'
+      , 'at least'
       );
 define( 'LNG_DESC_PLAYLIST_NAME'
       , 'Name'
@@ -559,6 +559,12 @@ DEFINE( 'LNG_DESC_FASTER'
       );
 DEFINE( 'LNG_DESC_SLOWER'
       , 'slower than'
+      );
+DEFINE( 'LNG_DESC_HARDER'
+      , 'harder than'
+      );
+DEFINE( 'LNG_DESC_SOFTER'
+      , 'softer than'
       );
 DEFINE( 'LNG_DESC_BPM_INFO'
       , 'The BPM values are automatically computed by Spotify, meaning they ' .

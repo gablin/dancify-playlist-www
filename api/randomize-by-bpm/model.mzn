@@ -1,10 +1,12 @@
 include "globals.mzn";
 
 array[int] of int: bpm;
+array[int] of int: energy;
 array[int] of int: lengths;
 array[int] of int: genres;
 array[int, int] of int: ranges;
-array[int, int] of int: diffs;
+array[int, int] of int: bpm_diffs;
+array[int, int] of int: energy_diffs;
 set of int: RangeSet = index_set_1of2(ranges);
 bool: dance_slot_same_genre;
 int: min_length;
@@ -31,8 +33,8 @@ OrderSet: firstOrderInDanceSlot(DanceSlotSet: d) =
 
 % Assert number of ranges is 1+ number of min BPM distances.
 constraint
-assert( card(index_set_1of2(ranges)) == card(index_set_1of2(diffs))+1
-      , "num(ranges) != num(diffs)+1"
+assert( card(index_set_1of2(ranges)) == card(index_set_1of2(bpm_diffs))+1
+      , "num(ranges) != num(bpm_diffs)+1"
       , true
       );
 
@@ -60,26 +62,31 @@ forall (i in RangeSet)
 % Only tracks with same genre can be place in the same dance slot.
 constraint
 if dance_slot_same_genre
-then forall (s in DanceSlotSet, i in (s-1)*card(RangeSet)+1..s*card(RangeSet)-1 )
+then forall ( s in DanceSlotSet
+            , i in (s-1)*card(RangeSet)+1..s*card(RangeSet)-1
+            )
      ( ( has_track[i] /\ has_track[i+1] ) ->
        genres[order[i]] == genres[order[i+1]]
      )
 else true
 endif;
 
-% Ensure that there BPM difference between two adjacent tracks
+% Ensure that the BPM difference between two adjacent tracks
 % in the same dance slot is within the acceptable difference range. A
 % positive/negative BPM distance means that the following track must be
-% faster/slower by at least that much. A BPM difference range of 0 means this
+% faster/slower by at least that much. A difference range of 0 means this
 % check is disabled.
 constraint
-forall (i in index_set_1of2(diffs))
-( let { int: v1 = diffs[i, 1]
-      , int: v2 = diffs[i, 2]
-      , int: min_d = if v1 >= 0 /\ v2 > 0 then min(v1, v2) else max(v1, v2) endif
-      , int: max_d = if v1 >= 0 /\ v2 > 0 then max(v1, v2) else min(v1, v2) endif
+forall (i in index_set_1of2(bpm_diffs))
+( let { int: v1 = bpm_diffs[i, 1]
+      , int: v2 = bpm_diffs[i, 2]
+      , int: min_d =
+          if v1 >= 0 /\ v2 > 0 then min(v1, v2) else max(v1, v2) endif
+      , int: max_d =
+          if v1 >= 0 /\ v2 > 0 then max(v1, v2) else min(v1, v2) endif
       }
-  in forall ( j in OrderSet
+  in (v1 - v2 != 0) ->
+     forall ( j in OrderSet
               where (j mod card(RangeSet)) == (i mod card(RangeSet))
             )
      ( assert( v1*v2 >= 0
@@ -101,6 +108,43 @@ forall (i in index_set_1of2(diffs))
      )
 );
 
+% Ensure that the energy difference between two adjacent tracks
+% in the same dance slot is within the acceptable difference range. A
+% positive/negative energy distance means that the following track must be
+% harder/softer by at least that much. A difference range of 0 means this
+% check is disabled.
+constraint
+forall (i in index_set_1of2(energy_diffs))
+( let { int: v1 = energy_diffs[i, 1]
+      , int: v2 = energy_diffs[i, 2]
+      , int: min_d =
+          if v1 >= 0 /\ v2 > 0 then min(v1, v2) else max(v1, v2) endif
+      , int: max_d =
+          if v1 >= 0 /\ v2 > 0 then max(v1, v2) else min(v1, v2) endif
+      }
+  in (v1 - v2 != 0) ->
+     forall ( j in OrderSet
+              where (j mod card(RangeSet)) == (i mod card(RangeSet))
+            )
+     ( assert( v1*v2 >= 0
+             , "differences have non-matching signs: \(v1), \(v2)"
+             , true
+             ) /\
+       ( (has_track[j] /\ has_track[j+1]) ->
+         if max_d > 0
+         then energy[order[j+1]] - energy[order[j]] >= min_d
+         else energy[order[j+1]] - energy[order[j]] <= min_d
+         endif
+       ) /\
+       ( (has_track[j] /\ has_track[j+1]) ->
+         if max_d > 0
+         then energy[order[j+1]] - energy[order[j]] <= max_d
+         else energy[order[j+1]] - energy[order[j]] >= max_d
+         endif
+       )
+     )
+);
+
 % Either a dance slot is full, or it contains no tracks at all.
 constraint
 forall (i in DanceSlotSet)
@@ -109,8 +153,8 @@ forall (i in DanceSlotSet)
      ( has_track[fo] <-> has_track[j] )
 );
 
-% If a dance slot has tracks, then the totalt length of the tracks must be within
-% the specified range.
+% If a dance slot has tracks, then the totalt length of the tracks must be
+% within the specified range.
 constraint
 forall (i in DanceSlotSet)
 ( let { OrderSet: fo = firstOrderInDanceSlot(i) }

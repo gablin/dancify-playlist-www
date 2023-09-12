@@ -24,18 +24,23 @@ function callApi(url, data, success_f, fail_f) {
   $.post(url, { data: JSON.stringify(data) })
     .done(
       function(res) {
+        function fail(msg) {
+          console.log('API call: ' + url);
+          console.log('Data: ' + JSON.stringify(data));
+          console.log('Response: ' + res);
+          fail_f(msg);
+        }
+
         let json = null;
         try {
           json = JSON.parse(res);
         }
         catch (e) {
-          // Do nothing here
+          fail('failed to parse API result');
+          return;
         }
-        if (json === null || json.status == 'FAILED') {
-          console.log('API call: ' + url);
-          console.log('Data: ' + JSON.stringify(data));
-          console.log('Response: ' + res);
-          fail_f(json.msg);
+        if (json.status == 'FAILED') {
+          fail(json.msg);
           return;
         }
         else if (json.status == 'NOSESSION') {

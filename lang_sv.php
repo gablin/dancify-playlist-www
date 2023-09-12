@@ -157,8 +157,8 @@ define( 'LNG_MENU_CHANGE_PLAYLIST'
 define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
       , 'Spara ändringar till Spotify'
       );
-define( 'LNG_MENU_RANDOMIZE_BY_BPM'
-      , 'Slumpa ordning enligt BPM'
+define( 'LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY'
+      , 'Slumpa ordning enligt BPM och energi'
       );
 define( 'LNG_MENU_INSERT_TRACK'
       , 'Lägg in låt'
@@ -504,8 +504,8 @@ define( 'LNG_DESC_BPM'
 define( 'LNG_DESC_BPM_RANGE_TRACK'
       , 'Låt'
       );
-define( 'LNG_DESC_BPM_DIFFERENCE'
-      , 'Diff'
+define( 'LNG_DESC_AT_LEAST'
+      , 'minst'
       );
 define( 'LNG_DESC_PLAYLIST_NAME'
       , 'Namn'
@@ -560,6 +560,12 @@ DEFINE( 'LNG_DESC_FASTER'
       );
 DEFINE( 'LNG_DESC_SLOWER'
       , 'långsammare än'
+      );
+DEFINE( 'LNG_DESC_HARDER'
+      , 'hårdare än'
+      );
+DEFINE( 'LNG_DESC_SOFTER'
+      , 'mjukare än'
       );
 DEFINE( 'LNG_DESC_BPM_INFO'
       , 'BPM-värdena beräknas automatiskt av Spotify, vilket betyder att de ' .

@@ -23,7 +23,7 @@ mkHtmlNavMenu(
   , [ LNG_MENU_SEARCH_FOR_TRACKS, 'search-for-tracks', true ]
   , [ LNG_MENU_SORT, 'sort', true ]
   , [ LNG_MENU_RANDOMIZE, 'randomize', true ]
-  , [ LNG_MENU_RANDOMIZE_BY_BPM, 'randomize-by-bpm', true ]
+  , [ LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY, 'randomize-by-bpm', true ]
   , []
   , [ LNG_MENU_SET_TRACK_PLAY_LENGTH
     , 'set-track-play-length'
@@ -97,7 +97,7 @@ try {
 <div class="action-input-area" name="randomize-by-bpm">
   <div class="background"></div>
   <div class="input">
-    <div class="title"><?= LNG_MENU_RANDOMIZE_BY_BPM ?></div>
+    <div class="title"><?= LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY ?></div>
 
     <table class="bpm-range-area">
       <tbody>
@@ -108,24 +108,54 @@ try {
           <td class="label">
             <?= LNG_DESC_BPM ?>: <span></span>
           </td>
-          <td class="bpm-range-controller">
+          <td class="range bpm">
             <div></div>
           </td>
-          <td>
+          <td class="buttons">
             <button class="add lowlight">+</button>
             <button class="remove lowlight">-</button>
           </td>
         </tr>
-        <tr class="difference">
-          <td></td>
-          <td class="label">
-            <?= LNG_DESC_BPM_DIFFERENCE ?>: <span></span>
-            <select name="direction">
-              <option value="+1"><?= LNG_DESC_FASTER ?></option>
-              <option value="-1"><?= LNG_DESC_SLOWER ?></option>
-            </select>
+        <tr class="bpm-difference">
+          <td>
+            <label class="checkbox">
+              <input type="checkbox" name="bpm-constraint" value="false" />
+              <span class="checkmark"></span>
+            </label>
           </td>
-          <td class="bpm-difference-controller">
+          <td class="label">
+            <?= LNG_DESC_BPM ?>:
+            <div class="wrapper">
+              <div><?= LNG_DESC_AT_LEAST ?> <span></span></div>
+              <select name="direction">
+                <option value="+1"><?= LNG_DESC_FASTER ?></option>
+                <option value="-1"><?= LNG_DESC_SLOWER ?></option>
+              </select>
+            </div>
+          </td>
+          <td class="range bpm-diff">
+            <div></div>
+          </td>
+          <td></td>
+        </tr>
+        <tr class="energy-difference">
+          <td>
+            <label class="checkbox">
+              <input type="checkbox" name="energy-constraint" value="false" />
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td class="label">
+            <?= LNG_DESC_ENERGY ?>:
+            <div class="wrapper">
+              <div><?= LNG_DESC_AT_LEAST ?> <span></span></div>
+              <select name="direction">
+                <option value="+1"><?= LNG_DESC_FASTER ?></option>
+                <option value="-1"><?= LNG_DESC_SLOWER ?></option>
+              </select>
+            </div>
+          </td>
+          <td class="range energy-diff">
             <div></div>
           </td>
           <td></td>
@@ -137,10 +167,10 @@ try {
           <td class="label">
             <?= LNG_DESC_BPM ?>: <span></span>
           </td>
-          <td class="bpm-range-controller">
+          <td class="range bpm">
             <div></div>
           </td>
-          <td>
+          <td class="buttons">
             <button class="add lowlight">+</button>
             <button class="remove lowlight">-</button>
           </td>
@@ -154,7 +184,7 @@ try {
           <td class="label">
             <span></span>
           </td>
-          <td class="dance-length-range-controller">
+          <td class="range dance-length">
             <div></div>
           </td>
         </tr>
@@ -165,13 +195,6 @@ try {
         <input type="checkbox" name="dance-slot-has-same-genre" value="true" />
         <span class="checkmark"></span>
         <?= LNG_DESC_DANCE_SLOT_SAME_GENRE ?>
-      </label>
-    </p>
-    <p>
-      <label class="checkbox">
-        <input type="checkbox" name="spread-out-same-genre" value="true" />
-        <span class="checkmark"></span>
-        <?= LNG_DESC_SPREAD_OUT_SAME_GENRE ?>
       </label>
     </p>
     <p class="warning">

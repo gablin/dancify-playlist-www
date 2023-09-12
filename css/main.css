@@ -878,11 +878,11 @@ label.checkbox .checkmark:after {
   font-weight: bold;
   margin-bottom: 1em;
 }
-.action-input-area .input .buttons {
+.action-input-area .input > .buttons {
   margin-top: 1em;
   overflow: auto;
 }
-.action-input-area .input .buttons button {
+.action-input-area .input > .buttons button {
   float: right;
   margin-left: 2em;
 }
@@ -981,6 +981,10 @@ button.loading {
 button.loading:hover {
   cursor: wait !important;
 }
+
+.bpm-range-area {
+  width: 40em;
+}
 .bpm-range-area,
 .dance-length-range-area {
   margin: 1em 0;
@@ -990,7 +994,15 @@ button.loading:hover {
   font-weight: bold;
 }
 .bpm-range-area .label {
-  width: 10em;
+  width: 12.5em;
+}
+.bpm-range-area tr.bpm-difference .label,
+.bpm-range-area tr.energy-difference .label {
+  display: flex;
+  align-items: center;
+}
+.bpm-range-area .label .wrapper {
+  margin-left: .8rem;
 }
 .dance-length-range-area .desc {
   width: 6em;
@@ -999,22 +1011,33 @@ button.loading:hover {
 .dance-length-range-area .label {
   width: 7em;
 }
-.bpm-range-area .bpm-range-controller,
-.bpm-range-area .bpm-difference-controller {
+.bpm-range-area .range {
   width: 20em;
 }
-.dance-length-range-area .dance-length-range-controller {
+.bpm-range-area tr.bpm-difference td.label {
+  padding-top: .5rem;
+}
+.bpm-range-area tr.energy-difference td.label {
+  padding-bottom: .5rem;
+}
+.dance-length-range-area .range.dance-length {
   width: 24em;
 }
-.bpm-range-area button {
+.bpm-range-area .buttons {
+  width: 6em;
+}
+.bpm-range-area .buttons button {
   margin: 0 .5em;
   padding: 0;
   width: 1.8em;
   height: 1.6em;
   border-radius: .2em;
 }
-.bpm-range-area button:first-child {
+.bpm-range-area .buttons button:first-child {
   margin-left: 2em;
+}
+.bpm-range-area tr.disabled {
+  color: #999;
 }
 
 .track-play-length-area .label {
