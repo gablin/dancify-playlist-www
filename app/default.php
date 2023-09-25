@@ -321,12 +321,12 @@ try {
     <div>
       <div>
         <?= sprintf(LNG_INSTR_ENTER_SONG, 'Song Link', 'Spotify URI') ?>:
-        <input type="text" name="track-to-insert" />
+        <input type="text" name="repeating-track-to-insert" />
         <button class="small" onclick="$('div.song_link_help').show();">?</button>
       </div>
       <div>
         <?= sprintf( LNG_INSTR_INSERT_TRACK_ENTER_FREQ
-                   , "<input type=\"text\" name=\"track-insertion-freq\" class=\"number centered\" />"
+                   , "<input type=\"text\" name=\"repeating-track-insertion-freq\" class=\"number centered\" />"
                    ) ?>
       </div>
     </div>

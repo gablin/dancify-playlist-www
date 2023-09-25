@@ -23,11 +23,11 @@ function setupFormElementsForInsertTrack() {
                                                  , d.name
                                                  , d.length
                                                  , d.bpm
-                                                 , t.acousticness
-                                                 , t.danceability
-                                                 , t.energy
-                                                 , t.instrumentalness
-                                                 , t.valence
+                                                 , d.acousticness
+                                                 , d.danceability
+                                                 , d.energy
+                                                 , d.instrumentalness
+                                                 , d.valence
                                                  , d.genre.by_user
                                                  , d.genre.by_others
                                                  , d.comments
@@ -51,12 +51,14 @@ function setupFormElementsForInsertTrack() {
           b.removeClass('loading');
         };
 
-        if (!checkTrackInsertInput(form, false)) {
+        let song_input = form.find('input[name=track-to-insert]');
+
+        if (!checkTrackInsertInput(song_input)) {
           restoreButton();
           return;
         }
 
-        let data = getTrackInsertData(form);
+        let data = getTrackInsertData(song_input);
         loadTrack(
           data.trackUrl
         , function(track) {
@@ -98,12 +100,15 @@ function setupFormElementsForInsertTrack() {
         b.removeClass('loading');
       };
 
-      if (!checkTrackInsertInput(form, true)) {
+      let song_input = form.find('input[name=repeating-track-to-insert]');
+      let freq_input = form.find('input[name=repeating-track-insertion-freq]');
+
+      if (!checkTrackInsertInput(song_input, freq_input)) {
         restoreButton();
         return;
       }
 
-      let data = getTrackInsertData(form);
+      let data = getTrackInsertData(song_input, freq_input);
       loadTrack(
         data.trackUrl
       , function(track) {
@@ -111,7 +116,7 @@ function setupFormElementsForInsertTrack() {
           let new_tracks = [];
           for (let i = 0; i < tracks.length; i++) {
               if (i > 0 && i % data.insertFreq == 0) {
-                new_tracks.push(to);
+                new_tracks.push(track);
               }
               new_tracks.push(tracks[i]);
           }
@@ -132,23 +137,25 @@ function setupFormElementsForInsertTrack() {
   );
 }
 
-function getTrackInsertData() {
+function getTrackInsertData(song_input, freq_input) {
   let form = getPlaylistForm();
-  return { trackUrl: form.find('input[name=track-to-insert]').val().trim()
-         , insertFreq:
-             form.find('input[name=track-insertion-freq]').val().trim()
+  return { trackUrl: song_input.val().trim()
+         , insertFreq: freq_input ? freq_input.val().trim() : null
          };
 }
 
-function checkTrackInsertInput(form, require_freq) {
-  let track_link = form.find('input[name=track-to-insert]').val().trim();
+function checkTrackInsertInput(song_input, freq_input) {
+  console.log(song_input);
+  console.log(freq_input);
+
+  let track_link = song_input.val().trim();
   if (track_link.length == 0) {
     alert('<?= LNG_ERR_SPECIFY_TRACK_TO_INSERT ?>');
     return false;
   }
 
-  if (require_freq) {
-    let freq_str = form.find('input[name=track-insertion-freq]').val().trim();
+  if (freq_input) {
+    let freq_str = freq_input.val().trim();
     freq = parseInt(freq_str);
     if (isNaN(freq)) {
       alert('<?= LNG_ERR_FREQ_NOT_INT ?>');
