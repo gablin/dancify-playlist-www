@@ -36,16 +36,13 @@ $user_sql = escapeSqlValue(getThisUserId($api));
 $res = queryDb( "SELECT track_play_length_s, fade_out_s FROM playback " .
                 "WHERE user = '$user_sql'"
               );
+$row = $res->fetch_assoc();
 $play_len_sql = array_key_exists('trackPlayLength', $json)
                   ? escapeSqlValue($json['trackPlayLength'])
-                  : ( $res->num_rows == 1
-                        ? $res->fetch_assoc()['track_play_length_s'] : 0
-                    );
+                  : ($res->num_rows == 1 ? $row ['track_play_length_s'] : 0);
 $fade_out_len_sql = array_key_exists('fadeOutLength', $json)
                       ? escapeSqlValue($json['fadeOutLength'])
-                      : ( $res->num_rows == 1
-                            ? $res->fetch_assoc()['fade_out_s'] : 0
-                        );
+                      : ($res->num_rows == 1 ? $row['fade_out_s'] : 0);
 if ($res->num_rows == 1) {
   if ($play_len_sql > 0 || $fade_out_len_sql > 0) {
     queryDb( "UPDATE playback SET track_play_length_s = $play_len_sql " .
