@@ -350,18 +350,18 @@ try {
         <?= LNG_INSTR_CHOOSE_SILENCE_LENGTH ?>:
         <select name="silence-to-insert">
           <?php
-          $silence_tracks = [ [  '5s', '37y25dG9sw4I5zoL17RhcV' ]
-                            , [ '10s', '2kLGdOul5dz2mKtTwvXf2r' ]
-                            , [ '15s', '6HCeE4rWf4AIEskHZeLkOz' ]
-                            , [ '20s', '5fKCBiLEHnnOFFUxQhogGO' ]
-                            , [ '30s', '0smMqKMlcdRwNBMVR91EWQ' ]
-                            , [ '40s', '7kj6uEhhZTfanELdgVFk36' ]
-                            , [ '50s', '6A6dK5HzbAcxq7iVsjvqJs' ]
-                            , [  '1m', '6ZfRjAcExubAvJFOkZfGtI' ]
-                            , [  '2m', '2EeLn1LGhXQO9uFERlb2gE' ]
-                            , [  '3m', '5nbMQjQKOwHuBsP2mGvvvn' ]
-                            , [  '4m', '0MOoNgDUyEgVPi1fbvJFLZ' ]
-                            , [  '5m', '4zJFlydxSMdcQfXMzCiLbq' ]
+          $silence_tracks = [ [  '5s', '7J1lI2BMAMJREGHR1XKugi' ]
+                            , [ '10s', '4NrhD38gP3COip5ggPa90i' ]
+                            , [ '15s', '7LB33RimbNkOScIH4nVeSv' ]
+                            , [ '20s', '7pnQYSbl9NAl3UoWv1JNSP' ]
+                            , [ '30s', '252reTybx13y5Ll8QFheQ6' ]
+                            , [ '40s', '424YjaAqOmbtagYHZTo4xU' ]
+                            , [ '50s', '1tn6PdpK4WFflnz8Ku35oe' ]
+                            , [  '1m', '6mT4NHE2gK8rpUHUHUKfMT' ]
+                            , [  '2m', '4oFylKunGY8ApZNrpt4BQs' ]
+                            , [  '3m', '6keTTDs8ILeh7mKUrzqG3b' ]
+                            , [  '4m', '5EhQ2ZoVzdc37INBJ84Bot' ]
+                            , [  '5m', '3gCmHGA0B75GVIOUuyf5x8' ]
                             ];
           foreach($silence_tracks as $t) {
             $len = $t[0];
