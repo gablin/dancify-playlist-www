@@ -32,11 +32,18 @@ function setupPlayback() {
   mkPlaybackHtml();
   $.getScript('https://sdk.scdn.co/spotify-player.js', function() {});
   window.onSpotifyWebPlaybackSDKReady = initPlayer;
+
   $(document).on( 'keydown'
                 , function(e) {
                     if (e.key == ' ') {
-                      togglePlay();
-                      return false;
+                      let target = $(e.target);
+                      if ( !target.is('input') &&
+                           !target.is('textarea') &&
+                           !target.is('select')
+                         ) {
+                        togglePlay();
+                        return false;
+                      }
                     }
                   }
                 );
