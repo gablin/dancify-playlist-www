@@ -31,8 +31,9 @@ if ($res->num_rows == 0) {
   echo(toJson(['status' => 'NOT-FOUND']));
   die();
 }
-$play_length_s = $res->fetch_assoc()['track_play_length_s'];
-$fade_out_s = $res->fetch_assoc()['fade_out_s'];
+$row = $res->fetch_assoc();
+$play_length_s = $row['track_play_length_s'];
+$fade_out_s = $row['fade_out_s'];
 echo( toJson( [ 'status' => 'OK'
               , 'trackPlayLength' => $play_length_s
               , 'fadeOutLength' => $fade_out_s
