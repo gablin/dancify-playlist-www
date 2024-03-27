@@ -477,7 +477,7 @@ function addPlaylistTracks($api, $id, $tracks) {
     $ts = array_slice($tracks, $i, $limit);
     $res = $api->addPlaylistTracks($id, $ts);
     if (!$res) {
-      throw new Exception();
+      throw new Exception("API addPlaylistsTracks call failed");
     }
   }
 }

@@ -215,7 +215,8 @@ class SpotifyWebAPI
 
         $this->lastResponse = $this->sendRequest('POST', $uri, $tracks, $headers);
 
-        return $this->lastResponse['status'] == 201;
+        $status = $this->lastResponse['status'];
+        return $status == 200 || $status == 201;
     }
 
     /**
