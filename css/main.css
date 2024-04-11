@@ -945,6 +945,36 @@ label.checkbox .checkmark:after {
   text-align: right;
   padding-right: 1em;
 }
+.action-input-area .check-results .table-wrapper {
+  overflow-y: auto;
+}
+.action-input-area .check-results table .distance {
+  text-align: right;
+  padding-right: 2rem;
+}
+.action-input-area .check-results table .index {
+  text-align: right;
+  padding-right: 1rem;
+}
+.action-input-area .check-results table div.title {
+  font-size: 1rem;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+.action-input-area .check-results table div.title .artists {
+  font-size: 80%;
+  color: #2D4739;
+}
+.action-input-area .check-results table {
+  width: 100%;
+}
+.action-input-area .check-results table .genre {
+  font-weight: bold;
+}
+.action-input-area .check-results table .genre:hover {
+  background-color: #eee;
+  cursor: pointer;
+}
 
 .song_link_help {
   position: fixed;

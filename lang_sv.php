@@ -148,6 +148,9 @@ DEFINE( 'LNG_BTN_GENERATE'
 DEFINE( 'LNG_BTN_APPLY'
       , 'Applicera'
       );
+DEFINE( 'LNG_BTN_CHECK_PLAYLIST'
+      , 'Kolla spellista'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -216,6 +219,9 @@ DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
       );
 DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
       , 'Dublettkoll'
+      );
+DEFINE( 'LNG_MENU_GENRE_CHECK'
+      , 'Genrekoll'
       );
 DEFINE( 'LNG_MENU_RANDOMIZE'
       , 'Slumpa ordning'
@@ -294,6 +300,15 @@ define( 'LNG_HEAD_SELECTED_IN'
       );
 define( 'LNG_HEAD_COUNT'
       , 'Antal'
+      );
+define( 'LNG_HEAD_DISTANCE'
+      , 'Avs'
+      );
+define( 'LNG_HEAD_TRACK_1'
+      , '1:a låt'
+      );
+define( 'LNG_HEAD_TRACK_2'
+      , '2:a låt'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -537,6 +552,9 @@ define( 'LNG_DESC_PLAYLIST_NAME'
 define( 'LNG_DESC_GENRE'
       , 'genre'
       );
+define( 'LNG_DESC_WO_GENRE'
+      , 'Utan genre'
+      );
 define( 'LNG_DESC_ENERGY'
       , 'energi'
       );
@@ -649,6 +667,9 @@ define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'
 define( 'LNG_DESC_SEARCH_RESULTS'
       , 'Sökresultat'
       );
+define( 'LNG_DESC_RESULTS'
+      , 'Resultat'
+      );
 define( 'LNG_DESC_NO_TRACKS_FOUND'
       , 'Inga låtar hittades'
       );
@@ -665,6 +686,11 @@ define( 'LNG_DESC_DUPLICATE_CHECK'
       , 'Kolla efter och lista låtar som är dubletter. Lokal koll går igenom ' .
         'spellistan i kombination med den lokala scratchpaden. Global koll går ' .
         'endast igenom den globala scratchpaden.'
+      );
+define( 'LNG_DESC_GENRE_CHECK'
+      , 'Gå igenom alla genrer som förekommer i spellistan och lista ' .
+        'avstånden mellan två låtar av samma genre. Klicka på genren för att ' .
+        'se avstånden inom den genren. Kortast visas först.'
       );
 define( 'LNG_DESC_MIN'
       , 'Min'

@@ -17,6 +17,11 @@ mkHtmlNavMenu(
     , true
     , 'onShowDuplicateCheck'
     ]
+  , [ LNG_MENU_GENRE_CHECK
+    , 'genre-check'
+    , true
+    , 'onShowGenreCheck'
+    ]
   , []
   , [ LNG_MENU_INSERT_TRACK, 'insert-track', true ]
   , [ LNG_MENU_INSERT_REPEATING_TRACK, 'insert-track-at-interval', true ]
@@ -654,6 +659,47 @@ try {
   </div>
 </div>
 
+<div class="action-input-area" name="genre-check">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_GENRE_CHECK ?></div>
+
+    <p>
+      <?= LNG_DESC_GENRE_CHECK ?>
+    </p>
+
+    <div class="buttons">
+      <button class="cancel" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="checkGenresBtn">
+        <?= LNG_BTN_CHECK_PLAYLIST ?>
+      </button>
+    </div>
+
+    <div class="check-results">
+      <div class="title"><?= LNG_DESC_RESULTS ?></div>
+      <div class="results">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th class="distance"><?= LNG_HEAD_DISTANCE ?></th>
+                <th class="index">#</th>
+                <th><?= LNG_HEAD_TRACK_1 ?></th>
+                <th class="index">#</th>
+                <th><?= LNG_HEAD_TRACK_2 ?></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="action-input-area" name="restore-playlist">
   <div class="background"></div>
   <div class="input">
@@ -991,6 +1037,7 @@ try {
 <script src="/js/heartbeat.js.php"></script>
 <script src="/js/track-overview.js.php"></script>
 <script src="/js/duplicate-check.js.php"></script>
+<script src="/js/genre-check.js.php"></script>
 <script src="/js/randomize.js.php"></script>
 <script src="/js/playback.js.php"></script>
 <script src="/js/export.js.php"></script>
@@ -1028,6 +1075,7 @@ $(document).ready(
     setupSearchForTracks();
     setupTrackOverview();
     setupDuplicateCheck();
+    setupGenreCheck();
     setupRandomize();
     setupPlayback();
     setupExport();

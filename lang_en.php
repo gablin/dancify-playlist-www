@@ -147,6 +147,9 @@ DEFINE( 'LNG_BTN_GENERATE'
 DEFINE( 'LNG_BTN_APPLY'
       , 'Apply'
       );
+DEFINE( 'LNG_BTN_CHECK_PLAYLIST'
+      , 'Check playlist'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -215,6 +218,9 @@ DEFINE( 'LNG_MENU_SEARCH_FOR_TRACKS'
       );
 DEFINE( 'LNG_MENU_DUPLICATE_CHECK'
       , 'Duplicate check'
+      );
+DEFINE( 'LNG_MENU_GENRE_CHECK'
+      , 'Genre check'
       );
 DEFINE( 'LNG_MENU_RANDOMIZE'
       , 'Randomize order'
@@ -293,6 +299,15 @@ define( 'LNG_HEAD_SELECTED_IN'
       );
 define( 'LNG_HEAD_COUNT'
       , 'Count'
+      );
+define( 'LNG_HEAD_DISTANCE'
+      , 'Dist'
+      );
+define( 'LNG_HEAD_TRACK_1'
+      , '1st track'
+      );
+define( 'LNG_HEAD_TRACK_2'
+      , '2nd track'
       );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
@@ -536,6 +551,9 @@ define( 'LNG_DESC_PLAYLIST_NAME'
 define( 'LNG_DESC_GENRE'
       , 'genre'
       );
+define( 'LNG_DESC_WO_GENRE'
+      , 'Without genre'
+      );
 define( 'LNG_DESC_ENERGY'
       , 'energy'
       );
@@ -647,6 +665,9 @@ define( 'LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP'
 define( 'LNG_DESC_SEARCH_RESULTS'
       , 'Search results'
       );
+define( 'LNG_DESC_RESULTS'
+      , 'Results'
+      );
 define( 'LNG_DESC_NO_TRACKS_FOUND'
       , 'No tracks found'
       );
@@ -663,6 +684,11 @@ define( 'LNG_DESC_DUPLICATE_CHECK'
       , 'Check for and list tracks that are duplicates. Local check covers ' .
         'the playlist in combination with the local scratchpad. Global check ' .
         'covers only the global scratchpad.'
+      );
+define( 'LNG_DESC_GENRE_CHECK'
+      , 'Go through all genres that appear in the playlist and list the ' .
+        'distances between two songs av the same genre. Click on the genre ' .
+        'to view the distances within that genre. Shortest is shown first.'
       );
 define( 'LNG_DESC_MIN'
       , 'Min'
