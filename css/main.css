@@ -881,6 +881,9 @@ label.checkbox .checkmark:after {
   border: 1px solid #000;
   padding: 2em;
   max-width: 40em;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 .action-input-area .input .title {
   font-size: 125%;
@@ -889,7 +892,6 @@ label.checkbox .checkmark:after {
 }
 .action-input-area .input > .buttons {
   margin-top: 1em;
-  overflow: auto;
 }
 .action-input-area .input > .buttons button {
   float: right;
@@ -945,6 +947,13 @@ label.checkbox .checkmark:after {
   text-align: right;
   padding-right: 1em;
 }
+.action-input-area .check-results {
+  flex-basis: 100vh;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
 .action-input-area .check-results .table-wrapper {
   overflow-y: auto;
 }
@@ -967,6 +976,9 @@ label.checkbox .checkmark:after {
 }
 .action-input-area .check-results table {
   width: 100%;
+}
+.action-input-area .check-results table th {
+  padding-bottom: 1rem;
 }
 .action-input-area .check-results table .genre {
   font-weight: bold;

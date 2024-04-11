@@ -679,22 +679,20 @@ try {
 
     <div class="check-results">
       <div class="title"><?= LNG_DESC_RESULTS ?></div>
-      <div class="results">
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th class="distance"><?= LNG_HEAD_DISTANCE ?></th>
-                <th class="index">#</th>
-                <th><?= LNG_HEAD_TRACK_1 ?></th>
-                <th class="index">#</th>
-                <th><?= LNG_HEAD_TRACK_2 ?></th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="distance"><?= LNG_HEAD_DISTANCE ?></th>
+              <th class="index">#</th>
+              <th><?= LNG_HEAD_TRACK_1 ?></th>
+              <th class="index">#</th>
+              <th><?= LNG_HEAD_TRACK_2 ?></th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

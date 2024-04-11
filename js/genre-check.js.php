@@ -50,7 +50,6 @@ function buildGenreCheckResults(tracks) {
 
   let playlist_delimiters = computePlaylistDelimiterPositions(tracks)
                             .map(([n, _ign]) => n);
-  console.log(playlist_delimiters);
   let dist_data = genres.map(
     (genre) => {
       let track_pairs = [];
@@ -108,9 +107,11 @@ function showGenreCheckResults(tracks, data) {
 
   data.forEach(
     ([genre, track_pairs]) => {
+      let genre_name = genre > 0 ? genreToString(genre)
+                                 : '<?= LNG_DESC_WO_GENRE ?>';
       let genre_tr = $( '<tr>' +
                           '<td colspan="5" class="genre">' +
-                            genreToString(genre) +
+                            genre_name +
                           '</td>' +
                         '</tr>'
                      ).appendTo(table);
@@ -132,10 +133,10 @@ function showGenreCheckResults(tracks, data) {
             let track2 = pos2 !== null ? tracks[pos2] : null;
             return $('<tr />')
                    .append('<td class="distance">' + dist + '</td>')
-                   .append('<td class="index">' + pos1 + '</td>')
+                   .append('<td class="index">' + (pos1 + 1) + '</td>')
                    .append(buildTrackTd(track1))
                    .append( '<td class="index">' +
-                              (pos2 !== null ? pos2 : '') +
+                              (pos2 !== null ? (1 + pos2) : '') +
                             '</td>'
                           )
                    .append(buildTrackTd(track2))
