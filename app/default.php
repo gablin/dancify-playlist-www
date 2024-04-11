@@ -432,10 +432,10 @@ try {
       <button id="searchTracksBtn"><?= LNG_BTN_SEARCH ?></button>
     </div>
 
-    <div class="search-results">
+    <div class="search-results hide">
       <div class="error"></div>
       <div class="none-found"></div>
-      <div class="tracks-found">
+      <div class="tracks-found hide">
         <div class="title"><?= LNG_DESC_SEARCH_RESULTS ?></div>
         <p class="info">
           <?= LNG_DESC_SEARCH_FOR_TRACKS_RESULTS_HELP ?>

@@ -903,10 +903,12 @@ label.checkbox .checkmark:after {
 }
 .action-input-area .search-results {
   margin-top: 2em;
-  max-width: 60vw;
-  height: 50vh;
   display: flex;
   flex-direction: column;
+  overflow-y: hidden;
+}
+.action-input-area .search-results.hide {
+  display: none;
 }
 .action-input-area .search-results .info {
   font-size: 80%;
@@ -916,11 +918,16 @@ label.checkbox .checkmark:after {
   color: #E60000;
   font-weight: bold;
 }
-.action-input-area .search-results .duplicates-found {
-  overflow-y: scroll;
+.action-input-area .search-results .tracks-found,
+.action-input-area .search-results .tracks-found div.playlist {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
 }
-.action-input-area .search-results .none-found,
-.action-input-area .search-results .tracks-found {
+.action-input-area .search-results .tracks-found.hide {
+  display: none;
+}
+.action-input-area .search-results .none-found {
   display: none;
 }
 .action-input-area .search-results .tracks-found .buttons {
@@ -947,9 +954,15 @@ label.checkbox .checkmark:after {
   text-align: right;
   padding-right: 1em;
 }
+.action-input-area .search-results .duplicates-found,
+.action-input-area .search-results .duplicates-found div.playlist {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
 .action-input-area .check-results {
   flex-basis: 100vh;
-  margin-top: 1rem;
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   overflow-y: hidden;

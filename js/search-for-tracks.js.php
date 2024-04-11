@@ -68,7 +68,7 @@ function setupSearchForTracksButtons() {
     body.addClass('loading');
     action_area.find('.error').hide();
     action_area.find('.none-found').hide();
-    action_area.find('.tracks-found').hide();
+    action_area.find('.tracks-found').addClass('hide');
     CANCEL_SEARCH_FOR_TRACK = false;
 
     let close_btn = $(this).closest('.buttons').find('button.cancel');
@@ -118,7 +118,7 @@ function searchForTracks( genre
 {
   clearResults();
   let search_results_area = getSearchForTracksResultsArea();
-  search_results_area.show();
+  search_results_area.removeClass('hide');
   $('#addSearchToPlaylistBtn').prop('disabled', true);
   $('#addSearchToLocalScratchpadBtn').prop('disabled', true);
   $('#addSearchToGlobalScratchpadBtn').prop('disabled', true);
@@ -164,7 +164,8 @@ function searchForTracks( genre
                             tracks.push(t);
                           }
                           appendResults(tracks);
-                          search_results_area.find('.tracks-found').show();
+                          search_results_area.find('.tracks-found')
+                                             .removeClass('hide');
                           setTableHeight();
                           if (d.trackIds.length == SEARCH_LIMIT) {
                             load(offset + SEARCH_LIMIT);
