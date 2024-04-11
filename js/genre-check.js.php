@@ -46,26 +46,13 @@ function buildGenreCheckResults(tracks) {
     }
   );
 
-  const all_genres = getGenreList();
   let genres = uniq(tracks.map((t) => t.genre));
-  genres = genres.map(
-             (i) => {
-               if (i == 0) return [0, '<?= LNG_DESC_WO_GENRE ?>'];
-               return all_genres.filter(([n, s]) => i == n)[0];
-             }
-           );
-  genres.sort( (a, b) => {
-                 if (a[0] == 0) return  1;
-                 if (b[0] == 0) return -1;
-                 return strcmp(a[1], b[1]);
-               }
-             );
 
   let playlist_delimiters = computePlaylistDelimiterPositions(tracks)
                             .map(([n, _ign]) => n);
   console.log(playlist_delimiters);
   let dist_data = genres.map(
-    ([genre_int, genre_name]) => {
+    (genre) => {
       let track_pairs = [];
 
       let track_pos = null;
@@ -77,7 +64,7 @@ function buildGenreCheckResults(tracks) {
             has_matched = false;
           }
 
-          if (track.genre == genre_int) {
+          if (track.genre == genre) {
             if (track_pos === null) {
               track_pos = i;
             }
@@ -105,7 +92,7 @@ function buildGenreCheckResults(tracks) {
         }
       );
 
-      return [genre_name, track_pairs];
+      return [genre, track_pairs];
     }
   );
   return dist_data;
@@ -114,11 +101,16 @@ function buildGenreCheckResults(tracks) {
 function showGenreCheckResults(tracks, data) {
   let table = getGenreCheckResultsArea().find('table tbody');
 
+  // Sort so genre with shortest distance appears first
+  data.sort(
+    ([g1, data1], [g2, data2]) => intcmp(data1[0][2], data2[0][2])
+  );
+
   data.forEach(
-    ([genre_name, track_pairs]) => {
+    ([genre, track_pairs]) => {
       let genre_tr = $( '<tr>' +
                           '<td colspan="5" class="genre">' +
-                            genre_name +
+                            genreToString(genre) +
                           '</td>' +
                         '</tr>'
                      ).appendTo(table);
