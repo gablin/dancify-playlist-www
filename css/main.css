@@ -941,6 +941,10 @@ label.checkbox .checkmark:after {
 .action-input-area .search-results .table-wrapper {
   overflow-y: auto;
 }
+.action-input-area .search-results table .count {
+  text-align: right;
+  padding-right: 1em;
+}
 
 .song_link_help {
   position: fixed;

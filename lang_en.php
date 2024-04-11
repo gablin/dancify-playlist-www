@@ -291,6 +291,9 @@ define( 'LNG_HEAD_ADDED_BY'
 define( 'LNG_HEAD_SELECTED_IN'
       , 'Selected in'
       );
+define( 'LNG_HEAD_COUNT'
+      , 'Count'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );

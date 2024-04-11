@@ -292,6 +292,9 @@ define( 'LNG_HEAD_ADDED_BY'
 define( 'LNG_HEAD_SELECTED_IN'
       , 'Vald i'
       );
+define( 'LNG_HEAD_COUNT'
+      , 'Antal'
+      );
 define( 'LNG_DESC_COPYRIGHT'
       , 'Copyright'
       );

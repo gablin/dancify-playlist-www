@@ -640,8 +640,8 @@ try {
             <table class="playlist">
               <thead>
                 <tr>
-                  <th class="index">#</th>
                   <th><?= LNG_HEAD_TITLE ?></th>
+                  <th class="count"><?= LNG_HEAD_COUNT ?></th>
                 </tr>
               </thead>
               <tbody>
