@@ -127,7 +127,7 @@ if (fwrite($fh, $dzn_content) === false) {
 // Solve model and get output
 $time_limit_s = 60;
 $time_limit_ms = $time_limit_s*1000;
-$res = shell_exec( "minizinc model.mzn $dzn_file " .
+$res = shell_exec( "./minizinc/bin/minizinc model.mzn $dzn_file " .
                    "--time-limit $time_limit_ms " .
                    "--unbounded-msg '' " .
                    "--unknown-msg '' " .
@@ -138,7 +138,7 @@ $res = shell_exec( "minizinc model.mzn $dzn_file " .
 $json = fromJson($res);
 if (is_null($json)) {
   $clean_up_fun();
-  fail("no solution found");
+  fail("no solution found: $dir");
 }
 
 // Build new track list
