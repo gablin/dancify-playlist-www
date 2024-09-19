@@ -5,6 +5,8 @@ session_start();
  * Outputs beginning of every HTML page.
  */
 function beginPage() {
+  $extra_logo_text_cls =
+    count(explode('/', $_SERVER['REQUEST_URI'])) == 2 ? 'large' : '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,7 +23,7 @@ function beginPage() {
   <body>
     <div class="body-wrapper">
       <div class="logo">
-        <div class="text">
+        <div class="text <?= $extra_logo_text_cls ?>">
           <?php echo(LNG_SLOGAN); ?>
         </div>
         <div class="lang">

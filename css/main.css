@@ -85,21 +85,21 @@ a:hover {
 
 .logo {
   position: relative;
-  height: 5em;
   background-color: #09814A;
   color: #FFF;
   border-bottom: 1px solid #000;
+  display: flex;
+  justify-content: center;
 }
 .logo .text {
-  position: absolute;
-  margin: 0;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-family: 'Lobster', cursive;
-  font-size: 300%;
+  font-size: 200%;
   text-shadow: 2px 2px 4px #000;
   white-space: nowrap;
+  margin: .1em 0 .2em;
+}
+.logo .text.large {
+  font-size: 300%;
 }
 
 .menu,
@@ -393,7 +393,7 @@ form {
   font-weight: bold;
 }
 .playlist table td.title {
-  padding: .5em 0;
+  padding: .25em 0;
 }
 .playlist table td.title div.artists {
   font-size: 80%;
