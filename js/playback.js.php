@@ -26,6 +26,7 @@ const PLAYBACK_PLAY_TRACK_ATTEMPTS = 3;
 const PLAYBACK_DEFAULT_VOLUME = 0.5;
 const PLAYBACK_CHECK_PLAY_POS_UPDATE_FREQ_MS = 500;
 const PLAYBACK_FADE_OUT_STEP_MS = 100;
+const PLAYBACK_PLAY_PREV_TRACK_TIME_WINDOW = 2000;
 
 function setupPlayback() {
   mkPlaybackHtml();
@@ -419,7 +420,7 @@ function rewindOrPlayPrevTrack() {
         return;
       }
 
-      if (state.position < 1000) {
+      if (state.position < PLAYBACK_PLAY_PREV_TRACK_TIME_WINDOW) {
         playPrevTrack();
       }
       else {
