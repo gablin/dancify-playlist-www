@@ -27,14 +27,42 @@ const PLAYBACK_DEFAULT_VOLUME = 0.5;
 const PLAYBACK_CHECK_PLAY_POS_UPDATE_FREQ_MS = 500;
 const PLAYBACK_FADE_OUT_STEP_MS = 100;
 const PLAYBACK_PLAY_PREV_TRACK_TIME_WINDOW = 2000;
+const PLAYBACK_SEEK_SKIP_LENGTH = 30*1000;
 
 function setupPlayback() {
   mkPlaybackHtml();
   $.getScript('https://sdk.scdn.co/spotify-player.js', function() {});
   window.onSpotifyWebPlaybackSDKReady = initPlayer;
 
+  let is_ctrl_pressed = false;
+  let is_shift_pressed = false;
+
+  function seekSkip(offset) {
+    PLAYBACK_PLAYER.getCurrentState().then(
+      state => {
+        if (!state) return;
+        let new_pos = state.position + offset;
+        let max_end_pos = adjustDuration(state.duration) - 200;
+        if (new_pos < 0) new_pos = 0;
+        if (new_pos > max_end_pos) new_pos = max_end_pos;
+        playTrack( PLAYBACK_LAST_PLAYED_TRACK_ID
+                 , PLAYBACK_LAST_PLAYED_INDEX
+                 , PLAYBACK_LAST_PLAYED_TABLE
+                 , new_pos
+                 );
+      }
+    );
+  }
+
   $(document).on( 'keydown'
                 , function(e) {
+                      if (e.key == 'Control') {
+                      is_ctrl_pressed = true;
+                    }
+                    else if (e.key == 'Shift') {
+                      is_shift_pressed = true;
+                    }
+
                     if (e.key == ' ') {
                       let target = $(e.target);
                       if ( !target.is('input') &&
@@ -44,6 +72,32 @@ function setupPlayback() {
                         togglePlay();
                         return false;
                       }
+                    }
+                    else if (e.key == 'ArrowLeft' && is_ctrl_pressed) {
+                      if (is_shift_pressed) {
+                        seekSkip(-PLAYBACK_SEEK_SKIP_LENGTH);
+                      }
+                      else {
+                        rewindOrPlayPrevTrack();
+                      }
+                    }
+                    else if (e.key == 'ArrowRight' && is_ctrl_pressed) {
+                      if (is_shift_pressed) {
+                        seekSkip(PLAYBACK_SEEK_SKIP_LENGTH);
+                      }
+                      else {
+                        playNextTrack();
+                      }
+                    }
+                  }
+                );
+  $(document).on( 'keyup'
+                , function(e) {
+                    if (e.key == 'Control') {
+                      is_ctrl_pressed = false;
+                    }
+                    else if (e.key == 'Shift') {
+                      is_shift_pressed = false;
                     }
                   }
                 );
@@ -518,6 +572,8 @@ function playTrack( track_id
                     }
                   , attempts = PLAYBACK_PLAY_TRACK_ATTEMPTS
                   ) {
+  if (!track_id) return;
+
   if (!PLAYBACK_PLAYER) {
     fail_f('<?= LNG_ERR_PLAYBACK_NOT_POSSIBLE ?>');
   }
