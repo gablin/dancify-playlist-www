@@ -674,7 +674,10 @@ function addTrackBpmHandling(tr) {
   function onKeyDown(e) {
     if (e.key === 'Enter') {
       skip_confirm = true;
+
+      // Move focus to BPM of next track
       input.blur();
+      input.closest('tr').nextAll().find('input[name=bpm]').first().focus();
     }
   }
 
