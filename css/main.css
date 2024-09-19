@@ -527,6 +527,8 @@ form {
   color: #BCB382;
 }
 .playback .controllers {
+  margin-top: .4rem;
+  flex: 1;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -585,9 +587,9 @@ form {
 }
 .playback .middle {
   flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: .3em;
 }
 .playback .seek,
 .playback .volume {
