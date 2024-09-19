@@ -526,9 +526,16 @@ form {
   font-size: 80%;
   color: #BCB382;
 }
-.playback button.controller {
-  margin: 0 1em 0 0;
-  font-size: 150%;
+.playback .controllers {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.playback .controllers button {
+  margin: 0;
+  font-size: 120%;
   padding: 0;
   background-color: #09814A;
   border-color: #09814A;
@@ -540,14 +547,47 @@ form {
   border-width: 0;
   border-radius: 50%;
   transition: background-color .2s, border-color .2s;
-  width: 1.8em;
-  min-width: 1.8em;
-  height: 1.8em;
+  width: 2em;
+  min-width: 2em;
+  height: 2em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.playback .controllers button.play svg {
+  width: .9em;
+  height: 1.1em;
+}
+.playback .controllers button.play svg.triangle {
+  margin-left: .2em;
+}
+.playback .controllers button.prev,
+.playback .controllers button.next {
+  width: 1.6em;
+  min-width: 1.6em;
+  height: 1.6em;
+}
+.playback .controllers button.prev svg,
+.playback .controllers button.next svg {
+  width: .7em;
+  height: .9em;
+}
+.playback .controllers button.prev svg {
+  margin-right: .1em;
+}
+.playback .controllers button.next svg {
+  margin-left: .1em;
 }
 .playback button:hover {
   background-color: #0CA761;
   border-color: #0CA761;
   cursor: pointer;
+}
+.playback .middle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .3em;
 }
 .playback .seek,
 .playback .volume {
@@ -556,6 +596,9 @@ form {
   justify-content: flex-end;
   align-items: center;
   user-select: none;
+}
+.playback .seek {
+  min-height: 1em;
 }
 .playback .seek .length-pos,
 .playback .seek .length-end {
@@ -571,7 +614,6 @@ form {
   height: 2ex;
 }
 .playback .volume {
-  width: 20rem;
   max-width: 20rem;
   margin-left: 1em;
 }
