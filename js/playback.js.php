@@ -10,7 +10,6 @@ var PLAYBACK_PLAYER = null;
 var PLAYBACK_DEVICE_ID = null;
 var PLAYBACK_SEEK_TIMER = null;
 var PLAYBACK_HAS_TRACK = false;
-var PLAYBACK_IS_STOPPED = false;
 var PLAYBACK_LAST_PLAYED_TRACK_ID = null;
 var PLAYBACK_LAST_PLAYED_INDEX = null;
 var PLAYBACK_LAST_PLAYED_TABLE = null;
@@ -315,7 +314,7 @@ function checkPlayPos() {
            state.position > adjustDuration(state.duration)
          ) {
         stopSeek();
-        playNextTrack();
+        playNextTrack(false);
       }
     }
   );
@@ -434,13 +433,9 @@ function rewindOrPlayPrevTrack() {
   );
 }
 
-function playNextTrack() {
+function playNextTrack(skip_if_no_next = true) {
   if (!PLAYBACK_PLAYER) {
     return;
-  }
-
-  if (PLAYBACK_IS_STOPPED) {
-    return
   }
 
   PLAYBACK_PLAYER.activateElement();
@@ -454,15 +449,16 @@ function playNextTrack() {
              , 0
              );
   }
-  else {
+  else if (skip_if_no_next) {
     // This is the last track; skip to end of it
-    PLAYBACK_IS_STOPPED = true;
     PLAYBACK_PLAYER.getCurrentState().then(
       state => {
         if (!state) return;
         // Must skip to almost end of track, or else it will try to play it from
         // the beginning.
         let end_pos = adjustDuration(state.duration) - 200;
+        if (state.position >= end_pos) return; // Already at the end
+
         playTrack( PLAYBACK_LAST_PLAYED_TRACK_ID
                  , PLAYBACK_LAST_PLAYED_INDEX
                  , PLAYBACK_LAST_PLAYED_TABLE
@@ -502,7 +498,6 @@ function triggerPause() {
   PLAYBACK_PLAYER.pause().then();
   renderPaused();
   stopSeek();
-  PLAYBACK_IS_STOPPED = true;
 }
 
 function hasPlayback() {
