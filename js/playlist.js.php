@@ -24,6 +24,7 @@ var LOADED_GLOBAL_SCRATCHPAD = false;
 var IS_LOADING_PLAYLIST_CONTENT = false;
 var ABORT_LOAD_PLAYLIST_CONTENT = false;
 var ABORT_LOAD_PLAYLIST_CALLBACK = null;
+var DELETE_BEHAVIOR_INHIBITED = false;
 
 const BPM_MIN = 0;
 const BPM_MAX = 255;
@@ -42,7 +43,7 @@ function setupPlaylist() {
                         clearTrackTrSelection();
                         return false;
                       }
-                      if (e.key == 'Delete') {
+                      if (e.key == 'Delete' && !DELETE_BEHAVIOR_INHIBITED) {
                         deleteSelectedTrackTrs();
                         return false;
                       }
@@ -71,6 +72,14 @@ function setupPlaylist() {
       addAppResizeHandling($(this));
     }
   );
+}
+
+function inhibitDeleteBehavior() {
+  DELETE_BEHAVIOR_INHIBITED = true;
+}
+
+function reenableDeleteBehavior() {
+  DELETE_BEHAVIOR_INHIBITED = false;
 }
 
 function getTableOfTr(tr) {
@@ -581,11 +590,13 @@ function addTrackBpmHandling(tr) {
       $(this).css('background-color', '#fff');
       $(this).css('color', '#000');
       $(this).data('old-value', $(this).val().trim());
+      inhibitDeleteBehavior();
     }
   );
   input.blur(
     function() {
       renderTrackBpm($(this).closest('tr'));
+      reenableDeleteBehavior();
     }
   );
 
@@ -872,6 +883,12 @@ function addTrackGenreHandling(tr) {
   select.focus(
     function() {
       $(this).data('old-value', $(this).find(':selected').val().trim());
+      inhibitDeleteBehavior();
+    }
+  );
+  select.blur(
+    function() {
+      reenableDeleteBehavior();
     }
   );
 }
@@ -894,6 +911,12 @@ function addTrackCommentsHandling(tr) {
   textarea.focus(
     function() {
       $(this).data('old-value', $(this).val().trim());
+      inhibitDeleteBehavior();
+    }
+  );
+  textarea.blur(
+    function() {
+      reenableDeleteBehavior();
     }
   );
   function fail(msg) {
