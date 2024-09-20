@@ -675,9 +675,8 @@ function addTrackBpmHandling(tr) {
     if (e.key === 'Enter') {
       skip_confirm = true;
 
-      // Move focus to BPM of next track
-      input.blur();
-      input.closest('tr').nextAll().find('input[name=bpm]').first().focus();
+      // Move focus to genre
+      input.closest('tr').find('select[name=genre]').focus();
     }
   }
 
@@ -883,15 +882,21 @@ function addTrackGenreHandling(tr) {
     }
   );
   select.change(function() { update($(this)); });
+
+  function onKeyDown(e) {
+    if (e.key === 'Enter') {
+      // Move focus to BPM of next track
+      select.closest('tr').nextAll().find('input[name=bpm]').first().focus();
+    }
+  }
   select.focus(
     function() {
-      $(this).data('old-value', $(this).find(':selected').val().trim());
-      inhibitDeleteBehavior();
+      select.on('keydown', onKeyDown);
     }
   );
   select.blur(
     function() {
-      reenableDeleteBehavior();
+      select.off('keydown', onKeyDown);
     }
   );
 }
