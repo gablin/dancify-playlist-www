@@ -3127,8 +3127,6 @@ function renderTrackOverview(
   let playlist_delimiters = computePlaylistDelimiterPositions(tracks);
   playlist_delimiters.forEach(
     function([i, length]) {
-      console.log(i);
-
       let delimiter = $('<div class="delimiter playlist" />');
       delimiter.css('height', area_vh + 'px');
       delimiter.css('left', (i*(bar_vw + border_size)) + 'px');
