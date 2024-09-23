@@ -29,11 +29,25 @@ function setupSaveChangesToSpotify() {
         restoreButton();
         clearActionInputs();
         if (overwrite_playlist) {
+          savePlaylistSnapshot( function() {}
+                              , function() {}
+                              , true
+                              , true
+                              , res.newPlaylistId
+                              );
           alert('<?= LNG_DESC_SAVED ?>');
         }
         else {
+          savePlaylistSnapshot( function() {}
+                              , function() {}
+                              , true
+                              , true
+                              , res.newPlaylistId
+                              );
+
+          // Add new playlist to list of playlist and load the new playlist
           let tr = addToUserPlaylists(res.newPlaylistId, name);
-          // Give some time to allow saves to propagate before loading the new list
+          // Give some time to allow saves to propagate before loading
           setTimeout(function() { tr.find('a').trigger('click'); }, 10);
         }
       }

@@ -579,6 +579,10 @@ define( 'LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK'
       , 'This will destroy all changes made to the playlist or scratchpad, ' .
         'depending on which to sort.'
       );
+define( 'LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK_BUT_NOT_SCRATCHPAD'
+      , 'This will destroy all changes made to the playlist (but the ' .
+        'scratchpad will be kept intact).'
+      );
 define( 'LNG_DESC_RESTORE_PLAYLIST'
       , 'Restore playlist to appear exactly as it appears in Spotify.'
       );

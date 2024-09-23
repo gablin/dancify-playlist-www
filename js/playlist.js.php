@@ -2261,7 +2261,12 @@ function addTrackTrRightClickMenu(tr) {
   );
 }
 
-function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
+function savePlaylistSnapshot( success_f
+                             , fail_f
+                             , show_status = true
+                             , no_playlist = false
+                             , playlist_id = null
+                             ) {
   if (PLAYLIST_INFO === null) {
     success_f();
     return;
@@ -2277,13 +2282,17 @@ function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
     }
     return { track: t.trackId, addedBy: t.addedBy };
   }
-  let playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackInfo);
-  if ( LAST_SPOTIFY_PLAYLIST_HASH === '' ||
-       LAST_SPOTIFY_PLAYLIST_HASH === computePlaylistHash(
-         playlist_tracks.map((t) => t.track)
-       )
-     ) {
-    playlist_tracks = null;
+
+  let playlist_tracks = null;
+  if (!no_playlist) {
+    playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackInfo);
+    if ( LAST_SPOTIFY_PLAYLIST_HASH === '' ||
+         LAST_SPOTIFY_PLAYLIST_HASH === computePlaylistHash(
+           playlist_tracks.map((t) => t.track)
+         )
+       ) {
+      playlist_tracks = null;
+    }
   }
   let scratchpad_tracks =
     getTrackData(getLocalScratchpadTable()).map(getTrackInfo);
@@ -2293,7 +2302,12 @@ function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
       overviews[name] = isTrackOverviewShowing(div);
     }
   );
-  let data = { playlistId: PLAYLIST_INFO.id
+
+  if (playlist_id === null) {
+    playlist_id = PLAYLIST_INFO.id;
+  }
+
+  let data = { playlistId: playlist_id
              , snapshot: { playlistData: playlist_tracks
                          , scratchpadData: scratchpad_tracks
                          , delimiter: PLAYLIST_DANCE_DELIMITER
@@ -2579,14 +2593,15 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
 
                if (data.playlistData !== null) {
                  load(getPlaylistTable(), 0, data.playlistData, 0);
-                 let s_table = getLocalScratchpadTable();
-                 load(s_table, 1, data.scratchpadData, 0);
-                 if (data.scratchpadData.length > 0) {
-                   showScratchpad(s_table);
-                 }
                }
                else {
                  no_snap_f();
+               }
+
+               let s_table = getLocalScratchpadTable();
+               load(s_table, 1, data.scratchpadData, 0);
+               if (data.scratchpadData.length > 0) {
+                 showScratchpad(s_table);
                }
              }
              else if (res.status == 'NOT-FOUND') {

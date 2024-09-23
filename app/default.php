@@ -707,7 +707,7 @@ try {
     </p>
     <p class="warning">
       <span><?= LNG_DESC_WARNING ?>:</span>
-      <?= LNG_DESC_THIS_WILL_REMOVE_ALL_WORK ?>
+      <?= LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK_BUT_NOT_SCRATCHPAD ?>
       <br />
       <?= strtoupper(LNG_DESC_NO_WAY_TO_UNDO) ?>
     </p>

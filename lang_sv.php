@@ -580,6 +580,10 @@ define( 'LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK'
       , 'Detta kommer förstöra all ändringar gjorda i spellistan eller ' .
         'scratchpaden, beroende på vilken som ska sorteras.'
       );
+define( 'LNG_DESC_THIS_WILL_REMOVE_PLAYLIST_WORK_BUT_NOT_SCRATCHPAD'
+      , 'Detta kommer förstöra all ändringar gjorda i spellistan (men ' .
+        'scratchpaden kommer att finnas kvar).'
+      );
 define( 'LNG_DESC_RESTORE_PLAYLIST'
       , 'Återställ spellistan så den ser ut exakt som den ser ut i Spotify.'
       );
