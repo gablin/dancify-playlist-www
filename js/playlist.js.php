@@ -1488,6 +1488,8 @@ function computePlaylistDelimiterPositions(tracks) {
   let delimiter_length = 0;
   tracks.forEach(
     function(track, i) {
+      if (isNaN(parseInt(track.length))) return;
+
       delimiter_length += track.length;
 
       if (delimiter_index < desired_delimiters.length) {
