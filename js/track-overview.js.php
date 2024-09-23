@@ -40,9 +40,12 @@ function setupFormElementsForTrackOverview() {
         function() {
           if (checkmark.is(':checked')) {
             $(overview_id).show();
+            savePlaylistSnapshot(function() {}, function() {});
+            savePlaylistSnapshotAndGlobalScratchpad();
           }
           else {
             $(overview_id).hide();
+            savePlaylistSnapshot(function() {}, function() {});
           }
           renderTrackOverviews();
           setPlaylistHeight();

@@ -2,16 +2,21 @@
 require '../autoload.php';
 ?>
 
+PLAYLIST_DELIMITER_BASE_ELEMENT = null;
+
 function setupPlaylistDelimiter() {
   setupFormElementsForPlaylistDelimiter();
+}
+
+function playlistDelimiterWrapper() {
+  return getPlaylistForm().find('.playlist-delimiters');
 }
 
 function setupFormElementsForPlaylistDelimiter() {
   let form = getPlaylistForm();
 
-  let delimiters_wrapper = form.find('.playlist-delimiters');
-  let delimiters = delimiters_wrapper.children();
-  let delimiter_base = delimiters.eq(0).clone();
+  let delimiters = playlistDelimiterWrapper().children();
+  PLAYLIST_DELIMITER_BASE_ELEMENT = delimiters.eq(0).clone();
 
   delimiters.each(
     function() {
@@ -21,9 +26,7 @@ function setupFormElementsForPlaylistDelimiter() {
 
   form.find('.playlist-delimiter-heading button.add').click(
     function() {
-      let new_delimiter = delimiter_base.clone();
-      setupPlaylistDelimiterElement(new_delimiter);
-      delimiters_wrapper.append(new_delimiter);
+      addNewPlaylistDelimiterElement();
     }
   );
 
@@ -47,6 +50,7 @@ function setupFormElementsForPlaylistDelimiter() {
       renderTable(getPlaylistTable());
       renderTrackOverviews();
       clearActionInputs();
+      savePlaylistSnapshot(function() {}, function() {});
     }
   );
 }
@@ -79,4 +83,33 @@ function parsePlaylistDelimiterInput(input) {
   }
 
   return parts[0]*3600 + parts[1]*60 + parts[2];
+}
+
+function setPlaylistDelimiterValue(elem, v) {
+  function pad(i) {
+    if (i < 10) return '0' + i;
+    return i;
+  }
+
+  let s = v % 60;
+  let m = (Math.trunc(v / 60)) % 60;
+  let h = Math.trunc(v / 3600);
+  let str = pad(h) + ':' + pad(m) + ':' + pad(s);
+  elem.find('input').val(str);
+}
+
+function addNewPlaylistDelimiterElement() {
+  let new_delimiter = PLAYLIST_DELIMITER_BASE_ELEMENT.clone();
+  setupPlaylistDelimiterElement(new_delimiter);
+  playlistDelimiterWrapper().append(new_delimiter);
+  return new_delimiter;
+}
+
+function clearPlaylistDelimiterElements() {
+  playlistDelimiterWrapper().children().remove();
+}
+
+function addPlaylistDelimiterElement(v) {
+  let delimiter = addNewPlaylistDelimiterElement();
+  setPlaylistDelimiterValue(delimiter, v);
 }

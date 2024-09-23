@@ -134,9 +134,9 @@ function loadPlaylistContent(playlist_info, success_f, fail_f) {
   }
   initTable(getPlaylistTable());
   initTable(getLocalScratchpadTable());
+  resetPlaylistSettings();
   loadPlaylistFromSnapshot(playlist_id, snapshot_success, noSnapshot, fail);
 }
-
 
 function clearPlaylistContent() {
   LAST_SPOTIFY_PLAYLIST_HASH = '';
@@ -162,6 +162,16 @@ function clearPlaylistContent() {
 
 function getCurrentPlaylistInfo() {
   return PLAYLIST_INFO;
+}
+
+function resetPlaylistSettings() {
+  PLAYLIST_DANCE_DELIMITER = 0;
+  setDelimiterAsHidden();
+
+  PLAYLIST_DELIMITERS = [];
+  clearPlaylistDelimiterElements();
+
+  getTrackOverviews().forEach(([name, div]) => div.hide());
 }
 
 function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
@@ -527,6 +537,11 @@ function checkForChangesInSpotifyPlaylist(playlist_id) {
 }
 
 function computePlaylistHash(track_ids) {
+  track_ids =
+    track_ids.map(
+      (t) => (typeof t === 'string' && t.length > 0) ? t : 'placeholder'
+    );
+
   // https://stackoverflow.com/a/52171480
   function cyrb53(str, seed = 0) {
     let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
@@ -1608,7 +1623,7 @@ function renderTable(table) {
   if (table.is(getPlaylistTable())) {
     let tracks = getTrackData(table);
     let playlist_delimiters = computePlaylistDelimiterPositions(tracks);
-    let track_trs = table.find('tr.track');
+    let track_trs = table.find('tr.track, tr.empty-track');
     playlist_delimiters.forEach(
       function([i, length]) {
         let tr =
@@ -2262,15 +2277,31 @@ function savePlaylistSnapshot(success_f, fail_f, show_status = true) {
     }
     return { track: t.trackId, addedBy: t.addedBy };
   }
-  playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackInfo);
-  scratchpad_tracks = getTrackData(getLocalScratchpadTable()).map(getTrackInfo);
-  data = { playlistId: PLAYLIST_INFO.id
-         , snapshot: { playlistData: playlist_tracks
-                     , scratchpadData: scratchpad_tracks
-                     , delimiter: PLAYLIST_DANCE_DELIMITER
-                     , spotifyPlaylistHash: LAST_SPOTIFY_PLAYLIST_HASH
-                     }
-         };
+  let playlist_tracks = getTrackData(getPlaylistTable()).map(getTrackInfo);
+  if ( LAST_SPOTIFY_PLAYLIST_HASH === '' ||
+       LAST_SPOTIFY_PLAYLIST_HASH === computePlaylistHash(
+         playlist_tracks.map((t) => t.track)
+       )
+     ) {
+    playlist_tracks = null;
+  }
+  let scratchpad_tracks =
+    getTrackData(getLocalScratchpadTable()).map(getTrackInfo);
+  let overviews = {};
+  getTrackOverviews().forEach(
+    ([name, div]) => {
+      overviews[name] = isTrackOverviewShowing(div);
+    }
+  );
+  let data = { playlistId: PLAYLIST_INFO.id
+             , snapshot: { playlistData: playlist_tracks
+                         , scratchpadData: scratchpad_tracks
+                         , delimiter: PLAYLIST_DANCE_DELIMITER
+                         , playlistDelimiter: PLAYLIST_DELIMITERS
+                         , trackOverviews: overviews
+                         , spotifyPlaylistHash: LAST_SPOTIFY_PLAYLIST_HASH
+                         }
+             };
   callApi( '/api/save-playlist-snapshot/'
          , data
          , function(d) {
@@ -2516,16 +2547,46 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
          , { playlistId: playlist_id }
          , function(res) {
              if (res.status == 'OK') {
-               PLAYLIST_DANCE_DELIMITER = res.snapshot.delimiter;
-               LAST_SPOTIFY_PLAYLIST_HASH = res.snapshot.spotifyPlaylistHash;
-               if (PLAYLIST_DANCE_DELIMITER > 0) {
-                 setDelimiterAsShowing();
+               let data = res.snapshot;
+               if ('delimiter' in data) {
+                 PLAYLIST_DANCE_DELIMITER = data.delimiter;
+                 if (PLAYLIST_DANCE_DELIMITER > 0) {
+                   setDelimiterAsShowing();
+                 }
                }
-               load(getPlaylistTable(), 0, res.snapshot.playlistData, 0);
-               let s_table = getLocalScratchpadTable();
-               load(s_table, 1, res.snapshot.scratchpadData, 0);
-               if (res.snapshot.scratchpadData.length > 0) {
-                 showScratchpad(s_table);
+
+               if ('playlistDelimiter' in data) {
+                 PLAYLIST_DELIMITERS = data.playlistDelimiter;
+                 PLAYLIST_DELIMITERS.forEach(
+                   (v) => addPlaylistDelimiterElement(v)
+                 );
+               }
+               else {
+                 addNewPlaylistDelimiterElement();
+               }
+
+               if ('trackOverviews' in data) {
+                 getTrackOverviews().forEach(
+                   ([name, div]) => {
+                     if (data.trackOverviews[name]) {
+                       div.show();
+                     }
+                   }
+                 );
+               }
+
+               LAST_SPOTIFY_PLAYLIST_HASH = data.spotifyPlaylistHash;
+
+               if (data.playlistData !== null) {
+                 load(getPlaylistTable(), 0, data.playlistData, 0);
+                 let s_table = getLocalScratchpadTable();
+                 load(s_table, 1, data.scratchpadData, 0);
+                 if (data.scratchpadData.length > 0) {
+                   showScratchpad(s_table);
+                 }
+               }
+               else {
+                 no_snap_f();
                }
              }
              else if (res.status == 'NOT-FOUND') {
@@ -2799,7 +2860,7 @@ function setPlaylistHeight() {
 
   let overviews_vh = 0;
   getTrackOverviews().forEach(
-    function(overview) {
+    ([name, overview]) => {
       let overview_vh =
         overview.is(':visible') ? overview.outerHeight(true) : 0;
       overviews_vh += overview_vh;
@@ -2825,12 +2886,12 @@ function renderTrackOverviews() {
 }
 
 function getTrackOverviews() {
-  return [ $('div.bpm-overview')
-         , $('div.energy-overview')
-         , $('div.danceability-overview')
-         , $('div.acousticness-overview')
-         , $('div.instrumentalness-overview')
-         , $('div.valence-overview')
+  return [ [ 'bpm', $('div.bpm-overview') ]
+         , [ 'energy', $('div.energy-overview') ]
+         , [ 'danceability', $('div.danceability-overview') ]
+         , [ 'acousticness', $('div.acousticness-overview') ]
+         , [ 'instrumentalness', $('div.instrumentalness-overview') ]
+         , [ 'valence', $('div.valence-overview') ]
          ];
 }
 
@@ -3019,7 +3080,7 @@ function renderTrackOverview(
 
   let num_areas_showing =
     getTrackOverviews().reduce(
-      function(a, div) { return a + isTrackOverviewShowing(div); }
+      (a, [name, div]) => a + isTrackOverviewShowing(div)
     , 0
     );
 
@@ -3162,9 +3223,7 @@ function addTrackBarSelectHandling(overview_div, bar) {
 
 function addTrackBarSelectionInAllOverviews(track_index) {
   getTrackOverviews().forEach(
-    function(div) {
-      addTrackBarSelection(div, track_index);
-    }
+    ([name, div]) => addTrackBarSelection(div, track_index)
   );
 }
 
@@ -3181,9 +3240,7 @@ function addTrackBarSelection(overview_div, track_index) {
 
 function removeTrackBarSelectionInAllOverviews(track_index) {
   getTrackOverviews().forEach(
-    function(div) {
-      removeTrackBarSelection(div, track_index);
-    }
+    ([name, div]) => removeTrackBarSelection(div, track_index)
   );
 }
 
@@ -3200,9 +3257,7 @@ function removeTrackBarSelection(overview_div, track_index) {
 
 function clearTrackBarSelectionInAllOverviews() {
   getTrackOverviews().forEach(
-    function(div) {
-      clearTrackBarSelection(div);
-    }
+    ([name, div]) => clearTrackBarSelection(div)
   );
 }
 
@@ -3225,7 +3280,7 @@ function updateTrackBarSelection(
   function propagateBarSelectionToOtherOverviews() {
     // Clear selection in all other overviews
     getTrackOverviews().forEach(
-      function(div) {
+      ([name, div]) => {
         if (div.is(overview_div)) return;
         if (!isTrackOverviewShowing(overview_div)) return;
         clearTrackBarSelection(div);
@@ -3238,7 +3293,7 @@ function updateTrackBarSelection(
         let bar_wr = $(this);
         if (!bar_wr.hasClass('selected')) return;
         getTrackOverviews().forEach(
-          function(div) {
+          ([name, div]) => {
             if (div.is(overview_div)) return;
             if (!isTrackOverviewShowing(overview_div)) return;
             addTrackBarSelection(div, index);
