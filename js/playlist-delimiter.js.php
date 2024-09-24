@@ -34,7 +34,7 @@ function setupFormElementsForPlaylistDelimiter() {
     function() {
       let values = [];
       let has_errors = false;
-      delimiters_wrapper.find('input').each(
+      playlistDelimiterWrapper().find('input').each(
         function() {
           let value = parsePlaylistDelimiterInput($(this));
           if (value === null) {
