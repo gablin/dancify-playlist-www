@@ -121,6 +121,10 @@ for ($i = 0; $i < count($tracks); $i++) {
     continue;
   }
 
+  if (!isset($t->preview_url)) {
+    $t->preview_url = '';
+  }
+
   $bpm = array_values( // To reset indices
            array_filter(
              $bpms
