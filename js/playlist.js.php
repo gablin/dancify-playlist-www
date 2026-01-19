@@ -1558,9 +1558,6 @@ function computePlaylistDelimiterPositions(tracks) {
 function renderTable(table) {
   let dance_delimiter =
     table.is(getPlaylistTable()) ? PLAYLIST_DANCE_DELIMITER : 0;
-  let playlist_delimiters =
-    table.is(getPlaylistTable()) ? PLAYLIST_DELIMITERS : [];
-  playlist_delimiters = playlist_delimiters.map((v) => v*1000); // Convert to ms
 
   const num_cols = buildNewTableTrackTr(table).find('td').length;
 
@@ -1601,18 +1598,30 @@ function renderTable(table) {
     }
   );
 
+  let playlist_delimiters = [];
+  if (table.is(getPlaylistTable())) {
+    let tracks = getTrackData(table);
+    playlist_delimiters = computePlaylistDelimiterPositions(tracks);
+  }
+
   // Compute total length
   let total_length = 0;
   let delimiter_index = 0;
-  let delimiter_length = 0;
+  let playlist_length = 0;
   table.find('tr.track').each(
     function(i) {
       let tr = $(this);
 
       let track_length = getTrackLength(tr);
       total_length += track_length;
-      delimiter_length += track_length;
-      tr.find('td.aggr-length').text(formatTrackLength(total_length));
+      playlist_length += track_length;
+      tr.find('td.aggr-length').text(formatTrackLength(playlist_length));
+      if ( delimiter_index < playlist_delimiters.length &&
+           playlist_length >= playlist_delimiters[delimiter_index][1]
+         ) {
+        playlist_length = 0;
+        delimiter_index++;
+      }
     }
   );
   getTableSummaryTr(table).find('td.length').text(
@@ -1620,28 +1629,24 @@ function renderTable(table) {
   );
 
   // Insert playlist delimiters
-  if (table.is(getPlaylistTable())) {
-    let tracks = getTrackData(table);
-    let playlist_delimiters = computePlaylistDelimiterPositions(tracks);
-    let track_trs = table.find('tr.track, tr.empty-track');
-    playlist_delimiters.forEach(
-      function([i, length]) {
-        let tr =
-          $( '<tr class="delimiter playlist">' +
-               '<td colspan="' + (num_cols-2) + '"><div /></td>' +
-               '<td class="length">' + formatTrackLength(length) + '</td>' +
-               '<td><div /></td>' +
-             '</tr>'
-           );
-        if (i < track_trs.length) {
-          track_trs.eq(i).before(tr);
-        }
-        else {
-          track_trs.last().after(tr);
-        }
+  let track_trs = table.find('tr.track, tr.empty-track');
+  playlist_delimiters.forEach(
+    function([i, length]) {
+      let tr =
+        $( '<tr class="delimiter playlist">' +
+             '<td colspan="' + (num_cols-2) + '"><div /></td>' +
+             '<td class="length">' + formatTrackLength(length) + '</td>' +
+             '<td><div /></td>' +
+           '</tr>'
+         );
+      if (i < track_trs.length) {
+        track_trs.eq(i).before(tr);
       }
-    );
-  }
+      else {
+        track_trs.last().after(tr);
+      }
+    }
+  );
 
   if (table.is(getPlaylistTable())) {
     renderTrackOverviews();
