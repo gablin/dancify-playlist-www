@@ -1356,6 +1356,14 @@ function addTrackPreviewHandling(tr) {
 function buildNewTableTrackTrFromTrackObject(track) {
   let tr = buildNewTableTrackTr();
   if ('trackId' in track) {
+    let track_len = track.length;
+    if (hasPlayback()) {
+      let max_length = getMaxPlayLength();
+      if (max_length > 0) {
+        track_len = Math.min(max_length, track_len);
+      }
+    }
+
     tr.find('td.title').append( formatTrackTitleAsHtml( track.artists
                                                       , track.name
                                                       )
@@ -1372,6 +1380,7 @@ function buildNewTableTrackTrFromTrackObject(track) {
       .prop('value', track.instrumentalness);
     tr.find('input[name=valence]').prop('value', track.valence);
     tr.find('input[name=length_ms]').prop('value', track.length);
+    tr.find('input[name=length_ms_original]').prop('value', track.length);
     let bpm_input = tr.find('input[name=bpm]');
     if (track.bpm.custom >= 0) {
       bpm_input.prop('value', track.bpm.custom);
@@ -1383,7 +1392,7 @@ function buildNewTableTrackTrFromTrackObject(track) {
     tr.find('input[name=genres_by_others]')
       .prop('value', track.genre.by_others.join(','));
     tr.find('textarea[name=comments]').text(track.comments);
-    tr.find('td.length').text(formatTrackLength(track.length));
+    tr.find('td.length').text(formatTrackLength(track_len));
 
     // Genre
     let genre_select = tr.find('select[name=genre]');
@@ -1565,7 +1574,14 @@ function renderTable(table) {
   renderTablePlayingTrack(table);
 
   function getTrackLength(tr) {
-    return parseInt(tr.find('input[name=length_ms]').val());
+    let track_len = parseInt(tr.find('input[name=length_ms]').val());
+    if (hasPlayback()) {
+      let max_length = getMaxPlayLength();
+      if (max_length > 0) {
+        return Math.min(max_length, track_len);
+      }
+    }
+    return track_len;
   }
 
   // Insert dance delimiters
@@ -1658,6 +1674,12 @@ function renderAllTables() {
   renderTable(getPlaylistTable());
   renderTable(getLocalScratchpadTable());
   renderTable(getGlobalScratchpadTable());
+}
+
+function rebuildPlaylistTable() {
+  let table = getPlaylistTable();
+  replaceTracks(table, getTrackData(table));
+  renderTable(table);
 }
 
 function formatTrackTitleAsText(artists, name) {

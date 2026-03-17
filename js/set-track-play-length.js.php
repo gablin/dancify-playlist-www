@@ -21,6 +21,7 @@ function setupSetTrackPlayLength() {
       function success() {
         restoreButton();
         clearActionInputs();
+        rebuildPlaylistTable();
       }
       function fail(msg) {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
@@ -44,6 +45,7 @@ function setupSetTrackPlayLength() {
       function success() {
         restoreButton();
         clearActionInputs();
+        rebuildPlaylistTable();
       }
       function fail(msg) {
         alert('ERROR: <?= LNG_ERR_FAILED_TO_SAVE ?>');
