@@ -70,6 +70,7 @@ function setupFormElementsForInsertTrack() {
             indicateStateUpdate();
             restoreButton();
             clearActionInputs();
+            song_input.val('');
 
             if (isScratchpadTable(table)) {
               showScratchpad(table);
