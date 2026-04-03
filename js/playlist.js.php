@@ -2412,7 +2412,7 @@ function loadGlobalScratchpad(success_f, fail_f) {
                            )
                }
              , function(d) {
-                 let tracks = [];
+                 let track_objects = [];
                  for (let i = 0; i < d.tracks.length; i++) {
                    let t = d.tracks[i];
                    let added_by = typeof tracks_to_load[i] === 'string'
@@ -2433,9 +2433,9 @@ function loadGlobalScratchpad(success_f, fail_f) {
                                                       , t.preview_url
                                                       , added_by
                                                       );
-                   tracks.push(obj);
+                   track_objects.push(obj);
                  }
-                 appendTracks(table, tracks);
+                 appendTracks(table, track_objects);
                  load(tracks, o);
                }
              , fail
