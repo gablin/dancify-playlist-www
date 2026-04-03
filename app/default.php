@@ -134,8 +134,8 @@ try {
             <div class="wrapper">
               <div><?= LNG_DESC_AT_LEAST ?> <span></span></div>
               <select name="direction">
-                <option value="+1"><?= LNG_DESC_FASTER ?></option>
-                <option value="-1"><?= LNG_DESC_SLOWER ?></option>
+                <option value="+1"><?= LNG_DESC_SLOWER ?></option>
+                <option value="-1"><?= LNG_DESC_FASTER ?></option>
               </select>
             </div>
           </td>
@@ -156,8 +156,8 @@ try {
             <div class="wrapper">
               <div><?= LNG_DESC_AT_LEAST ?> <span></span></div>
               <select name="direction">
-                <option value="+1"><?= LNG_DESC_FASTER ?></option>
-                <option value="-1"><?= LNG_DESC_SLOWER ?></option>
+                <option value="+1"><?= LNG_DESC_SLOWER ?></option>
+                <option value="-1"><?= LNG_DESC_FASTER ?></option>
               </select>
             </div>
           </td>
