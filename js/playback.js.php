@@ -275,7 +275,7 @@ function initPlayer() {
       PLAYBACK_PLAYER = player;
       PLAYBACK_DEVICE_ID = device_id;
       getPlaybackArea().show();
-      setPlaylistHeight();
+      updatePlaylistHeights();
       $('.playlist a.preview').hide();
       player.getVolume().then(
         volume => { renderVolume(volume); }

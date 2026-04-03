@@ -65,7 +65,7 @@ function setupPlaylist() {
                     }
                   }
                 );
-  $(window).resize(setPlaylistHeight);
+  $(window).resize(updatePlaylistHeights);
   $(window).resize(renderTrackOverviews);
   $('.app-separator').each(
     function() {
@@ -1666,8 +1666,8 @@ function renderTable(table) {
 
   if (table.is(getPlaylistTable())) {
     renderTrackOverviews();
-    setPlaylistHeight();
   }
+  setPlaylistHeight(table);
 }
 
 function renderAllTables() {
@@ -2892,9 +2892,15 @@ function showPlaylistsWithTrack(tid, title) {
   loadPlaylists(0);
 }
 
-function setPlaylistHeight() {
+function updatePlaylistHeights() {
+  setPlaylistHeight(getPlaylistTable());
+  setPlaylistHeight(getLocalScratchpadTable());
+  setPlaylistHeight(getGlobalScratchpadTable());
+}
+
+function setPlaylistHeight(table) {
   let screen_vh = window.innerHeight;
-  let table_offset = $('div.playlists-wrapper div.table-wrapper').offset().top;
+  let table_offset = table.closest('.table-wrapper').offset().top;
   let footer_vh = $('div.footer').outerHeight(true);
 
   let playback = $('div.playback');

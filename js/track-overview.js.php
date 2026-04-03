@@ -48,7 +48,7 @@ function setupFormElementsForTrackOverview() {
             savePlaylistSnapshot(function() {}, function() {});
           }
           renderTrackOverviews();
-          setPlaylistHeight();
+          updatePlaylistHeights();
         }
       );
     }
