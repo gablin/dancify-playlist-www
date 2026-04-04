@@ -46,7 +46,7 @@ function buildGenreCheckResults(tracks) {
     }
   );
 
-  let genres = uniq(tracks.map((t) => t.genre));
+  let genres = uniq(tracks.map((t) => t.genre)).filter((g) => g !== undefined);
 
   let playlist_delimiters = computePlaylistDelimiterPositions(tracks)
                             .map(([n, _ign]) => n);
@@ -99,8 +99,6 @@ function buildGenreCheckResults(tracks) {
 
 function showGenreCheckResults(tracks, data) {
   let table = getGenreCheckResultsArea().find('table tbody');
-
-  console.log(data); // TODO: remove
 
   // Sort so genre with shortest distance appears first
   data.sort(
