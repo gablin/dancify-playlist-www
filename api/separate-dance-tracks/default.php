@@ -15,7 +15,8 @@ if (!hasSession()) {
 if (!isset($_POST['data'])) {
   fail("missing required POST field: data");
 }
-$json = fromJson($_POST['data'], true);
+$json_str = $_POST['data'];
+$json = fromJson($json_str, true);
 if (is_null($json)) {
   fail("POST field 'data' not in JSON format");
 }
@@ -64,28 +65,18 @@ $clean_up_fun = function () use ($dir) { shell_exec("rm -rf $dir"); };
 if ($dir === false) {
   fail('failed to create temp dir');
 }
-$dzn_file = $dir . '/input.dzn';
-$fh = fopen($dzn_file, 'w');
+$input_file = $dir . '/input.json';
+$fh = fopen($input_file, 'w');
 if ($fh === false) {
   $clean_up_fun();
-  fail('failed to open model input file');
+  fail('failed to open solver input file');
 }
-if (fwrite($fh, $dzn_content) === false) {
+if (fwrite($fh, $json_str) === false) {
   $clean_up_fun();
-  fail('failed to write model input file');
+  fail('failed to write solver input file');
 }
-
-// Solve model and get output
 $time_limit_s = 60;
-$time_limit_ms = $time_limit_s*1000;
-$res = shell_exec( "../../minizinc/bin/minizinc model.mzn $dzn_file " .
-                   "--time-limit $time_limit_ms " .
-                   "--unbounded-msg '' " .
-                   "--unknown-msg '' " .
-                   "--search-complete-msg '' " .
-                   "--soln-sep '' " .
-                   "2> /dev/null"
-                 );
+$res = shell_exec("./solve.py $input_file $time_limit_s 2> /dev/null");
 $json = fromJson($res);
 if (is_null($json)) {
   $clean_up_fun();
@@ -94,12 +85,7 @@ if (is_null($json)) {
 
 $clean_up_fun();
 
-$new_slot_order = [];
-foreach ($json['slotOrder'] as $v) {
-  $new_slot_order[] = $v - 1;
-}
-
-echo(toJson(['status' => 'OK', 'slotOrder' => $new_slot_order]));
+echo(toJson(['status' => 'OK', 'slotOrder' => $json['slotOrder']]));
 
 } // End try
 catch (NoSessionException $e) {
