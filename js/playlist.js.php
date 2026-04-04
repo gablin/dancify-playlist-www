@@ -2922,10 +2922,7 @@ function setPlaylistHeight(table) {
   let playlist_vh = screen_vh - table_offset - footer_vh - overviews_vh -
                     playback_vh;
   let playlist_px = playlist_vh + 'px';
-  [ getPlaylistTable(), getLocalScratchpadTable(), getGlobalScratchpadTable() ]
-    .forEach(
-      table => table.closest('.table-wrapper').css('height', playlist_px)
-    );
+  table.closest('.table-wrapper').css('height', playlist_px);
 }
 
 function renderTrackOverviews() {
