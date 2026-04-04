@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import json
+import math
 import os
 import random
 import sys
@@ -29,24 +30,19 @@ penalties = [ 1000,
 
 num_slots = data['numSlots']
 
+groups = data['conflictGroups']
+largest_gsize = max([len(vs) for vs in groups])
+group_penalty_factors = [math.ceil(largest_gsize / len(vs)) for vs in groups]
+
 def scoreOrder(order):
   score = 0
-  for group in data['conflictGroups']:
-    gsize = len(group) + 2 # We iterate over the edges as well
-    end = gsize - 1
+  for (g, group) in enumerate(groups):
+    gsize = len(group)
     for i in range(gsize):
       for j in range(i + 1, gsize):
-        if i == 0:
-          if j == end:
-            continue
-          else:
-            dist = order[group[j-1]]
-        elif j == end:
-          dist = num_slots - order[group[i-1]]
-        else:
-          dist = abs(order[group[i-1]] - order[group[j-1]])
+        dist = abs(order[group[i]] - order[group[j]])
         if dist < len(penalties) + 1:
-          score += penalties[dist-1]
+          score += penalties[dist - 1] * group_penalty_factors[g]
 
   return score
 
