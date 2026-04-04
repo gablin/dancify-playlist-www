@@ -878,4 +878,7 @@ define( 'LNG_MUST_SELECT_A_GENRE_OR_BPM'
 define( 'LNG_ERR_FAILED_TO_SEPARATE'
       , 'Isärdragningen misslyckades'
       );
+define( 'LNG_SELECT_ALL'
+      , 'Välj alla'
+      );
 ?>

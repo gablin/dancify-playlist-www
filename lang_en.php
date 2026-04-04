@@ -876,4 +876,7 @@ define( 'LNG_MUST_SELECT_A_GENRE_OR_BPM'
 define( 'LNG_ERR_FAILED_TO_SEPARATE'
       , 'Failed to run separation'
       );
+define( 'LNG_SELECT_ALL'
+      , 'Select all'
+      );
 ?>

@@ -1233,11 +1233,13 @@ img.swish-qr {
 .separate-option .select-area .wrapper {
   display: flex;
   gap: .5rem;
+  justify-content: flex-end;
 }
-.separate-option .select-area .wrapper > *:first-child {
+.separate-option .select-area .wrapper > *:first-child:not(button) {
   flex: 1;
   text-align: right;
 }
+
 .separate-error {
   margin: 1em 0;
   color: #E60000;

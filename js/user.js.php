@@ -49,6 +49,12 @@ function loadUserPlaylists(user_id) {
                  let p = d.playlists[i];
                  let tr = buildUserPlaylistsTableTr(p.id, p.name);
                  table.append(tr);
+
+                 // TODO: remove
+                 if (i == 6) {
+                   success();
+                   return;
+                 }
                }
                offset += d.playlists.length;
                if (offset == d.total) {

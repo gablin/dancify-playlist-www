@@ -203,11 +203,26 @@ function onShowSeparateDanceTracks() {
   let select_area = $('#separateGenreSelectArea');
   select_area.empty();
   genres.forEach(
-    (t) => {
+    ([genre_id, genre_txt]) => {
+      let num_tracks =
+        tracks.filter((t) => getSeparateGenreFromTrack(t) == genre_id).length;
+
       $('<div class="wrapper" />')
       .appendTo(select_area)
-      .append($('<div />').text(t[1]))
-      .append($('<input type="checkbox" />').attr('value', t[0]))
+      .append($('<div />').text(genre_txt + ' (' + num_tracks + ')'))
+      .append($('<input type="checkbox" />').attr('value', genre_id));
     }
+  );
+
+  $('<div class="wrapper" />')
+  .appendTo(select_area)
+  .append(
+    $('<button />')
+    .text('<?= LNG_SELECT_ALL ?>')
+    .click(
+      function() {
+        select_area.find('input').prop('checked', true);
+      }
+    )
   );
 }
