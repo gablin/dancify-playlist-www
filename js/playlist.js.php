@@ -1715,6 +1715,10 @@ function setDanceDelimiter(d) {
   PLAYLIST_DANCE_DELIMITER = d;
 }
 
+function getDanceDelimiter(d) {
+  return PLAYLIST_DANCE_DELIMITER;
+}
+
 function isUsingDanceDelimiter() {
   return PLAYLIST_DANCE_DELIMITER > 0;
 }

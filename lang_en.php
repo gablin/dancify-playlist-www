@@ -150,6 +150,9 @@ DEFINE( 'LNG_BTN_APPLY'
 DEFINE( 'LNG_BTN_CHECK_PLAYLIST'
       , 'Check playlist'
       );
+DEFINE( 'LNG_BTN_SEPARATE'
+      , 'Separate'
+      );
 define( 'LNG_MENU'
       , 'Menu'
       );
@@ -164,6 +167,9 @@ define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
       );
 define( 'LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY'
       , 'Randomize order by BPM and energy'
+      );
+define( 'LNG_MENU_SEPARATE_DANCE_TRACKS'
+      , 'Separate dance tracks'
       );
 define( 'LNG_MENU_INSERT_TRACK'
       , 'Insert track'
@@ -451,7 +457,7 @@ define( 'LNG_ERR_FAILED_TO_SAVE_CHANGES_TO_SPOTIFY'
         '"- BACKUP" was made before it was destroyed.'
       );
 define( 'LNG_ERR_FAILED_TO_RANDOMIZE'
-      , 'failed to run randomization'
+      , 'Failed to run randomization'
       );
 define( 'LNG_ERR_FAILED_TO_SEARCH'
       , 'Search failed'
@@ -732,6 +738,15 @@ define( 'LNG_DESC_COMPARE_AGAINST'
 define( 'LNG_DESC_ASK_CONFIRM_BPM'
       , 'Do you want to confirm that this BPM on that track is accurate?'
       );
+define( 'LNG_DESC_SEPARATE_DANCE_TRACK_INFO'
+      , 'This will rearrange the tracks so that tracks with same genre ' .
+        'appear as far away from one another as possible. The same can ' .
+        'also be applied to tracks with certain BPM or higher. Note that ' .
+        'that the tracks within the same dance will be kept intact.'
+      );
+define( 'LNG_DESC_DANCE_DELIMITER_NOT_SET'
+      , 'Dance delimiter must be set before you can do this!'
+      );
 define( 'LNG_ERROR_MUST_SELECT_INPUT_PLAYLIST'
       , 'Must select an input playlist'
       );
@@ -848,5 +863,17 @@ define( 'LNG_GENRE_BUGG'
       );
 define( 'LNG_GENRE_WCS'
       , 'wcs'
+      );
+define( 'LNG_CHOOSE_GENRES_TO_SEPARATE'
+      , 'Choose the genres you want to separate:'
+      );
+define( 'LNG_CHOOSE_BPM_TO_SEPARATE'
+      , 'Choose what BPM and above you want to separate:'
+      );
+define( 'LNG_MUST_SELECT_A_GENRE_OR_BPM'
+      , 'You must choose at least one genre or provide a BPM value'
+      );
+define( 'LNG_ERR_FAILED_TO_SEPARATE'
+      , 'Failed to run separation'
       );
 ?>

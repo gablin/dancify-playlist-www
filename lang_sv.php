@@ -151,6 +151,9 @@ DEFINE( 'LNG_BTN_APPLY'
 DEFINE( 'LNG_BTN_CHECK_PLAYLIST'
       , 'Kolla spellista'
       );
+DEFINE( 'LNG_BTN_SEPARATE'
+      , 'Dra isär'
+      );
 define( 'LNG_MENU'
       , 'Meny'
       );
@@ -165,6 +168,9 @@ define( 'LNG_MENU_SAVE_CHANGES_TO_SPOTIFY'
       );
 define( 'LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY'
       , 'Slumpa ordning enligt BPM och energi'
+      );
+define( 'LNG_MENU_SEPARATE_DANCE_TRACKS'
+      , 'Dra isär danslåtar'
       );
 define( 'LNG_MENU_INSERT_TRACK'
       , 'Lägg in låt'
@@ -734,6 +740,15 @@ define( 'LNG_DESC_COMPARE_AGAINST'
 define( 'LNG_DESC_ASK_CONFIRM_BPM'
       , 'Vill du intyga att denna BPM på låten stämmer?'
       );
+define( 'LNG_DESC_SEPARATE_DANCE_TRACK_INFO'
+      , 'Detta kommer flytta om låtarna så att låtar med samma genre hamnar ' .
+        'så långt ifrån varandra som möjligt. Detsamma kan tillämpas på ' .
+        'låtar med ett visst BPM eller högre. Notera att låtarna inom samma ' .
+        'dans förblir orörda.'
+      );
+define( 'LNG_DESC_DANCE_DELIMITER_NOT_SET'
+      , 'Dansavgränsning måste sättas innan du kan göra detta!'
+      );
 define( 'LNG_ERROR_MUST_SELECT_INPUT_PLAYLIST'
       , 'Måste välja en inputspellista'
       );
@@ -850,5 +865,17 @@ define( 'LNG_GENRE_BUGG'
       );
 define( 'LNG_GENRE_WCS'
       , 'wcs'
+      );
+define( 'LNG_CHOOSE_GENRES_TO_SEPARATE'
+      , 'Välj de genrer som du vill dra isär:'
+      );
+define( 'LNG_CHOOSE_BPM_TO_SEPARATE'
+      , 'Välj vilken BPM och över som du vill dra isär:'
+      );
+define( 'LNG_MUST_SELECT_A_GENRE_OR_BPM'
+      , 'Du måste välja minst en genre eller ange ett BPM-värde'
+      );
+define( 'LNG_ERR_FAILED_TO_SEPARATE'
+      , 'Isärdragningen misslyckades'
       );
 ?>

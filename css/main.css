@@ -1222,3 +1222,24 @@ img.swish-qr {
 }
 .select-playlist select {
 }
+
+.separate-option {
+  display: flex;
+  gap: 1rem;
+}
+.separate-option > :not(.desc) {
+  flex: 1;
+}
+.separate-option .select-area .wrapper {
+  display: flex;
+  gap: .5rem;
+}
+.separate-option .select-area .wrapper > *:first-child {
+  flex: 1;
+  text-align: right;
+}
+.separate-error {
+  margin: 1em 0;
+  color: #E60000;
+  font-weight: bold;
+}

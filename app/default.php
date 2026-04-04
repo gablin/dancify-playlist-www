@@ -30,6 +30,11 @@ mkHtmlNavMenu(
   , [ LNG_MENU_SORT, 'sort', true ]
   , [ LNG_MENU_RANDOMIZE, 'randomize', true ]
   , [ LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY, 'randomize-by-bpm', true ]
+  , [ LNG_MENU_SEPARATE_DANCE_TRACKS
+    , 'separate-dance-tracks'
+    , true
+    , 'onShowSeparateDanceTracks'
+    ]
   , []
   , [ LNG_MENU_SET_TRACK_PLAY_LENGTH
     , 'set-track-play-length'
@@ -213,6 +218,49 @@ try {
         <?= LNG_BTN_CANCEL ?>
       </button>
       <button id="randomizeBtn"><?= LNG_BTN_RANDOMIZE ?></button>
+    </div>
+  </div>
+</div>
+
+<div class="action-input-area" name="separate-dance-tracks">
+  <div class="background"></div>
+  <div class="input">
+    <div class="title"><?= LNG_MENU_SEPARATE_DANCE_TRACKS ?></div>
+
+    <p>
+      <?= LNG_DESC_SEPARATE_DANCE_TRACK_INFO ?>
+    </p>
+
+    <p>
+      <?= LNG_CHOOSE_GENRES_TO_SEPARATE ?>
+    </p>
+
+    <div class="separate-option">
+      <div class="desc"><?= LNG_HEAD_GENRE ?>:</div>
+      <div class="select-area" id="separateGenreSelectArea">
+      </div>
+    </div>
+
+    <p>
+      <?= LNG_CHOOSE_BPM_TO_SEPARATE ?>
+    </p>
+
+    <div class="separate-option">
+      <div class="desc"><?= LNG_HEAD_BPM ?>:</div>
+      <input type="text" name="above-bpm-to-separate"></input>
+    </div>
+
+    <p id="danceLimiterNotSetWarning" class="warning">
+      <?= LNG_DESC_DANCE_DELIMITER_NOT_SET ?>
+    </p>
+
+    <div id="separateDanceTrackErrors" class="separate-error"></div>
+
+    <div class="buttons">
+      <button class="cancel" id="cancelSeparateBtn" onclick="clearActionInputs();">
+        <?= LNG_BTN_CANCEL ?>
+      </button>
+      <button id="separateBtn"><?= LNG_BTN_SEPARATE ?></button>
     </div>
   </div>
 </div>
@@ -1036,6 +1084,7 @@ try {
 <script src="/js/duplicate-check.js.php"></script>
 <script src="/js/genre-check.js.php"></script>
 <script src="/js/randomize.js.php"></script>
+<script src="/js/separate-dance-tracks.js.php"></script>
 <script src="/js/playback.js.php"></script>
 <script src="/js/export.js.php"></script>
 <script src="/js/set-track-play-length.js.php"></script>
@@ -1074,6 +1123,7 @@ $(document).ready(
     setupDuplicateCheck();
     setupGenreCheck();
     setupRandomize();
+    setupSeparateDanceTracks();
     setupPlayback();
     setupExport();
     setupSetTrackPlayLength();
