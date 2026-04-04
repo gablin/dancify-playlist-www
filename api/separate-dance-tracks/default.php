@@ -76,7 +76,9 @@ if (fwrite($fh, $json_str) === false) {
   fail('failed to write solver input file');
 }
 $time_limit_s = 60;
-$res = shell_exec("./solve.py $input_file $time_limit_s 2> /dev/null");
+$num_workers = 6;
+$res =
+  shell_exec("./solve.py $input_file $time_limit_s $num_workers 2> /dev/null");
 $json = fromJson($res);
 if (is_null($json)) {
   $clean_up_fun();
@@ -85,7 +87,7 @@ if (is_null($json)) {
 
 $clean_up_fun();
 
-echo(toJson(['status' => 'OK', 'slotOrder' => $json['slotOrder']]));
+echo(toJson(['status' => 'OK', 'slotOrder' => $json['order']]));
 
 } // End try
 catch (NoSessionException $e) {
