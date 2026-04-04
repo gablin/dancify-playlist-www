@@ -116,7 +116,7 @@ function showGenreCheckResults(tracks, data) {
                                  : '<?= LNG_DESC_WO_GENRE ?>';
       let genre_tr = $( '<tr>' +
                           '<td colspan="5" class="genre">' +
-                            genre_name +
+                            genre_name + ' (' + track_pairs.length + ')' +
                           '</td>' +
                         '</tr>'
                      ).appendTo(table);
