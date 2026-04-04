@@ -100,6 +100,8 @@ function buildGenreCheckResults(tracks) {
 function showGenreCheckResults(tracks, data) {
   let table = getGenreCheckResultsArea().find('table tbody');
 
+  console.log(data); // TODO: remove
+
   // Sort so genre with shortest distance appears first
   data.sort(
     ([g1, data1], [g2, data2]) => intcmp(data1[0][2], data2[0][2])
