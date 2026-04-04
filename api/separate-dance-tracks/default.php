@@ -94,7 +94,9 @@ if (is_null($json)) {
 
 $clean_up_fun();
 
-echo(toJson(['status' => 'OK', 'slotOrder' => $json['order']]));
+echo(toJson(['status' => 'OK',
+             'slotOrder' => $json['order'],
+             'score' => $json['score']]));
 
 } // End try
 catch (NoSessionException $e) {

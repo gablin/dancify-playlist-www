@@ -52,6 +52,7 @@ function setupSeparateDanceTracks() {
       callApi( '/api/separate-dance-tracks/'
              , data
              , function(d) {
+                 console.log('Score: ' + d.score);
                  updatePlaylistAfterSeparation(d.slotOrder);
                  restoreButtons();
                  clearActionInputs();
