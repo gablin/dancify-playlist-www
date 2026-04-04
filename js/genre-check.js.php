@@ -94,6 +94,11 @@ function buildGenreCheckResults(tracks) {
       return [genre, track_pairs];
     }
   );
+
+  // Remove any dodgy data that may have been produced due to playlist
+  // delimiters
+  dist_data = dist_data.filter(([g, data]) => data.length > 0);
+
   return dist_data;
 }
 
