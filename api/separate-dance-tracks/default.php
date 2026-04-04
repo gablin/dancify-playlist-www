@@ -83,7 +83,7 @@ if (fwrite($fh, $json_str) === false) {
   $clean_up_fun();
   fail('failed to write solver input file');
 }
-$num_workers = 6;
+$num_workers = 4;
 $res =
   shell_exec("./solve.py $input_file $time_limit $num_workers 2> /dev/null");
 $json = fromJson($res);
