@@ -1683,13 +1683,13 @@ function rebuildPlaylistTable() {
 }
 
 function formatTrackTitleAsText(artists, name) {
-  return artists.join(', ') + ' - ' + name;
+  return (artists !== undefined ? artists : []).join(', ')  + ' - ' + name;
 }
 
 function formatTrackTitleAsHtml(artists, name) {
   return $( '<div class="title">' +
               '<div class="name">' + name + '</div>' +
-              '<div class="artists">' + artists.join(', ') + '</div>' +
+              '<div class="artists">' + (artists !== undefined ? artists : []).join(', ') + '</div>' +
             '</div>'
           );
 }
