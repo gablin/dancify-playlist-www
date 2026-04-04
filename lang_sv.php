@@ -152,7 +152,7 @@ DEFINE( 'LNG_BTN_CHECK_PLAYLIST'
       , 'Kolla spellista'
       );
 DEFINE( 'LNG_BTN_SEPARATE'
-      , 'Dra isär'
+      , 'Separera'
       );
 define( 'LNG_MENU'
       , 'Meny'
@@ -170,7 +170,7 @@ define( 'LNG_MENU_RANDOMIZE_BY_BPM_AND_ENERGY'
       , 'Slumpa ordning enligt BPM och energi'
       );
 define( 'LNG_MENU_SEPARATE_DANCE_TRACKS'
-      , 'Dra isär danslåtar'
+      , 'Separera danslåtar'
       );
 define( 'LNG_MENU_INSERT_TRACK'
       , 'Lägg in låt'
@@ -867,16 +867,16 @@ define( 'LNG_GENRE_WCS'
       , 'wcs'
       );
 define( 'LNG_CHOOSE_GENRES_TO_SEPARATE'
-      , 'Välj de genrer som du vill dra isär:'
+      , 'Välj de genrer som du vill separera:'
       );
 define( 'LNG_CHOOSE_BPM_TO_SEPARATE'
-      , 'Välj vilken BPM och över som du vill dra isär:'
+      , 'Välj vilken BPM och över som du vill separera:'
       );
 define( 'LNG_MUST_SELECT_A_GENRE_OR_BPM'
       , 'Du måste välja minst en genre eller ange ett BPM-värde'
       );
 define( 'LNG_ERR_FAILED_TO_SEPARATE'
-      , 'Isärdragningen misslyckades'
+      , 'Separeringen misslyckades'
       );
 define( 'LNG_SELECT_ALL'
       , 'Välj alla'
