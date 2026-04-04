@@ -128,6 +128,7 @@ if (fwrite($fh, $dzn_content) === false) {
 $time_limit_s = 60;
 $time_limit_ms = $time_limit_s*1000;
 $res = shell_exec( "../../minizinc/bin/minizinc model.mzn $dzn_file " .
+                   "--solver chuffed " .
                    "--time-limit $time_limit_ms " .
                    "--unbounded-msg '' " .
                    "--unknown-msg '' " .
