@@ -24,6 +24,7 @@ if (is_null($json)) {
 // Check data
 $required_fields = [ 'numSlots'
                    , 'conflictGroups'
+                   , 'timeLimit'
                    ];
 foreach ($required_fields as $field) {
   if (!array_key_exists($field, $json)) {
@@ -33,11 +34,18 @@ foreach ($required_fields as $field) {
 
 $num_slots = $json['numSlots'];
 $conflict_groups = $json['conflictGroups'];
+$time_limit = $json['timeLimit'];
 if ($num_slots <= 0) {
   fail('no slots');
 }
 if (count($conflict_groups) == 0) {
   fail('no conflict groups');
+}
+if ($time_limit <= 0) {
+  fail('illegal time limit');
+}
+if ($time_limit > 3600) {
+  fail('time limit too high');
 }
 foreach ($conflict_groups as $group) {
   foreach ($group as $s) {
@@ -75,10 +83,9 @@ if (fwrite($fh, $json_str) === false) {
   $clean_up_fun();
   fail('failed to write solver input file');
 }
-$time_limit_s = 60;
 $num_workers = 6;
 $res =
-  shell_exec("./solve.py $input_file $time_limit_s $num_workers 2> /dev/null");
+  shell_exec("./solve.py $input_file $time_limit $num_workers 2> /dev/null");
 $json = fromJson($res);
 if (is_null($json)) {
   $clean_up_fun();

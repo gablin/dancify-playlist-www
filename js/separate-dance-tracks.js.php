@@ -40,7 +40,7 @@ function setupSeparateDanceTracks() {
         body.removeClass('loading');
       };
 
-      let countdown = 60;
+      let countdown = data.timeLimit;
       count_handle = setInterval(
                        function() {
                          countdown -= 1;
@@ -176,9 +176,13 @@ function generateSeparateApiData(params) {
     );
   }
 
+  let time_limit =
+    parseInt($('select[name=time-limit-separate]').find(':selected').val()) *
+    60;
+
   groups = groups.filter((g) => g.length > 1);
 
-  return { numSlots: num_slots, conflictGroups: groups }
+  return { numSlots: num_slots, conflictGroups: groups, timeLimit: time_limit };
 }
 
 function updatePlaylistAfterSeparation(order) {

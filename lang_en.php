@@ -882,6 +882,9 @@ define( 'LNG_ERR_FAILED_TO_SEPARATE'
 define( 'LNG_SELECT_ALL'
       , 'Select all'
       );
+define( 'LNG_CHOOSE_TIME_LIMIT_FOR_SEPARATING'
+      , 'Choose how many minutes to run (longer will give better results):'
+      );
 define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
       , 'No dance tracks match the separation requirements'
       );

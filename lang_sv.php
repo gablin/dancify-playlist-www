@@ -886,6 +886,9 @@ define( 'LNG_ERR_FAILED_TO_SEPARATE'
 define( 'LNG_SELECT_ALL'
       , 'Välj alla'
       );
+define( 'LNG_CHOOSE_TIME_LIMIT_FOR_SEPARATING'
+      , 'Välj hur många minuter att köra (längre ger bättre resultat):'
+      );
 define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
       , 'Inga danslåtar matchar kraven för separering'
       );
