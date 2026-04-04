@@ -242,12 +242,21 @@ try {
     </div>
 
     <p>
-      <?= LNG_CHOOSE_BPM_TO_SEPARATE ?>
+      <?= LNG_CHOOSE_BPM_AND_ABOVE_TO_SEPARATE ?>
     </p>
 
     <div class="separate-option">
       <div class="desc"><?= LNG_HEAD_BPM ?>:</div>
       <input type="text" name="above-bpm-to-separate"></input>
+    </div>
+
+    <p>
+      <?= LNG_CHOOSE_BPM_AND_BELOW_TO_SEPARATE ?>
+    </p>
+
+    <div class="separate-option">
+      <div class="desc"><?= LNG_HEAD_BPM ?>:</div>
+      <input type="text" name="below-bpm-to-separate"></input>
     </div>
 
     <p id="danceLimiterNotSetWarning" class="warning">

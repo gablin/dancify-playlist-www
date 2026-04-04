@@ -11,6 +11,11 @@ function setupSeparateDanceTracks() {
         return;
       }
       let data = generateSeparateApiData(params);
+      if (data.conflictGroups.length == 0) {
+        $('#separateDanceTrackErrors')
+        .text('<?= LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS ?>');
+        return;
+      }
 
       let cancel_button = $('#cancelSeparateBtn');
 
@@ -77,20 +82,34 @@ function getSeparateDanceTracksParams() {
     }
   );
 
-  let bpm_input = $('input[name=above-bpm-to-separate]');
-  let bpm_value = bpm_input.val().trim();
-  bpm_value = bpm_value.length > 0 ? parseInt(bpm_value) : 0;
-  if (isNaN(bpm_value)) {
+  let above_bpm_input = $('input[name=above-bpm-to-separate]');
+  let above_bpm_value = above_bpm_input.val().trim();
+  above_bpm_value = above_bpm_value.length > 0 ? parseInt(above_bpm_value) : 0;
+  if (isNaN(above_bpm_value)) {
     error_div.text('<?= LNG_ERR_BPM_NAN ?>');
     return null;
   }
 
-  if (selected_genres.length == 0 && bpm_value == 0) {
+  let below_bpm_input = $('input[name=below-bpm-to-separate]');
+  let below_bpm_value = below_bpm_input.val().trim();
+  below_bpm_value = below_bpm_value.length > 0 ? parseInt(below_bpm_value) : 0;
+  if (isNaN(below_bpm_value)) {
+    error_div.text('<?= LNG_ERR_BPM_NAN ?>');
+    return null;
+  }
+
+  if ( selected_genres.length == 0 &&
+       above_bpm_value == 0 &&
+       below_bpm_value == 0
+     )
+  {
     error_div.text('<?= LNG_MUST_SELECT_A_GENRE_OR_BPM ?>');
     return null;
   }
 
-  return { genres: selected_genres, bpm: bpm_value };
+  return { genres: selected_genres,
+           above_bpm: above_bpm_value,
+           below_bpm: below_bpm_value };
 }
 
 function getSeparateBpmFromTrack(t) {
@@ -115,9 +134,9 @@ function generateSeparateApiData(params) {
   let genres = getGenreList().map((t) => t[0])
                              .filter((g) => genres_in_use.includes(g));
 
-  // First group is BPM, then follows all genres
+  // First groups are BPMs, then follows all genres
   let groups = [];
-  for (let i = 0; i < genres.length + 1; i++) {
+  for (let i = 0; i < genres.length + 2; i++) {
     groups.push([]);
   }
 
@@ -137,13 +156,19 @@ function generateSeparateApiData(params) {
 
     dance_tracks.forEach(
       (t) => {
-        if (getSeparateBpmFromTrack(t) >= params.bpm && params.bpm > 0) {
-          addToGroup(s, 0);
+        let bpm = getSeparateBpmFromTrack(t);
+        if (bpm > 0) {
+          if (bpm >= params.above_bpm && params.above_bpm > 0) {
+            addToGroup(s, 0);
+          }
+          if (bpm <= params.below_bpm && params.below_bpm > 0) {
+            addToGroup(s, 1);
+          }
         }
         genres.forEach(
           (g, i) => {
             if (g == getSeparateGenreFromTrack(t)) {
-              addToGroup(s, i + 1);
+              addToGroup(s, i + 2);
             }
           }
         );

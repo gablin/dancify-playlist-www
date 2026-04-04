@@ -869,8 +869,13 @@ define( 'LNG_GENRE_WCS'
 define( 'LNG_CHOOSE_GENRES_TO_SEPARATE'
       , 'Välj de genrer som du vill separera:'
       );
-define( 'LNG_CHOOSE_BPM_TO_SEPARATE'
-      , 'Välj vilken BPM och över som du vill separera:'
+define( 'LNG_CHOOSE_BPM_AND_ABOVE_TO_SEPARATE'
+      , 'För att separarera låtar med viss BPM och högre, ange den BPM:en ' .
+        'nedanför:'
+      );
+define( 'LNG_CHOOSE_BPM_AND_BELOW_TO_SEPARATE'
+      , 'För att separarera låtar med viss BPM och lägre, ange den BPM:en ' .
+        'nedanför:'
       );
 define( 'LNG_MUST_SELECT_A_GENRE_OR_BPM'
       , 'Du måste välja minst en genre eller ange ett BPM-värde'
@@ -880,5 +885,8 @@ define( 'LNG_ERR_FAILED_TO_SEPARATE'
       );
 define( 'LNG_SELECT_ALL'
       , 'Välj alla'
+      );
+define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
+      , 'Inga danslåtar matchar kraven för separering'
       );
 ?>

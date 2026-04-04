@@ -867,8 +867,11 @@ define( 'LNG_GENRE_WCS'
 define( 'LNG_CHOOSE_GENRES_TO_SEPARATE'
       , 'Choose the genres you want to separate:'
       );
-define( 'LNG_CHOOSE_BPM_TO_SEPARATE'
-      , 'Choose what BPM and above you want to separate:'
+define( 'LNG_CHOOSE_BPM_AND_ABOVE_TO_SEPARATE'
+      , 'To separate tracks with certain BPM and higher, state that BPM below:'
+      );
+define( 'LNG_CHOOSE_BPM_AND_BELOW_TO_SEPARATE'
+      , 'To separate tracks with certain BPM and below, state that BPM below:'
       );
 define( 'LNG_MUST_SELECT_A_GENRE_OR_BPM'
       , 'You must choose at least one genre or provide a BPM value'
@@ -878,5 +881,8 @@ define( 'LNG_ERR_FAILED_TO_SEPARATE'
       );
 define( 'LNG_SELECT_ALL'
       , 'Select all'
+      );
+define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
+      , 'No dance tracks match the separation requirements'
       );
 ?>
