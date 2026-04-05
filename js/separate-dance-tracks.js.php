@@ -230,6 +230,16 @@ function onShowSeparateDanceTracks() {
     uniq(tracks.map(getSeparateGenreFromTrack).filter((v) => v > 0));
   let genres = getGenreList().filter((t) => genres_in_use.includes(t[0]));
 
+  let genres_count =
+    genres.map(
+      (g) => [ g[0]
+             , g[1]
+             , tracks.filter((t) => getSeparateGenreFromTrack(t) == g[0]).length
+             ]
+    );
+
+  genres_count.sort((g1, g2) => g2[2] - g1[2]);
+
   let select_area = $('#separateGenreSelectArea');
   select_area.empty();
   $('<div class="wrapper" />')
@@ -243,15 +253,12 @@ function onShowSeparateDanceTracks() {
       }
     )
   );
-  genres.forEach(
-    ([genre_id, genre_txt]) => {
-      let num_tracks =
-        tracks.filter((t) => getSeparateGenreFromTrack(t) == genre_id).length;
-
+  genres_count.forEach(
+    ([g, txt, num]) => {
       $('<div class="wrapper" />')
       .appendTo(select_area)
-      .append($('<div />').text(genre_txt + ' (' + num_tracks + ')'))
-      .append($('<input type="checkbox" />').attr('value', genre_id));
+      .append($('<div />').text(txt + ' (' + num + ')'))
+      .append($('<input type="checkbox" />').attr('value', g));
     }
   );
 }
