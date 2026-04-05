@@ -898,4 +898,7 @@ define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
 define( 'LNG_GENRES_SHOWING'
       , 'Genres showing'
       );
+define( 'LNG_TOO_MANY_GENRES_SELECTED'
+      , 'Too many genres selected, choose at most 10'
+      );
 ?>

@@ -65,6 +65,9 @@ function setupFormElementsForTrackOverview() {
           selected_genres.push(parseInt(opt.val()));
         }
       );
+      if (selected_genres.length > 10) {
+        alert('<?= LNG_TOO_MANY_GENRES_SELECTED ?>');
+      }
 
       let sorted_genres = getGenreList()
                           .map((t) => t[0])

@@ -821,18 +821,16 @@ function getEnergyRgbColor(e) {
 }
 
 function getGenreRgbColor(i) {
-  const colors = [ '0983c8'
-                 , 'd5672b'
-                 , '6ead51'
-                 , 'c41757'
-                 , 'fff12d'
-                 , '5a4195'
-                 , '059dac'
-                 , 'cf4229'
-                 , '9ec54c'
-                 , '7d2a8b'
-                 , 'e0922e'
-                 , '2b55a2'
+  const colors = [ '0000ff'
+                 , 'ff7f0a'
+                 , '00ff00'
+                 , 'ff00ff'
+                 , 'ffff00'
+                 , '00ffff'
+                 , 'ff0000'
+                 , '7fff00'
+                 , '7f00ff'
+                 , '00ff7f'
                  ];
   let c = colors[i];
   return [ parseInt(c.substring(0, 2), 16)
@@ -3212,7 +3210,7 @@ function renderGenresOverview() {
   let overview_div = $('div.genres-overview');
   renderTrackOverview(
     overview_div
-  , '<?= LNG_HEAD_GENRES ?>'
+  , '<?= LNG_HEAD_GENRE ?>'
   , height_f
   , 0
   , 1

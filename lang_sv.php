@@ -902,4 +902,7 @@ define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
 define( 'LNG_GENRES_SHOWING'
       , 'Visar genrar'
       );
+define( 'LNG_TOO_MANY_GENRES_SELECTED'
+      , 'För många genrer valda, välj max 10'
+      );
 ?>
