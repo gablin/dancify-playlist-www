@@ -29,6 +29,7 @@ function setupFormElementsForTrackOverview() {
                     , 'div.instrumentalness-overview'
                     ]
                   , [ 'show-valence-overview', 'div.valence-overview' ]
+                  , [ 'show-genres-overview', 'div.genres-overview' ]
                   ];
   overviews.forEach(
     function(a) {
@@ -40,13 +41,11 @@ function setupFormElementsForTrackOverview() {
         function() {
           if (checkmark.is(':checked')) {
             $(overview_id).show();
-            savePlaylistSnapshot(function() {}, function() {});
-            savePlaylistSnapshotAndGlobalScratchpad();
           }
           else {
             $(overview_id).hide();
-            savePlaylistSnapshot(function() {}, function() {});
           }
+          savePlaylistSnapshot(function() {}, function() {});
           renderTrackOverviews();
           updatePlaylistHeights();
         }
@@ -62,11 +61,60 @@ function onShowTrackOverview() {
   , 'acousticness'
   , 'instrumentalness'
   , 'valence'
+  , 'genres'
   ].forEach(
     (name) => {
       let input = $('input[name=show-' + name + '-overview]');
       let div = $('div.' + name + '-overview');
       input.prop('checked', div.is(':visible'));
+    }
+  );
+
+  // Populate genre list
+  let tracks = getTrackData(getPlaylistTable());
+  let genres_in_use =
+    uniq(tracks.map(getGenreFromTrack).filter((v) => v > 0));
+  let genres = getGenreList().filter((t) => genres_in_use.includes(t[0]));
+
+  let genres_count =
+    genres.map(
+      (g) => [ g[0]
+             , g[1]
+             , tracks.filter((t) => getGenreFromTrack(t) == g[0]).length
+             ]
+    );
+
+  genres_count.sort((g1, g2) => g2[2] - g1[2]);
+
+  let genre_select = $('select[name=track-overview-genres]');
+  genre_select.empty();
+  genres_count.forEach(
+    ([g, txt, num]) => {
+      $('<option />')
+      .appendTo(genre_select)
+      .attr('value', g)
+      .prop('selected', TRACK_OVERVIEW_GENRES.includes(g))
+      .text(txt + ' (' + num + ')')
+      .click(
+        function() {
+          let selected_options = genre_select.find(':selected');
+          let selected_genres = [];
+          selected_options.each(
+            function() {
+              let opt = $(this);
+              selected_genres.push(parseInt(opt.val()));
+            }
+          );
+
+          let sorted_genres = getGenreList()
+                              .map((t) => t[0])
+                              .filter((g) => selected_genres.includes(g));
+          TRACK_OVERVIEW_GENRES = sorted_genres;
+
+          savePlaylistSnapshot(function() {}, function() {});
+          renderTrackOverviews();
+        }
+      );
     }
   );
 }

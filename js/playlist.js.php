@@ -26,6 +26,8 @@ var ABORT_LOAD_PLAYLIST_CONTENT = false;
 var ABORT_LOAD_PLAYLIST_CALLBACK = null;
 var DELETE_BEHAVIOR_INHIBITED = false;
 
+var TRACK_OVERVIEW_GENRES = [];
+
 const BPM_MIN = 0;
 const BPM_MAX = 255;
 
@@ -815,6 +817,30 @@ function getEnergyRgbColor(e) {
     }
   }
   console.log('ERROR: getEnergyRgbColor() with arg ' + e);
+  return null;
+}
+
+function getGenreRgbColor(v) {
+  //                 v    color (RGB)
+  const colors = [ [ 0.00, [  0,   0,   0] ] // Black (not to be used)
+                 , [ 0.20, [  0,   0, 255] ] // Blue
+                 , [ 0.36, [  0, 255, 255] ] // Turquoise
+                 , [ 0.52, [  0, 255,   0] ] // Green
+                 , [ 0.68, [255, 255,   0] ] // Yellow
+                 , [ 0.84, [255,   0,   0] ] // Red
+                 , [ 1.00, [255,   0, 255] ] // Purple
+                 ];
+  for (let i = 0; i < colors.length; i++) {
+    if (i == colors.length-2 || v < colors[i+1][0]) {
+      let p = (v - colors[i][0]) / (colors[i+1][0] - colors[i][0]);
+      let c = [...colors[i][1]];
+      for (let j = 0; j < c.length; j++) {
+        c[j] += Math.round((colors[i+1][1][j] - c[j]) * p);
+      }
+      return c;
+    }
+  }
+  console.log('ERROR: getGenreRgbColor() with arg ' + v);
   return null;
 }
 
@@ -2348,6 +2374,7 @@ function savePlaylistSnapshot( success_f
                          , delimiter: PLAYLIST_DANCE_DELIMITER
                          , playlistDelimiter: PLAYLIST_DELIMITERS
                          , trackOverviews: overviews
+                         , trackOverviewGenres: TRACK_OVERVIEW_GENRES
                          , spotifyPlaylistHash: LAST_SPOTIFY_PLAYLIST_HASH
                          }
              };
@@ -2642,6 +2669,9 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                    }
                  );
                }
+
+               TRACK_OVERVIEW_GENRES =
+                 'trackOverviewGenres' in data ? data.trackOverviewGenres : [];
              }
              else if (res.status == 'NOT-FOUND') {
                no_snap_f();
@@ -2940,6 +2970,7 @@ function renderTrackOverviews() {
   renderAcousticnessOverview();
   renderInstrumentalnessOverview();
   renderValenceOverview();
+  renderGenresOverview();
 }
 
 function getTrackOverviews() {
@@ -2949,6 +2980,7 @@ function getTrackOverviews() {
          , [ 'acousticness', $('div.acousticness-overview') ]
          , [ 'instrumentalness', $('div.instrumentalness-overview') ]
          , [ 'valence', $('div.valence-overview') ]
+         , [ 'genres', $('div.genres-overview') ]
          ];
 }
 
@@ -2977,9 +3009,9 @@ function makeTrackOverviewStatsFunction(
     let stats = overview_div.find('.stats');
     stats.text( heading_str + ' ' +
                 '<?= LNG_DESC_MIN ?>: ' + min + ' ' +
-                '<?= LNG_DESC_MAX ?>: ' + max + ' ' +
                 '<?= LNG_DESC_MEDIAN ?>: ' + median + ' ' +
-                '<?= LNG_DESC_AVERAGE ?>: ' + average
+                '<?= LNG_DESC_AVERAGE ?>: ' + average +
+                '<?= LNG_DESC_MAX ?>: ' + max + ' '
               );
   };
 }
@@ -2996,7 +3028,9 @@ function renderBpmOverview() {
   , get_f
   , BPM_MIN
   , BPM_MAX
+  , get_f
   , getBpmRgbColor
+  , get_f
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_BPM ?>'
                                   , get_f
@@ -3017,7 +3051,9 @@ function renderEnergyOverview() {
   , get_f
   , 0
   , 1
+  , get_f
   , getEnergyRgbColor
+  , get_f
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_ENERGY ?>'
                                   , get_f
@@ -3040,7 +3076,9 @@ function renderDanceabilityOverview() {
   , get_f
   , 0
   , 1
+  , get_f
   , getEnergyRgbColor
+  , get_f
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_DANCEABILITY ?>'
                                   , get_f
@@ -3063,7 +3101,9 @@ function renderAcousticnessOverview() {
   , get_f
   , 0
   , 1
+  , get_f
   , getEnergyRgbColor
+  , get_f
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_ACOUSTICNESS ?>'
                                   , get_f
@@ -3086,7 +3126,9 @@ function renderInstrumentalnessOverview() {
   , get_f
   , 0
   , 1
+  , get_f
   , getEnergyRgbColor
+  , get_f
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_INSTRUMENTALNESS ?>'
                                   , get_f
@@ -3109,7 +3151,9 @@ function renderValenceOverview() {
   , get_f
   , 0
   , 1
+  , get_f
   , getEnergyRgbColor
+  , get_f
   , makeTrackOverviewStatsFunction( overview_div
                                   , '<?= LNG_HEAD_VALENCE ?>'
                                   , get_f
@@ -3117,6 +3161,67 @@ function renderValenceOverview() {
                                       return Math.round(v*1000) / 1000;
                                     }
                                   )
+  );
+}
+
+function getBpmFromTrack(t) {
+  if (!t.bpm) return 0;
+  if (t.bpm.custom > -1) return t.bpm.custom;
+  return t.bpm.spotify;
+}
+
+function getGenreFromTrack(t) {
+  if (!t.genre) return 0;
+  if (t.genre.by_user > 0) return t.genre.by_user;
+  if (t.genre.by_others.length > 0) return t.genre.by_others[0];
+  return 0;
+}
+
+function getGenresInUse(tracks) {
+  let genres_in_use = uniq(tracks.map(getGenreFromTrack).filter((v) => v > 0));
+  return getGenreList()
+         .map((t) => t[0])
+         .filter((g) => genres_in_use.includes(g));
+}
+
+function renderGenresOverview() {
+  function get_f(t) {
+    let g = getGenreFromTrack(t);
+
+    if (!TRACK_OVERVIEW_GENRES.includes(g)) return 0;
+    let i = TRACK_OVERVIEW_GENRES.indexOf(g);
+
+    if (TRACK_OVERVIEW_GENRES.length == 1) {
+      return 1;
+    }
+    if (TRACK_OVERVIEW_GENRES.length == 2) {
+      return 0.5 + 0.5 * i;
+    }
+
+    let step = 0.8 / (TRACK_OVERVIEW_GENRES.length - 1);
+    return 0.2 + step * i;
+  }
+
+  function text_f(t) {
+    return formatGenre(getGenreFromTrack(t));
+  }
+
+  let overview_div = $('div.genres-overview');
+  renderTrackOverview(
+    overview_div
+  , '<?= LNG_HEAD_GENRES ?>'
+  , get_f
+  , 0
+  , 1
+  , get_f
+  , getGenreRgbColor
+  , text_f
+  , () => {
+      let genres_txts = TRACK_OVERVIEW_GENRES.map(formatGenre);
+
+      let stats = overview_div.find('.stats');
+      stats.text('<?= LNG_GENRES_SHOWING ?>: ' + genres_txts.join(', '));
+    }
   );
 }
 
@@ -3128,9 +3233,16 @@ function isTrackOverviewShowing(overview_div) {
   return overview_div.is(':visible');
 }
 
-function renderTrackOverview(
-  overview_div, desc, track_value_f, min_value, max_value, color_f, stats_f
-) {
+function renderTrackOverview( overview_div
+                            , desc
+                            , track_value_f
+                            , min_value
+                            , max_value
+                            , track_color_f
+                            , color_f
+                            , track_value_text_f
+                            , stats_f
+                            ) {
   if (!isTrackOverviewShowing(overview_div)) {
     return;
   }
@@ -3171,7 +3283,7 @@ function renderTrackOverview(
     tracks
   , function(track_index) {
       let t = this;
-      track_value = track_value_f(t);
+      let track_value = track_value_f(t);
 
       let bar_wrapper = $('<div class="bar-wrapper" />');
       bar_wrapper.css('left', bar_voffset + 'px');
@@ -3180,7 +3292,7 @@ function renderTrackOverview(
       let bar_vh = (track_value - min_value) / max_value * area_vh;
       bar.css('height', bar_vh + 'px');
       bar.css('width', bar_vw + 'px');
-      let cs = color_f(track_value);
+      let cs = color_f(track_color_f(t));
       bar.css('background-color', 'rgb(' + cs.join(',') + ')');
       bar_voffset += bar_vw + border_size;
       bar_wrapper.append(bar);
@@ -3204,7 +3316,7 @@ function renderTrackOverview(
       let track_info = $( '<div class="track-overview-track-info">' +
                             '#' + (track_index+1) + ' ' + title +
                             '<br />' +
-                            desc + ': ' + track_value +
+                            desc + ': ' + track_value_text_f(t) +
                           '</div>'
                         );
       if (selected_track_indices.includes(track_index)) {

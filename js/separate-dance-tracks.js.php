@@ -113,25 +113,12 @@ function getSeparateDanceTracksParams() {
            below_bpm: below_bpm_value };
 }
 
-function getSeparateBpmFromTrack(t) {
-  if (!t.bpm) return 0;
-  if (t.bpm.custom > -1) return t.bpm.custom;
-  return t.bpm.spotify;
-}
-
-function getSeparateGenreFromTrack(t) {
-  if (!t.genre) return 0;
-  if (t.genre.by_user > 0) return t.genre.by_user;
-  if (t.genre.by_others.length > 0) return t.genre.by_others[0];
-  return 0;
-}
-
 function generateSeparateApiData(params) {
   let tracks = getTrackData(getPlaylistTable());
   let delimiter = getDanceDelimiter();
 
   let genres_in_use =
-    uniq(tracks.map(getSeparateGenreFromTrack).filter((v) => v > 0));
+    uniq(tracks.map(getGenreFromTrack).filter((v) => v > 0));
   let genres = getGenreList().map((t) => t[0])
                              .filter((g) => genres_in_use.includes(g));
 
@@ -157,7 +144,7 @@ function generateSeparateApiData(params) {
 
     dance_tracks.forEach(
       (t) => {
-        let bpm = getSeparateBpmFromTrack(t);
+        let bpm = getBpmFromTrack(t);
         if (bpm > 0) {
           if (bpm >= params.above_bpm && params.above_bpm > 0) {
             addToGroup(s, 0);
@@ -168,7 +155,7 @@ function generateSeparateApiData(params) {
         }
         genres.forEach(
           (g, i) => {
-            if (g == getSeparateGenreFromTrack(t)) {
+            if (g == getGenreFromTrack(t)) {
               addToGroup(s, i + 2);
             }
           }
@@ -227,14 +214,14 @@ function onShowSeparateDanceTracks() {
   // Populate genre list
   let tracks = getTrackData(getPlaylistTable());
   let genres_in_use =
-    uniq(tracks.map(getSeparateGenreFromTrack).filter((v) => v > 0));
+    uniq(tracks.map(getGenreFromTrack).filter((v) => v > 0));
   let genres = getGenreList().filter((t) => genres_in_use.includes(t[0]));
 
   let genres_count =
     genres.map(
       (g) => [ g[0]
              , g[1]
-             , tracks.filter((t) => getSeparateGenreFromTrack(t) == g[0]).length
+             , tracks.filter((t) => getGenreFromTrack(t) == g[0]).length
              ]
     );
 

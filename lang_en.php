@@ -273,6 +273,9 @@ define( 'LNG_HEAD_VALENCE'
 define( 'LNG_HEAD_GENRE'
       , 'Genre'
       );
+define( 'LNG_HEAD_GENRES'
+      , 'Genres'
+      );
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
       );
@@ -380,6 +383,10 @@ define( 'LNG_DESC_SHOW_INSTRUMENTALNESS_OVERVIEW'
 define( 'LNG_DESC_SHOW_VALENCE_OVERVIEW'
       , 'Valence - the mood of the song (value between 0 and 1, where 0 is ' .
         'sad, depressing, angry, and 1 is happy, cheerful, euphoric)'
+      );
+define( 'LNG_DESC_SHOW_GENRES_OVERVIEW'
+      , 'Genres - which genres appear where in the playlist. Press down CTRL ' .
+        'to select many genres'
       );
 define( 'LNG_DESC_DANCE_DELIMITER'
       , <<<EOT
@@ -887,5 +894,8 @@ define( 'LNG_CHOOSE_TIME_LIMIT_FOR_SEPARATING'
       );
 define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
       , 'No dance tracks match the separation requirements'
+      );
+define( 'LNG_GENRES_SHOWING'
+      , 'Genres showing'
       );
 ?>

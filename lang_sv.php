@@ -274,6 +274,9 @@ define( 'LNG_HEAD_VALENCE'
 define( 'LNG_HEAD_GENRE'
       , 'Genre'
       );
+define( 'LNG_HEAD_GENRES'
+      , 'Genrer'
+      );
 define( 'LNG_HEAD_SCRATCHPAD'
       , 'Scratchpad'
       );
@@ -381,6 +384,10 @@ define( 'LNG_DESC_SHOW_INSTRUMENTALNESS_OVERVIEW'
 define( 'LNG_DESC_SHOW_VALENCE_OVERVIEW'
       , 'Valens - låtens humör (värde mellan 0 och 1, där 0 är ledsen, ' .
         'deprimerad, arg, och 1 är glad, lycklig, euforisk)'
+      );
+define( 'LNG_DESC_SHOW_GENRES_OVERVIEW'
+      , 'Genrer - vilka genrar förekommer var i spellistan. Håll in CTRL för ' .
+        'att välja flera genrer.'
       );
 define( 'LNG_DESC_DANCE_DELIMITER'
       , <<<EOT
@@ -891,5 +898,8 @@ define( 'LNG_CHOOSE_TIME_LIMIT_FOR_SEPARATING'
       );
 define( 'LNG_ERR_NO_SEPARATE_CONFLICT_GROUPS'
       , 'Inga danslåtar matchar kraven för separering'
+      );
+define( 'LNG_GENRES_SHOWING'
+      , 'Visar genrar'
       );
 ?>

@@ -681,6 +681,16 @@ try {
         <?= LNG_DESC_SHOW_VALENCE_OVERVIEW ?>
       </label>
     </p>
+    <p>
+      <label class="checkbox">
+        <input type="checkbox" name="show-genres-overview" value="false" />
+        <span class="checkmark"></span>
+        <?= LNG_DESC_SHOW_GENRES_OVERVIEW ?>
+        <div style="text-align: right;">
+          <select name="track-overview-genres" multiple="true"></select>
+        </div>
+      </label>
+    </p>
 
     <div class="buttons">
       <button class="cancel" onclick="clearActionInputs();">
@@ -1082,6 +1092,11 @@ try {
 </div>
 
 <div class="track-overview valence-overview">
+  <div class="bar-area"></div>
+  <div class="stats">THIS MUST NOT BE EMPTY</div>
+</div>
+
+<div class="track-overview genres-overview">
   <div class="bar-area"></div>
   <div class="stats">THIS MUST NOT BE EMPTY</div>
 </div>
