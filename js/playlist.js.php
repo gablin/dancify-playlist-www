@@ -2512,6 +2512,7 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
   function done(table, status_offset) {
     status[status_offset] = true;
     renderTable(table);
+    updatePlaylistHeights();
     if (status.every(x => x)) {
       success_f();
     }
@@ -2593,6 +2594,22 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
          , function(res) {
              if (res.status == 'OK') {
                let data = res.snapshot;
+
+               LAST_SPOTIFY_PLAYLIST_HASH = data.spotifyPlaylistHash;
+
+               if (data.playlistData !== null) {
+                 load(getPlaylistTable(), 0, data.playlistData, 0);
+               }
+               else {
+                 no_snap_f();
+               }
+
+               let s_table = getLocalScratchpadTable();
+               load(s_table, 1, data.scratchpadData, 0);
+               if (data.scratchpadData.length > 0) {
+                 showScratchpad(s_table);
+               }
+
                if ('delimiter' in data) {
                  PLAYLIST_DANCE_DELIMITER = data.delimiter;
                  if (PLAYLIST_DANCE_DELIMITER > 0) {
@@ -2618,21 +2635,6 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
                      }
                    }
                  );
-               }
-
-               LAST_SPOTIFY_PLAYLIST_HASH = data.spotifyPlaylistHash;
-
-               if (data.playlistData !== null) {
-                 load(getPlaylistTable(), 0, data.playlistData, 0);
-               }
-               else {
-                 no_snap_f();
-               }
-
-               let s_table = getLocalScratchpadTable();
-               load(s_table, 1, data.scratchpadData, 0);
-               if (data.scratchpadData.length > 0) {
-                 showScratchpad(s_table);
                }
              }
              else if (res.status == 'NOT-FOUND') {
