@@ -179,6 +179,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
     let track_ids = getTrackData(getPlaylistTable()).map(t => t.trackId);
     LAST_SPOTIFY_PLAYLIST_HASH = computePlaylistHash(track_ids);
   }
+
   function abort() {
     if (ABORT_LOAD_PLAYLIST_CONTENT) {
       ABORT_LOAD_PLAYLIST_CALLBACK();
@@ -186,6 +187,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
     }
     return false;
   }
+
   function load(offset) {
     if (abort()) return;
     let data = { playlistId: playlist_id
@@ -230,6 +232,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
                           }
                           else {
                             renderTable(getPlaylistTable());
+                            updatePlaylistHeights();
                             updatePlaylistHash();
                             success_f();
                           }
@@ -241,6 +244,7 @@ function loadPlaylistFromSpotify(playlist_id, success_f, fail_f) {
            , fail_f
            );
   }
+
   load(0);
 }
 
@@ -2509,6 +2513,7 @@ function saveGlobalScratchpad(success_f, fail_f, show_status = true) {
 
 function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
   let status = [false, false];
+
   function done(table, status_offset) {
     status[status_offset] = true;
     renderTable(table);
@@ -2517,6 +2522,7 @@ function loadPlaylistFromSnapshot(playlist_id, success_f, no_snap_f, fail_f) {
       success_f();
     }
   }
+
   function load(table, status_offset, tracks, track_offset) {
     function hasTrackAt(o) {
       return !(typeof tracks[o] === 'string' && tracks[o].length == 0);
