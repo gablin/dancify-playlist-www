@@ -12,8 +12,8 @@ function noop() {
 
 /**
  * Runs an API call and invokes a callback function depending on the outcome.
- * Note that the call is executed asynchronously, meaning this function will return
- * immediately even if the API call has not finished executing.
+ * Note that the call is executed asynchronously, meaning this function will
+ * return immediately even if the API call has not finished executing.
  *
  * @param url HTTP URL of API to access.
  * @param data Struct object to pass to API.
@@ -105,8 +105,8 @@ function uniq(a) {
 
 /**
  * Increments an RGB-specified color by a given amount. If one channel becomes
- * saturated, the leftover is distributed onto the other channels, thus attempting
- * to guarantee a visual difference.
+ * saturated, the leftover is distributed onto the other channels, thus
+ * attempting to guarantee a visual difference.
  *
  * @param rgb Int array.
  * @param inc int.

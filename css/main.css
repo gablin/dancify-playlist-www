@@ -1245,3 +1245,11 @@ img.swish-qr {
   color: #E60000;
   font-weight: bold;
 }
+
+.genre-select-wrapper {
+  display: flex;
+}
+.genre-select-wrapper select {
+  flex: 1;
+  resize: vertical;
+}

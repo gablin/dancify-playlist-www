@@ -820,28 +820,25 @@ function getEnergyRgbColor(e) {
   return null;
 }
 
-function getGenreRgbColor(v) {
-  //                 v    color (RGB)
-  const colors = [ [ 0.00, [  0,   0,   0] ] // Black (not to be used)
-                 , [ 0.20, [  0,   0, 255] ] // Blue
-                 , [ 0.36, [  0, 255, 255] ] // Turquoise
-                 , [ 0.52, [  0, 255,   0] ] // Green
-                 , [ 0.68, [255, 255,   0] ] // Yellow
-                 , [ 0.84, [255,   0,   0] ] // Red
-                 , [ 1.00, [255,   0, 255] ] // Purple
+function getGenreRgbColor(i) {
+  const colors = [ '0983c8'
+                 , 'd5672b'
+                 , '6ead51'
+                 , 'c41757'
+                 , 'fff12d'
+                 , '5a4195'
+                 , '059dac'
+                 , 'cf4229'
+                 , '9ec54c'
+                 , '7d2a8b'
+                 , 'e0922e'
+                 , '2b55a2'
                  ];
-  for (let i = 0; i < colors.length; i++) {
-    if (i == colors.length-2 || v < colors[i+1][0]) {
-      let p = (v - colors[i][0]) / (colors[i+1][0] - colors[i][0]);
-      let c = [...colors[i][1]];
-      for (let j = 0; j < c.length; j++) {
-        c[j] += Math.round((colors[i+1][1][j] - c[j]) * p);
-      }
-      return c;
-    }
-  }
-  console.log('ERROR: getGenreRgbColor() with arg ' + v);
-  return null;
+  let c = colors[i];
+  return [ parseInt(c.substring(0, 2), 16)
+         , parseInt(c.substring(2, 4), 16)
+         , parseInt(c.substring(4, 6), 16)
+         ];
 }
 
 function updateGenreInDb(track_id, genre, success_f, fail_f) {
@@ -3185,7 +3182,7 @@ function getGenresInUse(tracks) {
 }
 
 function renderGenresOverview() {
-  function get_f(t) {
+  function height_f(t) {
     let g = getGenreFromTrack(t);
 
     if (!TRACK_OVERVIEW_GENRES.includes(g)) return 0;
@@ -3202,6 +3199,12 @@ function renderGenresOverview() {
     return 0.2 + step * i;
   }
 
+  function color_f(t) {
+    let g = getGenreFromTrack(t);
+    if (!TRACK_OVERVIEW_GENRES.includes(g)) return 0;
+    return TRACK_OVERVIEW_GENRES.indexOf(g);
+  }
+
   function text_f(t) {
     return formatGenre(getGenreFromTrack(t));
   }
@@ -3210,10 +3213,10 @@ function renderGenresOverview() {
   renderTrackOverview(
     overview_div
   , '<?= LNG_HEAD_GENRES ?>'
-  , get_f
+  , height_f
   , 0
   , 1
-  , get_f
+  , color_f
   , getGenreRgbColor
   , text_f
   , () => {

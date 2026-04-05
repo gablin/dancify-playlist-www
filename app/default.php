@@ -686,7 +686,7 @@ try {
         <input type="checkbox" name="show-genres-overview" value="false" />
         <span class="checkmark"></span>
         <?= LNG_DESC_SHOW_GENRES_OVERVIEW ?>
-        <div style="text-align: right;">
+        <div class="genre-select-wrapper">
           <select name="track-overview-genres" multiple="true"></select>
         </div>
       </label>

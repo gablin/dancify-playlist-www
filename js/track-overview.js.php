@@ -52,6 +52,29 @@ function setupFormElementsForTrackOverview() {
       );
     }
   );
+
+  $('select[name=track-overview-genres]')
+  .on(
+    'change'
+  , function() {
+      let selected_options = $(this).find(':selected');
+      let selected_genres = [];
+      selected_options.each(
+        function() {
+          let opt = $(this);
+          selected_genres.push(parseInt(opt.val()));
+        }
+      );
+
+      let sorted_genres = getGenreList()
+                          .map((t) => t[0])
+                          .filter((g) => selected_genres.includes(g));
+      TRACK_OVERVIEW_GENRES = sorted_genres;
+
+      savePlaylistSnapshot(function() {}, function() {});
+      renderTrackOverviews();
+    }
+  );
 }
 
 function onShowTrackOverview() {
@@ -94,27 +117,7 @@ function onShowTrackOverview() {
       .appendTo(genre_select)
       .attr('value', g)
       .prop('selected', TRACK_OVERVIEW_GENRES.includes(g))
-      .text(txt + ' (' + num + ')')
-      .click(
-        function() {
-          let selected_options = genre_select.find(':selected');
-          let selected_genres = [];
-          selected_options.each(
-            function() {
-              let opt = $(this);
-              selected_genres.push(parseInt(opt.val()));
-            }
-          );
-
-          let sorted_genres = getGenreList()
-                              .map((t) => t[0])
-                              .filter((g) => selected_genres.includes(g));
-          TRACK_OVERVIEW_GENRES = sorted_genres;
-
-          savePlaylistSnapshot(function() {}, function() {});
-          renderTrackOverviews();
-        }
-      );
+      .text(txt + ' (' + num + ')');
     }
   );
 }
