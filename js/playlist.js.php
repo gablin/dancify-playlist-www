@@ -832,6 +832,8 @@ function getGenreRgbColor(i) {
                  , '7f00ff'
                  , '00ff7f'
                  ];
+  if (i >= colors.length) return [0, 0, 0];
+
   let c = colors[i];
   return [ parseInt(c.substring(0, 2), 16)
          , parseInt(c.substring(2, 4), 16)
