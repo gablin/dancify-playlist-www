@@ -54,3 +54,19 @@ function setupFormElementsForTrackOverview() {
     }
   );
 }
+
+function onShowTrackOverview() {
+  [ 'bpm'
+  , 'energy'
+  , 'danceability'
+  , 'acousticness'
+  , 'instrumentalness'
+  , 'valence'
+  ].forEach(
+    (name) => {
+      let input = $('input[name=show-' + name + '-overview]');
+      let div = $('div.' + name + '-overview');
+      input.prop('checked', div.is(':visible'));
+    }
+  );
+}

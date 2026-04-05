@@ -11,7 +11,11 @@ mkHtmlNavMenu(
   [ [ LNG_MENU_DANCE_DELIMITER, 'dance-delimiter', true ]
   , [ LNG_MENU_PLAYLIST_DELIMITER, 'playlist-delimiter', true ]
   , [ LNG_MENU_SCRATCHPAD, 'scratchpad', true ]
-  , [ LNG_MENU_TRACK_OVERVIEW, 'track-overview', true ]
+  , [ LNG_MENU_TRACK_OVERVIEW
+    , 'track-overview'
+    , true
+    , 'onShowTrackOverview'
+    ]
   , [ LNG_MENU_DUPLICATE_CHECK
     , 'duplicate-check'
     , true
