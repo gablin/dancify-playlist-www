@@ -892,6 +892,8 @@ function addTrackGenreHandling(tr) {
             .prop('selected', true);
         }
       );
+
+      renderGenresOverview();
     }
     update(getPlaylistTable(), tid);
     update(getLocalScratchpadTable(), tid);
